@@ -1,0 +1,38 @@
+---
+title: "Draft Thesis Proposal"
+output: 
+  pdf_document: 
+    fig_caption: yes
+author: "Hanne Oberman"
+---
+
+# Introduction
+
+Research goals...
+
+develop a valid method to investigate the plausibility of multiply imputed data based on: 
+
+- models (imputation and non-response)
+
+- data features (cross-tabs, point estimates, aggregate statistics, etc.)
+
+- assumptions
+
+- algorithmic convergence
+
+
+# Literature review
+
+Van Buuren, 2018...
+
+# Approach
+
+R Shiny...
+
+ShinyMICE
+
+- single measure to assess whether algorithm converged (based on Gelman-Rubin statistic?)
+
+- data visualizations pre and post imputation (scatterplots, densities, cross-tabs)
+
+- statistical evaluation of relations between variables pre and post imputation (chi square or t-tests)
