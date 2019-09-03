@@ -1,9 +1,11 @@
 ---
 title: "Draft Thesis Proposal"
+author: "Hanne Oberman"
+date: "`r Sys.Date()`"
 output: 
   pdf_document: 
     fig_caption: yes
-author: "Hanne Oberman"
+bibliography: ThesisProposal.bib
 ---
 
 # Introduction
@@ -23,7 +25,21 @@ develop a valid method to investigate the plausibility of multiply imputed data 
 
 # Literature review
 
-Van Buuren, 2018...
+@buur18
+
+@abay08
+
+@bart15
+
+@li91
+
+@rubin87
+
+@rubin96
+
+@vinknd
+
+
 
 # Approach
 
@@ -36,3 +52,5 @@ ShinyMICE
 - data visualizations pre and post imputation (scatterplots, densities, cross-tabs)
 
 - statistical evaluation of relations between variables pre and post imputation (chi square or t-tests)
+
+# References
