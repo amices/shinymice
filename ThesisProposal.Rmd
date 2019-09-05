@@ -39,6 +39,9 @@ develop a valid method to investigate the plausibility of multiply imputed data 
 
 @vinknd
 
+@mice11
+
+@shiny17
 
 
 # Approach
@@ -52,5 +55,17 @@ ShinyMICE
 - data visualizations pre and post imputation (scatterplots, densities, cross-tabs)
 
 - statistical evaluation of relations between variables pre and post imputation (chi square or t-tests)
+
+
+# Initial proposal
+
+ShinyMice: an evaluation suite for multiple imputation
+Supervisors: Prof.dr. Stef van Buuren, Dr. Gerko Vink 
+
+The MICE package in R is a world-leading software package for multiple imputation. When using the mice function to solve missing data, vast amounts of information are calculated and stored. However, the MICE package currently lacks a user-friendly means of assessing this information. This project focuses on developing and programming novel means of evaluating, presenting and organising this information in a web-browser based local app that allows for 1) comparing the imputed data to the observations, 2) inspecting the algorithmic convergence, 3) inspecting multivariate distributions, 4) the plausibility of the imputed data, and so on. During this project you will work closely with the developers of MICE in R and the coding components in this project will focus on R and Shiny. 
+
+The objective of the research is to 1) create a Shiny app to investigate and evaluate multiply imputed data sets, 2) implement it in MICE in R, 3) write an instructional vignette, 4) write a technical paper on the workings and usage of the software aimed at e.g. the R Journal or Journal of Statistical Software. The expected output is a state-of-the-art shiny app that can find its way into MICE.
+
+
 
 # References
