@@ -25,7 +25,14 @@ develop a valid method to investigate the plausibility of multiply imputed data 
 
 # Literature review
 
-@buur18
+
+
+“There is no clear-cut method for determining when the MICE algorithm has converged” (@buur18, \textsection 6.5).
+
+“Convergence is diagnosed when the variance between different sequences is no larger than the variance within each individual sequence” (@buur18, \textsection 6.5).
+
+“Several expository reviews are available that assess convergence diagnostics for MCMC methods (Cowles and Carlin 1996; Brooks and Gelman 1998; El Adlouni, Favre, and Bobée 2006). Cowles and Carlin (1996) conclude that “automated convergence monitoring (as by a machine) is unsafe and should be avoided.” No method works best in all circumstances. The consensus is to assess convergence with a combination of tools. The added value of using a combination of convergence diagnostics for missing data imputation has not yet been systematically studied” (@buur18, \textsection 6.5).
+
 
 @abay08
 
@@ -42,6 +49,12 @@ develop a valid method to investigate the plausibility of multiply imputed data 
 @mice11
 
 @shiny17
+
+@scha02
+
+@cowl96
+
+"As MICE is an iterative procedure, it is important that convergence is achieved. This may be checked by computing, at each cycle, the means of imputed values and/or the values of regression coefficients, and seeing if they are stable" (@whit11, p. 394).
 
 
 # Approach
