@@ -1,5 +1,6 @@
 ---
-title: "Draft Thesis Proposal"
+title: "Thesis Proposal"
+subtitle: "Methodology and Statistics for the Behavioural, Biomedical and Social Sciences"
 author: "Hanne Oberman"
 date: "`r Sys.Date()`"
 output: 
@@ -7,6 +8,33 @@ output:
     fig_caption: yes
 bibliography: ThesisProposal.bib
 ---
+
+\centering
+
+# ShinyMICE: an Evaluation Suite for Multiple Imputation
+
+Supervised by Prof. Dr. Stef van Buuren, & Dr. Gerko Vink
+
+Department of Methodology and Statistics 
+
+Utrecht University
+
+\raggedright 
+
+Requirements: max 750 words (excl. references)
+
+In general the proposal should focus on the relevancy of the project, the gap in the scientific literature, and the feasibility to finish the project within 8 months. Possibly specify a 'step 2' to pursue after the main objective is reached.
+
+
+\newpage
+
+
+
+# Proposal by supervisors
+
+The MICE package in R is a world-leading software package for multiple imputation. When using the mice function to solve missing data, vast amounts of information are calculated and stored. However, the MICE package currently lacks a user-friendly means of assessing this information. This project focuses on developing and programming novel means of evaluating, presenting and organising this information in a web-browser based local app that allows for 1) comparing the imputed data to the observations, 2) inspecting the algorithmic convergence, 3) inspecting multivariate distributions, 4) the plausibility of the imputed data, and so on. During this project you will work closely with the developers of MICE in R and the coding components in this project will focus on R and Shiny. 
+
+The objective of the research is to 1) create a Shiny app to investigate and evaluate multiply imputed data sets, 2) implement it in MICE in R, 3) write an instructional vignette, 4) write a technical paper on the workings and usage of the software aimed at e.g. the R Journal or Journal of Statistical Software. The expected output is a state-of-the-art shiny app that can find its way into MICE.
 
 # Introduction
 
@@ -68,12 +96,31 @@ develop a valid method to investigate the plausibility of multiply imputed data 
 
 "The convergence properties of FCS in general settings is still mostly an open question. The behavior of FCS algorithms under non- or quasi-Bayesian imputation procedures like PMM is entirely an open question" (@murr18, p.19)
 
+"Imputers who do choose to use FCS should use flexible univariate models wherever possible and take care to assess apparent convergence of the algorithm, for example by computing traces of pooled estimates or other statistics and using standard MCMC diagnostics (Gelman et al., 2013, Chpater 11). It may also be helpful to examine the results of many independent runs of the algorithm with different initializations and to use random scans over the p variables to try to identify any convergence issues and mitigate possible order dependence" (@murr18, p. 19).
+
+
+# Approach
+
+R Shiny...
+
+ShinyMICE
+
+- single measure to assess whether algorithm converged (based on Gelman-Rubin statistic?)
+
+- data visualizations pre and post imputation (scatterplots, densities, cross-tabs)
+
+- statistical evaluation of relations between variables pre and post imputation (chi square or t-tests)
+
+
+
+
+# Additional resources
+
 Bayes course on convergence:
 ```{r}
 # E. Assessing convergence
 # -----------------------------------------------------------------------------
 # History plot, autocorrelation plot
-
 # History plots show the sampled parameters over the iterations (excluding
 # the burn-in).
 # The development/pattern in these plots gives an indication of convergence.
@@ -81,13 +128,12 @@ Bayes course on convergence:
 # Autocorrelation can be measured at many lags.
 # High autocorrelation indicates slow mixing of the random path.
 
-mcmcplot(mcmcout = samples)
+# mcmcplot(mcmcout = samples)
 # #sigma seems fine, but b doesn't:
 # #even at lag 5 there is still quite some autocorrelation: therefore we need to center the predictors!
 # #otherwise we could use a million iterations to deminish this effect
 
 # Gelman-Rubin diagnostic
-
 # The Gelman and Rubin statistic requires you run
 # the sampler/algorithm at least twice: These runs are
 # referred to as multiple chains.
@@ -98,12 +144,10 @@ mcmcplot(mcmcout = samples)
 # See Gibbs sampler presentation (week 2)
 # https://drive.google.com/file/d/1ABHm8ala3c_puVvf32zF8h6TOZ3898uB/view
 # pdf p. 41, slide nr 29.
-
-gelman.plot(samples)
+# gelman.plot(samples)
 # #this appears to be okay with a really small deviation from 1
 
 # MC error (OPTIONAL?)
-
 # MC error = SD/sqrt(number of iterations)
 # SD represents the variation across iterations
 # MC error thus represents how much the means differ w.r.t. the iterations
@@ -124,28 +168,6 @@ gelman.plot(samples)
 # . Use other initial values
 ```
 
-# Approach
-
-R Shiny...
-
-ShinyMICE
-
-- single measure to assess whether algorithm converged (based on Gelman-Rubin statistic?)
-
-- data visualizations pre and post imputation (scatterplots, densities, cross-tabs)
-
-- statistical evaluation of relations between variables pre and post imputation (chi square or t-tests)
-
-
-# Initial proposal
-
-ShinyMice: an evaluation suite for multiple imputation
-Supervisors: Prof.dr. Stef van Buuren, Dr. Gerko Vink 
-
-The MICE package in R is a world-leading software package for multiple imputation. When using the mice function to solve missing data, vast amounts of information are calculated and stored. However, the MICE package currently lacks a user-friendly means of assessing this information. This project focuses on developing and programming novel means of evaluating, presenting and organising this information in a web-browser based local app that allows for 1) comparing the imputed data to the observations, 2) inspecting the algorithmic convergence, 3) inspecting multivariate distributions, 4) the plausibility of the imputed data, and so on. During this project you will work closely with the developers of MICE in R and the coding components in this project will focus on R and Shiny. 
-
-The objective of the research is to 1) create a Shiny app to investigate and evaluate multiply imputed data sets, 2) implement it in MICE in R, 3) write an instructional vignette, 4) write a technical paper on the workings and usage of the software aimed at e.g. the R Journal or Journal of Statistical Software. The expected output is a state-of-the-art shiny app that can find its way into MICE.
-
-
 
 # References
+
