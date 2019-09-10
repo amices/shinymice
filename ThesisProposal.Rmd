@@ -54,8 +54,75 @@ develop a valid method to investigate the plausibility of multiply imputed data 
 
 @cowl96
 
+@zhu15
+
 "As MICE is an iterative procedure, it is important that convergence is achieved. This may be checked by computing, at each cycle, the means of imputed values and/or the values of regression coefficients, and seeing if they are stable" (@whit11, p. 394).
 
+"A common diagnostic tool is to plot one or more parameters against the iteration number and assess convergence by how different the variance between different sequences is relative to the variance within each individual sequence, similar to the Gelman-Rubin statistic (Gelman and Rubin, 1992) used in Markov chain Monte Carlo (MCMC) diagnostics" (@li14, \textsection 4.3).
+
+"R.hat: The value of the Rˆ statistic used as a convergence criterion. The default is 1.1 (Gelman and Rubin 1992; Gelman, Carlin, Stern, and Rubin 2004)" (@su11 p. 4).
+
+"Our mi offers two ways to check the convergence of the multiple imputation procedure. By default, mi() monitors the mixing of each variable by the variance of its mean and standard deviation within and between different chains of the imputation. If the Rˆ statistic is smaller than 1.1, (i.e., the difference of the within and between variance is trivial), the imputation is considered converged (Gelman, Carlin, Stern, and Rubin 2004). Additionally, by specifying mi(data, check.coef.convergence = TRUE, ...), users can check the convergence of the parameters of the conditional models" (@su11, p. 13).
+
+"the convergence properties of FCS are currently under debate due to possible incompatibility (Li, Yu, and Rubin 2012; Zhu and Raghunathan 2015)" (@taka17, p. )
+
+"The convergence properties of FCS in general settings is still mostly an open question. The behavior of FCS algorithms under non- or quasi-Bayesian imputation procedures like PMM is entirely an open question" (@murr18, p.19)
+
+Bayes course on convergence:
+```{r}
+# E. Assessing convergence
+# -----------------------------------------------------------------------------
+# History plot, autocorrelation plot
+
+# History plots show the sampled parameters over the iterations (excluding
+# the burn-in).
+# The development/pattern in these plots gives an indication of convergence.
+# When the history plot is stable (a fat catterpillar), convergence is reached.
+# Autocorrelation can be measured at many lags.
+# High autocorrelation indicates slow mixing of the random path.
+
+mcmcplot(mcmcout = samples)
+# #sigma seems fine, but b doesn't:
+# #even at lag 5 there is still quite some autocorrelation: therefore we need to center the predictors!
+# #otherwise we could use a million iterations to deminish this effect
+
+# Gelman-Rubin diagnostic
+
+# The Gelman and Rubin statistic requires you run
+# the sampler/algorithm at least twice: These runs are
+# referred to as multiple chains.
+# It compares the variance between chains to the variance
+# within chains (G-R statistic = T/W = (pooled within chain
+# var + between chain var)/pooled within chain var.
+# It's the red line in the plot, and should be near 1.
+# See Gibbs sampler presentation (week 2)
+# https://drive.google.com/file/d/1ABHm8ala3c_puVvf32zF8h6TOZ3898uB/view
+# pdf p. 41, slide nr 29.
+
+gelman.plot(samples)
+# #this appears to be okay with a really small deviation from 1
+
+# MC error (OPTIONAL?)
+
+# MC error = SD/sqrt(number of iterations)
+# SD represents the variation across iterations
+# MC error thus represents how much the means differ w.r.t. the iterations
+# MC error decreases as number of iterations increases.
+# It should not be larger than 5% of the sample standard deviation
+
+# History and density plot (OPTIONAL)
+# plot(samples)
+
+# Autocorrelation plots (OPTIONAL)
+# autocorr.plot(samples)
+
+# If parameters did not converge, you may:
+# . Use (many) more iterations
+# . Use a different parametrization (e.g., center predictors)
+# . Use different priors (e.g., multivariate normal prior (i.e.,
+#   dmnorm(,)) for parameters which are correlated)
+# . Use other initial values
+```
 
 # Approach
 
