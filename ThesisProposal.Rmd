@@ -32,34 +32,65 @@ In general the proposal should focus on the relevancy of the project, the gap in
 
 
 
-# Proposal by supervisors
-
-The MICE package in R is a world-leading software package for multiple imputation. When using the mice function to solve missing data, vast amounts of information are calculated and stored. However, the MICE package currently lacks a user-friendly means of assessing this information. This project focuses on developing and programming novel means of evaluating, presenting and organizing this information in a web-browser based local app that allows for 1) comparing the imputed data to the observations, 2) inspecting the algorithmic convergence, 3) inspecting multivariate distributions, 4) the plausibility of the imputed data, and so on. During this project you will work closely with the developers of MICE in R and the coding components in this project will focus on R and Shiny. 
-
-The objective of the research is to 1) create a Shiny app to investigate and evaluate multiply imputed data sets, 2) implement it in MICE in R, 3) write an instructional vignette, 4) write a technical paper on the workings and usage of the software aimed at e.g. the R Journal or Journal of Statistical Software. The expected output is a state-of-the-art shiny app that can find its way into MICE.
 
 
 # Introduction/context and research question/goals
 
-Almost all (social) scientific research has to cope with missingness. Ignoring missing data yields invalid inferences (@buur18). Multiple imputation provides a solution and is growing in popularity. The incomplete data is completed several times. The variability between these imputations en-captures the uncertainty of the inferences due to missingness (@rubin87). 
+Almost all (social) scientific research copes with missingness (source?). Ignoring missing data can yield wildly invalid inferences (@buur18). A solution is provided by multiple imputation (MI; @rubin87). This technique -- that is growing in popularity (@buur18) -- entails completing a data set with missingness several times. The variability between these completions en-captures the uncertainty of the inferences due to missingness (@rubin87). 
 
-The MICE package in R is a world-leading software package for multiple imputation (Multiple Imputation using Chained Equations; @mice11). However, the package currently does not provide user-friendly means to evaluate the multiply imputed data. Therefore, the goal of this project is develop a MICE evaluation suite, featuring existing modules (like plots to compare the incomplete and completed data sets), and novel assessment tools (like measures to quantify algorithmic convergence). The practical relevance of this research project is in facilitating applied researchers in making valid inferences despite of missingness. Moreover, it contributes to the scientific literature because there is not yet a clear-cut way of diagnosing convergence for MICE algorithms.
-
+The R package MICE (Multiple Imputation using Chained Equations; @mice11) is the world-leading software for multiple imputation (@buur18). However, the package currently does not provide user-friendly means to evaluate the multiply imputed data. Therefore, the goal of this project is develop a MICE evaluation suite, featuring existing modules (like plots to compare the incomplete and completed data sets), and novel assessment tools (like a measure to assess algorithmic convergence). The practical relevance of this research project is in facilitating applied researchers in making valid inferences despite of missingness. Moreover, it contributes to the scientific literature because there is not yet a clear-cut way of diagnosing convergence for MICE algorithms.
 
 # Literature review
 
-That is, “there is no clear-cut method for determining when the MICE algorithm has converged” (@buur18, \textsection 6.5). Currently, users have to rely on visual inspection of the algorithm's iterations. Convergence is said to be reached when the parameters (like means of completed variables or regression coefficients) are stable over iterations (@whit11). 
+Currently, “there is no clear-cut method for determining when the MICE algorithm has converged” (@buur18, \textsection 6.5). Instead, users have to rely on visual inspection of the algorithm's iterations. Convergence is said to be reached when the parameters (like means of completed variables or regression coefficients) are stable over iterations (@whit11). 
 <!-- "As MICE is an iterative procedure, it is important that convergence is achieved. This may be checked by computing, at each cycle, the means of imputed values and/or the values of regression coefficients, and seeing if they are stable" (@whit11, p. 394). -->
-And additionally, when the variance between the several imputation chains is no larger than the variances within each chain (@buur18). 
+Additionally, convergence requires the variance between the several imputation chains to be no larger than the variances within each chain (@buur18). 
 <!-- “Convergence is diagnosed when the variance between different sequences is no larger than the variance within each individual sequence” (@buur18, \textsection 6.5).  -->
-According to @li14 the latter part of this procedure is conceptually similar to the Gelman-Rubin statistic (@gelm92). 
+According to @li14 the latter is conceptually similar to the Gelman-Rubin statistic. 
 <!-- "A common diagnostic tool is to plot one or more parameters against the iteration number and assess convergence by how different the variance between different sequences is relative to the variance within each individual sequence, similar to the Gelman-Rubin statistic (Gelman and Rubin, 1992) used in Markov chain Monte Carlo (MCMC) diagnostics" (@li14, \textsection 4.3). -->
 
-Since the G-R statistic assumes independence between ..., it cannot be directly applied as convergence criterion with 1.1 as conventional cut-off (see @su11).
+
+The Gelman-Rubin statistic (@gelm92), however, assumes independence between chains. Therefore, it cannot be directly applied to compare imputations that share the same incomplete data (source??).  
+
+Notwithstandlingly, it seems like @su11 did implement the Gelman-Rubin statistic as convergence criterion into their R package 'mi', including the conventional cut-off of 1.1.
 <!-- "R.hat: The value of the $\hat{R}$ statistic used as a convergence criterion. The default is 1.1 (Gelman and Rubin 1992; Gelman, Carlin, Stern, and Rubin 2004)" (@su11 p. 4). -->
 <!-- "Our mi offers two ways to check the convergence of the multiple imputation procedure. By default, mi() monitors the mixing of each variable by the variance of its mean and standard deviation within and between different chains of the imputation. If the $\hat{R}$ statistic is smaller than 1.1, (i.e., the difference of the within and between variance is trivial), the imputation is considered converged (Gelman, Carlin, Stern, and Rubin 2004). Additionally, by specifying mi(data, check.coef.convergence = TRUE, ...), users can check the convergence of the parameters of the conditional models" (@su11, p. 13). -->
+It is worth investigating its validity in the context of MICE's convergence, and the broader framework of fully conditional specification (FSC) algorithms. 
+
+The most recent literature on the topic states that convergence properties of FCS algorithms are still under debate (@taka17), with the specific case of a MICE procedure like predictive mean matching posing an entirely open question (@murr18).
+<!-- "the convergence properties of FCS are currently under debate due to possible incompatibility (Li, Yu, and Rubin 2012; Zhu and Raghunathan 2015)" (@taka17, p. ) -->
+<!-- "The convergence properties of FCS in general settings is still mostly an open question. The behavior of FCS algorithms under non- or quasi-Bayesian imputation procedures like PMM is entirely an open question" (@murr18, p.19) -->
+@buur18 summarizes this problem as follows: "No method works best in all circumstances. The consensus is to assess convergence with a combination of tools. The added value of using a combination of convergence diagnostics for missing data imputation has not yet been systematically studied” (@buur18, \textsection 6.5).
+<!-- “Several expository reviews are available that assess convergence diagnostics for MCMC methods (Cowles and Carlin 1996; Brooks and Gelman 1998; El Adlouni, Favre, and Bobée 2006). Cowles and Carlin (1996) conclude that “automated convergence monitoring (as by a machine) is unsafe and should be avoided.” No method works best in all circumstances. The consensus is to assess convergence with a combination of tools. The added value of using a combination of convergence diagnostics for missing data imputation has not yet been systematically studied” (@buur18, \textsection 6.5). -->
+And that is exactly the gap in the scientific literature that this thesis will contribute to.
 
 
+
+# Approach that will be used to answer the research question
+
+During this research project I will work directly with developers of the MICE R package. I will use R Shiny (@shiny17) to program a web-browser based local app for the evaluation of multiply imputed data: 'ShinyMICE'. 
+
+<!-- Develop a valid method to investigate the plausibility of multiply imputed data based on: -->
+
+<!-- - models (imputation and non-response) -->
+
+<!-- - data features (cross-tabs, point estimates, aggregate statistics, etc.) -->
+
+<!-- - assumptions -->
+
+The research report that is to be handed in December 13th 2019 will consist of an investigation into algorithmic convergence of MICE. Ideally, this will result in a single indicator to flag non-convergence (potentially based on the Gelman-Rubin statistic, autocorrelation, or MC error).
+
+The second stage of the research project is of more practical nature: programming ShinyMICE. The application will at least consist of the following: 1) one or more measures to assess algorithmic convergence; 2) data visualizations (e.g., scatterplots, densities, and cross-tabulations of the data pre- and post-imputation); and 3) statistical evaluation of relations between variables pre- versus post-imputation (i.e., chi square tests or t-tests). This part of the thesis also entails research into user interface (UI) design, local versus cloud-based data storage, and optimizing the application's efficiency.
+
+A working beta version of ShinyMICE will be considered sufficient to proceed to the next step: writing a technical paper on the workings and usage of the software. Possible journals for publication of this manuscript are *The R Journal* and *Journal of Statistical Software*.
+
+Finally, the shinyMICE package will be integrated into the existing MICE environment, and a vingette for applied researchers will be written. 
+
+
+# Additional resources
+
+
+"Imputers who do choose to use FCS should use flexible univariate models wherever possible and take care to assess apparent convergence of the algorithm, for example by computing traces of pooled estimates or other statistics and using standard MCMC diagnostics (Gelman et al., 2013, Chpater [*sic*] 11). It may also be helpful to examine the results of many independent runs of the algorithm with different initializations and to use random scans over the p variables to try to identify any convergence issues and mitigate possible order dependence" (@murr18, p. 19).
 
 @abay08
 
@@ -79,39 +110,15 @@ Since the G-R statistic assumes independence between ..., it cannot be directly 
 
 @zhu15
 
+@gelm92's convergence criterion is defined as the ratio between the sum of the pooled within chain variance plus the between chain variance, and the pooled within chain variance.
 
 
-"the convergence properties of FCS are currently under debate due to possible incompatibility (Li, Yu, and Rubin 2012; Zhu and Raghunathan 2015)" (@taka17, p. )
+Proposal by supervisors:
 
-"The convergence properties of FCS in general settings is still mostly an open question. The behavior of FCS algorithms under non- or quasi-Bayesian imputation procedures like PMM is entirely an open question" (@murr18, p.19)
+"The MICE package in R is a world-leading software package for multiple imputation. When using the mice function to solve missing data, vast amounts of information are calculated and stored. However, the MICE package currently lacks a user-friendly means of assessing this information. This project focuses on developing and programming novel means of evaluating, presenting and organizing this information in a web-browser based local app that allows for 1) comparing the imputed data to the observations, 2) inspecting the algorithmic convergence, 3) inspecting multivariate distributions, 4) the plausibility of the imputed data, and so on. During this project you will work closely with the developers of MICE in R and the coding components in this project will focus on R and Shiny. 
 
-"Imputers who do choose to use FCS should use flexible univariate models wherever possible and take care to assess apparent convergence of the algorithm, for example by computing traces of pooled estimates or other statistics and using standard MCMC diagnostics (Gelman et al., 2013, Chpater [*sic*] 11). It may also be helpful to examine the results of many independent runs of the algorithm with different initializations and to use random scans over the p variables to try to identify any convergence issues and mitigate possible order dependence" (@murr18, p. 19).
+The objective of the research is to 1) create a Shiny app to investigate and evaluate multiply imputed data sets, 2) implement it in MICE in R, 3) write an instructional vignette, 4) write a technical paper on the workings and usage of the software aimed at e.g. the R Journal or Journal of Statistical Software. The expected output is a state-of-the-art shiny app that can find its way into MICE".
 
-“Several expository reviews are available that assess convergence diagnostics for MCMC methods (Cowles and Carlin 1996; Brooks and Gelman 1998; El Adlouni, Favre, and Bobée 2006). Cowles and Carlin (1996) conclude that “automated convergence monitoring (as by a machine) is unsafe and should be avoided.” No method works best in all circumstances. The consensus is to assess convergence with a combination of tools. The added value of using a combination of convergence diagnostics for missing data imputation has not yet been systematically studied” (@buur18, \textsection 6.5).
-
-
-# Approach that will be used to answer the research question
-
-Work directly with developers of the MICE R package. Use R Shiny (@shiny17) to program ShinyMICE. First, create/develop. Then, implement in existing MICE R package. Then write technical paper on the workings and usage of the software (thesis). Then write vingette for applied researchers.
-
-Develop a valid method to investigate the plausibility of multiply imputed data based on:
-
-- models (imputation and non-response)
-
-- data features (cross-tabs, point estimates, aggregate statistics, etc.)
-
-- assumptions
-
-- algorithmic convergence (single measure to assess whether algorithm converged (potentially based on Gelman-Rubin statistic))
-
-- data visualizations pre and post imputation (scatterplots, densities, cross-tabs)
-
-- statistical evaluation of relations between variables pre and post imputation (chi square or t-tests)
-
-Possible journal for publication: the R Journal or Journal of Statistical Software.
-
-
-# Additional resources
 
 Bayes course on convergence:
 ```{r}
