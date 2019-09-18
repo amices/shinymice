@@ -36,9 +36,9 @@ In general the proposal should focus on the relevancy of the project, the gap in
 
 # Introduction/context and research question/goals
 
-Almost all (social) scientific research copes with missingness (source?). Ignoring missing data can yield wildly invalid inferences (@buur18). A solution is provided by multiple imputation (MI; @rubin87). This technique -- that is growing in popularity (@buur18) -- entails completing a data set with missingness several times. The variability between these completions en-captures the uncertainty of the inferences due to missingness (@rubin87). 
+At some point, any (social) scientist conducting statistical analyses will run into a missing data problem (@alli02). Simply ignoring the missingness or using ad hoc solutions can yield wildly invalid inferences (@buur18). Multiple imputation (MI; @rubin87) provides a framework to circumvent the problem of missing information. This technique -- that is growing in popularity (@buur18) -- entails completing the missing values in an incomplete data set several times. The variability between the completed data sets captures the uncertainty in the inferences due to missingness (@rubin87). 
 
-The R package MICE (Multiple Imputation using Chained Equations; @mice11) is the world-leading software for multiple imputation (@buur18). However, the package currently does not provide user-friendly means to evaluate the multiply imputed data. Therefore, the goal of this project is develop a MICE evaluation suite, featuring existing modules (like plots to compare the incomplete and completed data sets), and novel assessment tools (like a measure to assess algorithmic convergence). The practical relevance of this research project is in facilitating applied researchers in making valid inferences despite of missingness. Moreover, it contributes to the scientific literature because there is not yet a clear-cut way of diagnosing convergence for MICE algorithms.
+The R package MICE (Multiple Imputation using Chained Equations; @mice11) is the world-leading software for multiple imputation (@buur18). However, the package currently does not provide user-friendly means to evaluate the multiply imputed data. Therefore, the goal of this project is develop a MICE evaluation suite, featuring existing modules (like plots to compare the incomplete and completed data sets), and novel assessment tools (like a measure to flag algorithmic non-convergence). The practical relevance of this research project is in facilitating applied researchers in making valid inferences despite of missingness. Simultaniously it contributes to the scientific literature because there is not yet a clear-cut way of diagnosing convergence for MI algorithms.
 
 # Literature review
 
@@ -48,7 +48,6 @@ Additionally, convergence requires the variance between the several imputation c
 <!-- “Convergence is diagnosed when the variance between different sequences is no larger than the variance within each individual sequence” (@buur18, \textsection 6.5).  -->
 According to @li14 the latter is conceptually similar to the Gelman-Rubin statistic. 
 <!-- "A common diagnostic tool is to plot one or more parameters against the iteration number and assess convergence by how different the variance between different sequences is relative to the variance within each individual sequence, similar to the Gelman-Rubin statistic (Gelman and Rubin, 1992) used in Markov chain Monte Carlo (MCMC) diagnostics" (@li14, \textsection 4.3). -->
-
 
 The Gelman-Rubin statistic (@gelm92), however, assumes independence between chains. Therefore, it cannot be directly applied to compare imputations that share the same incomplete data (source??).  
 
@@ -68,7 +67,7 @@ And that is exactly the gap in the scientific literature that this thesis will c
 
 # Approach that will be used to answer the research question
 
-During this research project I will work directly with developers of the MICE R package. I will use R Shiny (@shiny17) to program a web-browser based local app for the evaluation of multiply imputed data: 'ShinyMICE'. 
+During this research project I will work directly with developers of the MICE R package. I will use R Shiny (@shiny17) to program a web-browser based local app for the evaluation of multiply imputed data: 'ShinyMICE'. This approach does not require the use of any (personal) data. Therefore, the project will not be reviewed by the ethical committee.
 
 <!-- Develop a valid method to investigate the plausibility of multiply imputed data based on: -->
 
@@ -82,45 +81,46 @@ The research report that is to be handed in December 13th 2019 will consist of a
 
 The second stage of the research project is of more practical nature: programming ShinyMICE. The application will at least consist of the following: 1) one or more measures to assess algorithmic convergence; 2) data visualizations (e.g., scatterplots, densities, and cross-tabulations of the data pre- and post-imputation); and 3) statistical evaluation of relations between variables pre- versus post-imputation (i.e., chi square tests or t-tests). This part of the thesis also entails research into user interface (UI) design, local versus cloud-based data storage, and optimizing the application's efficiency.
 
-A working beta version of ShinyMICE will be considered sufficient to proceed to the next step: writing a technical paper on the workings and usage of the software. Possible journals for publication of this manuscript are *The R Journal* and *Journal of Statistical Software*.
+A working beta version of ShinyMICE will be considered sufficient to proceed to the next step: writing a technical paper on the workings and usage of the software. The preferred journal for publication of this manuscript is *Journal of Statistical Software* -- alternatively, publication in *The R Journal* will be attempted.
 
 Finally, the shinyMICE package will be integrated into the existing MICE environment, and a vingette for applied researchers will be written. 
 
 
-# Additional resources
+
+# Additional resources (not used)
 
 
 "Imputers who do choose to use FCS should use flexible univariate models wherever possible and take care to assess apparent convergence of the algorithm, for example by computing traces of pooled estimates or other statistics and using standard MCMC diagnostics (Gelman et al., 2013, Chpater [*sic*] 11). It may also be helpful to examine the results of many independent runs of the algorithm with different initializations and to use random scans over the p variables to try to identify any convergence issues and mitigate possible order dependence" (@murr18, p. 19).
 
-@abay08
+<!-- @abay08 -->
 
-@bart15
+<!-- @bart15 -->
 
-@li91
+<!-- @li91 -->
 
-@rubin87
+<!-- @rubin87 -->
 
-@rubin96
+<!-- @rubin96 -->
 
-@vinknd
+<!-- @vinknd -->
 
-@scha02
+<!-- @scha02 -->
 
-@cowl96
+<!-- @cowl96 -->
 
-@zhu15
+<!-- @zhu15 -->
 
 @gelm92's convergence criterion is defined as the ratio between the sum of the pooled within chain variance plus the between chain variance, and the pooled within chain variance.
 
 
-Proposal by supervisors:
+**Proposal by supervisors:**
 
 "The MICE package in R is a world-leading software package for multiple imputation. When using the mice function to solve missing data, vast amounts of information are calculated and stored. However, the MICE package currently lacks a user-friendly means of assessing this information. This project focuses on developing and programming novel means of evaluating, presenting and organizing this information in a web-browser based local app that allows for 1) comparing the imputed data to the observations, 2) inspecting the algorithmic convergence, 3) inspecting multivariate distributions, 4) the plausibility of the imputed data, and so on. During this project you will work closely with the developers of MICE in R and the coding components in this project will focus on R and Shiny. 
 
 The objective of the research is to 1) create a Shiny app to investigate and evaluate multiply imputed data sets, 2) implement it in MICE in R, 3) write an instructional vignette, 4) write a technical paper on the workings and usage of the software aimed at e.g. the R Journal or Journal of Statistical Software. The expected output is a state-of-the-art shiny app that can find its way into MICE".
 
 
-Bayes course on convergence:
+**Bayes course on convergence:**
 ```{r}
 # E. Assessing convergence
 # -----------------------------------------------------------------------------
