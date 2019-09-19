@@ -1,0 +1,79 @@
+---
+title: "Research Report"
+subtitle: "Methodology and Statistics for the Behavioural, Biomedical and Social Sciences"
+author: "Hanne Oberman (4216318)"
+date: "`r Sys.Date()`"
+output: 
+  pdf_document: 
+    fig_caption: yes
+bibliography: ThesisProposal.bib
+---
+
+\centering
+
+# ShinyMICE: an Evaluation Suite for Multiple Imputation
+
+Supervised by prof. dr. Stef van Buuren, & dr. Gerko Vink
+
+Department of Methodology and Statistics 
+
+Utrecht University
+
+
+\raggedright 
+
+Goals: 
+
+- find an answer to a research question in the field of Methods and Statistics
+
+- get work experience in the field of Methods and Statistics
+
+- a first step in writing a scientific paper: perform research and report the findings in a short research report
+
+
+Grading:
+
+- The amount of work done
+
+- Work independency
+
+- Clarity and logic of the research report (clear and correct formulations, a logical structure of sections and of paragraphs within sections, no typos or errors in grammar, and flow of sections, like key questions from literature or conclusions from results).
+
+- Nice looking and consistent lay-out of the report (conciseness in presentation of tables, figures, and formulas (if any)).
+
+- General comments
+
+Format (either/or):
+
+- It is written as a (mini) thesis, with an introduction, methods section, some results (i.e., preliminary analyses, or pilot simulations), and a discussion of results. The length of the research report should be maximally 2500 words of text (without references list and/or tables and figures). Please do not include appendices, and no more than 6 tables/figures. Table and Figure captions do not count towards the word limit. An abstract may be included, but is not necessary. 
+
+- It is the first ‘half’ of the thesis, i.e., there are no results included yet, but the report contains a full introduction including a literature review and a methods section that contains details about the data, instruments and/or statistical procedures. There is no (absolute) word limit but the length of the report should comply with recommendations/expectations of the proposed journal. Note that most journals have word limits or rather strong opinions on (too) lengthy manuscripts.
+
+
+\newpage
+
+
+
+
+
+# Introduction
+
+- MI (and ad hoc solutions?)
+
+
+# Theoretical Background
+
+- Terminology (MCAR, MAR, MNAR)
+
+- Rubin's rules
+
+- FCS vs. JM
+
+
+# Methods
+
+- 
+
+
+# References
+
