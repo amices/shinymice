@@ -51,9 +51,9 @@ And additionally, the variation between imputations should be no larger than the
 <!-- “Convergence is diagnosed when the variance between different sequences is no larger than the variance within each individual sequence” (@buur18, \textsection 6.5).  -->
 *Conceptually, this visual evaluation procedure is similar to the 'Gelman-Rubin statistic' (@li14). Practically, however, Gelman and Rubin's convergence diagnostic $\widehat{R}$ ('potential scale reduction'; 1992) cannot be directly applied to assess convergence of MICE algorithms because the measure is famously prone to produce false positives when applied to MI data.*  
 <!-- "A common diagnostic tool is to plot one or more parameters against the iteration number and assess convergence by how different the variance between different sequences is relative to the variance within each individual sequence, similar to the Gelman-Rubin statistic (Gelman and Rubin, 1992) used in Markov chain Monte Carlo (MCMC) diagnostics" (@li14, \textsection 4.3). -->
-*That is, the overdispersed initial state of the MICE algorithm does not conform to $\widehat{R}$'s assumption of equal starting points (source!).*
+*That is, the over-dispersed initial state of the MICE algorithm does not conform to $\widehat{R}$'s assumption of equal starting points (source?).*
 
-Notwithstandingly, it seems like @su11 did implement $\widehat{R}$ as convergence criterion into their R package 'mi', including the conventional cut-off of 1.1.
+Notwithstanding, it seems like @su11 did implement $\widehat{R}$ as convergence criterion into their R package 'mi', including the conventional cut-off of 1.1.
 <!-- "R.hat: The value of the $\hat{R}$ statistic used as a convergence criterion. The default is 1.1 (Gelman and Rubin 1992; Gelman, Carlin, Stern, and Rubin 2004)" (@su11 p. 4). -->
 <!-- "Our mi offers two ways to check the convergence of the multiple imputation procedure. By default, mi() monitors the mixing of each variable by the variance of its mean and standard deviation within and between different chains of the imputation. If the $\hat{R}$ statistic is smaller than 1.1, (i.e., the difference of the within and between variance is trivial), the imputation is considered converged (Gelman, Carlin, Stern, and Rubin 2004). Additionally, by specifying mi(data, check.coef.convergence = TRUE, ...), users can check the convergence of the parameters of the conditional models" (@su11, p. 13). -->
 It is worth investigating the validity of the convergence statistic in the context of MICE, and the broader framework of fully conditional specification (FSC) algorithms. 
@@ -79,9 +79,9 @@ During this research project I will work directly with developers of the MICE R 
 
 <!-- - assumptions -->
 
-The research report that is to be handed in December 13th 2019 will consist of an investigation into algorithmic convergence of MICE. Ideally, this will result in a single indicator to flag non-convergence (potentially based on the Gelman-Rubin statistic, autocorrelation, or MC error).
+The research report that is to be handed in December 13th 2019 will consist of an investigation into algorithmic convergence of MICE. Ideally, this will result in a single indicator to flag non-convergence (potentially based on the Gelman-Rubin statistic, auto-correlation, or MC error).
 
-The second stage of the research project is of more practical nature: programming ShinyMICE. The application will at least consist of the following: 1) one or more measures to assess algorithmic convergence; 2) data visualizations (e.g., scatterplots, densities, and cross-tabulations of the data pre- and post-imputation); and 3) statistical evaluation of relations between variables pre- versus post-imputation (i.e., chi square tests or t-tests). This part of the thesis also entails research into user interface (UI) design, local versus cloud-based data storage, and optimizing the application's efficiency.
+The second stage of the research project is of more practical nature: programming ShinyMICE. The application will at least consist of the following: 1) one or more measures to assess algorithmic convergence; 2) data visualizations (e.g., scatter-plots, densities, and cross-tabulations of the data pre- and post-imputation); and 3) statistical evaluation of relations between variables pre- versus post-imputation (i.e., chi square tests or t-tests). This part of the thesis also entails research into user interface (UI) design, local versus cloud-based data storage, and optimizing the application's efficiency.
 
 A working beta version of ShinyMICE will be considered sufficient to proceed to the next step: writing a technical paper on the workings and usage of the software. The preferred journal for publication of this manuscript is *Journal of Statistical Software* -- alternatively, publication in *The R Journal* will be attempted.
 
@@ -114,6 +114,8 @@ Finally, the shinyMICE package will be integrated into the existing MICE environ
 <!-- @zhu15 -->
 
 @gelm92's convergence criterion is defined as the ratio between the sum of the pooled within chain variance plus the between chain variance, and the pooled within chain variance.
+
+"Why can the number of iterations in MICE be so low? First of all, realize that the imputed data Ymis form the only memory in the the MICE algorithm. Chapter 3 explained that imputed data can have a considerable amount of random noise, depending on the strength of the relations between the variables. Applications of MICE with lowly correlated data therefore inject a lot of noise into the system. Hence, the auto-correlation over t will be low, and convergence will be rapid, and in fact immediate if all variables are independent. Thus, the incorporation of noise into the imputed data has pleasant side-effect of speeding up convergence" (@buur18, par. 4.5).
 
 
 **Proposal by supervisors:**
