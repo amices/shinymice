@@ -72,8 +72,77 @@ Format (either/or):
 
 # Methods
 
-- 
+- Potential convergence measures: 
 
+*why do people say the GR stat will give false positives? perhaps the window (nr of it) is too small. if you start from dispersed, you'll end up with convergence (GR = 1) --> the bad thing is to stop too early. this is a false negative, not positive! possible approach: replicate and build a decision rule to solve the problem. * 
+
+*in mice algorithms, iterating is very fast compared to regular MCMC. therefore, we could use the average over the last 5 iterations you'll take the 'majority vote' to indicate conv. so compute GR at each iteration: band and threshold. another approach is to compute autocorrelation  (which is decreasing over itarations because we add in noise. schafer (1997, p. 129) wrote on worst linear stat and calculate the autocorr of that stat we know that the alg did converge. mice has noise so little autocorr. but we have very rich data so we're not estimating everything from scratch. not: we're talking about missing data only, not the combined data (that autocorr. is very high). autocorr is high if we can predict the miss value very well. the higher r sq the higher the autocorr. so the harder to converge. watch out for the problem with texp that will converge at once because you can deductively impute the value per class. possibly use slope of mean too to see whether there is trending. maybe also compute first eigenvalue of the matrix, not just mean and sd. also in pca we have several measures for nr of components, why not do something similar for mice? however, now we use mean and sd of missing values only, and that's not possible fr correlations because we'll have different ns for different correls. but of we take the compl. data that should not be a problem because that's constant. maybe look into allpying pca on the imputed data and if that stays the same we know that the means and variances are stable too. patrick ... and ian white work on stata proc mi also work on convergence diagnostics --> autocorr function plot in sas of worst linear function, and likelihood ratio that you could save.*
+
+- Bayes course on convergence:
+```{r}
+# E. Assessing convergence
+# -----------------------------------------------------------------------------
+# History plot, autocorrelation plot
+# History plots show the sampled parameters over the iterations (excluding
+# the burn-in).
+# The development/pattern in these plots gives an indication of convergence.
+# When the history plot is stable (a fat catterpillar), convergence is reached.
+# Autocorrelation can be measured at many lags.
+# High autocorrelation indicates slow mixing of the random path.
+
+# mcmcplot(mcmcout = samples)
+# #sigma seems fine, but b doesn't:
+# #even at lag 5 there is still quite some autocorrelation: therefore we need to center the predictors!
+# #otherwise we could use a million iterations to deminish this effect
+
+# Gelman-Rubin diagnostic
+# The Gelman and Rubin statistic requires you run
+# the sampler/algorithm at least twice: These runs are
+# referred to as multiple chains.
+# It compares the variance between chains to the variance
+# within chains (G-R statistic = T/W = (pooled within chain
+# var + between chain var)/pooled within chain var.
+# It's the red line in the plot, and should be near 1.
+# See Gibbs sampler presentation (week 2)
+# https://drive.google.com/file/d/1ABHm8ala3c_puVvf32zF8h6TOZ3898uB/view
+# pdf p. 41, slide nr 29.
+# gelman.plot(samples)
+# #this appears to be okay with a really small deviation from 1
+
+# MC error (OPTIONAL?)
+# MC error = SD/sqrt(number of iterations)
+# SD represents the variation across iterations
+# MC error thus represents how much the means differ w.r.t. the iterations
+# MC error decreases as number of iterations increases.
+# It should not be larger than 5% of the sample standard deviation
+
+# History and density plot (OPTIONAL)
+# plot(samples)
+
+# Autocorrelation plots (OPTIONAL)
+# autocorr.plot(samples)
+
+# If parameters did not converge, you may:
+# . Use (many) more iterations
+# . Use a different parametrization (e.g., center predictors)
+# . Use different priors (e.g., multivariate normal prior (i.e.,
+#   dmnorm(,)) for parameters which are correlated)
+# . Use other initial values
+```
+
+
+# Additional resources (not used)
+
+**Potentially add something about updated (2019) version of $\widehat{R}$ and the new threshold of 1.01, see @veht19. Or leave it for the Research Report.**
+
+
+"For models based on multiple imputed data sets, this [R hat > 1.1] is often a false positive: Chains of different submodels may not overlay each other exactly, since there were fitted to different data" (see https://cran.r-project.org/web/packages/brms/vignettes/brms_missings.html).
+
+"Imputers who do choose to use FCS should use flexible univariate models wherever possible and take care to assess apparent convergence of the algorithm, for example by computing traces of pooled estimates or other statistics and using standard MCMC diagnostics (Gelman et al., 2013, Chapter 11). It may also be helpful to examine the results of many independent runs of the algorithm with different initializations and to use random scans over the p variables to try to identify any convergence issues and mitigate possible order dependence" (@murr18, p. 19).
+
+@gelm92's convergence criterion is defined as the ratio between the sum of the pooled within chain variance plus the between chain variance, and the pooled within chain variance.
+
+"Why can the number of iterations in MICE be so low? First of all, realize that the imputed data Ymis form the only memory in the the MICE algorithm. Chapter 3 explained that imputed data can have a considerable amount of random noise, depending on the strength of the relations between the variables. Applications of MICE with lowly correlated data therefore inject a lot of noise into the system. Hence, the auto-correlation over t will be low, and convergence will be rapid, and in fact immediate if all variables are independent. Thus, the incorporation of noise into the imputed data has pleasant side-effect of speeding up convergence" (@buur18, par. 4.5).
 
 # References
 
