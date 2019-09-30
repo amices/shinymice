@@ -43,6 +43,7 @@ With MI, many assumptions are made about the nature of the observed and missing 
 
 The goal is to develop an MI evaluation suite for the world leading R package `MICE` [@mice11]. It will feature novel assessment tools (e.g., a measure to flag algorithmic non-convergence), and  interactive adaptations of (partially) implemented modules (e.g., plots to compare the incomplete and completed data sets). This research project will aid applied researchers in drawing valid inference from incomplete data sets. Simultaneously, a contribution to the scientific literature is made by developing novel methodology and guidelines for evaluating MI data methods. 
 
+**conv te veel nadruk, weinig op diagnostiek, dat is veel sprekender.diag is ook wetenschap, meer modeling dan algorithmisch. in hoeverre duik ik de piepte om conv maat te maken. en aan de andere kant hoe grbruikers helpen om de diagn te maken in mice? bijv kijken of je overimp kunt gebruiken om te zien hoe goed het imp model is. --> double robustness/sensit. analys.**
 
 # Literature Review
 
@@ -71,7 +72,7 @@ The limitations in assessing convergence of MI algorithms may be overcome by com
 
 # Methods
 
-This research project will be supervised by the `MICE` developers. I will develop novel  methodology for evaluating MI data, and implement these methods in an interactive evaluation device in R Shiny [@shiny17]: '`ShinyMICE`'. This approach does not require the use of any empirical data. Therefore, the project is not subject to the school's ethical approval process.
+This research project will be supervised by the `MICE` developers. I will develop novel  methodology for evaluating MI data, and implement these methods in an interactive evaluation device in R Shiny [@shiny17]: '`ShinyMICE`'. This approach does not require the use of any unpublished empirical data. Therefore, the project is not subject to the school's ethical approval process. **or only published data/zonder bewerking van empirische data geen FETC/vrijelijk toegankelijke open access data bewerken vereist ook al FETC misschien?**
 
 <!-- Develop a valid method to investigate the plausibility of multiply imputed data based on: -->
 
