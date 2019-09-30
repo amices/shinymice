@@ -1,0 +1,95 @@
+---
+title: "Thesis Proposal"
+author: "Hanne Oberman (4216318)"
+date: "`r Sys.Date()`"
+output:
+  #word_document: default
+  pdf_document:
+    fig_caption: yes
+subtitle: Methodology and Statistics for the Behavioural, Biomedical and Social Sciences
+bibliography: ThesisProposal.bib
+---
+
+\centering
+
+# ShinyMICE: an Evaluation Suite for Multiple Imputation
+
+Supervised by prof. dr. Stef van Buuren, & dr. Gerko Vink
+
+Department of Methodology and Statistics 
+
+Utrecht University
+
+Word count: 775
+
+\raggedright 
+
+<!-- Requirements: max 750 words (excl. references) -->
+
+<!-- In general the proposal should focus on the relevancy of the project, the gap in the scientific literature, and the feasibility to finish the project within 8 months. Possibly specify a 'step 2' to pursue after the main objective is reached. -->
+
+
+\newpage
+
+
+
+
+
+# Introduction
+
+At some point, any (social) scientist conducting statistical analyses will run into a missing data problem [@alli02]. Simply ignoring the missingness or using ad hoc solutions can yield wildly invalid inferences [@buur18]. A framework to circumvent the *ubiquitous* problem of missing information is multiple imputation (MI; [@rubin87]). This technique -- that is growing in popularity [@buur18] -- entails 'guessing' the missing values in an incomplete data set several times. The variability between the completed data sets represents how much uncertainty in the inferences is due to missingness [@rubin87]. 
+
+With MI, many assumptions are made about the nature of the observed and missing parts of the data, and their relation to the 'true' data generating model. Without proper evaluation of the imputations and the underlying assumptions, any drawn inference may erroneously be deemed valid (**source?**). Such evaluation measures are currently missing or under-developed in MI software. Therefore, I aim to answer the following question: 'Which measures are vital for evaluating the validity of multiply imputed data?'. 
+
+The goal is to develop an MI evaluation suite for the world leading R package `MICE` [@mice11]. It will feature novel assessment tools (e.g., a measure to flag algorithmic non-convergence), and  interactive adaptations of (partially) implemented modules (e.g., plots to compare the incomplete and completed data sets). This research project will aid applied researchers in drawing valid inference from incomplete data sets. Simultaneously, a contribution to the scientific literature is made by developing novel methodology and guidelines for evaluating MI data methods. 
+
+
+# Literature Review
+
+The numerous assumptions underlying MI algorithms can principally not be verified from the incomplete observed data **No source needed - we'd need the true data to verify**. Instead, imputers are  designated to evaluate the (plausibility of) multiply imputed data, and the robustness of results to the assumptions. The latter can be assessed by performing sensitivity analyses, see e.g. @nguy17 for practical guidelines. Methodology for evaluating the MI data however, is still largely missing. In the only available review of diagnostics, @abay08 overlook the most vital state to be evaluated: convergence of the algorithm. Without convergence, any 'deeper' assumption and resulting inference may be (anders erg sterk) invalid.
+<!-- The weighting approach (a selection based method) [25,26], and the pattern-mixture approach [25,27] are two methods that have been proposed in the literature for conducting sensitivity analyses within the MI framework. (https://bmcmedresmethodol.biomedcentral.com/articles/10.1186/s12874-015-0022-1) -->
+
+While the convergence properties of iterative MI algorithms are still under debate [@taka17], specific procedures like *predictive mean matching* pose entirely open questions [@murr18].
+<!-- "the convergence properties of FCS are currently under debate due to possible incompatibility (Li, Yu, and Rubin 2012; Zhu and Raghunathan 2015)" (@taka17, p. ) -->
+<!-- "The convergence properties of FCS in general settings is still mostly an open question. The behavior of FCS algorithms under non- or quasi-Bayesian imputation procedures like PMM is entirely an open question" (@murr18, p.19) -->
+@buur18 summarizes the issues with diagnosing convergence as follows: "No method works best in all circumstances. The consensus is to assess convergence with a combination of tools. The added value of using a combination of convergence diagnostics for missing data imputation has not yet been systematically studied” (@buur18, \textsection 6.5).
+<!-- “Several expository reviews are available that assess convergence diagnostics for MCMC methods (Cowles and Carlin 1996; Brooks and Gelman 1998; El Adlouni, Favre, and Bobée 2006). Cowles and Carlin (1996) conclude that “automated convergence monitoring (as by a machine) is unsafe and should be avoided.” No method works best in all circumstances. The consensus is to assess convergence with a combination of tools. The added value of using a combination of convergence diagnostics for missing data imputation has not yet been systematically studied” (@buur18, \textsection 6.5). -->
+Meanwhile, applied researchers have to rely on visual inspection of the algorithm's iterations [@buur18]. Convergence is said to be reached when parameters (e.g., means of completed variables) are stable across iterations [@whit11]. 
+<!-- "As MICE is an iterative procedure, it is important that convergence is achieved. This may be checked by computing, at each cycle, the means of imputed values and/or the values of regression coefficients, and seeing if they are stable" (@whit11, p. 394). -->
+And additionally, the variation between imputation chains should be no larger than the variation within each individual chain [@buur18]. 
+<!-- “Convergence is diagnosed when the variance between different sequences is no larger than the variance within each individual sequence” (@buur18, \textsection 6.5).  -->
+Conceptually, the visual inspection procedure is equivalent to  Gelman, & Rubin's [-@gelm92] convergence statistic $\widehat{R}$ [@li14]. In practice, however, $\widehat{R}$ cannot be applied directly to MI data, and is prone to producing false negatives [@lace07].
+<!-- "A common diagnostic tool is to plot one or more parameters against the iteration number and assess convergence by how different the variance between different sequences is relative to the variance within each individual sequence, similar to the Gelman-Rubin statistic (Gelman and Rubin, 1992) used in Markov chain Monte Carlo (MCMC) diagnostics" (@li14, \textsection 4.3). -->
+The limitations in assessing convergence of MI algorithms may be overcome by combining $\widehat{R}$ with other diagnostics like auto-correlation and MC error.
+<!-- Notwithstandingly, it seems like @su11 did implement $\widehat{R}$ as convergence criterion into their R package 'mi', including the conventional cut-off. -->
+<!-- "R.hat: The value of the $\hat{R}$ statistic used as a convergence criterion. The default is 1.1 (Gelman and Rubin 1992; Gelman, Carlin, Stern, and Rubin 2004)" (@su11 p. 4). -->
+<!-- "Our mi offers two ways to check the convergence of the multiple imputation procedure. By default, mi() monitors the mixing of each variable by the variance of its mean and standard deviation within and between different chains of the imputation. If the $\hat{R}$ statistic is smaller than 1.1, (i.e., the difference of the within and between variance is trivial), the imputation is considered converged (Gelman, Carlin, Stern, and Rubin 2004). Additionally, by specifying mi(data, check.coef.convergence = TRUE, ...), users can check the convergence of the parameters of the conditional models" (@su11, p. 13). -->
+<!-- So it is worth investigating the validity of this convergence statistic in the context of multiple imputation.  -->
+
+**Add: which other assumptions could be checked? The assumption of MAR. Ideally, we would want to study all possible combinations of variables: univariate, bivariate, etc. And to include both plots and stats.**
+
+
+# Methods
+
+This research project will be supervised by the `MICE` developers. I will develop novel  methodology for evaluating MI data, and implement these methods in an interactive evaluation device in R Shiny [@shiny17]: '`ShinyMICE`'. This approach does not require the use of any empirical data. Therefore, the project is not subject to the school's ethical approval process.
+
+<!-- Develop a valid method to investigate the plausibility of multiply imputed data based on: -->
+
+<!-- - models (imputation and non-response) -->
+
+<!-- - data features (cross-tabs, point estimates, aggregate statistics, etc.) -->
+
+<!-- - assumptions -->
+
+The research report will consist of an investigation into algorithmic convergence of MI algorithms. Ideally, this will result in a single summary indicator to flag non-convergence.
+
+In the second stage of the research project I will focus on other evaluation measures to implement in `ShinyMICE`. The application will at least consist of the following: 1) one or more measures to assess algorithmic convergence; 2) data visualizations (e.g., scatter-plots, densities, and cross-tabulations of the data pre- and post-imputation); and 3) statistical evaluation of relations between variables pre- versus post-imputation (i.e., $\chi^2$-tests or t-tests). 
+<!-- 1) comparing the imputed data to the observations, 2) inspecting the algorithmic convergence, 3) inspecting multivariate distributions, 4) the plausibility of the imputed data -->
+
+A working beta version of ShinyMICE will be considered a sufficient milestone to proceed with writing a technical paper on the methodology and the software. I aim to submit this for publication in *Journal of Statistical Software*. Finally, ShinyMICE will be integrated into the existing MICE environment, and a vignette for applied researchers will be written. 
+
+
+
+
+# References
+
