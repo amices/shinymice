@@ -72,6 +72,7 @@ Format (either/or):
 
 # Methods
 
+
 - Potential convergence measures: 
 
 *why do people say the GR stat will give false positives? perhaps the window (nr of it) is too small. if you start from dispersed, you'll end up with convergence (GR = 1) --> the bad thing is to stop too early. this is a false negative, not positive! possible approach: replicate and build a decision rule to solve the problem. * 
@@ -132,6 +133,9 @@ Format (either/or):
 
 
 # Additional resources (not used)
+
+**quick win: xyplot and hist have all lattice functions (all sorts of scatterplots!)**
+
 
 **Potentially add something about updated (2019) version of $\widehat{R}$ and the new threshold of 1.01, see @veht19. Or leave it for the Research Report.**
 
