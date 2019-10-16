@@ -47,7 +47,7 @@ Format (either/or):
 
 - It is written as a (mini) thesis, with an introduction, methods section, some results (i.e., preliminary analyses, or pilot simulations), and a discussion of results. The length of the research report should be maximally 2500 words of text (without references list and/or tables and figures). Please do not include appendices, and no more than 6 tables/figures. Table and Figure captions do not count towards the word limit. An abstract may be included, but is not necessary. 
 
-- It is the first ‘half’ of the thesis, i.e., there are no results included yet, but the report contains a full introduction including a literature review and a methods section that contains details about the data, instruments and/or statistical procedures. There is no (absolute) word limit but the length of the report should comply with recommendations/expectations of the proposed journal. Note that most journals have word limits or rather strong opinions on (too) lengthy manuscripts.
+- It is the first half of the thesis, i.e., there are no results included yet, but the report contains a full introduction including a literature review and a methods section that contains details about the data, instruments and/or statistical procedures. There is no (absolute) word limit but the length of the report should comply with recommendations/expectations of the proposed journal. Note that most journals have word limits or rather strong opinions on (too) lengthy manuscripts.
 
 
 \newpage
@@ -72,12 +72,17 @@ Format (either/or):
 
 # Methods
 
+Replicate @lace07: chains that converged within ten iterations are still flagged as non-converged at iteration fifty [@lace07].
 
-- Potential convergence measures: 
+"The monitoring statistic was computed for mean monthly earnings at each iteration in chains of length k = 200. Since calculation of the statistic requires M parallel sequences, m = 5 such chains were constructed. This value of m was informed by the preferred choice given in the literature on multiple imputation. The monitoring statistic computed at each iteration is presented in Figures 15 to 17 for each of the three missingness mechanisms. The red vertical line denotes ten iterations." [@lace07, p. 49]
 
-*why do people say the GR stat will give false positives? perhaps the window (nr of it) is too small. if you start from dispersed, you'll end up with convergence (GR = 1) --> the bad thing is to stop too early. this is a false negative, not positive! possible approach: replicate and build a decision rule to solve the problem. * 
+![](Figures/lace07.png)
 
-*in mice algorithms, iterating is very fast compared to regular MCMC. therefore, we could use the average over the last 5 iterations you'll take the 'majority vote' to indicate conv. so compute GR at each iteration: band and threshold. another approach is to compute autocorrelation  (which is decreasing over itarations because we add in noise. schafer (1997, p. 129) wrote on worst linear stat and calculate the autocorr of that stat we know that the alg did converge. mice has noise so little autocorr. but we have very rich data so we're not estimating everything from scratch. not: we're talking about missing data only, not the combined data (that autocorr. is very high). autocorr is high if we can predict the miss value very well. the higher r sq the higher the autocorr. so the harder to converge. watch out for the problem with texp that will converge at once because you can deductively impute the value per class. possibly use slope of mean too to see whether there is trending. maybe also compute first eigenvalue of the matrix, not just mean and sd. also in pca we have several measures for nr of components, why not do something similar for mice? however, now we use mean and sd of missing values only, and that's not possible fr correlations because we'll have different ns for different correls. but of we take the compl. data that should not be a problem because that's constant. maybe look into allpying pca on the imputed data and if that stays the same we know that the means and variances are stable too. patrick ... and ian white work on stata proc mi also work on convergence diagnostics --> autocorr function plot in sas of worst linear function, and likelihood ratio that you could save.*
+- Notes MICE meetings: 
+
+Why do people say the GR stat will give false positives? perhaps the window (nr of it) is too small. if you start from dispersed, you'll end up with convergence (GR = 1) --> the bad thing is to stop too early. this is a false negative, not positive! possible approach: replicate and build a decision rule to solve the problem. 
+
+In mice algorithms, iterating is very fast compared to regular MCMC. therefore, we could use the average over the last 5 iterations you'll take the 'majority vote' to indicate conv. so compute GR at each iteration: band and threshold. another approach is to compute autocorrelation  (which is decreasing over itarations because we add in noise. schafer (1997, p. 129) wrote on worst linear stat and calculate the autocorr of that stat we know that the alg did converge. mice has noise so little autocorr. but we have very rich data so we're not estimating everything from scratch. not: we're talking about missing data only, not the combined data (that autocorr. is very high). autocorr is high if we can predict the miss value very well. the higher r sq the higher the autocorr. so the harder to converge. watch out for the problem with texp that will converge at once because you can deductively impute the value per class. possibly use slope of mean too to see whether there is trending. maybe also compute first eigenvalue of the matrix, not just mean and sd. also in pca we have several measures for nr of components, why not do something similar for mice? however, now we use mean and sd of missing values only, and that's not possible fr correlations because we'll have different ns for different correls. but of we take the compl. data that should not be a problem because that's constant. maybe look into allpying pca on the imputed data and if that stays the same we know that the means and variances are stable too. patrick ... and ian white work on stata proc mi also work on convergence diagnostics --> autocorr function plot in sas of worst linear function, and likelihood ratio that you could save.
 
 - Bayes course on convergence:
 ```{r}
@@ -140,7 +145,7 @@ Format (either/or):
 **Potentially add something about updated (2019) version of $\widehat{R}$ and the new threshold of 1.01, see @veht19. Or leave it for the Research Report.**
 
 
-"For models based on multiple imputed data sets, this [R hat > 1.1] is often a false positive: Chains of different submodels may not overlay each other exactly, since there were fitted to different data" (see https://cran.r-project.org/web/packages/brms/vignettes/brms_missings.html).
+"For models based on multiple imputed data sets, this [R hat \> 1.1] is often a false positive: Chains of different submodels may not overlay each other exactly, since there were fitted to different data" (see https://cran.r-project.org/web/packages/brms/vignettes/brms_missings.html).
 
 "Imputers who do choose to use FCS should use flexible univariate models wherever possible and take care to assess apparent convergence of the algorithm, for example by computing traces of pooled estimates or other statistics and using standard MCMC diagnostics (Gelman et al., 2013, Chapter 11). It may also be helpful to examine the results of many independent runs of the algorithm with different initializations and to use random scans over the p variables to try to identify any convergence issues and mitigate possible order dependence" (@murr18, p. 19).
 
