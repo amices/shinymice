@@ -2,14 +2,17 @@
 title: "Research Report"
 subtitle: "Methodology and Statistics for the Behavioural, Biomedical and Social Sciences"
 author: "Hanne Oberman (4216318)"
-date: "`r Sys.Date()`"
+date: "`r format(Sys.time(), '%d %B %Y')`"
 output: 
   pdf_document: 
     fig_caption: yes
 bibliography: ThesisProposal.bib
+
 ---
 
 \centering
+
+![](Figures/logo.png)
 
 # ShinyMICE: an Evaluation Suite for Multiple Imputation
 
@@ -19,10 +22,13 @@ Department of Methodology and Statistics
 
 Utrecht University
 
+\newpage
 
 \raggedright 
 
-Goals: 
+# Requirements
+
+## Goals: 
 
 - find an answer to a research question in the field of Methods and Statistics
 
@@ -31,7 +37,7 @@ Goals:
 - a first step in writing a scientific paper: perform research and report the findings in a short research report
 
 
-Grading:
+## Grading:
 
 - The amount of work done
 
@@ -43,7 +49,7 @@ Grading:
 
 - General comments
 
-Format (either/or):
+## Format (either/or):
 
 - It is written as a (mini) thesis, with an introduction, methods section, some results (i.e., preliminary analyses, or pilot simulations), and a discussion of results. The length of the research report should be maximally 2500 words of text (without references list and/or tables and figures). Please do not include appendices, and no more than 6 tables/figures. Table and Figure captions do not count towards the word limit. An abstract may be included, but is not necessary. 
 
@@ -60,6 +66,14 @@ Format (either/or):
 
 - MI (and ad hoc solutions?)
 
+**From thesis proposal**: 
+
+At some point, any scientist conducting statistical analyses will run into a missing data problem [@alli02]. Missingness is problematic because statistical inference cannot be performed on incomplete data, and  ad hoc solutions can yield wildly invalid results [@buur18]. To circumvent the ubiquitous problem of missing information, Rubin [@rubin87] proposed the framework of multiple imputation (MI). MI is an iterative algorithmic procedure in which missing data points are 'guessed' (i.e. imputed) several times. The variability between the imputations validly reflects how much uncertainty in the inference is due to missing information--that is, if all statistical assumptions are met [@rubin87].
+
+With MI, many assumptions are made about the nature of the observed and missing parts of the data and their relation to the 'true' *data generating model* [@buur18]. Without proper evaluation of the imputations and the underlying assumptions, any drawn inference may erroneously be deemed valid. Such evaluation measures are currently missing or under-developed in MI software, like the world leading `R` package `MICE` [@mice11]. Therefore, I will answer the following question: 'Which measures are vital for evaluating the validity of multiply imputed data?'. 
+
+
+
 
 # Theoretical Background
 
@@ -69,8 +83,33 @@ Format (either/or):
 
 - FCS vs. JM
 
+**From thesis proposal**: 
+
+The validity of the MI solution depends on numerous assumptions that cannot be verified from the observed data alone. So instead of statistical tests for assumptions, evaluation procedures have been developed. For the following assumptions, no reliable procedure has been proposed and/or implemented: 1) *ignorability* of the *missingness mechanism* [@rubin87]; 2) *congeneality* of the imputation models [@meng94]; and 3) *compatibility* of the MI modeling procedure [@rubin96]. 
+
+1. A missingness mechanism is said to be ignorable when the probability to be missing does not depend on the missing data itself. Violation of this assumption can gravely affect inferences. Robustness of inferences to varying degrees of violation can be assessed with sensitivity analyses. Some practical guidelines exist (e.g., [@nguy17]), but current MI software does not facilitate this methodology for empirical researchers. 
+
+2. Congeneal imputation models capture all required relations between observed and missing parts of the data. The extent to which this has been successful can be evaluated by plotting conditional distributions [@abay08]. Such visualizations are available in `MICE`, but subsequent statistical tests to quantify the relations with covariates are not provided. ^[Additionally, there is potential to assess model fit by means of *over-imputation* [@buur18] or *double robustness* [@bang05]-- topics that are only persued if time permits.] 
+
+3. The third assumption is met when the MI algorithm converges to a stable distribution. However, conventional measures to diagnose convergence-- e.g., Gelman and Rubin's [-@gelm92] statistic $\widehat{R}$ --are not applicable on multiply imputed data [@lace07]. Therefore, empirical researchers have to rely on visual inspection procedures that are theoretically equivalent to $\widehat{R}$ [@whit11]. Visually assessing convergence is not only difficult to the untrained eye, it might also be futile. The convergence properties of MI algorithms lack scientific consensus [@taka17], and some default `MICE` techniques might not converge to stable distributions at all [@murr18]. Moreover, convergence diagnostics for MI methods have not been systematically studied [@buur18].
+
+In short, the existing literature provides both possibilities and limitations to evaluating the validity of multiply imputed data. The goal of this research project is to develop novel methodology and guidelines for evaluating MI methods, and implement these in an interactive evaluation framework for multiple imputation. This framework will aid applied researchers in drawing valid inference from incomplete datasets. 
+
+
+
 
 # Methods
+
+**From thesis proposal**: 
+
+Initially, the research project will consist of an investigation into algorithmic convergence of MI algorithms. I will replicate Lacerda et al.'s simulation study on $\widehat{R}$ [@lace07], and develop novel guidelines for assessing convergence. Ideally, I will integrate several diagnostics (e.g., $\widehat{R}$, *auto-correlation*, and *simulation error*) into a single summary indicator to flag non-convergence. 
+
+Subsequently, I will use `R Shiny` [@shiny17] to implement the convergence indicator and existing evaluation measures in `ShinyMICE`, see Figure 1. The application will at least contain methodology for: sensitivity analyses; data visualizations (e.g., scatter-plots, densities, cross-tabulations); and statistical evaluation of relations between variables pre- versus post-imputation (i.e., $\chi^2$-tests or $t$-tests).  
+![Preliminary impression of the interactive `ShinyMICE` user interface.](Figures/Impression.png)
+
+A working beta version of `ShinyMICE` will be considered a sufficient milestone to proceed with writing a technical paper on the methodology and the software. I will submit the paper for publication in *Journal of Statistical Software*. Finally, `ShinyMICE` will be integrated into the existing `MICE` environment, and a vignette for applied researchers will be written. 
+
+The R code and documentation of this project will be open source (available on Github). Since the study does not require the use of unpublished empirical data, I expect that the FETC will grant the label 'exempt'. 
 
 Replicate @lace07: chains that converged within ten iterations are still flagged as non-converged at iteration fifty [@lace07].
 
@@ -82,7 +121,7 @@ Replicate @lace07: chains that converged within ten iterations are still flagged
 
 Why do people say the GR stat will give false positives? perhaps the window (nr of it) is too small. if you start from dispersed, you'll end up with convergence (GR = 1) --> the bad thing is to stop too early. this is a false negative, not positive! possible approach: replicate and build a decision rule to solve the problem. 
 
-In mice algorithms, iterating is very fast compared to regular MCMC. therefore, we could use the average over the last 5 iterations you'll take the 'majority vote' to indicate conv. so compute GR at each iteration: band and threshold. another approach is to compute autocorrelation  (which is decreasing over itarations because we add in noise. schafer (1997, p. 129) wrote on worst linear stat and calculate the autocorr of that stat we know that the alg did converge. mice has noise so little autocorr. but we have very rich data so we're not estimating everything from scratch. not: we're talking about missing data only, not the combined data (that autocorr. is very high). autocorr is high if we can predict the miss value very well. the higher r sq the higher the autocorr. so the harder to converge. watch out for the problem with texp that will converge at once because you can deductively impute the value per class. possibly use slope of mean too to see whether there is trending. maybe also compute first eigenvalue of the matrix, not just mean and sd. also in pca we have several measures for nr of components, why not do something similar for mice? however, now we use mean and sd of missing values only, and that's not possible fr correlations because we'll have different ns for different correls. but of we take the compl. data that should not be a problem because that's constant. maybe look into allpying pca on the imputed data and if that stays the same we know that the means and variances are stable too. patrick ... and ian white work on stata proc mi also work on convergence diagnostics --> autocorr function plot in sas of worst linear function, and likelihood ratio that you could save.
+In mice algorithms, iterating is very fast compared to regular MCMC. therefore, we could use the average over the last 5 iterations you'll take the 'majority vote' to indicate conv. so compute GR at each iteration: band and threshold. another approach is to compute autocorrelation  (which is decreasing over itarations because we add in noise. schafer (1997, p. 129) wrote on worst linear stat and calculate the autocorr of that stat we know that the alg did converge. mice has noise so little autocorr. but we have very rich data so we're not estimating everything from scratch. note: we're talking about missing data only, not the combined data (that autocorr. is very high). autocorr is high if we can predict the miss value very well. the higher r sq the higher the autocorr. so the harder to converge. watch out for the problem with texp that will converge at once because you can deductively impute the value per class. possibly use slope of mean too to see whether there is trending. maybe also compute first eigenvalue of the matrix, not just mean and sd. also in pca we have several measures for nr of components, why not do something similar for mice? however, now we use mean and sd of missing values only, and that's not possible fr correlations because we'll have different ns for different correls. but of we take the compl. data that should not be a problem because that's constant. maybe look into applying pca on the imputed data and if that stays the same we know that the means and variances are stable too. patrick ... and ian white work on stata proc mi also work on convergence diagnostics --> autocorr function plot in sas of worst linear function, and likelihood ratio that you could save.
 
 - Bayes course on convergence:
 ```{r}
