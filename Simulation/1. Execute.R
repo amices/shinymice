@@ -1,39 +1,26 @@
+# load required packages
 library(mice)
 library(mvtnorm)
+
+# load simulation/evaluation functions
+source("Functions/CreateData.R")
+source("Functions/Simulate.R")
+# source("Functions/xyz.R")
+
+# simulation parameters
 set.seed(321)
+populationsize <- 100
+n.iter <- 10
+n.sim <- 10
+# bivar.corr <- 0.5
 
-# create data
-sigma <- matrix(c(0, 1, 1, 0), 2, 2)
-simdata <- rmvnorm::mvtnorm(, sigma = sigma)
+# create and ampute data
+data <- data.simulation(n = populationsize, bivar.corr = .5)
 
+# run simulation
+sims <- simulate.function(data = data, n.iter = n.iter, n.sim = n.sim)
 
-# function to make missing
-make.missing <- function(){
-  
-}
-data <- make.missing()
-
-# object to store sims
-OUT <- list()
-
-# simulation function
-simulate.function <- function(data, n.iter, nsim = 100){
-  set.seed(123)
-  #object to fill in
-  out <- list()
-  for (i in 1:nsim){
-    #impute
-    out[[i]] <- mice(maxit = n.iter, method = "norm")
-  }
-}
-# start simulation
-max.it <- 100
-
-# simulate for each in max.it
-for(i in 1:max.it){
-  OUT[[i]] <- simulate.function(data, n.iter = max.it[i])
-}
-
+##### UNDER CONSTRUCTION #####
 
 # Evaluate
 evaluate.function <- function(OUT){
