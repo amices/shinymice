@@ -2,6 +2,7 @@
 # requires the packages 'mice' and 'mvtnorm'
 
 data.simulation <- function(n = populationsize, bivar.corr = .5) {
+  set.seed(123)
   # define variance covariance matrix
   sigma <- matrix(c(1, bivar.corr, bivar.corr, 1), 2, 2)
   # simulate multivariate normal

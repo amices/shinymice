@@ -15,9 +15,9 @@ source("Functions/Evaluate.R")
 
 # simulation parameters
 set.seed(321)
-populationsize <- 100
-n.iter <- 10
-n.sim <- 10
+populationsize <- 1000
+n.iter <- 100
+n.sim <- 100
 # bivar.corr <- 0.5
 
 # create data, perform lm(), and ampute data to impute
@@ -29,8 +29,24 @@ sims <-
                     n.iter = n.iter,
                     n.sim = n.sim)
 
+# create test objects 
+# test <- sims[[2]][[1]]
+# test2 <- list(sims[[2]][[1]], sims[[2]][[2]])
+# test3 <- my.lm(test)
+
 # compute R hat
-conv <- invisible(convergence.diag(sims = sims))
+conv <- convergence.diag(sims = sims)
+
+# create analyzed object
+mi.lm <- lapply(sims, lapply, my.lm)
+
+# eval
+evals <- lapply(mi.lm, sapply, evaluate.function)
+
+# extract
+result <- cbind(t(sapply(evals, rowMeans)), conv)
+
+
 ##### UNDER CONSTRUCTION #####
 
 # Evaluate
