@@ -11,6 +11,7 @@ library(dplyr)
 source("Functions/CreateData.R")
 source("Functions/Simulate.R")
 source("Functions/Evaluate.R")
+#source("simulation100it100sim.Rdata")
 # source("Functions/xyz.R")
 
 # simulation parameters
@@ -46,7 +47,7 @@ evals <- lapply(mi.lm, sapply, evaluate.function)
 # extract
 result <- cbind(t(sapply(evals, rowMeans)), conv)
 
-
+# save.data(result, filename = "simulation100it100sim")
 ##### UNDER CONSTRUCTION #####
 
 # Evaluate
