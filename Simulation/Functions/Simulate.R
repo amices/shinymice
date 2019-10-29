@@ -6,12 +6,12 @@ simulate.function <- function(data, n.iter, n.sim) {
   # set.seed(123)
   pb <- txtProgressBar(min = 0, max = n.iter, style = 3)
   #objects to store sims
-  OUT <- out <- state <- list()
+  OUT <- out <- state <- STATE <- list()
   # loop over all possible nrs of iterations
   for (i in 1:n.iter) {
     # repeat each analysis nsim times
     for (j in 1:n.sim) {
-      state[i,j] <- .Random.seed
+      state[[j]] <- .Random.seed
       # for each iterarion value, store each nsim 'repeatings' in lower case out
       out[[j]] <-
         mice(
@@ -20,11 +20,12 @@ simulate.function <- function(data, n.iter, n.sim) {
           method = "norm",
           maxit = i,
           print = F,
-          seed = .Random.seed
+          # seed = .Random.seed
         )
     }
     # for each iteration value, store the combined nsim simulations together
     OUT[[i]] <- out
+    STATE[[i]] <- state
     setTxtProgressBar(pb, i)
   }
   close(pb)
