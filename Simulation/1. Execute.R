@@ -17,8 +17,8 @@ source("Functions/Evaluate.R")
 # simulation parameters
 set.seed(321)
 populationsize <- 1000
-n.iter <- 100
-n.sim <- 100
+n.iter <- 50
+n.sim <- 10
 # bivar.corr <- 0.5
 
 # create data, perform lm(), and ampute data to impute

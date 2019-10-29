@@ -41,7 +41,7 @@ my.lm <-
 # lapply(sims, lapply, my.lm)
 
 evaluate.function <- function(OUT) {
-  set.seed(123)
+  # set.seed(123)
   # eval.out <-  list()
 
   # for each sim, for each maxit value...
