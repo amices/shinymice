@@ -11,7 +11,8 @@ simulate.function <- function(data, n.iter, n.sim) {
   for (i in 1:n.iter) {
     # repeat each analysis nsim times
     for (j in 1:n.sim) {
-      state[[j]] <- .Random.seed
+      # save current state of the randomness
+      state[[j]] <- .Random.seed[1]
       # for each iterarion value, store each nsim 'repeatings' in lower case out
       out[[j]] <-
         mice(
