@@ -50,6 +50,7 @@ mi.lm <- lapply(sims, lapply, my.lm)
 evals <- lapply(mi.lm, sapply, evaluate.function)
 ## q: do I need to save this in an object or just the averages?
 ## q: do I need to compute var/se of the diagnostics?
+## q: add percent bias (PB)? (see https://stefvanbuuren.name/fimd/sec-evaluation.html)
 
 # extract
 result <- cbind(t(sapply(evals, rowMeans)), conv)

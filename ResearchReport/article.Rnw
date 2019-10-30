@@ -116,6 +116,13 @@ All programming code used in this paper is available in the file XYZ.R along wit
 %% -- Notation ---------------------------------------------------------------
 \subsection{Notation and conventions?} \label{sec:notation}
 
+Notation in this paper is copied from \cite{buur18}, and thus based on \cite{rubin87}.
+
+% "Let Y denote the n × p matrix containing the data values on p variables for all n units in the sample. We define the response indicator R as an n × p 0-1 matrix. The elements of Y and R are denoted by y i j and r i j , respectively, where i = 1 , ... , n and j = 1 , ... , p . If y i j is observed, then r i j = 1 , and if y i j is missing, then r i j = 0 ." ... The observed data are collectively denoted by Y o b s . The missing data are collectively denoted as Y m i s , and contain all elements y i j where r i j = 0 . When taken together Y = ( Y o b s , Y m i s ) contain the hypothetically complete data." \cite[par.~2.2]{buur18}
+
+Terminology (MCAR, MAR, MNAR)
+
+% The data are said to be MCAR if Pr ( R = 0 | Y o b s , Y m i s , ?? ) = Pr ( R = 0 | ?? ) (2.1) so the probability of being missing depends only on some parameters ?? , the overall probability of being missing. The data are said to be MAR if Pr ( R = 0 | Y o b s , Y m i s , ?? ) = Pr ( R = 0 | Y o b s , ?? ) (2.2) so the missingness probability may depend on observed information, including any design factors. Finally, the data are MNAR if Pr ( R = 0 | Y o b s , Y m i s , ?? ) (2.3) does not simplify, so here the probability to be missing also depends on unobserved information, including Y m i s itself. \cite[par.~2.2]{buur18}
 
 Blue points are observed, the red points are imputed. 
 
@@ -124,7 +131,9 @@ Blue points are observed, the red points are imputed.
 %% -- Theoretical Background ---------------------------------------------------------------
 \section{Theoretical Background} \label{sec:background}
 
-- Terminology (MCAR, MAR, MNAR)
+- missingness mechanims, ignorability
+
+"The practical importance of the distinction between MCAR, MAR and MNAR is that it clarifies the conditions under which we can accurately estimate the scientifically interesting parameters without the need to know $\psi$" \cite[par.~2.2]{buur18}.
 
 - Rubin's rules
 
@@ -159,7 +168,7 @@ Subsequently, I will use\proglang{R}Shiny \citep{shiny} to implement the converg
 
 A working beta version of \pkg{ShinyMICE} will be considered a sufficient milestone to proceed with writing a technical paper on the methodology and the software. I will submit the paper for publication in \emph{Journal of Statistical Software}. Finally, \pkg{ShinyMICE} will be integrated into the existing MICE environment, and a vignette for applied researchers will be written. 
 
-The\proglang{R}code and documentation of this project will be open source (available on Github). Since the study does not require the use of unpublished empirical data, I expect that the FETC will grant the label exempt. 
+The \proglang{R} code and documentation of this project will be open source (available on Github). Since the study does not require the use of unpublished empirical data, I expect that the FETC will grant the label exempt. 
 
 % \includegraphics[height=80mm,keepaspectratio]{logo} % this is not correct yet, it needs a figure label and stuff
 
@@ -170,6 +179,8 @@ The\proglang{R}code and documentation of this project will be open source (avail
 - Robustness of inferences to varying degrees of violation can be assessed with sensitivity analyses. See \citep{nguy17}.
 
 - Forked MICE with MNAR sensitivity analyses, see \url{https://thestatsgeek.com/2018/06/07/missing-not-at-random-sensitivity-analysis-with-fcs-multiple-imputation/}.
+
+See https://stefvanbuuren.name/fimd/sec-sensitivity.html
 
 "The MAR assumption can never be tested from the observed data. One can however check whether the imputations created by MICE algorithm are plausible" \cite[p.~42]{mice}. 
 
@@ -183,10 +194,28 @@ The\proglang{R}code and documentation of this project will be open source (avail
 
 - Relations between observed and missing parts of the data: use \pkg{lattice} package functionalities to improve the \pkg{mice} functions \fct{hist} and \fct{xyplot}.
 
+Create scatterplots via \fct{xyplot} and use lattice functionalities to adapt.
+
 "An important step in multiple imputation is to assess whether imputations are plausible. Imputations should be values that could have been obtained had they not been missing. Imputations should be close to the data. Data values that are clearly impossible (e.g., negative counts, pregnant fathers) should not occur in the imputed data. Imputations should respect relations between variables, and reflect the appropriate amount of uncertainty about their 'true' values. Diagnostic checks on the imputed data provide a way to check the plausibility of the imputations" \cite[p.~11]{mice}.
 
+"The mice package contains several graphic functions that can be used to gain insight into the correspondence of the observed and imputed data: \fct{bwplot}, \fct{stripplot}, \fct{densityplot} and \fct{xyplot}." \cite[par.~6.6]{buur18}
+
+see https://onlinelibrary.wiley.com/doi/full/10.1111/1467-9574.00219
+
 "It is often useful to inspect the distributions of original and the imputed data. One way of doing this is to use the function \fct{stripplot} \dots  The differences between the
-red points represents our uncertainty about the true (but unknown) values. \dots Under MCAR, univariate distributions of the observed and imputed data are expected to be identical. Under MAR, they can be different, both in location and spread, but their multivariate distribution is assumed to be identical." \cite[p.~12]{mice}. Create scatterplots via \fct{xyplot}.
+red points represents our uncertainty about the true (but unknown) values. \dots Under MCAR, univariate distributions of the observed and imputed data are expected to be identical. Under MAR, they can be different, both in location and spread, but their multivariate distribution is assumed to be identical." \cite[p.~12]{mice}. 
+
+"Bondarenko and Raghunathan (2016) proposed a more refined diagnostic tool that aims to compare the distributions of observed and imputed data conditional on the missingness probability. The idea is that under MAR the conditional distributions should be similar if the assumed model for creating multiple imputations has a good fit. An example is created as ..."  \cite[par.~6.6]{buur18}
+
+see https://www.ncbi.nlm.nih.gov/pubmed/26952693
+
+% fit <- with(imp, glm(ici(imp) ~ age + bmi + hyp + chl,
+%                      family = binomial))
+% ps <- rep(rowMeans(sapply(fit$analyses, fitted.values)),
+%           imp$m + 1)
+% xyplot(imp, bmi ~ ps | as.factor(.imp),
+%        xlab = "Probability that record is incomplete",
+%        ylab = "BMI", pch = c(1, 19), col = mdc(1:2))
 
 
 %% -- Methods: Convergence ---------------------------------------------------------------

@@ -10,7 +10,7 @@ data.simulation <- function(n = populationsize, bivar.corr = .5) {
   # perform complete data analysis
   compl.lm <- lm(V1 ~ V2, simdata)
   # remove values at random with 50 percent probability to be missing
-  ampdata <- ampute(simdata, prop = 0.8, mech = "MCAR")$amp
+  ampdata <- ampute(simdata, prop = 0.5, mech = "MCAR")$amp
   # output
   return(list(data = ampdata, compl.lm = compl.lm))
 }
