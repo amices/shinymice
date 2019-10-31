@@ -61,6 +61,11 @@ evaluate.function <- function(OUT) {
   # cov = coverage rate (95 out of 100 CI95%s should contain the 'true' value): "coverage rate (cov) of the 95% confidence interval"
   # cov.rate <- mean(cov.ind)
   
+  # now apply colMeans for mean over nsims
+  
+  # and get se for plot with: sapply(df,function(x)sd(x)/sqrt(length(x)))
+  
+  
   # output
   return(c(bias, ciw, cov.ind))
 }

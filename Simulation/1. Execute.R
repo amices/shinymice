@@ -22,19 +22,19 @@ n.sim <- 10
 # bivar.corr <- 0.5
 
 # create data, perform lm(), and ampute data to impute
-data <- data.simulation(n = populationsize, bivar.corr = .5)
-## question: do I need a completely obs. covariate X?
-## q: which vars then go into lm()?
-## q: is missingness proportion of .5 ok?
-## q: do I need to set.seed() within this function or is outside enough?
+data <- data.simulation(n = populationsize, true_effect = 2)
+## question: do I need a completely obs. covariate X? not nec. because we can include pattern in ampute. if yes, easier to solve but less real. maybe add two covs with 30% miss? then conv more pressing.
+## q: which vars then go into lm()? not applicable
+## q: is missingness proportion of .5 ok? 
+## q: do I need to set.seed() within this function or is outside enough? we want maxit=1 nested in 2, nested in 3, nested in 4 ... 100. but we want the sims per maxit value to vary. so just on top of the execute is enough
 
 # run simulation
 sims <-
   simulate.function(data = data[[1]],
                     n.iter = n.iter,
                     n.sim = n.sim)
-## q: how do I make sure that mice doesn't start from the same seed value every simulation?
-## q: how do I speed this up? should I use parlmice()?
+## q: how do I make sure that mice doesn't start from the same seed value every simulation? not relevant
+## q: how do I speed this up? should I use parlmice()? nope, 100 is enough
 ## q: should I save everything of all simulations? the incomplete data is the same each it, each sim. should I just extract the imps?
 
 # compute R hat
@@ -43,18 +43,18 @@ conv <- convergence.diag(sims = sims)
 
 # create analyzed object
 mi.lm <- lapply(sims, lapply, my.lm)
-## q: should I use the finite pool function to get nominal coverage?
-## q: how?
+## q: should I use the finite pool function to get nominal coverage? yes. absolutely.
+## q: how? in regular pool() we get u bar, we only need B.
 
 # eval
-evals <- lapply(mi.lm, sapply, evaluate.function)
-## q: do I need to save this in an object or just the averages?
+evals <- lapply(mi.lm, sapply, evaluate.function) # a list where every element is ...
+## q: do I need to save this in an object or just the averages? ses are nice for plots! create error bars
 ## q: do I need to compute var/se of the diagnostics?
-## q: add percent bias (PB)? (see https://stefvanbuuren.name/fimd/sec-evaluation.html)
+## q: add percent bias (PB)? (see https://stefvanbuuren.name/fimd/sec-evaluation.html) neu, niet per se. if yes, watch out for 0 as pop. param.
 
 # extract
 result <- cbind(t(sapply(evals, rowMeans)), conv)
-## q: include this in function?
+## q: include this in function? pipe sapply rowmeans, dan result t evals conv
 
 # plot (not fancy, just to check)
 colnames(result) <- c("bias", "ciw", "cov", "Rhat", "Rhat_lenient", "Rhat_mid", "Rhat_stringent")
