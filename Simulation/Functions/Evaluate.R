@@ -36,6 +36,20 @@ my.lm <-
   function(OUT)
     summary(pool(lm.mids(V1 ~ V2, OUT)), conf.int = T)
 
+# testing
+test1 <- mice(data)
+test2 <- lm.mids(Y ~ X + Z1 + Z2, test)
+test3 <- pool(test2)
+# use t of finite pop.
+imp_est <- test3$pooled$estimate[[2]]
+imp_var <- test3$pooled$b[[2]] + (test3$pooled$b[[2]]/test3$m)
+imp_se <- sqrt(imp_var)
+z_value <- qnorm(.025,lower.tail = F)
+ci_low <- imp_est - z_value * imp_se
+ci_up <- imp_est + z_value * imp_se
+# what to save?
+out <- c(imp_est, ci_low, ci_up)
+
 ########## Part 3 ############
 # produce simulation diagnostics
 evaluate.function <- function(OUT) {
@@ -45,7 +59,7 @@ evaluate.function <- function(OUT) {
   # ... compute bias
   # bias <- mi.lm$est - compl.lm$est per sim, per maxit value
   bias <-
-    as.numeric(OUT$estimate[2] - data$compl.lm$coefficients[2])
+    as.numeric(OUT$estimate[2] - true_effect)
   
   # ... compute confidence interval width (ciw): Wider intervals are associated with more uncertainty and the more narrow interval that is still properly covered indicates a sharper inference
   # ciw <- mi.lm$ci95_ul - mi.lm$ci95_ll
@@ -55,7 +69,7 @@ evaluate.function <- function(OUT) {
   # ... indicate if 'true' value is within ci95%
   # cov.ind <- ifelse(compl.lm$est %in% mi.lm$ci95, 1, 0)
   cov.ind <-
-    dplyr::between(data$compl.lm$coefficients[2],
+    dplyr::between(true_effect,
                    OUT$`2.5 %`[2],
                    OUT$`97.5 %`[2])
   # cov = coverage rate (95 out of 100 CI95%s should contain the 'true' value): "coverage rate (cov) of the 95% confidence interval"
