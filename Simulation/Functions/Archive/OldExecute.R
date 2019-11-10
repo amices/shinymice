@@ -10,31 +10,71 @@ library(dplyr)
 # load simulation/evaluation functions
 source("Functions/CreateData.R")
 source("Functions/Simulate.R")
-#source("Functions/Evaluate.R")
+source("Functions/NewSim.R")
 source("Functions/Diagnostics.R")
 
 # simulation parameters
 populationsize <- 1000
-n.iter <- 5
+n.iter <- 10
 n.sim <- 10
 true_effect <- 2
 
 # start simulation study
 set.seed(128)
 
+# create data
+
+# perfrom mi
+impute.data <- function(data, m = 5, method = "norm", maxit = maxit, ...) {
+  imp <- mice(data, m = m, maxit = maxit, print = FALSE, ...)
+  fit <- with(imp, lm(Y ~ X + Z1 + Z2))
+  tab <- summary(pool(fit), "all", conf.int = TRUE)
+  as.numeric(tab["x", c("estimate", "2.5 %", "97.5 %")])
+}
+
+
+# combine individual functions into simulation function
+simulate <- function(runs = 10, n.iter = 10) {
+  res <- array(NA, dim = c(n.iter, runs, 3))
+  dimnames(res) <- list(c(1:n.iter),
+                        as.character(1:runs),
+                        c("estimate", "2.5 %","97.5 %"))
+  for(run in 1:runs) {
+    data <- data.simulation(populationsize, true_effect)
+    for (i in 1:n.iter) {
+    res[i, run, ] <- impute.data(data, maxit = i)}
+  }
+  res
+}
+
+# perform simulation
+res <- simulate(2)
+
+# evaluate simulations
+evaluate.sim <- function(sims, true_effect = true_effect){
+  RB <- rowMeans(res[,, "estimate"]) - true_effect
+  CR <- rowMeans(res[,, "2.5 %"] < true_effect & true_effect < res[,, "97.5 %"])
+  AW <- rowMeans(res[,, "97.5 %"] - res[,, "2.5 %"])
+  return(data.frame(RB, CR, AW))
+}
+
+evaluate.sim(res)
+  
+
 # create data and ampute it
 data <- data.simulation(n = populationsize, true_effect = true_effect)
+
+# new sim
+test.sim <- simulate.fun(data, n.iter, n.sim)
 
 # run simulation
 sims <-
   simulate.function(data = data,
                     n.iter = n.iter,
                     n.sim = n.sim)
-## q: should I save everything of all simulations? the incomplete data is the same each it, each sim. should I just extract the imps?
 
 # compute R hat
 conv <- convergence.diag(sims = sims)
-## q: should I include this (and the next function) in the simulate step to save on memory use? I don't actually needs the imp objects
 
 # create analyzed object
 mi.lm <- lapply(sims, lapply, my.lm)

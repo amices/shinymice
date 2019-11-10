@@ -230,6 +230,57 @@ The \proglang{R} code and documentation of this project will be open source (ava
 
 "In general, you cannot know for sure if your chain has converged. But sometimes you can know if your chain has not converged, so we at least check for this latter possibility" \cite[p.~101]{hoff09}
 
+"In order to converge to a stationary distribution, a Markov chain needs to satisfy three important properties (Roberts 1996; Tierney 1996): irreducible, the chain must be able to reach all interesting parts of the state space; aperiodic, the chain should not oscillate between different states; recurrence, all interesting parts can be reached infinitely often, at least from almost all starting points. Do these properties hold for the MICE algorithm? Irreducibility is generally not a problem since the user has large control over the interesting parts of the state space. This flexibility is actually the main rationale for FCS instead of a joint model. Periodicity is a potential problem, and can arise in the situation where imputation models are clearly inconsistent. A rather artificial example of an oscillatory behavior occurs when Y 1 is imputed by Y 2 $\beta$ + $\epsilon$  1 and Y 2 is imputed by - Y 1 $\beta$ + $\epsilon$  2 for some fixed, nonzero $\beta$ . The sampler will oscillate between two qualitatively different states, so the correlation between Y 1 and Y 2 after imputing Y 1 will differ from that after imputing Y 2 . In general, we would like the statistical inferences to be independent of the stopping point. A way to diagnose the ping-pong problem, or order effect, is to stop the chain at different points. The stopping point should not affect the statistical inferences. The addition of noise to create imputations is a safeguard against periodicity, and allows the sampler to "break out" more easily. Non-recurrence may also be a potential difficulty, manifesting itself as explosive or non-stationary behavior. For example, if imputations are made by deterministic functions, the Markov chain may lock up. Such cases can sometimes be diagnosed from the trace lines of the sampler. See Section 6.5.2 for an example. As long as the parameters of imputation models are estimated from the data, non-recurrence is mild or absent. The required properties of the MCMC method can be translated into conditions on the eigenvalues of the matrix of transition probabilities (MacKay 2003, 372-73). The development of practical tools that put these conditions to work for multiple imputation is still an ongoing research problem." \cite[par.~4.5]{buur18}
+
+\section{Simulation study}
+
+\subsection{Simulation: Introduction}
+
+R hat not working on MI data? "if over-dispersion does not hold, $var_plus$ can be too low, which can lead to falsely diagnosing convergence.)" \cite[p~437]{broo98}. Aim to replicate Lacerda et al. that R hat will not be smaller than 1.1 before iteration nr. 50.
+
+As recommended by ... Rhat is computed as .... to be able to detect ... in the tails of the distribution.
+
+R hat is not appropriate because it assumes overdispersed initial values, which means that the initial values of the m imputation chains should be 'far away' from the distribution that the chains are converging to (the modus of the distribution). With MI procedures, initial values are chosen such that ... or maybe even estimated from the observed data. This means that at most one initial value is necessary, but probably none at al. I should look this up. 
+
+The potential scale reduction factor tells us how much variance could be shrunken down by running the chains infinitely long. That tells us something about how dependent the chains are on the starting values. If there is no dependence on the initial values anymore, the chains have converged (in the mixing sense of the word).
+
+Convergence can also be interpreted as stable over iterations, or non-recurring. Non-recurrence can be evaluated with autocorrelation. Autocorrelation shows how dependent subsequent draws of an imputation chain are on the previous value. If there is a lot of dependence, draws at e.g. iteration five are significantly correlated with the value of the first draw. Ideally, we want the chains to intermingle nicely, without trends witihin chains. Autocorrelation above the confidence level indicate dependence within chains.    
+
+\subsection{Simulation: Methodology}
+
+Explain diagnostics here (see below). 
+
+We want to evaluate whether the imputation procedure has converged. We can apply GR statistic Rhat to the first two moments of the variables of interest (mean and variance). The primary research interest is in determining whether Rhat is an appropriate convergence diagnostic, and if so, which level of stringency suits MI data. The simulation diagnostics are as recommended by Stef van Buuren \cite{buur18}. That is, absolute bias confidence interval width, and empirical coverage rate (coverage probability?) across simulations.
+
+Hypothesis based on \cite{lace07} is that the conventional acceptable level of Rhat is too strict for MI data. We expect that the simulation diagnostics will indicate proper imputations before Rhat will. 
+
+\subsection{Simulation: Simulation Approach}
+
+Set-up: simulate data, impute missing data points with varying number of iterations. Then evaluate the regular diagnostics of MI simulations, see Vink, n.d., and the convergence. Diagnostics include absolute bias of the estimated regression coefficient, confidence interval width, and empirical coverage rate (coverage probability?) across simulations. Convergence is evaluated with $\hat{R}$, or potential scale reduction factor. Proposed by Gelman and Rubin (1992), but since developed into ...
+
+In this study, 1000 MCMC simulations are performed. 
+
+\begin{Code}
+# pseudocode of similation 
+simulate data with missingness
+for (number of iterations from 1 to 100)
+  impute the missingness
+  compute convergence and simulation diagnostics
+save diagnostics
+\end{Code}
+
+Simulation code is available in appendix A and on Github.
+
+\subsection{Simulation: Results}
+
+Rhat is not perfect for MI data. The value shoudl theoretically not be smaller than one, yet it happened several times in this study. How could Rhat smaller than 1 occur? The number of simulations is smaller than in 'regular' MCMC processes. Therefore, the '$n-1/n)$' correction factor can influence the estimated potential scale reduction facotr. This downwards bias is in the opposite direction than expected. 
+
+\subsection{Simulation Discussion}
+
+"The mixture-of-sequences variance, V, should stabilize as a function of n. (Before convergence, we expect $\sigma^2$ to decrease with n, only increasing if the sequences explore a new area of parameter space, which would imply that the original sequences were not overdispersed for the particular scalar summary being monitored.)" 
+% \cite[p~438]{broo98}
+
+We would like to have convergence measures for multivariable statistics (scalars?) of interest. This is, however, dependent of the complete data model. The eigenvector decomposition methof proposed by May 9? should be implemented. I could not find any resources to apply this method and it is outside the scope of this thesis to investigate how this apprach could be implemented.
 
 %% -- Manuscript ---------------------------------------------------------------
 

@@ -2,7 +2,7 @@
 # requires the package 'mice'
 
 # simulation function
-simulate.function <- function(data, n.iter, n.sim) {
+simulate.function <- function(data, n.iter, n.sim, true_effect = 2, m = 5) {
   # set.seed(123)
   pb <- txtProgressBar(min = 0, max = n.iter, style = 3)
   z_value <- qnorm(.025,lower.tail = F)
@@ -11,7 +11,7 @@ simulate.function <- function(data, n.iter, n.sim) {
   temp <- out <- OUT <- list()
   # objects to store converegnce diagnostics
   r.hat <- matrix(NA, nrow = n.iter, ncol = n.sim)
-  convergence <- matrix(NA, n.iter, ncol = 4)
+  # convergence <- matrix(NA, n.iter, ncol = 4)
   # loop over all possible nrs of iterations
   for (i in 1:n.iter) {
     # repeat each analysis nsim times
@@ -26,14 +26,15 @@ simulate.function <- function(data, n.iter, n.sim) {
         )
       # extract r hat
       if (i < 2) {r.hat[i, j] <- NA}
-      else {r.hat[i, j] <-
-        max(as.numeric(Rhat.mice(temp)$Rhat.M.imp))}
+      else {r.hat[i, j] <- max(as.numeric(Rhat.mice(temp)$Rhat.M.imp))}
       
       # apply analysis and extract est.
-      temp <- pool(lm.mids(Y ~ X + Z1 + Z2, temp)) 
+      out[[i]] <- temp %>% 
+        pool(lm.mids(Y ~ X + Z1 + Z2)) %>% 
+               diagnostics.function(true_effect = true_effect, z_value = z_value)
       
       # extract diagnostics
-      out[[i]] <- diagnostics.function(mipo_object = temp, true_effect = true_effect, z_value = z_value)
+      # out[[i]] <- 
     }
     # for each iteration value, store the combined nsim simulations together
     setTxtProgressBar(pb, i)
@@ -41,7 +42,7 @@ simulate.function <- function(data, n.iter, n.sim) {
   }
   
   # prepare for output
-  convergence[, 1] <- rowMeans(r.hat, na.rm = T)
+  # convergence[, 1] <- rowMeans(r.hat, na.rm = T)
   # convergence[, 2] <- rowMeans(bias)
   # convergence[, 2] <- rowMeans(r.hat < 1.2, na.rm = T)
   # convergence[, 3] <- rowMeans(r.hat < 1.1, na.rm = T)

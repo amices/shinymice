@@ -1,4 +1,4 @@
-\begin{thebibliography}{15}
+\begin{thebibliography}{16}
 \newcommand{\enquote}[1]{``#1''}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
@@ -23,6 +23,17 @@ Abayomi K, Gelman A, Levy M (2008).
 Allison PD (2001).
 \newblock \emph{Missing data}, volume 136.
 \newblock Sage publications.
+
+\bibitem[{Brooks and Gelman(1998)}]{broo98}
+Brooks SP, Gelman A (1998).
+\newblock \enquote{General {Methods} for {Monitoring} {Convergence} of
+  {Iterative} {Simulations}.}
+\newblock \emph{Journal of Computational and Graphical Statistics},
+  \textbf{7}(4), 434--455.
+\newblock ISSN 1061-8600.
+\newblock \doi{10.1080/10618600.1998.10474787}.
+\newblock
+  \urlprefix\url{https://www.tandfonline.com/doi/abs/10.1080/10618600.1998.10474787}.
 
 \bibitem[{Chang \emph{et~al.}(2017)Chang, Cheng, Allaire, Xie, and
   McPherson}]{shiny}
