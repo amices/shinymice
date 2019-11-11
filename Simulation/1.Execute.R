@@ -18,12 +18,12 @@ source("Functions/Evaluate.R")
 
 # simulation parameters
 populationsize <- 1000 #n of simulated dataset
-n.iter <- 15 #nr of iterations (varying 1:n.iter)
-n.sim <- 10 #nr of simulations per iteration value
+n.iter <- 50 #nr of iterations (varying 1:n.iter)
+n.sim <- 100 #nr of simulations per iteration value
 true_effect <- 2 #regression coefficient to be estimated
 
 # start simulation study
-set.seed(128)
+set.seed(1111)
 
 ###
 
@@ -47,7 +47,7 @@ simulate <- function(runs = 10, n.iter = 5) {
 }
 
 # simulate
-res <- simulate(runs = n.sims, n.iter = n.iter)
+res <- simulate(runs = n.sim, n.iter = n.iter)
 
 ###
 
@@ -61,4 +61,4 @@ res <- simulate(runs = n.sims, n.iter = n.iter)
 ###
 
 # save for future reference
-save.Rdata(out, name = "results.Rdata", path = "Results")
+save.Rdata(out, name = "results3.Rdata", path = "Results")

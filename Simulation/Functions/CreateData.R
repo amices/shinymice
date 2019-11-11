@@ -16,7 +16,7 @@ data.simulation <- function(n = populationsize, true_effect = 2) {
   
   # compute  outcome variable from predictors
   simdata$Y <-
-    1 + true_effect * simdata$X + 0.5 * simdata$Z1 - 1 * simdata$Z2 + rnorm(n = populationsize, sd = 10)
+    true_effect * simdata$X + 0.5 * simdata$Z1 - 1 * simdata$Z2 + rnorm(n = populationsize, sd = 10)
   
   # remove values at random with 50 percent probability to be missing
   ampdata <- ampute(simdata, prop = 0.5, mech = "MCAR")$amp

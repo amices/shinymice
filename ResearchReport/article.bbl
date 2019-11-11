@@ -1,4 +1,4 @@
-\begin{thebibliography}{16}
+\begin{thebibliography}{15}
 \newcommand{\enquote}[1]{``#1''}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
@@ -125,14 +125,6 @@ Van~Buuren S, Groothuis-Oudshoorn K (2011).
 \newblock \doi{10.18637/jss.v045.i03}.
 \newblock
   \urlprefix\url{https://www.jstatsoft.org/index.php/jss/article/view/v045i03}.
-
-\bibitem[{Vehtari \emph{et~al.}(2019)Vehtari, Gelman, Simpson, Carpenter, and
-  Bürkner}]{veht19}
-Vehtari A, Gelman A, Simpson D, Carpenter B, Bürkner PC (2019).
-\newblock \enquote{Rank-normalization, folding, and localization: {An} improved
-  \${\textbackslash}widehat\{{R}\}\$ for assessing convergence of {MCMC}.}
-\newblock \emph{arXiv:1903.08008 [stat]}.
-\newblock ArXiv: 1903.08008, \urlprefix\url{http://arxiv.org/abs/1903.08008}.
 
 \bibitem[{White \emph{et~al.}(2011)White, Royston, and Wood}]{whit11}
 White IR, Royston P, Wood AM (2011).

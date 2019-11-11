@@ -100,20 +100,22 @@
 
 At some point, any scientist conducting statistical analyses will run into a missing data problem \citep{alli02}. Missingness is problematic because statistical inference cannot be performed on incomplete data, and  ad hoc solutions can yield wildly invalid results \citep{buur18}. To circumvent the ubiquitous problem of missing information, \cite{rubin87} proposed the framework of multiple imputation (MI). MI is an iterative algorithmic procedure in which missing data points are 'guessed' (i.e. imputed) several times. The variability between the imputations validly reflects how much uncertainty in the inference is due to missing information--that is, if all statistical assumptions are met \cite{rubin87}.
 
-With MI, many assumptions are made about the nature of the observed and missing parts of the data and their relation to the 'true' \emph{data generating model} \citep{buur18}. Without proper evaluation of the imputations and the underlying assumptions, any drawn inference may erroneously be deemed valid. Such evaluation measures are currently missing or under-developed in MI software, like the world leading \proglang{R} package \pkg{mice} \citep{mice11}. Therefore, I will answer the following question: 'Which measures are vital for evaluating the validity of multiply imputed data?'.
+With MI, many assumptions are made about the nature of the observed and missing parts of the data and their relation to the 'true' \emph{data generating model} \citep{buur18}. Without proper evaluation of the imputations and the underlying assumptions, any drawn inference may erroneously be deemed valid. Such evaluation measures are currently missing or under-developed in MI software, like the world leading \proglang{R} package \pkg{mice} \citep{mice}. Therefore, I will answer the following question: 'Which measures are vital for evaluating the validity of multiply imputed data?'.
 
 %% -- Features ---------------------------------------------------------------
 \subsection{Features} \label{sec:features}
 
-The aim of this paper is to provide applied researchers an introduction to the interactive evaluation device \pkg{ShinyMICE}. All programming code used in this paper is available in the file XYZ.R along with the manuscript, and on Github repository XYZ. 
+The aim of this paper is to provide applied researchers an introduction to the interactive evaluation device \pkg{ShinyMICE}. The intended audience consists of empirical researchers and statisticians who (want to) use multiple imputation to solve missing data problems. Basic familiarity with multiple imputation methodology is assumed. For an accessible and comprehensive introduction to MI from an applied perspective, see \cite{buur18}. For the theoretical foundation of MI, see \cite{rubin87}. All programming code used in this paper is available in the file 'XYZ.R' along with the manuscript, and on Github repository 'XYZ'. 
 
-"The intended audience of this paper consists of applied researchers who want to address problems caused by missing data by multiple imputation. The text assumes basic familiarity with R. The document contains hands-on analysis using the mice package. We do not discuss problems of incomplete data in general. We refer to the excellent books by Little and Rubin (2002) and Schafer (1997). Theory and applications of multiple imputation have been developed in Rubin (1987) and Rubin (1996). van Buuren (2012) introduces multiple imputation from an applied perspective" \cite[p.~4]{mice}.
+% "The intended audience of this paper consists of applied researchers who want to address problems caused by missing data by multiple imputation. The text assumes basic familiarity with R. The document contains hands-on analysis using the mice package. We do not discuss problems of incomplete data in general. We refer to the excellent books by Little and Rubin (2002) and Schafer (1997). Theory and applications of multiple imputation have been developed in Rubin (1987) and Rubin (1996). van Buuren (2012) introduces multiple imputation from an applied perspective" \cite[p.~4]{mice}.
 
 
 %% -- Notation ---------------------------------------------------------------
-\subsection{Notation and conventions?} \label{sec:notation}
+\subsection{Notation} \label{sec:notation}
 
-Notation in this paper is copied from \cite{buur18}, and thus based on \cite{rubin87}. Let $Y$ denote an $n \times p$ matrix containing the data values on $p$ variables for all $n$ units in a sample. The collection of observed data values is denoted as $Y_{obs}$; the missing part of $Y$ is refered to as $Y_{mis}$. Response indicator $R$ shows whether a data value in $Y$ is missing or observed. The relation between $R$, $Y_{obs}$, and $Y_{mis}$ determines the missingness mechanism.     
+The \proglang{R} \pkg{Shiny} application introduced in this paper is developed with the aim to integrate it into the \pkg{mice} environment. \pkg{ShinyMICE} therefore follows notation and conventions of \cite{mice}. For an overview of the deviations from the 'original' notation by \cite{rubin87}, see \cite{buur18}. 
+
+Let $Y$ denote an $n \times p$ matrix containing the data values on $p$ variables for all $n$ units in a sample. The collection of observed data values is denoted as $Y_{obs}$; the missing part of $Y$ is refered to as $Y_{mis}$. Response indicator $R$ shows whether a data value in $Y$ is missing or observed. The relation between $R$, $Y_{obs}$, and $Y_{mis}$ determines the missingness mechanism.
 
 % "Let Y denote the n x p matrix containing the data values on p variables for all n units in the sample. We define the response indicator R as an n x p 0-1 matrix. The elements of Y and R are denoted by y i j and r i j , respectively, where i = 1 , ... , n and j = 1 , ... , p . If y i j is observed, then r i j = 1 , and if y i j is missing, then r i j = 0 ." ... The observed data are collectively denoted by Y o b s . The missing data are collectively denoted as Y m i s , and contain all elements y i j where r i j = 0 . When taken together Y = ( Y o b s , Y m i s ) contain the hypothetically complete data." \cite[par.~2.2]{buur18}
 
@@ -178,34 +180,44 @@ The \proglang{R} code and documentation of this project will be open source (ava
 %% -- Methods: Sensitivity Analyses ---------------------------------------------------------------
 \subsection{Sensitivity Analyses} \label{sec:sensitivity}
 
-- Robustness of inferences to varying degrees of violation can be assessed with sensitivity analyses. See \citep{nguy17}.
+% In general: "The MAR assumption can never be tested from the observed data. One can however check whether the imputations created by MICE algorithm are plausible" \cite[p.~42]{mice}. 
 
-- Forked MICE with MNAR sensitivity analyses, see \url{https://thestatsgeek.com/2018/06/07/missing-not-at-random-sensitivity-analysis-with-fcs-multiple-imputation/}.
+\subsubsection{What is already implemented?}
 
-- FIMD on sensitivity analyses, see https://stefvanbuuren.name/fimd/sec-sensitivity.html
+- Current guideine: "Plot densities of both the observed and imputed values of all variables to see whether the imputations are reasonable. Differences in the densities between the observed and imputed values may suggest a problem that needs to be further checked" \cite[p.~43]{mice}. 
+% FIMD on sensitivity analyses, see https://stefvanbuuren.name/fimd/sec-sensitivity.html
 
-"The MAR assumption can never be tested from the observed data. One can however check whether the imputations created by MICE algorithm are plausible" \cite[p.~42]{mice}. 
+\subsubsection{What is not yet implemented, but exists?}
 
-"Plot densities of both the observed and imputed values of all variables to see whether the imputations are reasonable. Differences in the densities between the observed and imputed values may suggest a problem that needs to be further checked" \cite[p.~43]{mice}. 
+- Robustness of inferences to varying degrees of violation can be assessed with sensitivity analyses. See \citep{nguy17} for guidelines. 
+
+- Forked MICE with MNAR sensitivity analyses
+% see \url{https://thestatsgeek.com/2018/06/07/missing-not-at-random-sensitivity-analysis-with-fcs-multiple-imputation/}.
+
+\subsubsection{What is not implemented, and NA?}
+
+- Nothing within the scope of this thesis.
 
 
 %% -- Methods: Visualizations ---------------------------------------------------------------
 \subsection{Data Visualization} \label{sec:visualization}
 
-- Implement existing plot functions in \pkg{ShinyMICE}, add subsequent statistical tests to quantify the relations with covariates.
+% In general: "An important step in multiple imputation is to assess whether imputations are plausible. Imputations should be values that could have been obtained had they not been missing. Imputations should be close to the data. Data values that are clearly impossible (e.g., negative counts, pregnant fathers) should not occur in the imputed data. Imputations should respect relations between variables, and reflect the appropriate amount of uncertainty about their 'true' values. Diagnostic checks on the imputed data provide a way to check the plausibility of the imputations" \cite[p.~11]{mice}.
 
-- Relations between observed and missing parts of the data: use \pkg{lattice} package functionalities to improve the \pkg{mice} functions \fct{hist} and \fct{xyplot}.
+\subsubsection{What is already implemented?}
 
-- Evaluation of MI methods in SAS, see https://onlinelibrary.wiley.com/doi/full/10.1111/1467-9574.00219
+- Existing plot functions to evaluate relations between observed and missing parts of the data (\pkg{mice} functions \fct{hist}, \fct{xyplot}, and \fct{stripplot}). 
+% "The mice package contains several graphic functions that can be used to gain insight into the correspondence of the observed and imputed data: \fct{bwplot}, \fct{stripplot}, \fct{densityplot} and \fct{xyplot}." \cite[par.~6.6]{buur18}
 
-"An important step in multiple imputation is to assess whether imputations are plausible. Imputations should be values that could have been obtained had they not been missing. Imputations should be close to the data. Data values that are clearly impossible (e.g., negative counts, pregnant fathers) should not occur in the imputed data. Imputations should respect relations between variables, and reflect the appropriate amount of uncertainty about their 'true' values. Diagnostic checks on the imputed data provide a way to check the plausibility of the imputations" \cite[p.~11]{mice}.
+% "It is often useful to inspect the distributions of original and the imputed data. One way of doing this is to use the function \fct{stripplot} \dots  The differences between the red points represents our uncertainty about the true (but unknown) values. \dots Under MCAR, univariate distributions of the observed and imputed data are expected to be identical. Under MAR, they can be different, both in location and spread, but their multivariate distribution is assumed to be identical." \cite[p.~12]{mice}. 
 
-"The mice package contains several graphic functions that can be used to gain insight into the correspondence of the observed and imputed data: \fct{bwplot}, \fct{stripplot}, \fct{densityplot} and \fct{xyplot}." \cite[par.~6.6]{buur18}
+\subsubsection{What is not yet implemented, but exists?}
 
-"It is often useful to inspect the distributions of original and the imputed data. One way of doing this is to use the function \fct{stripplot} \dots  The differences between the red points represents our uncertainty about the true (but unknown) values. \dots Under MCAR, univariate distributions of the observed and imputed data are expected to be identical. Under MAR, they can be different, both in location and spread, but their multivariate distribution is assumed to be identical." \cite[p.~12]{mice}. 
+- Improve plots using \pkg{lattice} package functionalities.
 
-"Bondarenko and Raghunathan (2016) [see https://www.ncbi.nlm.nih.gov/pubmed/26952693] proposed a more refined diagnostic tool that aims to compare the distributions of observed and imputed data conditional on the missingness probability. The idea is that under MAR the conditional distributions should be similar if the assumed model for creating multiple imputations has a good fit. An example is created as ..."  \cite[par.~6.6]{buur18}
-
+- Subsequent statistical tests to quantify the relations with covariates.
+% "Bondarenko and Raghunathan (2016) [see https://www.ncbi.nlm.nih.gov/pubmed/26952693] proposed a more refined diagnostic tool that aims to compare the distributions of observed and imputed data conditional on the missingness probability. The idea is that under MAR the conditional distributions should be similar if the assumed model for creating multiple imputations has a good fit. An example is created as ..."  \cite[par.~6.6]{buur18}
+% 
 % fit <- with(imp, glm(ici(imp) ~ age + bmi + hyp + chl,
 %                      family = binomial))
 % ps <- rep(rowMeans(sapply(fit$analyses, fitted.values)),
@@ -214,29 +226,56 @@ The \proglang{R} code and documentation of this project will be open source (ava
 %        xlab = "Probability that record is incomplete",
 %        ylab = "BMI", pch = c(1, 19), col = mdc(1:2))
 
+- Use evaluation of MI methods in SAS as example
+% see https://onlinelibrary.wiley.com/doi/full/10.1111/1467-9574.00219
+
+
+\subsubsection{What is not implemented, and NA?}
+
+- Nothing within the scope of this thesis.
 
 %% -- Methods: Convergence ---------------------------------------------------------------
 \subsection{Convergence Diagnostic} \label{sec:convergence}
 
-- Convergence issues: "Imputers who do choose to use FCS should use flexible univariate models wherever possible and take care to assess apparent convergence of the algorithm, for example by computing traces of pooled estimates or other statistics and using standard MCMC diagnostics (Gelman et al., 2013, Chapter 11). It may also be helpful to examine the results of many independent runs of the algorithm with different initializations and to use random scans over the p variables to try to identify any convergence issues and mitigate possible order dependence" \cite[p.~19]{murr18}.
+% In general: "In general, you cannot know for sure if your chain has converged. But sometimes you can know if your chain has not converged, so we at least check for this latter possibility" \cite[p.~101]{hoff09}
 
-- Replicate simulation study and build a decision rule to solve the problem: "The monitoring statistic was computed for mean monthly earnings at each iteration in chains of length k = 200. Since calculation of the statistic requires M parallel sequences, m = 5 such chains were constructed. This value of m was informed by the preferred choice given in the literature on multiple imputation. The monitoring statistic computed at each iteration is presented in Figures 15 to 17 for each of the three missingness mechanisms. The red vertical line denotes ten iterations" \cite[p.~49]{lace07}.
+% "In order to converge to a stationary distribution, a Markov chain needs to satisfy three important properties (Roberts 1996; Tierney 1996): irreducible, the chain must be able to reach all interesting parts of the state space; aperiodic, the chain should not oscillate between different states; recurrence, all interesting parts can be reached infinitely often, at least from almost all starting points. Do these properties hold for the MICE algorithm? Irreducibility is generally not a problem since the user has large control over the interesting parts of the state space. This flexibility is actually the main rationale for FCS instead of a joint model. Periodicity is a potential problem, and can arise in the situation where imputation models are clearly inconsistent. A rather artificial example of an oscillatory behavior occurs when Y 1 is imputed by Y 2 $\beta$ + $\epsilon$  1 and Y 2 is imputed by - Y 1 $\beta$ + $\epsilon$  2 for some fixed, nonzero $\beta$ . The sampler will oscillate between two qualitatively different states, so the correlation between Y 1 and Y 2 after imputing Y 1 will differ from that after imputing Y 2 . In general, we would like the statistical inferences to be independent of the stopping point. A way to diagnose the ping-pong problem, or order effect, is to stop the chain at different points. The stopping point should not affect the statistical inferences. The addition of noise to create imputations is a safeguard against periodicity, and allows the sampler to "break out" more easily. Non-recurrence may also be a potential difficulty, manifesting itself as explosive or non-stationary behavior. For example, if imputations are made by deterministic functions, the Markov chain may lock up. Such cases can sometimes be diagnosed from the trace lines of the sampler. See Section 6.5.2 for an example. As long as the parameters of imputation models are estimated from the data, non-recurrence is mild or absent. The required properties of the MCMC method can be translated into conditions on the eigenvalues of the matrix of transition probabilities (MacKay 2003, 372-73). The development of practical tools that put these conditions to work for multiple imputation is still an ongoing research problem." \cite[par.~4.5]{buur18}
 
-- Potentially add something about updated (2019) version of $\widehat{R}$ and the new threshold of 1.01, see \citep{veht19}.
 
-- Auto-correlation: "Applications of MICE with lowly correlated data therefore inject a lot of noise into the system. Hence, the auto-correlation over t will be low, and convergence will be rapid, and in fact immediate if all variables are independent. Thus, the incorporation of noise into the imputed data has pleasant side-effect of speeding up convergence" \citep{buur18}, par. 4.5. Also, schafer (1997, p. 129) wrote on worst linear statistic. We could calculate the autocorrelation of that statistic to know that the algorithm converged elsewhere too. See autocorr function plot in sas of worst linear function. Note: we're talking about missing data only, not the combined data (that autocorrelation is very high, as is the autocorrelation of deductively imputed values, like in the texp example). Worst linear function in SAS see \url{https://support.sas.com/documentation/cdl/en/statug/63033/HTML/default/viewer.htm#statug_mi_sect027.htm}.
+\subsubsection{What is already implemented?}
 
-- Stability of the solution: possibly use the slope of means over iterations too to see whether there is trending. Or apply PCA on the imputed data and if that (the eigenvalues?) stays the same we know that the means and variances are stable as well. Or look at MC error: MC error = SD/sqrt(number of iterations), where SD represents the variation across iterations. The MC error thus represents how much the means differ w.r.t. the iterations. MC error decreases as number of iterations increases. It should not be larger than 5\% of the sample standard deviation.
+- Traceplots
 
-"In general, you cannot know for sure if your chain has converged. But sometimes you can know if your chain has not converged, so we at least check for this latter possibility" \cite[p.~101]{hoff09}
+\subsubsection{What is not yet implemented, but exists?}
 
-"In order to converge to a stationary distribution, a Markov chain needs to satisfy three important properties (Roberts 1996; Tierney 1996): irreducible, the chain must be able to reach all interesting parts of the state space; aperiodic, the chain should not oscillate between different states; recurrence, all interesting parts can be reached infinitely often, at least from almost all starting points. Do these properties hold for the MICE algorithm? Irreducibility is generally not a problem since the user has large control over the interesting parts of the state space. This flexibility is actually the main rationale for FCS instead of a joint model. Periodicity is a potential problem, and can arise in the situation where imputation models are clearly inconsistent. A rather artificial example of an oscillatory behavior occurs when Y 1 is imputed by Y 2 $\beta$ + $\epsilon$  1 and Y 2 is imputed by - Y 1 $\beta$ + $\epsilon$  2 for some fixed, nonzero $\beta$ . The sampler will oscillate between two qualitatively different states, so the correlation between Y 1 and Y 2 after imputing Y 1 will differ from that after imputing Y 2 . In general, we would like the statistical inferences to be independent of the stopping point. A way to diagnose the ping-pong problem, or order effect, is to stop the chain at different points. The stopping point should not affect the statistical inferences. The addition of noise to create imputations is a safeguard against periodicity, and allows the sampler to "break out" more easily. Non-recurrence may also be a potential difficulty, manifesting itself as explosive or non-stationary behavior. For example, if imputations are made by deterministic functions, the Markov chain may lock up. Such cases can sometimes be diagnosed from the trace lines of the sampler. See Section 6.5.2 for an example. As long as the parameters of imputation models are estimated from the data, non-recurrence is mild or absent. The required properties of the MCMC method can be translated into conditions on the eigenvalues of the matrix of transition probabilities (MacKay 2003, 372-73). The development of practical tools that put these conditions to work for multiple imputation is still an ongoing research problem." \cite[par.~4.5]{buur18}
+- $\widehat{R}$, but too stringent (new) threshold, and assumption of overdispersed initial values of imputation chains not met.
+% Potentially add something about updated (2019) version of $\widehat{R}$ and the new threshold of 1.01, see \citep{veht19}.
+
+- Autocorrelation. Schafer (1997, p. 129) wrote on worst linear statistic. We could calculate the autocorrelation of that statistic to know that the algorithm converged elsewhere too. See autocorr function plot in sas of worst linear function.
+% Worst linear function in SAS see \url{https://support.sas.com/documentation/cdl/en/statug/63033/HTML/default/viewer.htm#statug_mi_sect027.htm}.
+% Note: we're talking about missing data only, not the combined data (that autocorrelation is very high, as is the autocorrelation of deductively imputed values, like in the texp example). 
+% "Applications of MICE with lowly correlated data therefore inject a lot of noise into the system. Hence, the auto-correlation over t will be low, and convergence will be rapid, and in fact immediate if all variables are independent. Thus, the incorporation of noise into the imputed data has pleasant side-effect of speeding up convergence" \citep{buur18}, par. 4.5. 
+
+- Sensitivity analysis: Run algorithm several times and compare results. 
+% "Imputers who do choose to use FCS should use flexible univariate models wherever possible and take care to assess apparent convergence of the algorithm, for example by computing traces of pooled estimates or other statistics and using standard MCMC diagnostics (Gelman et al., 2013, Chapter 11). It may also be helpful to examine the results of many independent runs of the algorithm with different initializations and to use random scans over the p variables to try to identify any convergence issues and mitigate possible order dependence" \cite[p.~19]{murr18}.
+
+\subsubsection{What is not implemented, and NA?}
+
+- $\hat{R}$ threshold: Replicate simulation study and build a decision rule to solve the problem with $\hat{R}$.
+% "The monitoring statistic was computed for mean monthly earnings at each iteration in chains of length k = 200. Since calculation of the statistic requires M parallel sequences, m = 5 such chains were constructed. This value of m was informed by the preferred choice given in the literature on multiple imputation. The monitoring statistic computed at each iteration is presented in Figures 15 to 17 for each of the three missingness mechanisms. The red vertical line denotes ten iterations" \cite[p.~49]{lace07}.
+
+- Stability of the solution: Possibly use the slope of means over iterations too to see whether there is trending. Or apply PCA on the imputed data and if that (the eigenvalues?) stays the same we know that the means and variances are stable as well, see McKay (?). 
+
+- MC error: MC error = SD/sqrt(number of iterations), where SD represents the variation across iterations. The MC error thus represents how much the means differ w.r.t. the iterations. MC error decreases as number of iterations increases. It should not be larger than 5\% of the sample standard deviation.
+
 
 \section{Simulation study}
 
 \subsection{Simulation: Introduction}
 
-R hat not working on MI data? "if over-dispersion does not hold, $var_plus$ can be too low, which can lead to falsely diagnosing convergence.)" \cite[p~437]{broo98}. Aim to replicate Lacerda et al. that R hat will not be smaller than 1.1 before iteration nr. 50.
+\emph{It is written as a (mini) thesis, with an introduction, methods section, some results (i.e., preliminary analyses, or pilot simulations), and a discussion of results. The length of the research report should be maximally 2500 words of text (without references list and or tables and figures). Please do not include appendices, and no more than 6 tables or figures. Table and Figure captions do not count towards the word limit. An abstract may be included, but is not necessary.}
+
+R hat not working on MI data? "if over-dispersion does not hold, $\sigma_+^2$ can be too low, which can lead to falsely diagnosing convergence." \cite[p~437]{broo98}. Aim to replicate Lacerda et al. that R hat will not be smaller than 1.1 before iteration nr. 50.
 
 As recommended by ... Rhat is computed as .... to be able to detect ... in the tails of the distribution.
 
@@ -254,6 +293,10 @@ We want to evaluate whether the imputation procedure has converged. We can apply
 
 Hypothesis based on \cite{lace07} is that the conventional acceptable level of Rhat is too strict for MI data. We expect that the simulation diagnostics will indicate proper imputations before Rhat will. 
 
+bias, variance, cov rate: evaluate problems that you might miss otherwise. there is no tradeoff between them. then your inference is valid. generate data, create miss, usually there is a new method that you want to investigate and then compare to cca. 
+
+% Missingness mechanism: "With MCAR missingness mechanisms, the probability to be missing is the same for all cases. This is a necessary simulation condition for evaluating the performance of imputation procedures. If an imputation method is not able to solve the problem (i.e. yield valid inference) under MCAR, the statistical properties of the procedure are not sound." (Vink, n.d., p. 4)
+
 \subsection{Simulation: Simulation Approach}
 
 Set-up: simulate data, impute missing data points with varying number of iterations. Then evaluate the regular diagnostics of MI simulations, see Vink, n.d., and the convergence. Diagnostics include absolute bias of the estimated regression coefficient, confidence interval width, and empirical coverage rate (coverage probability?) across simulations. Convergence is evaluated with $\hat{R}$, or potential scale reduction factor. Proposed by Gelman and Rubin (1992), but since developed into ...
@@ -265,11 +308,14 @@ In this study, 1000 MCMC simulations are performed.
 simulate data with missingness
 for (number of iterations from 1 to 100)
   impute the missingness
-  compute convergence and simulation diagnostics
+  compute convergence diagnostic
+  perform analysis
+  pool results
+  compute simulation diagnostics
 save diagnostics
 \end{Code}
 
-Simulation code is available in appendix A and on Github.
+Simulation code is available in online appendix XYZ on Github.
 
 \subsection{Simulation: Results}
 
@@ -277,10 +323,9 @@ Rhat is not perfect for MI data. The value shoudl theoretically not be smaller t
 
 \subsection{Simulation Discussion}
 
-"The mixture-of-sequences variance, V, should stabilize as a function of n. (Before convergence, we expect $\sigma^2$ to decrease with n, only increasing if the sequences explore a new area of parameter space, which would imply that the original sequences were not overdispersed for the particular scalar summary being monitored.)" 
-% \cite[p~438]{broo98}
+"The mixture-of-sequences variance, V, should stabilize as a function of n. (Before convergence, we expect $\sigma^2$ to decrease with n, only increasing if the sequences explore a new area of parameter space, which would imply that the original sequences were not overdispersed for the particular scalar summary being monitored.)" \cite[p~438]{broo98}.
 
-We would like to have convergence measures for multivariable statistics (scalars?) of interest. This is, however, dependent of the complete data model. The eigenvector decomposition methof proposed by May 9? should be implemented. I could not find any resources to apply this method and it is outside the scope of this thesis to investigate how this apprach could be implemented.
+We would like to have convergence measures for multivariable statistics (scalars?) of interest. This is, however, dependent of the complete data model. The eigenvector decomposition methof proposed by McKay (?) should be implemented. I could not find any resources to apply this method and it is outside the scope of this thesis to investigate how this apprach could be implemented.
 
 %% -- Manuscript ---------------------------------------------------------------
 
@@ -293,9 +338,9 @@ We would like to have convergence measures for multivariable statistics (scalars
 %%   is recommended. Alternatively, a plain {verbatim} can also be used.
 %%   (For executed code see the next section.)
 
-\section{Models and software} \label{sec:models}
-
-\emph{This is a placeholder.}
+% \section{Models and software} \label{sec:models}
+% 
+% \emph{This is a placeholder.}
 
 
 % A count response variable $y_i$ ($i = 1, \dots, n$) by assuming a Poisson distribution
@@ -394,9 +439,9 @@ We would like to have convergence measures for multivariable statistics (scalars
 %% - Comments within the code chunks should be avoided - these should be made
 %%   within the regular LaTeX text.
 
-\section{Illustrations} \label{sec:illustrations}
-
-\emph{This is a placeholder.}
+% \section{Illustrations} \label{sec:illustrations}
+% 
+% \emph{This is a placeholder.}
 
 % For a simple illustration of basic Poisson and NB count regression the
 % \code{quine} data from the \pkg{MASS} package is used. This provides the number
@@ -466,9 +511,9 @@ We would like to have convergence measures for multivariable statistics (scalars
 
 %% -- Summary/conclusions/discussion -------------------------------------------
 
-\section{Summary and discussion} \label{sec:summary}
-
-\emph{This is a placeholder.}
+% \section{Summary and discussion} \label{sec:summary}
+% 
+% \emph{This is a placeholder.}
 
 % \begin{leftbar}
 % As usual \dots
@@ -520,7 +565,7 @@ This technical paper is written by the sole author (Hanne Oberman, BSc.), with g
 
 \begin{appendix}
 
-\section{More technical details} \label{app:technical}
+% \section{More technical details} \label{app:technical}
 
 % \begin{leftbar}
 % Appendices can be included after the bibliography (with a page break). Each
@@ -541,7 +586,7 @@ This technical paper is written by the sole author (Hanne Oberman, BSc.), with g
 % \end{leftbar}
 
 
-\section[Using BibTeX]{Using \textsc{Bib}{\TeX}} \label{app:bibtex}
+% \section[Using BibTeX]{Using \textsc{Bib}{\TeX}} \label{app:bibtex}
 
 % \begin{leftbar}
 % References need to be provided in a \textsc{Bib}{\TeX} file (\code{.bib}). All

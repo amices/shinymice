@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.19 (MiKTeX 2.9.6880 64-bit) (preloaded format=pdflatex 2018.12.13)  8 NOV 2019 11:36
+This is pdfTeX, Version 3.14159265-2.6-1.40.19 (MiKTeX 2.9.6880 64-bit) (preloaded format=pdflatex 2018.12.13)  11 NOV 2019 18:33
 entering extended mode
 **./article.tex
 (article.tex
@@ -536,7 +536,7 @@ LaTeX Info: Redefining \nameref on input line 65.
 \@outlinefile=\write4
 \openout4 = `article.out'.
 
-<jsslogo.jpg, id=87, 540.0175pt x 393.47pt>
+<jsslogo.jpg, id=103, 540.0175pt x 393.47pt>
 File: jsslogo.jpg Graphic file (type jpg)
 <use jsslogo.jpg>
 Package pdftex.def Info: jsslogo.jpg  used on input line 65.
@@ -592,10 +592,6 @@ LaTeX Font Info:    Try loading font information for T1+lmss on input line 65.
 ("C:\Users\User\AppData\Local\Programs\MiKTeX 2.9\tex\latex\lm\t1lmss.fd"
 File: t1lmss.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
-
-Package natbib Warning: Citation `mice11' on page 1 undefined on input line 103
-.
-
 [1
 
 {C:/Users/User/AppData/Local/MiKTeX/2.9/pdftex/config/pdftex.map} <./jsslogo.jp
@@ -610,26 +606,15 @@ Overfull \hbox (5.47499pt too wide) has occurred while \output is active
  []
 
 [3]
-Overfull \hbox (3.0393pt too wide) in paragraph at lines 199--200
-[]\T1/lmr/m/n/10.95 - Eval-u-a-tion of MI meth-ods in SAS, see https://onlineli
-brary.wiley.com/doi/full/10.1111/1467-
- []
-
-
-Overfull \hbox (0.805pt too wide) in paragraph at lines 207--208
-[]\T1/lmr/m/n/10.95 "Bondarenko and Raghu-nathan (2016) [see https://www.ncbi.n
-lm.nih.gov/pubmed/26952693]
- []
-
-
 Overfull \hbox (5.47499pt too wide) has occurred while \output is active
 \T1/lmr/m/n/10.95 4 []
  []
 
 [4]
-
-Package natbib Warning: Citation `hoff09' on page 5 undefined on input line 231
-.
+Overfull \hbox (0.96358pt too wide) in paragraph at lines 286--287
+[]\T1/lmr/m/n/10.95 Convergence can also be in-ter-preted as sta-ble over it-er
+-a-tions, or non-recurring. Non-recurrence
+ []
 
 
 Overfull \hbox (5.47499pt too wide) has occurred while \output is active
@@ -637,74 +622,52 @@ Overfull \hbox (5.47499pt too wide) has occurred while \output is active
  []
 
 [5]
-Overfull \hbox (0.96358pt too wide) in paragraph at lines 247--248
-[]\T1/lmr/m/n/10.95 Convergence can also be in-ter-preted as sta-ble over it-er
--a-tions, or non-recurring. Non-recurrence
- []
-
-
 Overfull \hbox (5.47499pt too wide) has occurred while \output is active
 \T1/lmr/m/n/10.95 6 []
  []
 
-[6]
+[6] (article.bbl
 Overfull \hbox (5.47499pt too wide) has occurred while \output is active
 [] \T1/lmr/m/n/10.95 7
  []
 
-[7] (article.bbl
+[7])
 Overfull \hbox (5.47499pt too wide) has occurred while \output is active
 \T1/lmr/m/n/10.95 8 []
  []
 
-[8])
+[8]
+LaTeX Font Info:    Font shape `T1/pzc/m/n' in size <13> not available
+(Font)              Font shape `T1/pzc/mb/it' tried instead on input line 616.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 616.
+
 Overfull \hbox (5.47499pt too wide) has occurred while \output is active
 [] \T1/lmr/m/n/10.95 9
  []
 
 [9]
-
-LaTeX Font Warning: Font shape `T1/lmr/bx/sc' undefined
-(Font)              using `T1/lmr/bx/n' instead on input line 544.
-
-
-Package natbib Warning: There were undefined citations.
-
-LaTeX Font Info:    Font shape `T1/pzc/m/n' in size <13> not available
-(Font)              Font shape `T1/pzc/mb/it' tried instead on input line 571.
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 571.
-
-Overfull \hbox (10.94998pt too wide) has occurred while \output is active
-\T1/lmr/m/n/10.95 10 []
- []
-
-[10]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 571.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 616.
  (article.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 571.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 571.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 616.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 616.
 Package rerunfilecheck Info: File `article.out' has not changed.
-(rerunfilecheck)             Checksum: 627B1295C268F02CC1D3D122AC0A7557;2176.
-
-
-LaTeX Font Warning: Some font shapes were not available, defaults substituted.
-
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 571.
+(rerunfilecheck)             Checksum: 9A1ACD7B7E86BA236BE096CE6A72F522;3150.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 616.
  ) 
 Here is how much of TeX's memory you used:
  7470 strings out of 492965
- 111429 string characters out of 3126858
- 200272 words of memory out of 3000000
- 11156 multiletter control sequences out of 15000+200000
- 85429 words of font info for 58 fonts, out of 3000000 for 9000
+ 112167 string characters out of 3126858
+ 198064 words of memory out of 3000000
+ 11149 multiletter control sequences out of 15000+200000
+ 89691 words of font info for 59 fonts, out of 3000000 for 9000
  1141 hyphenation exceptions out of 8191
- 37i,9n,39p,2310b,417s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 37i,9n,39p,2296b,419s stack positions out of 5000i,500n,10000p,200000b,50000s
 {C:/Users/User/AppData/Local/Programs/MiKTeX 2.9/fonts/enc/dvips/lm/lm-rm.enc
-}{C:/Users/User/AppData/Local/Programs/MiKTeX 2.9/fonts/enc/dvips/lm/lm-mathex.
-enc}{C:/Users/User/AppData/Local/Programs/MiKTeX 2.9/fonts/enc/dvips/lm/lm-math
-it.enc}{C:/Users/User/AppData/Local/Programs/MiKTeX 2.9/fonts/enc/dvips/lm/lm-m
-athsy.enc}{C:/Users/User/AppData/Local/Programs/MiKTeX 2.9/fonts/enc/dvips/lm/l
-m-ec.enc}{C:/Users/User/AppData/Local/Programs/MiKTeX 2.9/fonts/enc/dvips/base/
+}{C:/Users/User/AppData/Local/Programs/MiKTeX 2.9/fonts/enc/dvips/lm/lm-ec.enc}
+{C:/Users/User/AppData/Local/Programs/MiKTeX 2.9/fonts/enc/dvips/lm/lm-mathex.e
+nc}{C:/Users/User/AppData/Local/Programs/MiKTeX 2.9/fonts/enc/dvips/lm/lm-mathi
+t.enc}{C:/Users/User/AppData/Local/Programs/MiKTeX 2.9/fonts/enc/dvips/lm/lm-ma
+thsy.enc}{C:/Users/User/AppData/Local/Programs/MiKTeX 2.9/fonts/enc/dvips/base/
 8r.enc}<C:/Users/User/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/lm/l
 mb10.pfb><C:/Users/User/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/lm
 /lmbo10.pfb><C:/Users/User/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public
@@ -716,14 +679,15 @@ type1/public/lm/lmmi8.pfb><C:/Users/User/AppData/Local/Programs/MiKTeX 2.9/font
 s/type1/public/lm/lmr10.pfb><C:/Users/User/AppData/Local/Programs/MiKTeX 2.9/fo
 nts/type1/public/lm/lmr8.pfb><C:/Users/User/AppData/Local/Programs/MiKTeX 2.9/f
 onts/type1/public/lm/lmri10.pfb><C:/Users/User/AppData/Local/Programs/MiKTeX 2.
-9/fonts/type1/public/lm/lmro10.pfb><C:/Users/User/AppData/Local/Programs/MiKTeX
- 2.9/fonts/type1/public/lm/lmss10.pfb><C:/Users/User/AppData/Local/Programs/MiK
-TeX 2.9/fonts/type1/public/lm/lmsy10.pfb><C:/Users/User/AppData/Local/Programs/
-MiKTeX 2.9/fonts/type1/public/lm/lmtt10.pfb><C:/Users/User/AppData/Local/Progra
-ms/MiKTeX 2.9/fonts/type1/urw/zapfchan/uzcmi8a.pfb>
-Output written on article.pdf (10 pages, 381427 bytes).
+9/fonts/type1/public/lm/lmri12.pfb><C:/Users/User/AppData/Local/Programs/MiKTeX
+ 2.9/fonts/type1/public/lm/lmro10.pfb><C:/Users/User/AppData/Local/Programs/MiK
+TeX 2.9/fonts/type1/public/lm/lmss10.pfb><C:/Users/User/AppData/Local/Programs/
+MiKTeX 2.9/fonts/type1/public/lm/lmsy10.pfb><C:/Users/User/AppData/Local/Progra
+ms/MiKTeX 2.9/fonts/type1/public/lm/lmtt10.pfb><C:/Users/User/AppData/Local/Pro
+grams/MiKTeX 2.9/fonts/type1/urw/zapfchan/uzcmi8a.pfb>
+Output written on article.pdf (9 pages, 386557 bytes).
 PDF statistics:
- 377 PDF objects out of 1000 (max. 8388607)
- 72 named destinations out of 1000 (max. 500000)
- 174 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 380 PDF objects out of 1000 (max. 8388607)
+ 78 named destinations out of 1000 (max. 500000)
+ 206 words of extra memory for PDF output out of 10000 (max. 10000000)
 
