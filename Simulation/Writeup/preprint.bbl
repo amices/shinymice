@@ -1,4 +1,4 @@
-\begin{thebibliography}{16}
+\begin{thebibliography}{13}
 \newcommand{\enquote}[1]{``#1''}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
@@ -8,16 +8,6 @@
   \providecommand{\doi}{doi:\discretionary{}{}{}\begingroup
   \urlstyle{rm}\Url}\fi
 \providecommand{\eprint}[2][]{\url{#2}}
-
-\bibitem[{Abayomi \emph{et~al.}(2008)Abayomi, Gelman, and Levy}]{abay08}
-Abayomi K, Gelman A, Levy M (2008).
-\newblock \enquote{Diagnostics for multivariate imputations.}
-\newblock \emph{Journal of the Royal Statistical Society: Series C (Applied
-  Statistics)}, \textbf{57}(3), 273--291.
-\newblock ISSN 0035-9254, 1467-9876.
-\newblock \doi{10.1111/j.1467-9876.2007.00613.x}.
-\newblock
-  \urlprefix\url{http://doi.wiley.com/10.1111/j.1467-9876.2007.00613.x}.
 
 \bibitem[{Allison(2001)}]{alli02}
 Allison PD (2001).
@@ -34,12 +24,6 @@ Brooks SP, Gelman A (1998).
 \newblock \doi{10.1080/10618600.1998.10474787}.
 \newblock
   \urlprefix\url{https://www.tandfonline.com/doi/abs/10.1080/10618600.1998.10474787}.
-
-\bibitem[{Chang \emph{et~al.}(2017)Chang, Cheng, Allaire, Xie, and
-  McPherson}]{shiny}
-Chang W, Cheng J, Allaire J, Xie Y, McPherson J (2017).
-\newblock \enquote{Shiny: web application framework for {R}.}
-\newblock \urlprefix\url{https://CRAN.R-project.org/package=shiny}.
 
 \bibitem[{Gelman and Rubin(1992)}]{gelm92}
 Gelman A, Rubin DB (1992).
@@ -73,15 +57,6 @@ Murray JS (2018).
 \newblock ISSN 0883-4237.
 \newblock \doi{10.1214/18-STS644}.
 \newblock \urlprefix\url{https://projecteuclid.org/euclid.ss/1525313139}.
-
-\bibitem[{Nguyen \emph{et~al.}(2017)Nguyen, Carlin, and Lee}]{nguy17}
-Nguyen CD, Carlin JB, Lee KJ (2017).
-\newblock \enquote{Model checking in multiple imputation: an overview and case
-  study.}
-\newblock \emph{Emerging Themes in Epidemiology}, \textbf{14}(1), 8.
-\newblock ISSN 1742-7622.
-\newblock \doi{10.1186/s12982-017-0062-6}.
-\newblock \urlprefix\url{https://doi.org/10.1186/s12982-017-0062-6}.
 
 \bibitem[{Rubin(1987)}]{rubin87}
 Rubin DB (1987).

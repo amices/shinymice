@@ -8,6 +8,7 @@ library(mice)
 library(mvtnorm)
 library(miceadds)
 library(dplyr)
+library(ggplot2)
 
 # load simulation/evaluation functions
 source("Functions/CreateData.R")
@@ -31,7 +32,7 @@ set.seed(1111)
 simulate <- function(runs = 10, n.iter = 5) {
   pb <- txtProgressBar(min = 0, max = runs, style = 3)
   # object for output
-  res <- array(NA, dim = c(n.iter, runs, 5))
+  res <- array(NA, dim = c(n.iter, runs, 6))
   # simulate data once
   data <- data.simulation(n = poulationsize)
   # repeat mi procedure 'runs'  times for each nr of iterations
@@ -57,8 +58,11 @@ res <- simulate(runs = n.sim, n.iter = n.iter)
 ###
 
 # plot
+# load("Results/results2.Rdata.Rdata")
+# out <- dat
+plot.ts(out, main = "", xlab = "Number of iterations")
 
 ###
 
 # save for future reference
-save.Rdata(out, name = "results3.Rdata", path = "Results")
+save.Rdata(out, name = "results4.Rdata", path = "Results")

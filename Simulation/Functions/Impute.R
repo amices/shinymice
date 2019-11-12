@@ -34,5 +34,5 @@ test.impute <- function(data, m = 5, method = "norm", maxit, ...) {
   tab[4] <- tab[1] + qt(.975, df = m - 1) * tab[2]
   
   # output
-  as.numeric(tab[,-2])
+  as.numeric(tab)
 }
