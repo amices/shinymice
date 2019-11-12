@@ -115,8 +115,6 @@ Non-convergence has two interpretations [look up source!!!]: mixing between chai
 
 The potential scale reduction factor tells us how much variance could be shrunken down by running the chains infinitely long. That tells us something about how dependent the chains are on the starting values. If there is no dependence on the initial values anymore, the chains have converged (in the mixing sense of the word).
 
-As recommended by \cite{veth19} $\widehat{R}$ is computed as .... to be able to detect ... in the tails of the distribution.
-
 Why is R hat not applicable on MI data? R hat is not appropriate because it assumes over-dispersed initial values, which means that the initial values of the m imputation chains should be 'far away' from the distribution that the chains are converging to (the mode of the distribution). With MI procedures, initial values are chosen such that ... or maybe even estimated from the observed data. This means that at most one initial value is necessary, but probably none at al. I should look this up. And, "if over-dispersion does not hold, $\sigma_+^2$ can be too low, which can lead to falsely diagnosing convergence." \cite[p~437]{broo98}. Empirical finding suggests otherwise: that R hat will not be smaller than 1.1 before iteration number. 50. Therefore, the aim is to replicate empirical finding Lacerda et al. 
 
 Convergence can also be interpreted as stable over iterations, or non-recurring. Non-recurrence can be evaluated with auto-correlation. Auto-correlation shows how dependent subsequent draws of an imputation chain are on the previous value. If there is a lot of dependence, draws at e.g. iteration five are significantly correlated with the value of the first draw. Ideally, we want the chains to intermingle nicely, without trends within chains. Auto-correlation above the confidence level indicate dependence within chains.
@@ -195,6 +193,24 @@ The aim is to evaluate whether the imputation procedure has converged. The prima
 
 % Plausibility of the imputed values: Plausible imputations - imputations that could be real values if they had been observed - are not a necessary condition for obtaining valid inference. However, in practice, especially when the imputer and the analyst are different persons, plausibility of imputations may be a desired property. When evaluating imputation routines, the evaluator should mention whether the routine is prone to deliver implausible value
 
+As recommended by \cite{veth19} $\widehat{R}$ is computed as .... to be able to detect ... in the tails of the distribution.
+
+\begin{equation}
+B=\frac{N}{M-1} \sum_{m=1}^{M}\left(\bar{\theta}^{(\cdot m)}-\bar{\theta}^{(\cdot \cdot)}\right)^{2}, \quad \text { where } \quad \bar{\theta}^{(\cdot m)}=\frac{1}{N} \sum_{n=1}^{N} \theta^{(n m)}, \quad \bar{\theta}^{(\cdot \cdot)}=\frac{1}{M} \sum_{m=1}^{M} \bar{\theta}^{(\cdot m)}
+\end{equation}
+
+\begin{equation}
+W=\frac{1}{M} \sum_{m=1}^{M} s_{j}^{2}, \quad \text { where } \quad s_{m}^{2}=\frac{1}{N-1} \sum_{n=1}^{N}\left(\theta^{(n m)}-\bar{\theta}^{(\cdot m)}\right)^{2}
+\end{equation}
+
+\begin{equation}
+\widehat{\operatorname{var}}^{+}(\theta | y)=\frac{N-1}{N} W+\frac{1}{N} B
+\end{equation}
+
+\begin{equation}
+\widehat{R}=\sqrt{\frac{\widehat{\operatorname{var}}^{+}(\theta | y)}{W}}
+\end{equation}
+
 Hypothesis based on \cite{lace07} is that the conventional acceptable level of $\widehat{R}$ is too strict for MI data. We expect that the simulation diagnostics will indicate proper imputations before $\widehat{R}$ will. 
 
 %% -- Simulation Approach ---------------------------------------------------------------
@@ -240,7 +256,7 @@ Z_{2}\\
 4 & 4 & 1.8 & 0\\
 4 & 16 & 4.8 & 0\\
 1.8 & 4.8 & 9 & 0\\
-0 & 0 & 0 & 10
+0 & 0 & 0 & 100
 \end{pmatrix}
 \end{bmatrix}\\[2\jot]
 Y &=  2 \times X + 0.5 \times Z_1 - 1 \times Z_2 + \epsilon
@@ -251,6 +267,7 @@ After data generation, the complete data is 'amputed'. That is, the \pkg{mice} f
 Missing data points are imputed with \pkg{mice} in \proglang{R}. All simulations are performed with imputation method 'norm' (Bayesian linear regression imputation), and five imputation chains. The number of iterations is varied over simulations ('maxit' argument between 1 and 100). For each number of iterations, simulation and convergence diagnostics are aggregated over 1000 MCMC simulations. 
 % Missingness mechanism: "With MCAR missingness mechanisms, the probability to be missing is the same for all cases. This is a necessary simulation condition for evaluating the performance of imputation procedures. If an imputation method is not able to solve the problem (i.e. yield valid inference) under MCAR, the statistical properties of the procedure are not sound." (Vink, n.d., p. 4)
 
+Add "post-processing steps (e.g. aggregation computations, summary statistics, regressions on the simulation results) used to transform simulation outputs to reported results". %, see \url{http://jsterman.scripts.mit.edu/docs/Rahmandad-Sterman%20Simulation%20Reporting%20Standards3.30%20update.pdf}.
 
 
 
@@ -344,9 +361,11 @@ It. & Bias & Emp. SE & CI width & Cov. rate & $\widehat{R}$ & Auto-corr. \\
   % 50 & -0.087 & 0.119 & 0.662 & 0.990 & 1.009 & -0.029 \\ 
    \hline
 \end{tabular}
+\caption{Simulation and convergence diagnostics over 1000 MCMC simulations.}
 \label{subsetresults}
 \end{table}
 
+Add simulation time (computational cost) to table? Add empirical SE of diagnostics?
 
 %% -- Manuscript ---------------------------------------------------------------
 
