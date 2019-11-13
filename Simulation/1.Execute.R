@@ -20,7 +20,7 @@ source("Functions/Evaluate.R")
 # simulation parameters
 populationsize <- 1000 #n of simulated dataset
 n.iter <- 50 #nr of iterations (varying 1:n.iter)
-n.sim <- 100 #nr of simulations per iteration value
+n.sim <- 1000 #nr of simulations per iteration value
 true_effect <- 2 #regression coefficient to be estimated
 
 # start simulation study
@@ -66,3 +66,5 @@ plot.ts(out, main = "", xlab = "Number of iterations")
 
 # save for future reference
 save.Rdata(out, name = "results4.Rdata", path = "Results")
+# list <- as.list(res)
+# saveRDS(list, file = "allsims.Rdata")
