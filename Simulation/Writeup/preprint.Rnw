@@ -230,7 +230,7 @@ simulate data with missingness
 for (number of simulation runs from 1 to 1000)
   for (number of iterations from 1 to 100)
     impute the missingness
-    compute convergence diagnostic
+    compute convergence diagnostics
     perform analysis
     pool results
     compute simulation diagnostics
@@ -262,7 +262,7 @@ Z_{2}\\
 Y &=  2 \times X + 0.5 \times Z_1 - 1 \times Z_2 + \epsilon
 \end{align*}
 
-After data generation, the complete data is 'amputed'. That is, the \pkg{mice} function \fct{ampute} is used to impose an MCAR missingness mechanism upon the data. The probability to be missing is the same for all cells, namely XYZ\%. %"Furthermore, we generate three kinds of missingness proportions: 0.1, 0.5, and 0.9. Note that these values indicate the sampled proportion of incomplete cases in Y" \cite{schou18}.
+After data generation, the complete data is 'amputed'. That is, the \pkg{mice} function \fct{ampute} in \proglang{R} is used to impose an MCAR missingness mechanism upon the data. The probability to be missing is the same for all cells, namely XYZ\%. %"Furthermore, we generate three kinds of missingness proportions: 0.1, 0.5, and 0.9. Note that these values indicate the sampled proportion of incomplete cases in Y" \cite{schou18}.
 Table XYZ shows a summary of the generated complete data, and the amputed data. The amputed data is the starting point of each of the 1000 simulations per simulation condition.
 
 Missing data points are imputed with \pkg{mice} in \proglang{R}. All simulations are performed with imputation method 'norm' (Bayesian linear regression imputation), and five imputation chains ($m = 5$). The number of iterations is varied over simulations ('maxit' argument between 1 and 100). Each simulation condition (i.e., each number of iterations) is simulated 1000 times. Simulation and convergence diagnostics are aggregated over the 1000 MCMC simulations. 
@@ -402,7 +402,7 @@ It. & Bias & Emp. SE & CI width & Cov. rate & & $\widehat{R}$ & Auto-corr. \\
 
 From the simulation diagnostics it appears that as little as three iterations is sufficient to draw valid inference. Convergence diagnostics $\widehat{R}$ and auto-correlation, however, indicate 20-30 iterations. Apparently, they are not perfect for MI data [move interpretation to Discussion!]. 
 
-[Add simulation time (computational cost) to table? Add empirical SE of all diagnostics? Sample some random simulations and check distribution and plausibility of imputations?]
+[Add simulation time (computational cost) to table? Add empirical SE of all diagnostics? Sample some random simulations and check distribution and plausibility of imputations? Use chain variance as scalar of interest for rhat and autocorrelation?]
 
 %% -- Manuscript ---------------------------------------------------------------
 

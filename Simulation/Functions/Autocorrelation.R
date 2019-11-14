@@ -1,7 +1,7 @@
 # compute the autocorrelation at lag 1
 # Used within imputation function
 
-get.autocorr <- function(imp, maxit, m = 5, n.var = 4){
+autocorr_function <- function(imp, maxit, m = 5, n.var = 4){
   
   # objects with variables in columns
   ac <- matrix(NA, nrow = m, ncol = n.var)

@@ -13,14 +13,15 @@ library(ggplot2)
 # load simulation/evaluation functions
 source("Functions/CreateData.R")
 source("Functions/Convergence.R")
+source("Functions/Convergence_supplement.R")
 source("Functions/Autocorrelation.R")
 source("Functions/Impute.R")
 source("Functions/Evaluate.R")
 
 # simulation parameters
 populationsize <- 1000 #n of simulated dataset
-n.iter <- 50 #nr of iterations (varying 1:n.iter)
-n.sim <- 1000 #nr of simulations per iteration value
+n.iter <- 15 #nr of iterations (varying 1:n.iter)
+n.sim <- 10 #nr of simulations per iteration value
 true_effect <- 2 #regression coefficient to be estimated
 
 # start simulation study
@@ -38,12 +39,12 @@ simulate <- function(runs = 10, n.iter = 5) {
   # repeat mi procedure 'runs'  times for each nr of iterations
   for (run in 1:runs) {
     for (i in 1:n.iter) {
-      res[i, run,] <- test.impute(data, method = "norm",
-                                  maxit = i)
+      res[i, run, ] <- test.impute(data, method = "norm",
+                                   maxit = i)
     }
     setTxtProgressBar(pb, run)
-    }
-  close(pb) 
+  }
+  close(pb)
   res
 }
 
@@ -65,6 +66,6 @@ plot.ts(out, main = "", xlab = "Number of iterations")
 ###
 
 # save for future reference
-save.Rdata(out, name = "results4.Rdata", path = "Results")
+save.Rdata(out, name = "results6.Rdata", path = "Results")
 # list <- as.list(res)
-# saveRDS(list, file = "allsims.Rdata")
+# saveRDS(list, file = "allsims2.Rdata")
