@@ -1,25 +1,26 @@
-# compute the autocorrelation at lag 1
+# Compute the maximum auto-correlation at lag 1
 # Used within imputation function
 
 autocorr_function <- function(imp, maxit, m = 5, n.var = 4){
   
-  # objects with variables in columns
+  # object for for loop
   ac <- matrix(NA, nrow = m, ncol = n.var)
-  #ac.prop <- matrix(NA, nrow = 1, ncol = n.var)
   
-  # critical value significance 
-  AC_lim <- qnorm((1 + .95) / 2) / sqrt(maxit)
-  
-  # compute converegnce diagnostic per variable
+  # compute convergence diagnostic per variable
   for (v in 1:n.var) {
     for (chain in 1:m) {
       ac[chain, v] <-
         acf(imp$chainMean[v, , chain],
           lag.max = 1,
-          plot = F)$acf[-1] #> AC_lim
-    #ac.prop <- colMeans(ac)
+          plot = F)$acf[-1]
   }
 }
 # output
-  ac[which.max(abs(ac))] # fraction of imputation chains with significant autocorrelation at lag 1
+  ac[which.max(abs(ac))]
 }
+
+# NB. This function can be adjusted to show the nr. of chains with significant auto-correlations,
+# output will then be the fraction of imputation chains with significant autocorrelation at lag 1.
+# To get this, add:
+# # critical value significance 
+# AC_lim <- qnorm((1 + .95) / 2) / sqrt(maxit)

@@ -11,17 +11,17 @@ library(dplyr)
 library(ggplot2)
 
 # load simulation/evaluation functions
-source("Functions/CreateData.R")
-source("Functions/Convergence.R")
-source("Functions/Convergence_supplement.R")
-source("Functions/Autocorrelation.R")
-source("Functions/Impute.R")
-source("Functions/Evaluate.R")
+source("Simulation/Functions/CreateData.R")
+source("Simulation/Functions/Convergence.R")
+source("Simulation/Functions/Convergence_supplement.R")
+source("Simulation/Functions/Autocorrelation.R")
+source("Simulation/Functions/Impute.R")
+source("Simulation/Functions/Evaluate.R")
 
 # simulation parameters
 populationsize <- 1000 #n of simulated dataset
-n.iter <- 15 #nr of iterations (varying 1:n.iter)
-n.sim <- 10 #nr of simulations per iteration value
+n.iter <- 100 #nr of iterations (varying 1:n.iter)
+n.sim <- 1000 #nr of simulations per iteration value
 true_effect <- 2 #regression coefficient to be estimated
 
 # start simulation study
@@ -30,42 +30,42 @@ set.seed(1111)
 ###
 
 # combine separate functions into wrapper
-simulate <- function(runs = 10, n.iter = 5) {
+simulate <- function(runs = 10, n.iter = 5, populationsize = 1000, true_effect = 2) {
   pb <- txtProgressBar(min = 0, max = runs, style = 3)
   # object for output
   res <- array(NA, dim = c(n.iter, runs, 6))
   # simulate data once
-  data <- data.simulation(n = poulationsize)
+  data <- data.simulation(n = poulationsize, true_effect)
   # repeat mi procedure 'runs'  times for each nr of iterations
   for (run in 1:runs) {
     for (i in 1:n.iter) {
-      res[i, run, ] <- test.impute(data, method = "norm",
-                                   maxit = i)
+      res[i, run, ] <- test.impute(data, maxit = i)
     }
     setTxtProgressBar(pb, run)
   }
   close(pb)
+  # output
   res
 }
 
 # simulate
-res <- simulate(runs = n.sim, n.iter = n.iter)
+res <- simulate(runs = n.sim, n.iter = n.iter, populationsize = populationsize, true_effect = true_effect)
 
 ###
 
 # evaluate
-(out <- evaluate.sim(res))
+(out <- evaluate.sim(res, true_effect = true_effect))
 
 ###
 
 # plot
-# load("Results/results2.Rdata.Rdata")
+# load("Results/results5.Rdata.Rdata")
 # out <- dat
 plot.ts(out, main = "", xlab = "Number of iterations")
 
 ###
 
 # save for future reference
-save.Rdata(out, name = "results6.Rdata", path = "Results")
+save.Rdata(out, name = "results7.Rdata", path = "Simulation/Results")
 # list <- as.list(res)
 # saveRDS(list, file = "allsims2.Rdata")

@@ -1,5 +1,5 @@
 # Supplementary functions for Rhat function (see Convergence.R)
-# To get folded, split-half rank-normalized Rhat
+# To get folded, split-half, rank-normalized Rhat
 
 # fold chains for rhat of tails
 fold_sims <- function(sims) {
@@ -35,6 +35,7 @@ z_scale <- function(x) {
 # compute rhat
 get.rhat <- function(sims, maxit = maxit) {
   # compute potential scale reduction factor (rhat) for each variable in mids object
+  # equations adapted from Vehtari et al. (2019)
   var_between <-
     maxit * var(apply(sims, 2, mean))
   var_within <- mean(apply(sims, 2, var))

@@ -25,16 +25,16 @@ test.impute <- function(data,
     tab[5] <- tab[6] <- NA
   }
   else if (maxit > 1) {
-    tab[5] <- rhat_function(imp, maxit)
-    tab[6] <- autocorr_function(imp, maxit)
+    tab[5] <- rhat_function(imp, maxit) #maximum Rhat across variables
+    tab[6] <- autocorr_function(imp, maxit) #auto-correlation at lag 1
   }
   
   # extract estimates
   mip <- unlist(pool(with(imp, lm(Y ~ X + Z1 + Z2))))
-  tab[1] <- mip$pooled.estimate2
-  tab[2] <- sqrt((m + 1) * mip$pooled.b2 / m)
-  tab[3] <- tab[1] - qt(.975, df = m - 1) * tab[2]
-  tab[4] <- tab[1] + qt(.975, df = m - 1) * tab[2]
+  tab[1] <- mip$pooled.estimate2 #estimated regression coefficient
+  tab[2] <- sqrt((m + 1) * mip$pooled.b2 / m) #pooled SE
+  tab[3] <- tab[1] - qt(.975, df = m - 1) * tab[2] #lower bound CI
+  tab[4] <- tab[1] + qt(.975, df = m - 1) * tab[2] #upper bound CI
   
   # output
   as.numeric(tab)

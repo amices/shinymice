@@ -1,6 +1,8 @@
 ---
 title: "Convergence of MI algorithms"
-output: html_notebook
+output:
+  html_document:
+    df_print: paged
 ---
 
 This file describes how convergence diagnostic $\widehat{R}$ is computed in the simulation study I ran for my Research Report. $\widehat{R}$ is also called 'potential scale reduction factor'. It tells us how much the variance of an estimate could be shrunken down if we would have infinitely many iterations.
