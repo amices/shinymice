@@ -30,12 +30,12 @@ set.seed(1111)
 ###
 
 # combine separate functions into wrapper
-simulate <- function(runs = 10, n.iter = 5, populationsize = 1000, true_effect = 2) {
+simulate <- function(runs, n.iter, populationsize, true_effect = 2) {
   pb <- txtProgressBar(min = 0, max = runs, style = 3)
   # object for output
   res <- array(NA, dim = c(n.iter, runs, 6))
   # simulate data once
-  data <- data.simulation(n = poulationsize, true_effect)
+  data <- data.simulation(n = populationsize, true_effect)
   # repeat mi procedure 'runs'  times for each nr of iterations
   for (run in 1:runs) {
     for (i in 1:n.iter) {
