@@ -18,7 +18,7 @@ data.simulation <- function(n = populationsize, true_effect = 2) {
   simdata$Y <-
     true_effect * simdata$X + 0.5 * simdata$Z1 - 1 * simdata$Z2 + rnorm(n = populationsize, sd = 10)
   
-  # remove values at random with 50 percent probability to be missing
+  # remove values at random with 20 percent probability to be missing
   ampdata <- ampute(simdata, prop = 0.8, mech = "MCAR")$amp
 
   # output
