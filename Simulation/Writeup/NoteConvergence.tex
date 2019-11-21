@@ -7,7 +7,8 @@
 
 %% another package (only for this demo article)
 % \usepackage{framed}
-\usepackage{multirow, amsmath}
+\usepackage{multirow, amsmath, tikz}
+\usetikzlibrary{fit, positioning}
 
 %% new custom commands
 \newcommand{\class}[1]{`\code{#1}'}
@@ -61,7 +62,7 @@
   Heidelberglaan~15\\
   3500 Utrecht, The Netherlands\\
   E-mail: \email{h.i.oberman@uu.nl} % \\
-  % URL: \url{https://eeecon.uibk.ac.at/~zeileis/}
+  URL: \url{https://hanneoberman.github.io/}
 }
 
 \begin{document}
@@ -71,25 +72,67 @@
 
 \section{Introduction} \label{sec:intro} % curly brackets can handle typesetting
 
-Feedback research seminar: order is not intuitive, mentioned, explained later. short sentences with a lot of content. implicitly a lot happens. expand sentence or it's obvious and i should delete it. Explain 'true data generating model'. follow important concepts with explanation or examples in next part. Look at abbreviations. for example r hat is just metnioned as 'e.g.' not clear in intro how important it is. also, look at distinction between mi and mice, they look like synonyms now. look at imputing vs analysing because they're called steps somewhere, and something else somewhere else. explain what a chain is. make clear when i talk about my study or lit. look at equations vehtari, because there is no real need for it. try to rephrase in my own words because of text flow. make clear that i only generate 1 dataset (not simulated data). in figure, r hat looks stable after 20 it. in discussion, explain that less it is advantage of mi, not a disadv. compared to MCMC. then final par is too negative, explain scope in intro instead.
+At some point, any scientist conducting statistical analyses will run into a missing data problem \citep{alli02}. Missingness is problematic because statistical inference cannot be performed on incomplete data, and ad hoc solutions (e.g., listwise deletion) can yield wildly invalid results \citep{buur18}. To circumvent the ubiquitous problem of missing information, \cite{rubin87} proposed the framework of multiple imputation (MI). MI is an iterative algorithmic procedure in which missing data points are 'guessed' (i.e. imputed) several times. [Add some stuff here about MICE.] The variability between the imputations validly reflects how much uncertainty in the inference is due to missing information--that is, if all statistical assumptions are met \citep{rubin87} [adjust this sentence to be more clear!].
 
-At some point, any scientist conducting statistical analyses will run into a missing data problem \citep{alli02}. Missingness is problematic because statistical inference cannot be performed on incomplete data, and ad hoc solutions can yield wildly invalid results \citep{buur18}. To circumvent the ubiquitous problem of missing information, \cite{rubin87} proposed the framework of multiple imputation (MI). MI is an iterative algorithmic procedure in which missing data points are 'guessed' (i.e. imputed) several times. [Add some stuff here about MICE.] The variability between the imputations validly reflects how much uncertainty in the inference is due to missing information--that is, if all statistical assumptions are met \citep{rubin87}.
+[Feedback: The order of the introduction is not intuitive. some terms are mentioned first and only explained later. There are some short sentences with a lot of content, so implicitly a lot happens. Expand these sentences or delete (because the thing would be too obvious?). Explain 'true data generating model'. Follow up other important concepts with explanation or examples too.]
 %Missing data is ubiquitous. MICE can solve stuff. 
 
-With MI, many assumptions are made about the nature of the observed and missing parts of the data and their relation to the `true' \emph{data generating model} \citep{buur18}. Without proper evaluation of the imputations and the underlying assumptions, any drawn inference may erroneously be deemed valid. Such evaluation measures are currently missing or under-developed in MI software, like the world leading \proglang{R} package \pkg{mice} \citep{mice}. %Therefore, I will answer the following question: 'Which measures are vital for evaluating the validity of multiply imputed data?'.
+With MI, many assumptions are made about the nature of the observed and missing parts of the data and their relation to the `true' \emph{data generating model} \citep{buur18} [explain what this is!]. Without proper evaluation of the imputations and the underlying assumptions, any drawn inference may erroneously be deemed valid. Such evaluation measures are currently missing or under-developed in MI software, like the world leading \proglang{R} package \pkg{mice} \citep{mice}. %Therefore, I will answer the following question: 'Which measures are vital for evaluating the validity of multiply imputed data?'.
 
-A fundamental assumption of MICE is convergence of the algorithm. MICE is a sort of Gibbs sampler, a type of MCMC algorithm. In general, the validity of inference resulting from MCMC algorithms is threatened by non-convergence. So we use convergence diagnostics to flag non-convergence. But it is not known whether conventional convergence diagnostics for MCMC methods work on MI data. 
+[Feedback: Look at abbreviations. For example r hat is just metnioned as 'e.g.'. It's not clear in the introduction section how important it is later.]
 
-Conventional thresholds to diagnose non-convergence-- e.g., Gelman and Rubin's \citeyear{gelm92} statistic $\widehat{R} < 1.1$ --are not applicable on multiply imputed data \citep{lace07}. Therefore, empirical researchers have to rely on visual inspection procedures that are theoretically equivalent to $\widehat{R}$ \citep{whit11}. Visually assessing convergence is not only difficult to the untrained eye, it might also be futile. The convergence properties of MI algorithms lack scientific consensus \citep{taka17}, and some default MICE techniques might not converge to stable distributions at all \citep{murr18}. Moreover, convergence diagnostics for MI methods have not been systematically studied \citep{buur18}.
+A fundamental assumption of MICE is convergence of the algorithm. MICE is a sort of Gibbs sampler, a type of Markov chain Monte Carlo (MCMC) algorithm. In general, the validity of inference resulting from MCMC algorithms is threatened by non-convergence. Hence we use convergence diagnostics to flag non-convergence. But it is not known whether conventional convergence diagnostics for MCMC methods work on MI data. 
 
-This paper investigates convergence properties of MI algorithms by means of model-based simulation in \proglang{R} \citep{R}. The results of this simulation study are guidelines for applied researchers to evaluate convergence of MI algorithms. %I will replicate Lacerda et al.'s simulation study on $\widehat{R}$ \citep{lace07}, and develop novel guidelines for assessing convergence. Ideally, I will integrate several diagnostics (e.g., $\widehat{R}$, \emph{auto-correlation}, and \emph{simulation error}) into a single summary indicator to flag non-convergence. 
+Conventional thresholds to diagnose non-convergence-- e.g., Gelman and Rubin's \citeyear{gelm92} statistic $\widehat{R} < 1.1$ --are not applicable on multiply imputed data \citep{lace07} [Expand or remove Rhat here! Refer to future section?]. Therefore, empirical researchers have to rely on visual inspection procedures that are theoretically equivalent to $\widehat{R}$ \citep{whit11} [explain why this is appropriate, and numerical is not]. Visually assessing convergence is not only difficult to the untrained eye, it might also be futile. The convergence properties of MI algorithms lack scientific consensus \citep{taka17}, and some default MICE techniques might not converge to stable distributions at all \citep{murr18}. Moreover, convergence diagnostics for MI methods have not been systematically studied \citep{buur18}.
+
+This paper investigates convergence properties of MI algorithms by means of model-based simulation in \proglang{R} \citep{R}. All programming code used in this note is available in the file 'XYZ.R' along with the manuscript, and on Github repository 'XYZ'. The results of this simulation study are guidelines for applied researchers to evaluate convergence of MI algorithms. %I will replicate Lacerda et al.'s simulation study on $\widehat{R}$ \citep{lace07}, and develop novel guidelines for assessing convergence. Ideally, I will integrate several diagnostics (e.g., $\widehat{R}$, \emph{auto-correlation}, and \emph{simulation error}) into a single summary indicator to flag non-convergence. 
 
 
 %% -- Features ---------------------------------------------------------------
-\subsection{Features} \label{sec:features}
+\subsection{Terminology} \label{sec:terms}
 
-The aim of this paper is to provide applied researchers a tool to assess convergence of MICE algorithms. The intended audience consists of empirical researchers and statisticians who use multiple imputation to solve missing data problems. Basic familiarity with multiple imputation methodology is assumed. For an accessible and comprehensive introduction to MI from an applied perspective, see \cite{buur18}. For the theoretical foundation of MI, see \cite{rubin87}. All programming code used in this paper is available in the file 'XYZ.R' along with the manuscript, and on Github repository 'XYZ'. 
-% "The intended audience of this paper consists of applied researchers who want to address problems caused by missing data by multiple imputation. The text assumes basic familiarity with R. The document contains hands-on analysis using the mice package. We do not discuss problems of incomplete data in general. We refer to the excellent books by Little and Rubin (2002) and Schafer (1997). Theory and applications of multiple imputation have been developed in Rubin (1987) and Rubin (1996). van Buuren (2012) introduces multiple imputation from an applied perspective" \cite[p.~4]{mice}.
+The aim of this paper is to provide applied researchers a tool to assess convergence of multiple imputation algorithms. The intended audience consists of empirical researchers and statisticians who use multiple imputation to solve missing data problems. Basic familiarity with multiple imputation methodology is assumed. For an accessible and comprehensive introduction to MI from an applied perspective, see \cite{buur18}. For the theoretical foundation of MI, see \cite{rubin87}.  
+
+[explain difference MI, MICE, mice]
+
+[Explain the use of `imputation chain' (the iterations of an imputation, only the final imputed values are used), starting values of chains, `simulation condition' (the number of iterations the algorithm has before imputing), ...?]
+
+[look at imputing vs analysing because they're called steps somewhere, and something else somewhere else. explain what a chain is.]
+
+\begin{figure}
+\centering
+	\large{\begin{tikzpicture}
+	\tikzstyle{main}=[circle, minimum size = 10mm, thick, draw =black!80, node distance = 20mm]
+\tikzstyle{connect}=[-latex, thick]
+\node[main, fill = white!100] (data) [label=left:Incomplete data] { };
+\node[main] (mids) [right=of data] { };
+\node[main] (mids2) [above=of mids] { };
+\node[main] (mids3) [below=of mids,label=below:Imputed data] { };
+\node[main] (mira) [right=of mids] {};
+\node[main] (mira2) [above=of mira] { };
+\node[main] (mira3) [below=of mira,label=below:Analysis results] { };
+\node[main, fill = white!100] (mipo) [right=of mira,label=right:Pooled result] { };
+\path (data) edge [connect] (mids)
+      (data) edge [connect] (mids2)
+      (data) edge [connect] (mids3)
+      (mids) edge [connect] (mira)
+      (mids2) edge [connect] (mira2)
+      (mids3) edge [connect] (mira3)
+		  (mira) edge [connect] (mipo)
+		  (mira2) edge [connect] (mipo)
+		  (mira3) edge [connect] (mipo);
+\end{tikzpicture}}
+\caption{Scheme of main steps in multiple imputation (Adapted from \cite[\S~1.4.1]{buur18})}
+\end{figure}
+
+
+% \begin{figure}[h]
+%   \resizebox{\textwidth}{!}{ %notice the \resizebox{} command
+%         \includegraphics{steps.png}
+%   }
+%   \caption{Scheme of main steps in multiple imputation (Adapted from \cite[par.~1.4.1]{buur18})}
+%     \label{resultssim}
+% \end{figure}
 
 
 %% -- Notation ---------------------------------------------------------------
@@ -97,12 +140,12 @@ The aim of this paper is to provide applied researchers a tool to assess converg
 
 The convergence guidelines introduced in this paper are developed to be integrated into the \pkg{mice} environment \citep{mice} in \proglang{R} \citep{R}. It therefore follows notation and conventions of \cite{mice}. For an overview of the deviations from the 'original' notation by \cite{rubin87}, see \cite{buur18}. 
 
-Let $Y$ denote an $n \times p$ matrix containing the data values on $p$ variables for all $n$ units in a sample. The collection of observed data values is denoted as $Y_{obs}$; the missing part of $Y$ is referred to as $Y_{mis}$. Response indicator $R$ shows whether a data value in $Y$ is missing or observed. The relation between $R$, $Y_{obs}$, and $Y_{mis}$ determines the missingness mechanism. This paper only considers a 'missing completely at random' mechanism, where the probability to be missing is equal for all $n \times p$ cells in $Y$.
+Let $Y$ denote an $n \times p$ matrix containing the data values on $p$ variables for all $n$ units in a sample. The collection of observed data values in $Y$ is denoted as $Y_{obs}$; the missing part of $Y$ is referred to as $Y_{mis}$. Response indicator $R$ shows whether a data value in $Y$ is missing or observed. The relation between $R$, $Y_{obs}$, and $Y_{mis}$ determines the missingness mechanism. This paper only considers a 'missing completely at random' (MCAR) mechanism, where the probability to be missing is equal for all $n \times p$ cells in $Y$.
 
-With multiple imputation, $Y_{mis}$ is 'filled in' (i.e. imputed) $m$ times. The $m$ imputed data sets are analyzed separately, and their results pooled. A distinction is made between the imputation step (employing $p$ 'imputation models'), and the analysis step (using one 'complete-data model' for each of the $m$ imputed data sets). The quantity of scientific interest is the result of the analysis step, e.g., a regression coefficient, and denoted with $Q$. That is, $Q$ is estimated on each imputed data set, resulting in $m$ separate $\hat{Q}$ values. These are combined into pooled estimate $\bar{Q}$.
+With multiple imputation, $Y_{mis}$ is 'filled in' (i.e. imputed) $m$ times. The $m$ imputed data sets are analyzed separately, and their results pooled [Make this more clear!]. A distinction is made between the imputation step (employing $p$ 'imputation models'), and the analysis step (using one 'complete-data model' for each of the $m$ imputed data sets). The quantity of scientific interest is the result of the analysis step, e.g., a regression coefficient, and denoted with $Q$. That is, $Q$ is estimated on each imputed data set, resulting in $m$ separate $\hat{Q}$ values. These are combined into pooled estimate $\bar{Q}$.
 % "Let Q denote the quantity of scientific interest (e.g., a regression coefficient)." \cite[p.~4]{mice}.
 
-[Explain the use of `imputation chain' (the iterations of an imputation, only the final imputed values are used), `simulation condition' (the number of iterations the algorithm has before imputing), ...?]
+
 
 % "Let Y denote the n x p matrix containing the data values on p variables for all n units in the sample. We define the response indicator R as an n x p 0-1 matrix. The elements of Y and R are denoted by y i j and r i j , respectively, where i = 1 , ... , n and j = 1 , ... , p . If y i j is observed, then r i j = 1 , and if y i j is missing, then r i j = 0 ." ... The observed data are collectively denoted by Y o b s . The missing data are collectively denoted as Y m i s , and contain all elements y i j where r i j = 0 . When taken together Y = ( Y o b s , Y m i s ) contain the hypothetically complete data." \cite[par.~2.2]{buur18}
 % The data are said to be MCAR if Pr ( R = 0 | Y o b s , Y m i s , $\psi$ ) = Pr ( R = 0 | $\psi$ ) (2.1) so the probability of being missing depends only on some parameters $\psi$ , the overall probability of being missing. The data are said to be MAR if Pr ( R = 0 | Y o b s , Y m i s , $\psi$ ) = Pr ( R = 0 | Y o b s , $\psi$ ) (2.2) so the missingness probability may depend on observed information, including any design factors. Finally, the data are MNAR if Pr ( R = 0 | Y o b s , Y m i s , $\psi$ ) (2.3) does not simplify, so here the probability to be missing also depends on unobserved information, including Y m i s itself. \cite[par.~2.2]{buur18}
@@ -121,9 +164,9 @@ Convergence has two interpretations [look up source!!!]: mixing between chains a
 We can never be certain of convergence, therefore convergence diagnostics evaluate signs of non-convergence \citep{hoff09}. % In general: "In general, you cannot know for sure if your chain has converged. But sometimes you can know if your chain has not converged, so we at least check for this latter possibility" \cite[p.~101]{hoff09}
 Diagnose non-convergence in the mixing sense: $\widehat{R}$. Diagnose non-convergence in the stability sense: auto-correlation. 
 
-In the latter interpretation of convergence, convergence is interpreted as stability over iterations, or non-recurring. Non-recurrence can be evaluated with auto-correlation. Auto-correlation shows how dependent subsequent draws of an imputation chain are on the previous value. If there is a lot of dependence, draws at e.g. iteration five are significantly correlated with the value of the first draw. Auto-correlation above the confidence level indicate dependence within chains. Also, possible to use MC error, Geweke, and the other one. But outside of scope of this study. Here, the focus is mainly on $\widehat{R}$.
+In the latter interpretation of convergence, convergence is interpreted as stability over iterations, or non-recurring. Non-recurrence can be evaluated with auto-correlation. Auto-correlation shows how dependent subsequent draws of an imputation chain are on the previous value. If there is a lot of dependence, draws at e.g. iteration five are significantly correlated with the value of the first draw. Auto-correlation above the confidence level [explain that this is a critical value for correlation based on alpha .05] indicate dependence within chains. Also, possible to use MC error, Geweke, and the other one. But outside of scope of this study. Here, the focus is mainly on $\widehat{R}$.
 
-The potential scale reduction factor $\widehat{R}$ tells us how much variance of an estimate could be shrunken down by running the chains infinitely long. That then tells us something about how dependent the chains are on the starting values. If there is no dependence on the initial values anymore, the chains have converged (in the mixing sense of the word). $\widehat{R}$ is then equal to one. Conventional threshold was $\widehat{R} < 1.2$ is acceptable. Most recent guideline by \cite{veht19} is more stringent: $\widehat{R} < 1.01$. 
+The potential scale reduction factor $\widehat{R}$ tells us how much variance of an estimate could be shrunken down by running the chains infinitely long [Add reference, gelman something?]. That then tells us something about how dependent the chains are on the starting values. If there is no dependence on the initial values anymore, the chains have converged (in the mixing sense of the word). $\widehat{R}$ is then equal to one. Conventional threshold was $\widehat{R} < 1.2$ is acceptable. Most recent guideline by \cite{veht19} is more stringent: $\widehat{R} < 1.01$. 
 
 Why is $\widehat{R}$ not applicable on MI data? $\widehat{R}$ is not appropriate because it assumes over-dispersed initial values, which means that the initial values of the $m$ imputation chains are 'far away' from the distribution that the chains are converging to. With MI procedures, initial values are chosen such that ... [or maybe even estimated from the observed data??]. This means that at most one initial value is necessary, but probably none at all. [I should look this up.] Without over-dispersed initial states, $\widehat{R}$ can falsely diagnose convergence \citep{broo98}. %would not be sensitive enough to flag non-convergence of MI algorithms: "if over-dispersion does not hold, $\sigma_+^2$ can be too low, which can lead to falsely diagnosing convergence." \cite[p~437]{broo98}. 
 This suggests that $\widehat{R}$ would not be sensitive enough to flag non-convergence of MI algorithms. Empirical finding, however, show that the opposite may be true: \cite{lace07} report $\widehat{R}$ values above the threshold of $\widehat{R} < 1.1$ after fifty iterations. %that $\widehat{R}$ will not be smaller than 1.1 before iteration number 50. Therefore, the aim is to replicate empirical finding Lacerda et al. 
@@ -182,6 +225,9 @@ The potential scale reduction factor $\widehat{R}$ is obtained as:
 \widehat{R}=\sqrt{\frac{\widehat{\operatorname{var}}^{+}(\theta | y)}{W}}.
 \end{equation*}
 
+[make clear when i talk about my study or lit. look at equations vehtari, because there is no real need for it. try to rephrase in my own words because of text flow.]
+
+
 In this study, $\widehat{R}$ is computed for the mean of each variable, in each imputation chain, over all simulation conditions and MCMC simulations. %For each simulation in each simulation condition, the maximum value of $\widehat{R}$ is reported.
 
 
@@ -235,7 +281,7 @@ for (number of simulation runs from 1 to 1000)
 aggregate convergence and simulation diagnostics
 \end{Code}
 
-The simulated data is a finite population of $N=1000$. The variables are dependent variable $Y$, independent variable $X$, and covariates $Z_1$ and $Z_2$. The quantity of scientific interest is the estimated regression coefficient of $X$ on $Y$ in linear regression model $Y \sim X+Z_1+Z_2$. The data generating model of the predictors is a multivariate normal distribution with means structure $\mu$, and variance-covariance matrix $\Sigma$. Outcome variable $Y$ is deduced from the predictor variables as follows:
+The simulated dataset is a finite population of $N=1000$. The data are simulated to solve a multiple linear regression complete data problem. The quantity of scientific interest is the estimated regression coefficient of predictor $X$ on outcome variable $Y$. The linear regression model is $Y \sim X+Z_1+Z_2$, where $Y$ is the dependent variable, $X$ is an independent variable, and $Z_1$ and $Z_2$ are covariates. The data generating model of the predictors is a multivariate normal distribution with means structure $\mu$, and variance-covariance matrix $\Sigma$. Outcome variable $Y$ is deduced from the predictor variables as follows:
 
 \begin{align*}
 \begin{pmatrix}X\\
@@ -260,8 +306,8 @@ Z_{2}\\
 Y &=  2 \times X + 0.5 \times Z_1 - 1 \times Z_2 + \epsilon
 \end{align*}
 
-After data generation, the complete data is 'amputed'. That is, the \pkg{mice} function \fct{ampute} in \proglang{R} is used to impose an MCAR missingness mechanism upon the data. The probability to be missing is the same for all cells, namely XYZ\%. %"Furthermore, we generate three kinds of missingness proportions: 0.1, 0.5, and 0.9. Note that these values indicate the sampled proportion of incomplete cases in Y" \cite{schou18}.
-Table XYZ shows a summary of the generated complete data, and the amputed data. The amputed data is the starting point of each of the 1000 simulations per simulation condition.
+After data generation, the complete data is 'amputed'. That is, the \pkg{mice} function \fct{ampute} in \proglang{R} is used to impose an MCAR missingness mechanism upon the data. The missingness is univariate, and the probability to be missing is the same for all variables, namely 20\%. This leaves 20\% of the rows completely observed. %"Furthermore, we generate three kinds of missingness proportions: 0.1, 0.5, and 0.9. Note that these values indicate the sampled proportion of incomplete cases in Y" \cite{schou18}.
+Table XYZ shows a summary of the generated complete data, and the amputed data. The amputed dataset is the starting point of each of the 1000 simulations per simulation condition.
 
 Missing data points are imputed with \pkg{mice} in \proglang{R}. All simulations are performed with imputation method 'norm' (Bayesian linear regression imputation), and five imputation chains ($m = 5$). The number of iterations is varied over simulations ('maxit' argument between 1 and 100). Each simulation condition (i.e., each number of iterations) is simulated 1000 times. Simulation and convergence diagnostics are aggregated over the 1000 MCMC simulations. 
 % Missingness mechanism: "With MCAR missingness mechanisms, the probability to be missing is the same for all cases. This is a necessary simulation condition for evaluating the performance of imputation procedures. If an imputation method is not able to solve the problem (i.e. yield valid inference) under MCAR, the statistical properties of the procedure are not sound." (Vink, n.d., p. 4)
@@ -298,7 +344,7 @@ Figure \ref{resultssim} shows the results over 1000 simulations. A subset of sim
 
 \begin{figure}[h]
   \resizebox{\textwidth}{!}{ %notice the \resizebox{} command
-        \includegraphics{res3.pdf}
+        \includegraphics{resultsA4.pdf}
   }      
   \caption{Simulation and convergence diagnostics over 1000 MCMC simulations.}
     \label{resultssim}
@@ -308,7 +354,7 @@ Evaluate simulation diagnostics one by one: bias, empirical SE, confidence inter
 
 %% --------------------------------
 \subsection{Simulation diagnostics}
-Bias. After 1 or 2 iterations bias fluctuates within a narrow range of the average bias across all simulation conditions.
+Bias. After 1 or 2 iterations bias fluctuates within a narrow range of the average bias across all simulation conditions. Average bias is not zero because there is only one incomplete dataset to be imputed. Bias is a sample effect.
 
 Empirical standard error (SE).
 
@@ -316,14 +362,14 @@ Empirical standard error (SE).
 Confidence interval width. Does not show a trend across the simulation conditions. [Is related to empirical SE??]
 
 
-Coverage rate. Is more or less stable after one iteration. But higher percentages then the expected 95\% \cite{neym43}.
+Coverage rate. Is more or less stable from two iterations upwards. But higher percentages then the expected 95\% \cite{neym43}. This is due to pooled SE??
 
 %% --------------------------------
 \subsection{Convergence diagnostics}
 
-$\widehat{R}$. Steep drop down up-to iteration 30-40, then stable. Conventional threshold $\widehat{R} < 1.2$ reached after three iterations, $\widehat{R} < 1.1$ after four iterations, $\widehat{R} < 1.01$ after 38 iterations (see online appendix). 
+$\widehat{R}$. Steep drop down up-to iteration 20-30, then stable. Conventional threshold $\widehat{R} < 1.2$ reached after three iterations, $\widehat{R} < 1.1$ after four iterations, $\widehat{R} < 1.01$ after 38 iterations (see online appendix). 
 
-Auto-correlation. Auto-correlation is dangerous when positive. These auto-correlations are negative. Still, we want the iterations to be stable. Low auto-correlations 
+Auto-correlation. Auto-correlation is dangerous when positive. These auto-correlations are negative. Still, we want the iterations to be stable and independent. Default maxit is five iterations now, should this be different? Are the 'waves' most pronounced at iteration 5? But why the dip??  
 
 
 % latex table generated in R 3.6.1 by xtable 1.8-4 package
@@ -420,10 +466,13 @@ From the simulation diagnostics it appears that as little as three iterations is
 
 This note illustrates that conventional convergence diagnostics behave differently on MI data as compared to the output of 'regular' MCMC algorithms. The recommended threshold for $\widehat{R}$ is too stringent for MI data.
 
-Moreover, $\widehat{R}$ could theoretically not be smaller than one, yet it happened several times in this study (see online appendix XYZ). How could $\widehat{R}$ smaller than 1 occur? The number of simulations is smaller than in `regular' MCMC processes. Therefore, the '$(n-1/n)$' correction factor can influence the estimated potential scale reduction factor. This downwards bias is in the opposite direction than expected: ``The mixture-of-sequences variance, V, should stabilize as a function of n. (Before convergence, we expect $\sigma^2$ to decrease with n, only increasing if the sequences explore a new area of parameter space, which would imply that the original sequences were not overdispersed for the particular scalar summary being monitored.)'' \cite[p~438]{broo98}.
+Moreover, $\widehat{R}$ could theoretically not be smaller than one, yet it happened several times in this study (see online appendix XYZ). How could $\widehat{R}$ smaller than 1 occur? The number of simulations is smaller than in `regular' MCMC processes[explain why this is positive!]. Therefore, the `$(n-1/n)$' [add equation number] correction factor can influence the estimated potential scale reduction factor. This downwards bias is in the opposite direction than expected: ``The mixture-of-sequences variance, V, should stabilize as a function of n. (Before convergence, we expect $\sigma^2$ to decrease with n, only increasing if the sequences explore a new area of parameter space, which would imply that the original sequences were not overdispersed for the particular scalar summary being monitored.)'' \cite[p~438]{broo98}.
 
-We would like to have convergence measures for multivariable statistics (scalars?) of interest. This is, however, dependent of the complete data model. The eigenvector decomposition method proposed by McKay (?) should be implemented. I could not find any resources to apply this method and it is outside the scope of this thesis to investigate how this approach could be implemented.
+% \url{https://discourse.mc-stan.org/t/rhat-1-as-low-as-9-94e-01-why/9252/3}
 
+Future research: We would like to have convergence measures for multivariable statistics (scalars?) of interest. This is, however, dependent of the complete data model. The eigenvector decomposition method proposed by McKay (?) should be implemented. I could not find any resources to apply this method and it is outside the scope of this thesis to investigate how this approach could be implemented.
+
+[in discussion, explain that less it is advantage of mi, not a disadv. compared to MCMC. then final par is too negative, explain scope in intro instead.]
 
 %% -- Optional special unnumbered sections -------------------------------------
 

@@ -66,6 +66,7 @@ plot.ts(out, main = "", xlab = "Number of iterations")
 ###
 
 # save for future reference
-save.Rdata(out, name = "results7.Rdata", path = "Simulation/Results")
+save.Rdata(out, name = "results8.Rdata", path = "Simulation/Results")
 # list <- as.list(res)
 # saveRDS(list, file = "allsims2.Rdata")
+save.image("environment.Rdata")
