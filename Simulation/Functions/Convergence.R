@@ -2,18 +2,25 @@
 # Used within imputation function
 # Requires package 'magrittr'/'dplyr', and the functions in Convergence_supplement.R
 
-rhat_function <- function(imp, maxit, n.var = 4) {
+rhat_function <- function(imp, maxit, n.var = 4, moment = "mean") {
   # extract convergence diagnostic Rhat from mids object
   
   # object to store output for loop
   rhat <- matrix(NA, nrow = 1, ncol = n.var)
   
+  # make suitable for convergence of mean and variance
+  if (moment == "mean"){
+    sims <- imp$chainMean
+  } else if (moment == "variance"){
+    sims <- imp$chainVar
+  }
+  
   # compute converegnce diagnostic per variable v
   for (v in 1:n.var) {
     rhat_bulk <-
-      imp$chainMean[v, , ] %>% split_chains() %>% z_scale() %>% get.rhat(maxit = maxit)
+      sims[v, , ] %>% split_chains() %>% z_scale() %>% get.rhat(maxit = maxit)
     rhat_tail <-
-      imp$chainMean[v, , ] %>% fold_sims() %>% split_chains() %>% z_scale() %>% get.rhat(maxit = maxit)
+      sims[v, , ] %>% fold_sims() %>% split_chains() %>% z_scale() %>% get.rhat(maxit = maxit)
     rhat[v] <- max(rhat_bulk, rhat_tail)
   }
   

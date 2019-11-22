@@ -7,7 +7,7 @@ test.impute <- function(data,
                         maxit,
                         ...) {
   # object for output
-  tab <- matrix(nrow = 1, ncol = 6)
+  tab <- matrix(nrow = 1, ncol = 8)
   
   if (maxit == 1) {
     impsim <<- mice(data,
@@ -23,11 +23,13 @@ test.impute <- function(data,
   
   # compute convergence diagnostics
   if (maxit < 2) {
-    tab[5] <- tab[6] <- NA
+    tab[5] <- tab[6] <- tab[7] <- tab[8] <- NA
   }
   else if (maxit > 1) {
     tab[5] <- rhat_function(impsim, maxit) #maximum Rhat across variables
-    tab[6] <- autocorr_function(impsim, maxit) #auto-correlation at lag 1
+    tab[6] <- rhat_function(impsim, maxit, moment = "variance") #maximum Rhat across variables
+    tab[7] <- autocorr_function(impsim, maxit) #auto-correlation at lag 1
+    tab[8] <- autocorr_function(impsim, maxit, moment = "variance") #auto-correlation at lag 1
   }
   
   # extract estimates

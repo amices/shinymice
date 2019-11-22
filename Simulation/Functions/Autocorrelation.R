@@ -1,16 +1,23 @@
 # Compute the maximum auto-correlation at lag 1
 # Used within imputation function
 
-autocorr_function <- function(imp, maxit, m = 5, n.var = 4){
+autocorr_function <- function(imp, maxit, m = 5, n.var = 4, moment = "mean"){
   
   # object for for loop
   ac <- matrix(NA, nrow = m, ncol = n.var)
+  
+  # make suitable for convergence of mean and variance
+  if (moment == "mean"){
+    sims <- imp$chainMean
+  } else if (moment == "variance"){
+    sims <- imp$chainVar
+  }
   
   # compute convergence diagnostic per variable
   for (v in 1:n.var) {
     for (chain in 1:m) {
       ac[chain, v] <-
-        acf(imp$chainMean[v, , chain],
+        acf(sims[v, , chain],
           lag.max = 1,
           plot = F)$acf[-1]
   }
