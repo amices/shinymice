@@ -21,11 +21,11 @@ source("Simulation/Functions/Evaluate.R")
 # simulation parameters
 populationsize <- 1000 #n of simulated dataset
 n.iter <- 100 #nr of iterations (varying 1:n.iter)
-n.sim <- 1000 #nr of simulations per iteration value
+n.sim <- 100 #nr of simulations per iteration value
 true_effect <- 2 #regression coefficient to be estimated
 
 # start simulation study
-set.seed(1111)
+set.seed(11)
 
 ###
 
