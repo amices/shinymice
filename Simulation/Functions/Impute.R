@@ -35,7 +35,8 @@ test.impute <- function(data,
   # extract estimates
   mip <- unlist(pool(with(impsim, lm(Y ~ X + Z1 + Z2))))
   tab[1] <- mip$pooled.estimate2 #estimated regression coefficient
-  tab[2] <- sqrt((m + 1) * mip$pooled.b2 / m) #pooled SE
+  tab[2] <- sqrt(mip$pooled.b2 + mip$pooled.b2 / m) #pooled SE
+  #tab[1:2] <- mip$pooled %>% select(estimate, b) %>% mutate(b = b + b/m)
   tab[3] <- tab[1] - qt(.975, df = m - 1) * tab[2] #lower bound CI
   tab[4] <- tab[1] + qt(.975, df = m - 1) * tab[2] #upper bound CI
   
