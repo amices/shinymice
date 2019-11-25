@@ -378,24 +378,6 @@ $\widehat{R}$. Steep drop down up-to iteration 20-30, then stable. Conventional 
 
 Auto-correlation. Auto-correlation is dangerous when positive. These auto-correlations are negative. Still, we want the iterations to be stable and independent. Default maxit is five iterations now, should this be different? Are the 'waves' most pronounced at iteration 5? But why the dip??  
 
-
-% % latex table generated in R 3.6.1 by xtable 1.8-4 package
-% % Tue Nov 12 17:43:11 2019
-% \begin{table}[ht]
-% \centering
-% \begin{tabular}{lrrrrrrr}
-%   \hline
-%   &\multicolumn{4}{c}{Simulation Diagnostics}& & \multicolumn{2}{c}{Convergence Diagn.} \\
-%   \cline{2-5} \cline{7-8}
-% It. & Bias & Emp. SE & CI width & Cov. rate & & $\widehat{R}$ & Auto-corr. \\ 
-%   \hline
-% ...
-% \end{tabular}
-% \caption{Simulation and convergence diagnostics over 1000 MCMC simulations.}
-% \label{subsetresults}
-% \end{table}
-
-
 % latex table generated in R 3.6.1 by xtable 1.8-4 package
 % Sun Nov 24 19:18:40 2019
 \begin{table}[ht]
@@ -406,7 +388,7 @@ Auto-correlation. Auto-correlation is dangerous when positive. These auto-correl
   \hline
  & Bias & Emp.SE & CI.width & Cov.rate & R.hat & R.var & Autocorr & AC.var \\ 
   \hline
-1 & -0.279 & 0.072 & 0.905 & 0.851 & \textsuperscript{a} & \textsuperscript{a} & \textsuperscript{a} & \textsuperscript{a} \\ 
+1 & -0.279 & 0.072 & 0.905 & 0.851 & NA & NA & NA & NA \\ 
   2 & -0.171 & 0.070 & 0.924 & 0.947 & 1.665 & 1.635 & -0.500 & -0.500 \\ 
   3 & -0.162 & 0.068 & 0.901 & 0.954 & 1.322 & 1.306 & -0.660 & -0.660 \\ 
   4 & -0.158 & 0.072 & 0.899 & 0.961 & 1.459 & 1.449 & -0.738 & -0.737 \\ 
@@ -426,7 +408,7 @@ Auto-correlation. Auto-correlation is dangerous when positive. These auto-correl
 \end{table}
 
 
-From \textsuperscript{a} the simulation diagnostics it appears that as little as three iterations is sufficient to draw valid inference. Convergence diagnostics $\widehat{R}$ and auto-correlation, however, indicate 20-30 iterations. Apparently, they are not perfect for MI data [move interpretation to Discussion!]. 
+From the simulation diagnostics it appears that as little as three iterations is sufficient to draw valid inference. Convergence diagnostics $\widehat{R}$ and auto-correlation, however, indicate 20-30 iterations. Apparently, they are not perfect for MI data [move interpretation to Discussion!]. 
 
 [Add simulation time (computational cost) to table? Add empirical SE of all diagnostics? Sample some random simulations and check distribution and plausibility of imputations? Use chain variance as scalar of interest for rhat and autocorrelation?]
 
