@@ -23,7 +23,7 @@ source("Simulation/Functions/Evaluate.R")
 # simulation parameters
 populationsize <- 1000 #n of simulated dataset
 n.iter <- 100 #nr of iterations (varying 1:n.iter)
-n.sim <- 100 #nr of simulations per iteration value
+n.sim <- 2 #nr of simulations per iteration value
 true_effect <- 2 #regression coefficient to be estimated
 
 # start simulation study
@@ -42,7 +42,7 @@ simulate <- function(data, n.iter) {
   # repeat mi procedure 'runs'  times for each nr of iterations
   #for (run in 1:runs) {
     for (i in 1:n.iter) {
-      res[[i]] <- test.impute(data, maxit = i)
+      res[[i]] <- test.impute(true_effect, data, maxit = i)
       setTxtProgressBar(pb, i)
     }
   #}
@@ -53,7 +53,10 @@ simulate <- function(data, n.iter) {
 }
 
 # simulate
-out <- replicate(2, simulate(data = data, n.iter = n.iter), simplify = FALSE)
+out <- replicate(n.sim, simulate(data = data, n.iter = n.iter), simplify = FALSE)
+
+#
+result <- out %>% map("10") %>% (function(x){reduce(x, `+`)/n.sim})
 
 ###
 
