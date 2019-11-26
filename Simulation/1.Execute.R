@@ -38,7 +38,7 @@ set.seed(11)
 data <- data.simulation(n = populationsize, true_effect)
 
 # combine separate functions into wrapper
-simulate <- function(data, n.iter) {
+simulate <- function(data, n.iter, true_effect) {
   pb <- txtProgressBar(min = 0, max = n.iter, style = 3)
   # object for output
   res <- list()
@@ -56,7 +56,7 @@ simulate <- function(data, n.iter) {
 }
 
 # simulate
-out <- replicate(n.sim, simulate(data = data, n.iter = n.iter), simplify = FALSE)
+out <- replicate(n.sim, simulate(data = data, n.iter = n.iter, true_effect = true_effect), simplify = FALSE)
 
 ###
 
@@ -69,5 +69,5 @@ plot.ts(results, main = "", xlab = "Number of iterations")
 ###
 
 # save for future reference
-save.Rdata(out, name = "results11.Rdata", path = "Simulation/Results")
+save.Rdata(results, name = "results11.Rdata", path = "Simulation/Results")
 # save.image("environment.Rdata")

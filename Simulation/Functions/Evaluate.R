@@ -5,7 +5,7 @@ evaluate.sim <- function(sims) {
   dt <- map(sims, as.data.table) %>% rbindlist(fill = TRUE)
   d <- dt[, lapply(.SD, mean)] %>% as.data.frame
   tab <- 1:n.iter %>% as.data.frame()
-  vars <- c("bias", "CIW", "cov", "R.mean", "R.var", "AC.mean", "AC.var")
+  vars <- c("bias", "CIW", "cov", "R_mean", "R_var", "AC_mean", "AC_var")
   for (var in vars) {
     tab <- cbind(tab, d[,grep(var, names(d))] %>% t) 
   }

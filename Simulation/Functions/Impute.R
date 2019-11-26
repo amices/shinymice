@@ -23,13 +23,13 @@ test.impute <- function(true_effect, data,
   
   # compute convergence diagnostics
   if (maxit < 2) {
-    R.mean <- R.var <- AC.mean <- AC.var <- NA
+    R_mean <- R_var <- AC_mean <- AC_var <- NA
   }
   else if (maxit > 1) {
-    R.mean <- rhat_function(impsim, maxit) #maximum Rhat across variables
-    R.var <- rhat_function(impsim, maxit, moment = "variance") #maximum Rhat across variables
-    AC.mean <- autocorr_function(impsim, maxit) #auto-correlation at lag 1
-    AC.var <- autocorr_function(impsim, maxit, moment = "variance") #auto-correlation at lag 1
+    R_mean <- rhat_function(impsim, maxit) #maximum Rhat across variables
+    R_var <- rhat_function(impsim, maxit, moment = "variance") #maximum Rhat across variables
+    AC_mean <- autocorr_function(impsim, maxit) #auto-correlation at lag 1
+    AC_var <- autocorr_function(impsim, maxit, moment = "variance") #auto-correlation at lag 1
   }
   
   # perform analysis
@@ -45,5 +45,5 @@ test.impute <- function(true_effect, data,
   cov <- CI.low <= true_effect & true_effect <= CI.up #coverage
   
   # output
-  return(data.frame(bias = bias, CIW = CIW, cov = cov, R.mean = R.mean, R.var = R.var, AC.mean = AC.mean, AC.var = AC.var))
+  return(data.frame(bias = bias, CIW = CIW, cov = cov, R_mean = R_mean, R_var = R_var, AC_mean = AC_mean, AC_var = AC_var))
  }
