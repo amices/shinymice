@@ -7,10 +7,13 @@
 library(mice)
 library(mvtnorm)
 library(miceadds)
-library(dplyr)
-library(ggplot2)
-library(purrr)
-library(magrittr)
+library(data.table)
+library(tidyverse)
+# library(dplyr)
+# library(ggplot2)
+# library(purrr)
+# library(magrittr)
+# library(tibble)
 
 # load simulation/evaluation functions
 source("Simulation/Functions/CreateData.R")
@@ -55,25 +58,16 @@ simulate <- function(data, n.iter) {
 # simulate
 out <- replicate(n.sim, simulate(data = data, n.iter = n.iter), simplify = FALSE)
 
-#
-result <- out %>% map("10") %>% (function(x){reduce(x, `+`)/n.sim})
-
 ###
 
 # evaluate
-#(out <- evaluate.sim(res, true_effect = true_effect))
-
-###
+results <- evaluate.sim(sims = out)
 
 # plot
-# load("Results/results5.Rdata.Rdata")
-# out <- dat
-plot.ts(out, main = "", xlab = "Number of iterations")
+plot.ts(results, main = "", xlab = "Number of iterations")
 
 ###
 
 # save for future reference
-save.Rdata(out, name = "results10.Rdata", path = "Simulation/Results")
-# list <- as.list(res)
-# saveRDS(list, file = "allsims2.Rdata")
+save.Rdata(out, name = "results11.Rdata", path = "Simulation/Results")
 # save.image("environment.Rdata")
