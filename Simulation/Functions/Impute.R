@@ -39,7 +39,7 @@ test.impute <- function(true_effect, data,
   # compute simulation diagnostics
   est <- mip$estimate[2] #estimated regression coefficient
   bias <- est - true_effect #bias
-  SE <- sqrt(mip$b[2] + mip$b[2] / m) #pooled finite SE
+  SE <- sqrt(mip$b[2] + (mip$b[2] / m)) #pooled finite SE
   CI.low <- est - qt(.975, df = m - 1) * SE #lower bound CI
   CI.up <- est + qt(.975, df = m - 1) * SE #upper bound CI
   CIW <- CI.up - CI.low #confidence interval width

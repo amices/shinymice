@@ -40,12 +40,16 @@ data <- data.simulation(n = populationsize, true_effect)
 # combine separate functions into wrapper
 simulate <- function(data, n.iter, true_effect) {
   pb <- txtProgressBar(min = 0, max = n.iter, style = 3)
+  
+  # remove values at random with 20 percent probability to be missing
+  ampdata <- ampute(data, prop = 0.8, mech = "MCAR")$amp
+  
   # object for output
   res <- list()
   # repeat mi procedure 'runs'  times for each nr of iterations
   #for (run in 1:runs) {
     for (i in 1:n.iter) {
-      res[[i]] <- test.impute(true_effect, data, maxit = i)
+      res[[i]] <- test.impute(true_effect, data = ampdata, maxit = i)
       setTxtProgressBar(pb, i)
     }
   #}
