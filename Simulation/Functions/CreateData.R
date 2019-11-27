@@ -21,10 +21,7 @@ data.simulation <- function(n = populationsize, true_effect = 2) {
   # estimate comlpete data parameter
   true_effect <<- unname(lm(Y ~ X + Z1 + Z2, data = simdata)[["coefficients"]]["X"])
 
-  # remove values at random with 20 percent probability to be missing
-  ampdata <- ampute(simdata, prop = 0.8, mech = "MCAR")$amp
-
   # output
-  return(ampdata)
+  return(simdata)
   
 }

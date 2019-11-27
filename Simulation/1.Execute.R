@@ -7,8 +7,13 @@
 library(mice)
 library(mvtnorm)
 library(miceadds)
-library(dplyr)
-library(ggplot2)
+library(data.table)
+library(tidyverse)
+# library(dplyr)
+# library(ggplot2)
+# library(purrr)
+# library(magrittr)
+# library(tibble)
 
 # load simulation/evaluation functions
 source("Simulation/Functions/CreateData.R")
@@ -29,44 +34,44 @@ set.seed(11)
 
 ###
 
+# simulate data once
+data <- data.simulation(n = populationsize, true_effect)
+
 # combine separate functions into wrapper
-simulate <- function(runs, n.iter, populationsize, true_effect = 2) {
-  pb <- txtProgressBar(min = 0, max = runs, style = 3)
+simulate <- function(data, n.iter, true_effect) {
+  pb <- txtProgressBar(min = 0, max = n.iter, style = 3)
+  
+  # remove values at random with 20 percent probability to be missing
+  ampdata <- ampute(data, prop = 0.8, mech = "MCAR")$amp
+  
   # object for output
-  res <- array(NA, dim = c(n.iter, runs, 8))
-  # simulate data once
-  data <- data.simulation(n = populationsize, true_effect)
+  res <- list()
   # repeat mi procedure 'runs'  times for each nr of iterations
-  for (run in 1:runs) {
+  #for (run in 1:runs) {
     for (i in 1:n.iter) {
-      res[i, run, ] <- test.impute(data, maxit = i)
+      res[[i]] <- test.impute(true_effect, data = ampdata, maxit = i)
+      setTxtProgressBar(pb, i)
     }
-    setTxtProgressBar(pb, run)
-  }
+  #}
   close(pb)
   # output
+  names(res) <- 1:n.iter
   res
 }
 
 # simulate
-res <- simulate(runs = n.sim, n.iter = n.iter, populationsize = populationsize, true_effect = true_effect)
+out <- replicate(n.sim, simulate(data = data, n.iter = n.iter, true_effect = true_effect), simplify = FALSE)
 
 ###
 
 # evaluate
-(out <- evaluate.sim(res, true_effect = true_effect))
-
-###
+results <- evaluate.sim(sims = out)
 
 # plot
-# load("Results/results5.Rdata.Rdata")
-# out <- dat
-plot.ts(out, main = "", xlab = "Number of iterations")
+plot.ts(results, main = "", xlab = "Number of iterations")
 
 ###
 
 # save for future reference
-save.Rdata(out, name = "results10.Rdata", path = "Simulation/Results")
-# list <- as.list(res)
-# saveRDS(list, file = "allsims2.Rdata")
+save.Rdata(results, name = "results12.Rdata", path = "Simulation/Results")
 # save.image("environment.Rdata")

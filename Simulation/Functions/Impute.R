@@ -1,13 +1,13 @@
 # Perform mi on mids object with varying maxit values
 # requires the package 'mice' and the function 'get.rhat'
 
-test.impute <- function(data,
+test.impute <- function(true_effect, data,
                         m = 5,
                         method = "norm",
                         maxit,
                         ...) {
   # object for output
-  tab <- matrix(nrow = 1, ncol = 8)
+  #tab <- list() # matrix(nrow = 1, ncol = 8)
   
   if (maxit == 1) {
     impsim <<- mice(data,
@@ -23,23 +23,28 @@ test.impute <- function(data,
   
   # compute convergence diagnostics
   if (maxit < 2) {
-    tab[5] <- tab[6] <- tab[7] <- tab[8] <- NA
+    R_mean <- R_var <- AC_mean <- AC_var <- NA
   }
   else if (maxit > 1) {
-    tab[5] <- rhat_function(impsim, maxit) #maximum Rhat across variables
-    tab[6] <- rhat_function(impsim, maxit, moment = "variance") #maximum Rhat across variables
-    tab[7] <- autocorr_function(impsim, maxit) #auto-correlation at lag 1
-    tab[8] <- autocorr_function(impsim, maxit, moment = "variance") #auto-correlation at lag 1
+    R_mean <- rhat_function(impsim, maxit) #maximum Rhat across variables
+    R_var <- rhat_function(impsim, maxit, moment = "variance") #maximum Rhat across variables
+    AC_mean <- autocorr_function(impsim, maxit) #auto-correlation at lag 1
+    AC_var <- autocorr_function(impsim, maxit, moment = "variance") #auto-correlation at lag 1
   }
   
-  # extract estimates
-  mip <- unlist(pool(with(impsim, lm(Y ~ X + Z1 + Z2))))
-  tab[1] <- mip$pooled.estimate2 #estimated regression coefficient
-  tab[2] <- sqrt(mip$pooled.b2 + mip$pooled.b2 / m) #pooled SE
-  #tab[1:2] <- mip$pooled %>% select(estimate, b) %>% mutate(b = b + b/m)
-  tab[3] <- tab[1] - qt(.975, df = m - 1) * tab[2] #lower bound CI
-  tab[4] <- tab[1] + qt(.975, df = m - 1) * tab[2] #upper bound CI
+  # perform analysis
+  # mip <- unlist(pool(with(impsim, lm(Y ~ X + Z1 + Z2))))
+  mip <- impsim %>% with(lm(Y~X+Z1+Z2)) %>% pool %>% .$pooled
+  
+  # compute simulation diagnostics
+  est <- mip$estimate[2] #estimated regression coefficient
+  bias <- est - true_effect #bias
+  SE <- sqrt(mip$b[2] + (mip$b[2] / m)) #pooled finite SE
+  CI.low <- est - qt(.975, df = m - 1) * SE #lower bound CI
+  CI.up <- est + qt(.975, df = m - 1) * SE #upper bound CI
+  CIW <- CI.up - CI.low #confidence interval width
+  cov <- CI.low < true_effect & true_effect < CI.up #coverage
   
   # output
-  as.numeric(tab)
-}
+  return(data.frame(bias = bias, CIW = CIW, cov = cov, R_mean = R_mean, R_var = R_var, AC_mean = AC_mean, AC_var = AC_var))
+ }
