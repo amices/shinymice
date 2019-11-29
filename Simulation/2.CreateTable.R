@@ -6,16 +6,15 @@
 library("dplyr")
 library("xtable")
 
-# transform object to tibble
-out <- out %>% as.tbl()
+# create table with only specific rows
+tab <- results %>% 
+  as.tbl() %>% 
+  .[c(1:10, 15, 20, 25, 50, 100),] %>% 
+  xtable(caption = "Simulation and convergence diagnostics over 1000 MCMC simulations.", label = "results", digits = 3)
 
-# use xtable
-tab <- xtable(out, caption = "Simulation and convergence diagnostics over 1000 MCMC simulations.", label = "results", digits = 3)
-
-# adjust table
+# adjust table attributes
 attr(tab, "align")[1] <- "l"
-tab <- tab[c(1:10, 15, 20, 25, 50, 100),]
-names(tab) <- c("Bias", "Emp. SE", "CI width", "Cov. rate",  "$R$", "$R$", "Auto-corr.", "Auto-corr.")
+names(tab) <- c("It.", "Bias", "CI width", "Cov. rate",  "$\\widehat{R}$", "$\\widehat{R}$", "Auto-corr.", "Auto-corr.")
 
 # # add footnote
 # comment <- list(pos = list(0), command = NULL)
@@ -28,7 +27,9 @@ print.xtable(
   tab,
   type = "latex",
   caption.placement = "top",
-  NA.string = "NA" 
+  NA.string = "NA",
+  include.rownames = FALSE,
+  sanitize.text.function = function(x){x}
   # add.to.row = comment,
   # hline.after = c(-1,0)
 )

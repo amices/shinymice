@@ -9,6 +9,7 @@ library(mvtnorm)
 library(miceadds)
 library(data.table)
 library(tidyverse)
+# or if you don't want the entire tidyverse, just load these
 # library(dplyr)
 # library(ggplot2)
 # library(purrr)
@@ -26,7 +27,7 @@ source("Simulation/Functions/Evaluate.R")
 # simulation parameters
 populationsize <- 1000 #n of simulated dataset
 n.iter <- 100 #nr of iterations (varying 1:n.iter)
-n.sim <- 100 #nr of simulations per iteration value
+n.sim <- 1000 #nr of simulations per iteration value
 true_effect <- 2 #regression coefficient to be estimated
 
 # start simulation study
@@ -73,5 +74,5 @@ plot.ts(results, main = "", xlab = "Number of iterations")
 ###
 
 # save for future reference
-save.Rdata(results, name = "results13.Rdata", path = "Simulation/Results")
+save.Rdata(results, name = "results14.Rdata", path = "Simulation/Results")
 # save.image("environment.Rdata")
