@@ -364,15 +364,24 @@ names(dat) <- c("It.", "Bias", "CI width", "Cov. rate", "R chain mean", "R chain
 plot.ts(dat[c(5:8, 2:4)], main = "", xlab = "Number of iterations")
 @
 
-\textbf{Try to put the chain means and vars together in one panel}
+\textbf{Try to put the chain means and vars together in one panel, like \ref{fig:rhat} but better.}
 
-% \begin{figure}[h]
-%   \resizebox{\textwidth}{!}{ %notice the \resizebox{} command
-%         \includegraphics{Figures/results.pdf}
-%   }
-%   \caption{Simulation and convergence diagnostics over 1000 MCMC simulations.}
-%     \label{resultssim}
-% \end{figure}
+
+\begin{figure}[h]
+  \resizebox{\textwidth}{!}{ %notice the \resizebox{} command
+        \includegraphics{Figures/Rhat.pdf}
+  }
+  \caption{Simulation and convergence diagnostics over 1000 MCMC simulations.}
+    \label{fig:rhat}
+\end{figure}
+
+\begin{figure}[h]
+  \resizebox{\textwidth}{!}{ %notice the \resizebox{} command
+        \includegraphics{Figures/AC.pdf}
+  }
+  \caption{Simulation and convergence diagnostics over 1000 MCMC simulations.}
+    \label{fig:ac}
+\end{figure}
 
 Evaluate simulation diagnostics one by one: bias, empirical SE, confidence interval width, and coverage rate. Then evaluate convergence diagnostics $\widehat{R}$ and auto-correlation.
 
