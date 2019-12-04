@@ -67,9 +67,12 @@ out <- replicate(n.sim, simulate(data = data, n.iter = n.iter, true_effect = tru
 
 # evaluate
 results <- evaluate.sim(sims = out)
+names(results) <- c("It.", "Bias", "CI width", "Cov. rate", "R chain mean", "R chain var", "AC chain mean", "AC chain var")
 
 # plot
-plot.ts(results, main = "", xlab = "Number of iterations")
+plot.ts(results[c(5:8, 2:4)], main = "Convergence and Simulation Diagnostics", xlab = "Number of iterations")
+plot.ts(results[2:4], main = "Simulation Diagnostics", xlab = "Number of iterations")
+plot.ts(results[5:8], main = "Convergence Diagnostics", xlab = "Number of iterations")
 
 ###
 

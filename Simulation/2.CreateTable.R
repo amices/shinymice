@@ -1,6 +1,6 @@
 # create table to display results
 # requires the packages "dplyr", "xtable
-# and the object 'out' created with '1. Excecute'
+# and the object 'results' created with '1. Excecute'
 
 # load package
 library("dplyr")
@@ -9,12 +9,12 @@ library("xtable")
 # create table with only specific rows
 tab <- results %>% 
   as.tbl() %>% 
-  .[c(1:10, 15, 20, 25, 50, 100),] %>% 
-  xtable(caption = "Simulation and convergence diagnostics over 1000 MCMC simulations.", label = "results", digits = 3)
+  .[c(1:10, 15, 25, 50, 100),] %>% 
+  xtable(caption = "Simulation and convergence diagnostics over 1000 MCMC simulations.", label = "tab:results", digits = 3)
 
 # adjust table attributes
+names(tab) <- c("It.", "Bias", "CI width", "Cov. rate",  "$\\widehat{R}_{mean}$", "$\\widehat{R}_{var}$", "$AC_{mean}$", "$AC_{var}$")
 attr(tab, "align")[1] <- "l"
-names(tab) <- c("It.", "Bias", "CI width", "Cov. rate",  "$\\widehat{R}$", "$\\widehat{R}$", "Auto-corr.", "Auto-corr.")
 
 # # add footnote
 # comment <- list(pos = list(0), command = NULL)
