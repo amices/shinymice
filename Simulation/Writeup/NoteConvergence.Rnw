@@ -369,7 +369,7 @@ Figures \ref{fig:conv} and \ref{fig:sim} shows the results over 1000 simulations
 
 \begin{figure}[h]
   \resizebox{\textwidth}{!}{ %notice the \resizebox{} command
-        \includegraphics{Figures/Rplot.pdf}
+        \includegraphics{Figures/simulation_diag.pdf}
   }
   \caption{Simulation diagnostics over 1000 MCMC simulations.}
     \label{fig:sim}
