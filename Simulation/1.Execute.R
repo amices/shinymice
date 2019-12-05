@@ -77,5 +77,5 @@ plot.ts(results[5:8], main = "Convergence Diagnostics", xlab = "Number of iterat
 ###
 
 # save for future reference
-save.Rdata(results, name = "results14.Rdata", path = "Simulation/Results")
-# save.image("environment.Rdata")
+save.Rdata(results, name = "results16.Rdata", path = "Simulation/Results")
+#save.image("environment.Rdata")
