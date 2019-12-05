@@ -43,7 +43,10 @@ simulate <- function(data, n.iter, true_effect) {
   pb <- txtProgressBar(min = 0, max = n.iter, style = 3)
   
   # remove values at random with 20 percent probability to be missing
-  ampdata <- ampute(data, prop = 0.8, mech = "MCAR")$amp
+  ampdata <- ampute(data, prop = 0.8, mech = "MCAR")
+  patterns <- ampdata$patterns
+  patterns[1:4, 1] <- 0
+  ampdata <- ampute(data = data, patterns = patterns, prop = 0.8, mech = "MCAR")$amp
   
   # object for output
   res <- list()
