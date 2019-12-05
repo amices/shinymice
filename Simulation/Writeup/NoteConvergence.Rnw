@@ -76,11 +76,11 @@ library("MASS")
 
 \section{Introduction} \label{sec:intro} % curly brackets can handle typesetting
 
-At some point, any scientist conducting statistical analyses will run into a missing data problem \citep{alli02}. Missingness is problematic because statistical inference cannot be performed on incomplete data without employing \emph{ad hoc} solutions (e.g., listwise deletion), which can yield wildly invalid results \citep{buur18}. A popular answer to the ubiquitous problem of missing information is to use the framework of multiple imputation (MI), proposed by \cite{rubin87}. MI is an iterative algorithmic procedure in which each missing data point is `guessed' (i.e. imputed) several times. The variablity between imputations is used to reflect how much uncertainty in the inference is introduced by the missingness. Therefore, MI can provide valid inferences despite of missing information. 
+At some point, any scientist conducting statistical analyses will run into a missing data problem \citep{alli02}. Missingness is problematic because statistical inference cannot be performed on incomplete data without employing \emph{ad hoc} solutions (e.g., list-wise deletion), which can yield wildly invalid results \citep{buur18}. A popular answer to the ubiquitous problem of missing information is to use the framework of multiple imputation (MI), proposed by \cite{rubin87}. MI is an iterative algorithmic procedure in which each missing data point is `guessed' (i.e. imputed) several times. The variability between imputations is used to reflect how much uncertainty in the inference is introduced by the missingness. Therefore, MI can provide valid inferences despite of missing information. 
 
 \textbf{ADD some references in this paragraph!} To obtain valid inferences with MI, the variability between imputations should be correct. If the variance between imputations is under-estimated, confidence intervals around estimates will be too narrow, which can yield spurious results. On the other hand, over-estimation of the variance between imputations results in unnecessarily wide confidence intervals, which can be costly because it requires more observations than strictly required. Since both of these situations are undesirable, imputations and their variability should be properly evaluated. Such evaluation measures are currently missing or under-developed in MI software, like the world leading \proglang{R} package \pkg{mice} \citep{mice}. 
 %Therefore, I will answer the following question: 'Which measures are vital for evaluating the validity of multiply imputed data?'.
-The aim of this note is to provide guidelines for the evaulation of imputations to applied researchers who use MI methods. More specifically, this note adresses the question: `How to diagnose convergence of the MI algorithm implemented in \pkg{mice}?'. 
+The aim of this note is to provide guidelines for the evaluation of imputations to applied researchers and statisticians who use MI methods. More specifically, this note addresses the question: `How to diagnose convergence of the MI algorithm implemented in \pkg{mice}?'. 
 
 The convergence properties of \pkg{mice} are investigated by means of model-based simulation in \proglang{R} \citep{R}. All programming code used in this note is available on Github repository \href{https://github.com/gerkovink/shinyMice}{`ShinyMICE'}. The results of this simulation study are guidelines for applied researchers to evaluate convergence of MI algorithms. These guidelines will be implemented in the interactive evaluation tool for \pkg{mice}, `ShinyMICE', which is currently under development. %I will replicate Lacerda et al.'s simulation study on $\widehat{R}$ \citep{lace07}, and develop novel guidelines for assessing convergence. Ideally, I will integrate several diagnostics (e.g., $\widehat{R}$, \emph{auto-correlation}, and \emph{simulation error}) into a single summary indicator to flag non-convergence. 
 
@@ -92,9 +92,9 @@ The intended audience of this note consists of empirical researchers and statist
 
 The convergence guidelines introduced in this paper are developed to be integrated into the \pkg{mice} environment \citep{mice} in \proglang{R} \citep{R}. This note therefore follows notation and conventions of \cite{mice}. Deviations from the 'original' notation by \cite{rubin87}, are described in \citep[\S~XYZ]{buur18}. 
 
-Let $Y$ denote an $n \times p$ matrix containing the data values on $p$ variables for all $n$ units in a sample. The collection of observed data values in $Y$ is denoted as $Y_{obs}$; the missing part of $Y$ is referred to as $Y_{mis}$. Response indicator $R$ shows whether a data value in $Y$ is missing or observed. The relation between $R$, $Y_{obs}$, and $Y_{mis}$ determines the missingness mechanism. This paper only considers a 'missing completely at random' (MCAR) mechanism, where the probability to be missing is equal for all $n \times p$ cells in $Y$.
+Let $Y$ denote an $n \times p$ matrix containing the data values on $p$ variables for all $n$ units in a sample. The collection of observed data values in $Y$ is denoted as $Y_{obs}$; the missing part of $Y$ is referred to as $Y_{mis}$. Response indicator $R$ shows whether a data value in $Y$ is missing or observed. The relation between $R$, $Y_{obs}$, and $Y_{mis}$ determines the missingness mechanism. This paper only considers a 'missing completely at random' (MCAR) mechanism, where the probability of being missing is equal for all $n \times p$ cells in $Y$.
 
-In this note, the terms `unobserved' and `missing' data are used interchangibly. Both refer to $Y_{mis}$, e.g. `$NA$' values in \proglang{R} or `999' in \proglang{SPSS}. The terms 'incomplete' or 'observed' data denote $Y_{obs}$. Incomplete data is the starting point of the multiple imputation procedure. Figure \ref{fig:steps} provides a schematic overview of the steps involved with MI.
+In this note, the terms `unobserved' and `missing' data are used interchangeably. Both refer to $Y_{mis}$, e.g. `$NA$' values in \proglang{R} or `999' in \proglang{SPSS}. The terms 'incomplete' or 'observed' data denote $Y_{obs}$. Incomplete data is the starting point of the multiple imputation procedure. Figure \ref{fig:steps} provides a schematic overview of the steps involved with MI.
 
 \begin{figure}
 \label{fig:steps}
@@ -157,7 +157,7 @@ This note is primarily concerned with the algorithmic properties of the imputati
 \subsection{Theoretical Background (NOG NIET AF VANAF HIER)} \label{sec:background}
 
 \textbf{Explain the measures that I'm investigating here. R hat is ... Auto-correlation is... How are they computed? What do they say? How are they computed on MI data? Looking at imputation chains. 
-Explain that there is no baseline to compare the measures with. Only current convergence check is to visually inspect trace plots. (But in the traceplots convergence seems immediate).}
+Explain that there is no baseline to compare the measures with. Only current convergence check is to visually inspect trace plots. (But in the trace-plots convergence seems immediate).}
 
 
 
@@ -321,7 +321,7 @@ Missing data points are imputed with \pkg{mice} in \proglang{R}. All simulations
 
 $\widehat{R}$ is computed within imputation chains: for each variable, for each simulation condition, for each simulation. The maximum value across variables within the same simulation is reported. Maximum $\widehat{R}$ values per simulation condition are aggregated across simulations.
 
-Autocorrelation (AC) is computed within imputation chains, as the correlation between $\theta$ at the $i^{th}$ iteration and $\theta$ at the $i+1^{th}$ iteration. For now, we only consider the chain mean as scalar of interest $\theta$. The AC of the variable with the highest absolute AC value is reported per simulation. These values are then averaged per simulation condition.
+Auto-correlation (AC) is computed within imputation chains, as the correlation between $\theta$ at the $i^{th}$ iteration and $\theta$ at the $i+1^{th}$ iteration. For now, we only consider the chain mean as scalar of interest $\theta$. The AC of the variable with the highest absolute AC value is reported per simulation. These values are then averaged per simulation condition.
 
 
 \subsection{Analysis}
@@ -338,7 +338,7 @@ We could also look at distributional characteristics, and plausibility of impute
 
 Bias is computed as the estimated regression coefficient after MI minus the true regression coefficient. Bias is averaged over all simulations with the same simulation condition.
 
-Confidence interval width (CIW) is computed as the diffence between the lower and upper bound of the 95\% confidence interval (CI95\%). The CI95\% bounds are computed as the estimated regression coefficient plus or minus (respectively) the pooled SE across imputations times 2.66 (the quantile of a t distribution with m-1 degrees of freedom). CIW is averaged over all simulations with the same simulation condition.
+Confidence interval width (CIW) is computed as the difference between the lower and upper bound of the 95\% confidence interval (CI95\%). The CI95\% bounds are computed as the estimated regression coefficient plus or minus (respectively) the pooled SE across imputations times 2.66 (the quantile of a t distribution with m-1 degrees of freedom). CIW is averaged over all simulations with the same simulation condition.
 
 Coverage rate is computed as the proportion of simulations (with the same simulation condition) in which the true regression coefficient is between the bounds of the CI95\%. 
 
@@ -417,7 +417,7 @@ It. & Bias & CI width & Cov. rate & $\widehat{R}_{mean}$ & $\widehat{R}_{var}$ &
 %% --------------------------------
 \subsection{Convergence diagnostics}
 
-\textbf{$\widehat{R}$}. Steep drop down up-to iteration twenty, then more gradual decrease upto iteration fourty, more or less stable after that. Conventional threshold $\widehat{R} < 1.2$ reached after seven or eight iterations, $\widehat{R} < 1.1$ after fourteen iterations for chain means and sixteen for chain variances, $\widehat{R} < 1.01$ not reached within the 100 iterations (see online appendix for full table of results). 
+\textbf{$\widehat{R}$}. Steep drop down up-to iteration twenty, then more gradual decrease up-to iteration forty, more or less stable after that. Conventional threshold $\widehat{R} < 1.2$ reached after seven or eight iterations, $\widehat{R} < 1.1$ after fourteen iterations for chain means and sixteen for chain variances, $\widehat{R} < 1.01$ not reached within the 100 iterations (see online appendix for full table of results). 
 
 \textbf{Auto-correlation.} Within the 100 iterations considered in this study, AC decreases steeply, then slowly increases. Lowest AC observed is \Sexpr{round(min(dat[-1, c("AC chain mean", "AC chain var")]), 3)} at four iterations. There appears to be a trend towards zero from four iterations upwards. Auto-correlation does not plateau completely. The average absolute maximum ACs are negative up to 77 iterations for chain means, and for chain variances all iterations considered here have negative ACs.
 
@@ -425,10 +425,10 @@ It. & Bias & CI width & Cov. rate & $\widehat{R}_{mean}$ & $\widehat{R}_{var}$ &
 
 %% --------------------------------
 \subsection{Simulation diagnostics}
-\textbf{Bias.} From two iterations upwards, average bias across repititions is stable. Across iterations two to one hundred, bias fluctuates within a narrow range around zero. 
+\textbf{Bias.} From two iterations upwards, average bias across repetitions is stable. Across iterations two to one hundred, bias fluctuates within a narrow range around zero. 
 % Average bias is not zero because there is only one incomplete dataset to be imputed. Bias is a sample effect.
 
-\textbf{Confidence interval width.} CIW does not show a clear trend across iterations. One might argue that there is some downward trending upto fourty iterations. %After about twenty-five iterations the average CIW across all simulation conditions and repetitions is reached \Sexpr{round(mean(dat[, "CI width"]), 3)}. 
+\textbf{Confidence interval width.} CIW does not show a clear trend across iterations. One might argue that there is some downward trending up-to forty iterations. %After about twenty-five iterations the average CIW across all simulation conditions and repetitions is reached \Sexpr{round(mean(dat[, "CI width"]), 3)}. 
 
 \textbf{Coverage rate.} Coverage rate is more or less stable from two iterations upwards. On average, the coverage rate is somewhat higher then the expected nominal coverage of 95\% \cite{neym43}, namely \Sexpr{round(mean(dat[, "Cov. rate"]), 3)}. 
 
@@ -443,7 +443,7 @@ It. & Bias & CI width & Cov. rate & $\widehat{R}_{mean}$ & $\widehat{R}_{var}$ &
 \textbf{Summary.}
 This note illustrates that conventional convergence diagnostics behave differently on MI data than other MCMC methods like Gibbs samplers in Bayesian analyses. The most recent recommended threshold for $\widehat{R}$ ($\widehat{R} < 1.01$) is too stringent for MI data.
 
-From the simulation diagnostics it appears that as little as two iterations could be sufficient to draw valid inference. Convergence diagnostics $\widehat{R}$ and auto-correlation, however, indicate deviant behavior upto twenty or even fourty iterations. 
+From the simulation diagnostics it appears that as little as two iterations could be sufficient to draw valid inference. Convergence diagnostics $\widehat{R}$ and auto-correlation, however, indicate deviant behavior up-to twenty or even forty iterations. 
 
 \textbf{R hat below 1.}
 Moreover, $\widehat{R}$ could theoretically not be smaller than one, yet it happened several times in this study (see online appendix XYZ). How could $\widehat{R}$ smaller than 1 occur? The number of simulations is smaller than in `regular' MCMC processes [explain that less iterations is an advantage of MI, not a disadvantage compared to MCMC]. Therefore, the `$(n-1/n)$' [add equation number] correction factor can influence the estimated potential scale reduction factor. This downwards bias is in the opposite direction than expected: ``The mixture-of-sequences variance, V, should stabilize as a function of n. (Before convergence, we expect $\sigma^2$ to decrease with n, only increasing if the sequences explore a new area of parameter space, which would imply that the original sequences were not overdispersed for the particular scalar summary being monitored.)'' \cite[p~438]{broo98}.
