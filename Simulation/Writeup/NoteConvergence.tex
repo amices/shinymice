@@ -76,9 +76,9 @@ At some point, any scientist conducting statistical analyses will run into a mis
 
 \textbf{ADD some references in this paragraph!} To obtain valid inferences with MI, the variability between imputations should be properly represented. If the variance between imputations is under-estimated, confidence intervals around estimates will be too narrow, which can yield spurious results. On the other hand, over-estimation of the variance between imputations results in unnecessarily wide confidence intervals, which can be costly because it lowers the statistical power. Since both of these situations are undesirable, imputations and their variability should be properly evaluated. Such evaluation measures are currently missing or under-developed in MI software, like the world-leading \pkg{mice} package \citep{mice} in \proglang{R} \citep{R}. 
 %Therefore, I will answer the following question: 'Which measures are vital for evaluating the validity of multiply imputed data?'.
-The aim of this note is to provide guidelines for the evaluation of imputations to applied researchers and statisticians who use MI methods. More specifically, this note addresses the question: `How to diagnose convergence of the MI algorithm implemented in \pkg{mice}?'. 
+The aim of this research project is to investigate the convergence properties of the MI algorithm that is implemented in \pkg{mice}: `Multiple Imputation using Chained Equations' (MICE). This note addresses the question: `How to diagnose convergence of the multiple imputation algorithm implemented in \pkg{mice}?'. 
 
-The convergence properties of \pkg{mice} are investigated by means of model-based simulation in \proglang{R} \citep{R}. The results of this simulation study are guidelines for applied researchers to evaluate convergence of MI algorithms. These guidelines will be implemented in the interactive evaluation tool for \pkg{mice}, `ShinyMICE', which is currently under development. All programming code used in this note is available from \href{https://github.com/gerkovink/shinyMice/simulation}{github.com/gerkovink/ShinyMICE/simulation}. 
+The convergence properties of the MICE algorithm are investigated by means of model-based simulation in \proglang{R} \citep{R}. The results of this simulation study are guidelines for assessing convergence of this MI method. These guidelines will be implemented in an interactive evaluation tool for \pkg{mice}, `ShinyMICE', which is currently under development. All programming code used in this note is available from \href{https://github.com/gerkovink/shinyMice/simulation}{github.com/gerkovink/ShinyMICE/simulation}. 
 %I will replicate Lacerda et al.'s simulation study on $\widehat{R}$ \citep{lace07}, and develop novel guidelines for assessing convergence. Ideally, I will integrate several diagnostics (e.g., $\widehat{R}$, \emph{auto-correlation}, and \emph{simulation error}) into a single summary indicator to flag non-convergence. 
 
 
@@ -89,7 +89,7 @@ The intended audience of this note consists of empirical researchers and statist
 
 The convergence guidelines introduced in this paper are developed to be integrated into the \pkg{mice} environment \citep{mice} in \proglang{R} \citep{R}. This note therefore follows notation and conventions of \cite{mice}. Deviations from the `original' notation by \cite{rubin87} are described in \citep[\S~XYZ]{buur18}. 
 
-Let $Y$ denote an $n \times p$ matrix containing the data values on $p$ variables for all $n$ units in a sample. The collection of observed data values in $Y$ is denoted as $Y_{obs}$; the missing part of $Y$ is referred to as $Y_{mis}$. Response indicator $R$ shows whether a data value in $Y$ is missing or observed. The relation between $R$, $Y_{obs}$, and $Y_{mis}$ determines the missingness mechanism. This paper only considers a `missing completely at random' (MCAR) mechanism, where the probability of being missing is equal for all $n \times p$ cells in $Y$.
+Let $Y$ denote an $n \times p$ matrix containing the data values on $p$ variables for all $n$ units in a sample. The collection of observed data values in $Y$ is denoted as $Y_{obs}$; the missing part of $Y$ is referred to as $Y_{mis}$. Response indicator $R$ shows whether a data value in $Y$ is missing or observed. The relation between $R$, $Y_{obs}$, and $Y_{mis}$ determines the missingness mechanism. This note only considers a `missing completely at random' (MCAR) mechanism, where the probability of being missing is equal for all $n \times p$ cells in $Y$.
 
 In this note, the terms `unobserved' and `missing' data are used interchangeably. Both refer to $Y_{mis}$, e.g. `\texttt{NA}' values in \proglang{R} or `\texttt{999}' in \proglang{SPSS}. The terms `incomplete' or `observed' data denote $Y_{obs}$. Incomplete data is the starting point of the multiple imputation procedure. Figure \ref{fig:steps} provides a schematic overview of the steps involved with MI.
 
@@ -124,8 +124,6 @@ Missing data in $Y$ is `imputed' (i.e., filled in) $m$ times. The imputed data i
 
 This note focusses on the algorithmic properties of the imputation step. The algorithm employed within this step has an iterative nature. That is, before drawing $m$ imputed values for each missing data point in $Y_{mis}$, a `chain' of potential values is considered. Each of the $m$ chains starts with an initial value, drawn randomly from $Y_{obs}$. The chains are terminated after a predefined number of iterations. Only the ultimate value that a chain lands on is imputed, and hence used in the next steps (analysis and pooling). The collection of values (or summary statistics) across iterations of each of the $m$ imputations will be referred to as an `imputation chain'. 
 
-\textbf{[Explain `simulation condition' (the number of iterations the algorithm has before imputing), ...?]}
-
 % "Let Q denote the quantity of scientific interest (e.g., a regression coefficient)." \cite[p.~4]{mice}.
 % "Let Y denote the n x p matrix containing the data values on p variables for all n units in the sample. We define the response indicator R as an n x p 0-1 matrix. The elements of Y and R are denoted by y i j and r i j , respectively, where i = 1 , ... , n and j = 1 , ... , p . If y i j is observed, then r i j = 1 , and if y i j is missing, then r i j = 0 ." ... The observed data are collectively denoted by Y o b s . The missing data are collectively denoted as Y m i s , and contain all elements y i j where r i j = 0 . When taken together Y = ( Y o b s , Y m i s ) contain the hypothetically complete data." \cite[par.~2.2]{buur18}
 % The data are said to be MCAR if Pr ( R = 0 | Y o b s , Y m i s , $\psi$ ) = Pr ( R = 0 | $\psi$ ) (2.1) so the probability of being missing depends only on some parameters $\psi$ , the overall probability of being missing. The data are said to be MAR if Pr ( R = 0 | Y o b s , Y m i s , $\psi$ ) = Pr ( R = 0 | Y o b s , $\psi$ ) (2.2) so the missingness probability may depend on observed information, including any design factors. Finally, the data are MNAR if Pr ( R = 0 | Y o b s , Y m i s , $\psi$ ) (2.3) does not simplify, so here the probability to be missing also depends on unobserved information, including Y m i s itself. \cite[par.~2.2]{buur18}
@@ -138,6 +136,8 @@ This note focusses on the algorithmic properties of the imputation step. The alg
 
 %% -- Theoretical Background ---------------------------------------------------------------
 \subsection{Theoretical Background} \label{sec:background}
+
+The method of multiple imputation The properties of multiple imputation procedures have been studied
 
 \textbf{Explain the measures that I'm investigating here. R hat is ... Auto-correlation is... How are they computed? What do they say? How are they computed on MI data? Looking at imputation chains. 
 Explain that there is no baseline to compare the measures with. Only current convergence check is to visually inspect trace plots. (But in the trace-plots convergence seems immediate).}
@@ -175,7 +175,7 @@ The potential scale reduction factor $\widehat{R}$ is obtained as:
 \widehat{R}=\sqrt{\frac{\widehat{\operatorname{var}}^{+}(\theta | y)}{W}}.
 \end{equation*}
 
-High R hat would indicate .... low R hat values indicate ....
+High $\widehat{R}$ would indicate .... low $\widehat{R}$ values indicate ....
 
 The second component of convergence ... interpreted as stability over iterations, or non-recurring. Non-recurrence can be evaluated with auto-correlation. Auto-correlation shows how dependent subsequent draws of an imputation chain are on the previous value. If there is a lot of dependence, draws at e.g. iteration five are significantly correlated with the value of the first draw. A high auto-correlation indicates dependence within chains. The magnitude of the AC can be interpreted qualitatively, or compared to the critical value of a \textbf{XYZ} distribution with \textbf{XYZ} degrees of freedom.
 
@@ -250,7 +250,7 @@ The hypothesis of this simulation study is that $\widehat{R}$ will over-estimate
 
 \section{Methods} \label{sec:methods}
 
-In this study, 1000 simulations are performed for each of the 100 simulation conditions. The simulation set-up consists of several steps, summarized in the pseudo-code below. The complete \proglang{R} script of the simulation study is available on Github.
+To investigate convergence properties of the \pkg{mice} algorithm, different lenghts of imputation chains are considered. this simulation study considers 100 simulation conditions. Each condition has a different maximum number of iterations, varying between one and one-hundred iterations. In this study, 1000 simulation runs are performed for each of the 100 simulation conditions. The simulation set-up consists of several steps, summarized in the pseudo-code below. The complete \proglang{R} script of the simulation study is available on Github.
 
 \begin{Code}
 # pseudo-code of simulation 

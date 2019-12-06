@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.19 (MiKTeX 2.9.6880 64-bit) (preloaded format=pdflatex 2018.12.13)  6 DEC 2019 19:09
+This is pdfTeX, Version 3.14159265-2.6-1.40.19 (MiKTeX 2.9.6880 64-bit) (preloaded format=pdflatex 2018.12.13)  6 DEC 2019 20:14
 entering extended mode
 **./NoteConvergence.tex
 (NoteConvergence.tex
@@ -959,12 +959,8 @@ ABD: EveryShipout initializing macros [1
 
 {C:/Users/User/AppData/Local/MiKTeX/2.9/pdftex/config/pdftex.map} <./jsslogo.jp
 g>]
-Overfull \hbox (13.16858pt too wide) in paragraph at lines 81--83
-\T1/lmr/m/n/10.95 gram-ming code used in this note is avail-able from [][]githu
-b.com/gerkovink/ShinyMICE/simulation[][]. 
- []
-
 LaTeX Font Info:    Try loading font information for T1+lmtt on input line 94.
+
 ("C:\Users\User\AppData\Local\Programs\MiKTeX 2.9\tex\latex\lm\t1lmtt.fd"
 File: t1lmtt.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
@@ -1124,7 +1120,7 @@ MiKTeX 2.9/fonts/type1/public/lm/lmsy10.pfb><C:/Users/User/AppData/Local/Progra
 ms/MiKTeX 2.9/fonts/type1/public/lm/lmsy8.pfb><C:/Users/User/AppData/Local/Prog
 rams/MiKTeX 2.9/fonts/type1/public/lm/lmtt10.pfb><C:/Users/User/AppData/Local/P
 rograms/MiKTeX 2.9/fonts/type1/urw/zapfchan/uzcmi8a.pfb>
-Output written on NoteConvergence.pdf (13 pages, 434904 bytes).
+Output written on NoteConvergence.pdf (13 pages, 435179 bytes).
 PDF statistics:
  390 PDF objects out of 1000 (max. 8388607)
  63 named destinations out of 1000 (max. 500000)
