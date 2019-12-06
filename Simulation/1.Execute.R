@@ -37,16 +37,17 @@ set.seed(1111)
 
 # simulate data once
 data <- data.simulation(n = populationsize, true_effect)
+# run ampute once to get patterns object (and )to be able to adjust it for multivariate missingness)
+amp_patterns <- ampute(data)$patterns
+# for multivariable missingness, uncomment this
+amp_patterns[1:4, 1] <- 0
 
 # combine separate functions into wrapper
-simulate <- function(data, n.iter, true_effect) {
+simulate <- function(data, n.iter, true_effect, amp_patterns) {
   pb <- txtProgressBar(min = 0, max = n.iter, style = 3)
   
   # remove values at random with 20 percent probability to be missing
-  ampdata <- ampute(data, prop = 0.8, mech = "MCAR")
-  patterns <- ampdata$patterns
-  patterns[1:4, 1] <- 0
-  ampdata <- ampute(data = data, patterns = patterns, prop = 0.8, mech = "MCAR")$amp
+  ampdata <- ampute(data, patterns = amp_patterns, prop = 0.8, mech = "MCAR")$amp
   
   # object for output
   res <- list()

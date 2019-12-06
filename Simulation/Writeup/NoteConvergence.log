@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.19 (MiKTeX 2.9.6880 64-bit) (preloaded format=pdflatex 2018.12.13)  5 DEC 2019 19:53
+This is pdfTeX, Version 3.14159265-2.6-1.40.19 (MiKTeX 2.9.6880 64-bit) (preloaded format=pdflatex 2018.12.13)  6 DEC 2019 19:09
 entering extended mode
 **./NoteConvergence.tex
 (NoteConvergence.tex
@@ -959,7 +959,16 @@ ABD: EveryShipout initializing macros [1
 
 {C:/Users/User/AppData/Local/MiKTeX/2.9/pdftex/config/pdftex.map} <./jsslogo.jp
 g>]
-Overfull \hbox (11.82582pt too wide) in paragraph at lines 118--119
+Overfull \hbox (13.16858pt too wide) in paragraph at lines 81--83
+\T1/lmr/m/n/10.95 gram-ming code used in this note is avail-able from [][]githu
+b.com/gerkovink/ShinyMICE/simulation[][]. 
+ []
+
+LaTeX Font Info:    Try loading font information for T1+lmtt on input line 94.
+("C:\Users\User\AppData\Local\Programs\MiKTeX 2.9\tex\latex\lm\t1lmtt.fd"
+File: t1lmtt.fd 2009/10/30 v1.6 Font defs for Latin Modern
+)
+Overfull \hbox (11.82582pt too wide) in paragraph at lines 119--120
  [][] 
  []
 
@@ -969,21 +978,28 @@ Overfull \hbox (5.47499pt too wide) has occurred while \output is active
  []
 
 [2]
+
+Package natbib Warning: Citation `XYZ' on page 3 undefined on input line 150.
+
+
+Package natbib Warning: Citation `XYZ' on page 3 undefined on input line 150.
+
+
 Overfull \hbox (5.47499pt too wide) has occurred while \output is active
 [] \T1/lmr/m/n/10.95 3
  []
 
 [3]
+
+Package natbib Warning: Citation `veth19' on page 4 undefined on input line 156
+.
+
+
 Overfull \hbox (5.47499pt too wide) has occurred while \output is active
 \T1/lmr/m/n/10.95 4 []
  []
 
 [4]
-LaTeX Font Info:    Try loading font information for T1+lmtt on input line 266.
-
- ("C:\Users\User\AppData\Local\Programs\MiKTeX 2.9\tex\latex\lm\t1lmtt.fd"
-File: t1lmtt.fd 2009/10/30 v1.6 Font defs for Latin Modern
-)
 Overfull \hbox (5.47499pt too wide) has occurred while \output is active
 [] \T1/lmr/m/n/10.95 5
  []
@@ -994,19 +1010,19 @@ Overfull \hbox (5.47499pt too wide) has occurred while \output is active
  []
 
 [6]
-<Figures/convergence_diag.pdf, id=215, 597.23125pt x 420.57124pt>
+<Figures/convergence_diag.pdf, id=218, 597.23125pt x 420.57124pt>
 File: Figures/convergence_diag.pdf Graphic file (type pdf)
 <use Figures/convergence_diag.pdf>
-Package pdftex.def Info: Figures/convergence_diag.pdf  used on input line 357.
+Package pdftex.def Info: Figures/convergence_diag.pdf  used on input line 345.
 (pdftex.def)             Requested size: 354.12434pt x 249.37344pt.
 
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-<Figures/simulation_diag.pdf, id=216, 597.23125pt x 420.57124pt>
+<Figures/simulation_diag.pdf, id=219, 597.23125pt x 420.57124pt>
 File: Figures/simulation_diag.pdf Graphic file (type pdf)
 <use Figures/simulation_diag.pdf>
-Package pdftex.def Info: Figures/simulation_diag.pdf  used on input line 365.
+Package pdftex.def Info: Figures/simulation_diag.pdf  used on input line 353.
 (pdftex.def)             Requested size: 354.12434pt x 249.37344pt.
 
 LaTeX Warning: `h' float specifier changed to `ht'.
@@ -1017,11 +1033,6 @@ Overfull \hbox (5.47499pt too wide) has occurred while \output is active
  []
 
 [7]
-
-Package natbib Warning: Citation `neym43' on page 8 undefined on input line 417
-.
-
-
 Overfull \hbox (5.47499pt too wide) has occurred while \output is active
 \T1/lmr/m/n/10.95 8 []
  []
@@ -1032,15 +1043,15 @@ Overfull \hbox (5.47499pt too wide) has occurred while \output is active
  []
 
 [9 <./Figures/simulation_diag.pdf>]
-Overfull \hbox (13.69044pt too wide) in paragraph at lines 454--455
+Overfull \hbox (13.69044pt too wide) in paragraph at lines 442--443
 []\T1/lmr/bx/n/10.95 LEAVING THIS HERE FOR REF-ER-ENCE, PLEASE RE-MOVE BE-FORE 
 HAND-
  []
 
-<NoteConvergence-003.pdf, id=255, 433.62pt x 433.62pt>
+<NoteConvergence-003.pdf, id=261, 433.62pt x 433.62pt>
 File: NoteConvergence-003.pdf Graphic file (type pdf)
 <use NoteConvergence-003.pdf>
-Package pdftex.def Info: NoteConvergence-003.pdf  used on input line 456.
+Package pdftex.def Info: NoteConvergence-003.pdf  used on input line 444.
 (pdftex.def)             Requested size: 354.12434pt x 354.14154pt.
 (NoteConvergence.bbl
 Underfull \vbox (badness 10000) has occurred while \output is active []
@@ -1065,27 +1076,27 @@ Overfull \hbox (10.94998pt too wide) has occurred while \output is active
 Package natbib Warning: There were undefined citations.
 
 LaTeX Font Info:    Font shape `T1/pzc/m/n' in size <13> not available
-(Font)              Font shape `T1/pzc/mb/it' tried instead on input line 482.
+(Font)              Font shape `T1/pzc/mb/it' tried instead on input line 470.
 
 Overfull \hbox (10.94998pt too wide) has occurred while \output is active
 [] \T1/lmr/m/n/10.95 13
  []
 
 [13]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 482.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 482.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 470.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 470.
  (NoteConvergence.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 482.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 482.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 470.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 470.
 Package rerunfilecheck Info: File `NoteConvergence.out' has not changed.
-(rerunfilecheck)             Checksum: 5264F7958B8B61F05BF8FB148D5A9480;1370.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 482.
+(rerunfilecheck)             Checksum: 928A460D00990FAAB78D7BB4C4212C27;1318.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 470.
  ) 
 Here is how much of TeX's memory you used:
- 17624 strings out of 492965
- 330232 string characters out of 3126858
- 389466 words of memory out of 3000000
- 21089 multiletter control sequences out of 15000+200000
+ 17629 strings out of 492965
+ 330228 string characters out of 3126858
+ 390492 words of memory out of 3000000
+ 21093 multiletter control sequences out of 15000+200000
  84071 words of font info for 50 fonts, out of 3000000 for 9000
  1141 hyphenation exceptions out of 8191
  55i,20n,60p,2304b,793s stack positions out of 5000i,500n,10000p,200000b,50000s
@@ -1113,9 +1124,9 @@ MiKTeX 2.9/fonts/type1/public/lm/lmsy10.pfb><C:/Users/User/AppData/Local/Progra
 ms/MiKTeX 2.9/fonts/type1/public/lm/lmsy8.pfb><C:/Users/User/AppData/Local/Prog
 rams/MiKTeX 2.9/fonts/type1/public/lm/lmtt10.pfb><C:/Users/User/AppData/Local/P
 rograms/MiKTeX 2.9/fonts/type1/urw/zapfchan/uzcmi8a.pfb>
-Output written on NoteConvergence.pdf (13 pages, 430784 bytes).
+Output written on NoteConvergence.pdf (13 pages, 434904 bytes).
 PDF statistics:
- 382 PDF objects out of 1000 (max. 8388607)
- 62 named destinations out of 1000 (max. 500000)
+ 390 PDF objects out of 1000 (max. 8388607)
+ 63 named destinations out of 1000 (max. 500000)
  153 words of extra memory for PDF output out of 10000 (max. 10000000)
 

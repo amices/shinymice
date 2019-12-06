@@ -8,7 +8,7 @@ library("ggplot2")
 library("ggpubr")
 
 
-# remove 
+# rename variables 
 names(results) <-
   c("it", "bias", "CIW", "CR",  "R_mean", "R_var", "AC_mean", "AC_var")
 
@@ -18,7 +18,7 @@ R_plot <- results %>% .[-1, ] %>%
   geom_line(linetype = "dashed", size = 1) +
   geom_line(aes(x = it, y = R_mean, color = "Chain mean")) +
   xlab("") +
-  ylab("PSRF") +
+  ylab(expression(paste(widehat(R)))) +
   scale_x_continuous(breaks = seq(0, 100, by = 10)) +
   scale_color_manual(name = "Legend",
                      values = c("Chain mean" = 1, "Chain variance" = 8), guide = "legend") +
