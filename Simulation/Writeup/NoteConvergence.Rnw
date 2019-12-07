@@ -82,7 +82,7 @@ At some point, any scientist conducting statistical analyses will run into a mis
 %Therefore, I will answer the following question: 'Which measures are vital for evaluating the validity of multiply imputed data?'.
 The aim of this research project is to investigate the convergence properties of the MI algorithm that is implemented in \pkg{mice}: `Multiple Imputation using Chained Equations' (MICE). This note addresses the question: `How to diagnose convergence of the multiple imputation algorithm implemented in \pkg{mice}?'. 
 
-The convergence properties of the MICE algorithm are investigated by means of model-based simulation in \proglang{R} \citep{R}. The results of this simulation study are guidelines for assessing convergence of this MI method. These guidelines will be implemented in an interactive evaluation tool for \pkg{mice}, `ShinyMICE', which is currently under development. All programming code used in this note is available from \href{https://github.com/gerkovink/shinyMice/simulation}{github.com/gerkovink/ShinyMICE/simulation}. 
+The convergence properties of MICE are investigated by means of model-based simulation in \proglang{R} \citep{R}. The results of this simulation study are guidelines for assessing convergence of the MI algorithm. These guidelines will be implemented in an interactive evaluation tool for \pkg{mice}, `ShinyMICE', which is currently under development. All programming code used in this note is available from \href{https://github.com/gerkovink/shinyMice/simulation}{github.com/gerkovink/ShinyMICE/simulation}. 
 %I will replicate Lacerda et al.'s simulation study on $\widehat{R}$ \citep{lace07}, and develop novel guidelines for assessing convergence. Ideally, I will integrate several diagnostics (e.g., $\widehat{R}$, \emph{auto-correlation}, and \emph{simulation error}) into a single summary indicator to flag non-convergence. 
 
 
@@ -141,7 +141,10 @@ This note focusses on the algorithmic properties of the imputation step. The alg
 %% -- Theoretical Background ---------------------------------------------------------------
 \subsection{Theoretical Background} \label{sec:background}
 
-The method of multiple imputation The properties of multiple imputation procedures have been studied
+The methodology for diagnosing convergence of multiple imputation algorithms has not been systematically studied \cite{buur18}. Yet, reference manuals of promiment MI software do mention the importance of evaluating algorithmic convergence (e.g., \cite[p.XYZ]{mice}, XYZ, XYZ). This section provides a brief review of how convergence is defined in the context of iterative algorithmic procedures, what diagnostic tools are available, and which of these may be applicable to MI algorithms. 
+
+
+
 
 \textbf{Explain the measures that I'm investigating here. R hat is ... Auto-correlation is... How are they computed? What do they say? How are they computed on MI data? Looking at imputation chains. 
 Explain that there is no baseline to compare the measures with. Only current convergence check is to visually inspect trace plots. (But in the trace-plots convergence seems immediate).}
@@ -185,6 +188,7 @@ The second component of convergence ... interpreted as stability over iterations
 
 \textbf{Convergence of MI}
 
+The convergence properties of multiple imputation algorithms lack scientific consensus \citep{taka17}. A review by \citep{murr18}  and some default MICE techniques might not converge to stable distributions at all \citep{murr18}. Convergence diagnostics for MI methods have not been systematically studied \citep{buur18}.  Moreover, 
 A fundamental assumption of MICE is convergence of the algorithm. MICE is a type of Markov chain Monte Carlo (MCMC) algorithm. In general, the validity of inference resulting from MCMC algorithms is threatened by non-convergence. Hence we use convergence diagnostics to flag non-convergence. But it is not known whether conventional convergence diagnostics for MCMC methods work on MI data.
 
 $\widehat{R}$ may not be an appropriate diagnostic to evaluate MI data because it assumes over-dispersed initial values. This means that the initial values of the $m$ imputation chains are `far away' from the distribution that the chains are converging to. In the \pkg{mice} algorithm, initial values are chosen randomly from the observed data. Therefore, we cannot be certain that the initial values are over-dispersed. %The initial parameter value is noodzakelijk. Daarom is het lastig om in MI that starten vanuit overdisp state. 
@@ -198,7 +202,7 @@ This suggests that $\widehat{R}$ would not be sensitive enough to flag non-conve
 
 \textbf{How is convergence checked now (current practice)?}
 
-Conventional thresholds to diagnose non-convergence-- e.g., Gelman and Rubin's \citeyear{gelm92} statistic $\widehat{R} < 1.1$ --are not applicable on multiply imputed data \citep{lace07} \textbf{[Expand or remove Rhat here! Refer to future section?]}. Therefore, empirical researchers have to rely on visual inspection procedures that are theoretically equivalent to $\widehat{R}$ \citep{whit11} \textbf{[explain why this is appropriate, and numerical is not]}. Visually assessing convergence is not only difficult to the untrained eye, it might also be futile. The convergence properties of MI algorithms lack scientific consensus \citep{taka17}, and some default MICE techniques might not converge to stable distributions at all \citep{murr18}. Moreover, convergence diagnostics for MI methods have not been systematically studied \citep{buur18}.
+Conventional thresholds to diagnose non-convergence-- e.g., Gelman and Rubin's \citeyear{gelm92} statistic $\widehat{R} < 1.1$ --are not applicable on multiply imputed data \citep{lace07} \textbf{[Expand or remove Rhat here! Refer to future section?]}. Therefore, empirical researchers have to rely on visual inspection procedures that are theoretically equivalent to $\widehat{R}$ \citep{whit11} \textbf{[explain why this is appropriate, and numerical is not]}. Visually assessing convergence is not only difficult to the untrained eye, it might also be futile. 
 
 % This research project consists of an investigation into algorithmic convergence of MI algorithms. I will replicate Lacerda et al.'s simulation study on $\widehat{R}$ \citep{lace07}, and develop novel guidelines for assessing convergence. Ideally, I will integrate several diagnostics (e.g., $\widehat{R}$, \emph{auto-correlation}, and \emph{simulation error}) into a single summary indicator to flag non-convergence.
 
