@@ -25,5 +25,6 @@ rhat_function <- function(imp, maxit, n.var = 4, moment = "mean") {
   }
   
   # output
-  max(rhat)
+  colnames(rhat) <- attr(impsim$chainMean, "dimnames")[[1]]
+  return(rhat)
 }

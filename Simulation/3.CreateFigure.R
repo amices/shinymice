@@ -8,17 +8,22 @@ library("ggplot2")
 library("ggpubr")
 
 # if necessary, load results
-# load("C:/Users/User/Desktop/shinyMice/Simulation/Results/results14.Rdata.Rdata")
+# load("C:/Users/User/Desktop/shinyMice/Simulation/Results/results17.Rdata.Rdata")
 # results <- dat
 
-# rename variables
-names(results) <- c("it", "bias", "CIW", "cov", "R_mean", "R_var", "AC_mean_X", "AC_mean_Z1", "AC_mean_Z2", "AC_mean_Y", "AC_var_X", "AC_var_Z1", "AC_var_Z2", "AC_var_Y")
-
 # create
-R_plot <- results %>% .[-1,] %>%
-  ggplot(aes(x = it, y = R_var, color = "Chain variance")) +
+R_plot <- results %>% .[-1, ] %>%
+  ggplot(aes(x = It., y = R_var_X, color = "Chain variance")) +
   geom_line(linetype = "dashed", size = 1) +
-  geom_line(aes(x = it, y = R_mean, color = "Chain mean")) +
+  geom_line(aes(x = It., y = R_var_Z1, color = "Chain variance"), linetype = "dashed", size = 1) +
+  geom_line(aes(x = It., y = R_var_Z2, color = "Chain variance"), linetype = "dashed", size = 1) +
+  geom_line(aes(x = It., y = R_var_Y, color = "Chain variance"), linetype = "dashed", size = 1) +
+  geom_line(aes(x = It., y = R_mean_X, color = "Chain mean")) +
+  geom_line(aes(x = It., y = R_mean_Z1, color = "Chain mean")) +
+  geom_line(aes(x = It., y = R_mean_Z2, color = "Chain mean")) +
+  geom_line(aes(x = It., y = R_mean_Y, color = "Chain mean")) +
+  geom_hline(yintercept = 1.1) +
+  geom_hline(yintercept = 1.01) +
   xlab("") +
   ylab(expression(paste(widehat(R)))) +
   scale_x_continuous(breaks = seq(0, 100, by = 10)) +
@@ -40,14 +45,16 @@ R_plot <- results %>% .[-1,] %>%
     legend.margin = margin(6, 6, 6, 6)
   )
 
-AC_plot <- results %>% .[-1,] %>%
-  ggplot(aes(x = it, y = AC_var_X, color = "Chain variance")) +
+AC_plot <- results %>% .[-1, ] %>%
+  ggplot(aes(x = It., y = AC_var_X, color = "Chain variance")) +
   geom_line(linetype = "dashed", size = 1) +
-  geom_line(aes(x = it, y = AC_var_X, color = "Chain variance", linetype = "dashed", size = 1)) +
-  geom_line(aes(x = it, y = AC_mean_X, color = "Chain mean")) +
-  geom_line(aes(x = it, y = AC_mean_Z1, color = "Chain mean")) +
-  geom_line(aes(x = it, y = AC_mean_Z2, color = "Chain mean")) +
-  geom_line(aes(x = it, y = AC_mean_Y, color = "Chain mean")) +
+  geom_line(aes(x = It., y = AC_var_Z1, color = "Chain variance"), linetype = "dashed", size = 1) +
+  geom_line(aes(x = It., y = AC_var_Z2, color = "Chain variance"), linetype = "dashed", size = 1) +
+  geom_line(aes(x = It., y = AC_var_Y, color = "Chain variance"), linetype = "dashed", size = 1) +
+  geom_line(aes(x = It., y = AC_mean_X, color = "Chain mean")) +
+  geom_line(aes(x = It., y = AC_mean_Z1, color = "Chain mean")) +
+  geom_line(aes(x = It., y = AC_mean_Z2, color = "Chain mean")) +
+  geom_line(aes(x = It., y = AC_mean_Y, color = "Chain mean")) +
   xlab("Number of iterations") +
   ylab("Auto-correlation") +
   scale_x_continuous(breaks = seq(0, 100, by = 10)) +
@@ -74,7 +81,7 @@ figure1 <-
 
 figure1
 
-bias_plot <- ggplot(results, aes(x = it, y = bias)) +
+bias_plot <- ggplot(results, aes(x = It., y = bias)) +
   geom_line() +
   geom_smooth(
     method = "loess",
@@ -94,7 +101,7 @@ bias_plot <- ggplot(results, aes(x = it, y = bias)) +
     axis.line = element_line(colour = "black")
   )
 
-CIW_plot <- ggplot(results, aes(x = it, y = CIW)) +
+CIW_plot <- ggplot(results, aes(x = It., y = CIW)) +
   geom_line() +
   geom_smooth(
     method = "loess",
@@ -114,7 +121,7 @@ CIW_plot <- ggplot(results, aes(x = it, y = CIW)) +
     axis.line = element_line(colour = "black")
   )
 
-cov_plot <- ggplot(results, aes(x = it, y = cov * 100)) +
+cov_plot <- ggplot(results, aes(x = It., y = cov * 100)) +
   geom_line() +
   geom_smooth(
     method = "loess",

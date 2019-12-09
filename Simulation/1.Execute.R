@@ -27,7 +27,7 @@ source("Simulation/Functions/Evaluate.R")
 # simulation parameters
 populationsize <- 1000 #n of simulated dataset
 n.iter <- 100 #nr of iterations (varying 1:n.iter)
-n.sim <- 10 #nr of simulations per iteration value
+n.sim <- 3 #nr of simulations per iteration value
 true_effect <- 2 #regression coefficient to be estimated
 
 # start simulation study
@@ -76,7 +76,7 @@ results <- evaluate.sim(sims = out)
 # plot
 #plot.ts(results[c(5:8, 2:4)], main = "Convergence and Simulation Diagnostics", xlab = "Number of iterations")
 #plot.ts(results[2:4], main = "Simulation Diagnostics", xlab = "Number of iterations")
-plot.ts(results[7:14], main = "Convergence Diagnostics", xlab = "Number of iterations")
+#plot.ts(results[5:12], main = "Convergence Diagnostics", xlab = "Number of iterations")
 
 ###
 

@@ -26,7 +26,8 @@ autocorr_function <- function(imp, maxit, m = 5, n.var = 4, moment = "mean"){
     ac_per_var[v] <- ac_per_chain[which.max(abs(ac_per_chain))]
 }
 # output
-  c(ac_per_var)
+  colnames(ac_per_var) <- attr(impsim$chainMean, "dimnames")[[1]]
+  return(ac_per_var)
 }
 
 # NB. This function can be adjusted to show the nr. of chains with significant auto-correlations,

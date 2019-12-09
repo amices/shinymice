@@ -40,14 +40,6 @@ test.impute <- function(true_effect,
       autocorr_function(impsim, maxit, moment = "variance") #auto-correlation at lag 1
   }
   
-  # AC_mean_X = AC_mean[1]
-  # AC_mean_Z1 = AC_mean[2]
-  # AC_mean_Z2 = AC_mean[3]
-  # AC_mean_Y = AC_mean[4]
-  # AC_var_X = AC_var[1]
-  # AC_mean_Z1 = AC_var[2]
-  # AC_mean_Z2 = AC_var[3]
-  # AC_mean_Y  = AC_var[4]
 
   # perform analysis
   # mip <- unlist(pool(with(impsim, lm(Y ~ X + Z1 + Z2))))
@@ -68,16 +60,22 @@ test.impute <- function(true_effect,
       bias = bias,
       CIW = CIW,
       cov = cov,
-      R_mean = R_mean,
-      R_var = R_var,
-      AC_mean_X = AC_mean[1],
-      AC_mean_Z1 = AC_mean[2],
-      AC_mean_Z2 = AC_mean[3],
-      AC_mean_Y = AC_mean[4],
-      AC_var_X = AC_var[1],
-      AC_var_Z1 = AC_var[2],
-      AC_var_Z2 = AC_var[3],
-      AC_var_Y  = AC_var[4]
+      R_mean_X = R_mean["X"],
+      R_mean_Z1 = R_mean["Z1"],
+      R_mean_Z2 = R_mean["Z2"],
+      R_mean_Y = R_mean["Y"],
+      R_var_X = R_var["X"],
+      R_var_Z1 = R_var["Z1"],
+      R_var_Z2 = R_var["Z2"],
+      R_var_Y  = R_var["Y"],
+      AC_mean_X = AC_mean["X"],
+      AC_mean_Z1 = AC_mean["Z1"],
+      AC_mean_Z2 = AC_mean["Z2"],
+      AC_mean_Y = AC_mean["Y"],
+      AC_var_X = AC_var["X"],
+      AC_var_Z1 = AC_var["Z1"],
+      AC_var_Z2 = AC_var["Z2"],
+      AC_var_Y  = AC_var["Y"]
     )
   )
 }
