@@ -22,8 +22,8 @@ R_plot <- results %>% .[-1, ] %>%
   geom_line(aes(x = It., y = R_mean_Z1, color = "Chain mean")) +
   geom_line(aes(x = It., y = R_mean_Z2, color = "Chain mean")) +
   geom_line(aes(x = It., y = R_mean_Y, color = "Chain mean")) +
-  geom_hline(yintercept = 1.1) +
-  geom_hline(yintercept = 1.01) +
+  #geom_hline(yintercept = 1.1) +
+  #geom_hline(yintercept = 1.01) +
   xlab("") +
   ylab(expression(paste(widehat(R)))) +
   scale_x_continuous(breaks = seq(0, 100, by = 10)) +

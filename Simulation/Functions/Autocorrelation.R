@@ -6,6 +6,7 @@ autocorr_function <- function(imp, maxit, m = 5, n.var = 4, moment = "mean"){
   # object for for loop
   ac_per_chain <- numeric(length = m)
   ac_per_var <- numeric(length = n.var)
+  names(ac_per_var) <- attr(imp$chainMean, "dimnames")[[1]]
   
   # make suitable for convergence of mean and variance
   if (moment == "mean") {
@@ -26,7 +27,6 @@ autocorr_function <- function(imp, maxit, m = 5, n.var = 4, moment = "mean"){
     ac_per_var[v] <- ac_per_chain[which.max(abs(ac_per_chain))]
 }
 # output
-  colnames(ac_per_var) <- attr(impsim$chainMean, "dimnames")[[1]]
   return(ac_per_var)
 }
 

@@ -7,9 +7,8 @@ test.impute <- function(true_effect,
                         method = "norm",
                         maxit,
                         ...) {
-  # object for output
-  #tab <- list() # matrix(nrow = 1, ncol = 8)
-  
+
+  # impute missing values
   if (maxit == 1) {
     impsim <<- mice(
       data,
@@ -22,14 +21,11 @@ test.impute <- function(true_effect,
   } else {
     impsim <<- mice.mids(impsim, maxit = 1, printFlag = FALSE)
   }
-  # impute missing values
   
   # compute convergence diagnostics
   if (maxit < 2) {
-    R_mean <- R_var <- NA
-    AC_mean <- AC_var <- c(rep(NA, 4))
-  }
-  else if (maxit > 1) {
+    R_mean <- R_var <- AC_mean <- AC_var <- c(rep(NA, 4))
+  } else {
     R_mean <-
       rhat_function(impsim, maxit) #maximum Rhat across variables
     R_var <-
@@ -64,18 +60,22 @@ test.impute <- function(true_effect,
       R_mean_Z1 = R_mean["Z1"],
       R_mean_Z2 = R_mean["Z2"],
       R_mean_Y = R_mean["Y"],
+      max_R_mean = max(R_mean),
       R_var_X = R_var["X"],
       R_var_Z1 = R_var["Z1"],
       R_var_Z2 = R_var["Z2"],
       R_var_Y  = R_var["Y"],
+      max_R_var = max(R_var),
       AC_mean_X = AC_mean["X"],
       AC_mean_Z1 = AC_mean["Z1"],
       AC_mean_Z2 = AC_mean["Z2"],
       AC_mean_Y = AC_mean["Y"],
+      max_AC_mean = min(AC_mean),
       AC_var_X = AC_var["X"],
       AC_var_Z1 = AC_var["Z1"],
       AC_var_Z2 = AC_var["Z2"],
-      AC_var_Y  = AC_var["Y"]
+      AC_var_Y  = AC_var["Y"],
+      max_AC_var = min(AC_var)
     )
   )
 }
