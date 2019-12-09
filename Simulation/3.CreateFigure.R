@@ -12,8 +12,7 @@ library("ggpubr")
 # results <- dat
 
 # rename variables
-names(results) <-
-  c("it", "bias", "CIW", "CR",  "R_mean", "R_var", "AC_mean", "AC_var")
+names(results) <- c("it", "bias", "CIW", "cov", "R_mean", "R_var", "AC_mean_X", "AC_mean_Z1", "AC_mean_Z2", "AC_mean_Y", "AC_var_X", "AC_var_Z1", "AC_var_Z2", "AC_var_Y")
 
 # create
 R_plot <- results %>% .[-1,] %>%
@@ -42,9 +41,13 @@ R_plot <- results %>% .[-1,] %>%
   )
 
 AC_plot <- results %>% .[-1,] %>%
-  ggplot(aes(x = it, y = AC_var, color = "Chain variance")) +
+  ggplot(aes(x = it, y = AC_var_X, color = "Chain variance")) +
   geom_line(linetype = "dashed", size = 1) +
-  geom_line(aes(x = it, y = AC_mean, color = "Chain mean")) +
+  geom_line(aes(x = it, y = AC_var_X, color = "Chain variance", linetype = "dashed", size = 1)) +
+  geom_line(aes(x = it, y = AC_mean_X, color = "Chain mean")) +
+  geom_line(aes(x = it, y = AC_mean_Z1, color = "Chain mean")) +
+  geom_line(aes(x = it, y = AC_mean_Z2, color = "Chain mean")) +
+  geom_line(aes(x = it, y = AC_mean_Y, color = "Chain mean")) +
   xlab("Number of iterations") +
   ylab("Auto-correlation") +
   scale_x_continuous(breaks = seq(0, 100, by = 10)) +
@@ -111,7 +114,7 @@ CIW_plot <- ggplot(results, aes(x = it, y = CIW)) +
     axis.line = element_line(colour = "black")
   )
 
-cov_plot <- ggplot(results, aes(x = it, y = CR * 100)) +
+cov_plot <- ggplot(results, aes(x = it, y = cov * 100)) +
   geom_line() +
   geom_smooth(
     method = "loess",
