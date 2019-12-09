@@ -40,7 +40,7 @@ data <- data.simulation(n = populationsize, true_effect)
 # run ampute once to get patterns object (and )to be able to adjust it for multivariate missingness)
 amp_patterns <- ampute(data)$patterns
 # for multivariable missingness, uncomment this
-amp_patterns[1:4, 1] <- 0
+# amp_patterns[1:4, 1] <- 0
 
 # combine separate functions into wrapper
 simulate <- function(data, n.iter, true_effect, amp_patterns) {
@@ -74,12 +74,12 @@ results <- evaluate.sim(sims = out)
 names(results) <- c("It.", "Bias", "CI width", "Cov. rate", "R chain mean", "R chain var", "AC chain mean", "AC chain var")
 
 # plot
-plot.ts(results[c(5:8, 2:4)], main = "Convergence and Simulation Diagnostics", xlab = "Number of iterations")
-plot.ts(results[2:4], main = "Simulation Diagnostics", xlab = "Number of iterations")
-plot.ts(results[5:8], main = "Convergence Diagnostics", xlab = "Number of iterations")
+#plot.ts(results[c(5:8, 2:4)], main = "Convergence and Simulation Diagnostics", xlab = "Number of iterations")
+#plot.ts(results[2:4], main = "Simulation Diagnostics", xlab = "Number of iterations")
+#plot.ts(results[5:8], main = "Convergence Diagnostics", xlab = "Number of iterations")
 
 ###
 
 # save for future reference
-save.Rdata(results, name = "results16.Rdata", path = "Simulation/Results")
+save.Rdata(results, name = "results17.Rdata", path = "Simulation/Results")
 #save.image("environment.Rdata")
