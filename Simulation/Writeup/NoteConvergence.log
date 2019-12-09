@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.19 (MiKTeX 2.9.6880 64-bit) (preloaded format=pdflatex 2018.12.13)  5 DEC 2019 19:53
+This is pdfTeX, Version 3.14159265-2.6-1.40.19 (MiKTeX 2.9.6880 64-bit) (preloaded format=pdflatex 2018.12.13)  9 DEC 2019 12:44
 entering extended mode
 **./NoteConvergence.tex
 (NoteConvergence.tex
@@ -834,28 +834,28 @@ File: tikzlibrarypositioning.code.tex 2008/10/06 v3.0.1a (rcs-revision 1.7)
 ) (NoteConvergence.aux)
 \openout1 = `NoteConvergence.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 68.
-LaTeX Font Info:    ... okay on input line 68.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 68.
-LaTeX Font Info:    ... okay on input line 68.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 68.
-LaTeX Font Info:    ... okay on input line 68.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 68.
-LaTeX Font Info:    ... okay on input line 68.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 68.
-LaTeX Font Info:    ... okay on input line 68.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 68.
-LaTeX Font Info:    ... okay on input line 68.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 68.
-LaTeX Font Info:    Try loading font information for TS1+cmr on input line 68.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 67.
+LaTeX Font Info:    ... okay on input line 67.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 67.
+LaTeX Font Info:    ... okay on input line 67.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 67.
+LaTeX Font Info:    ... okay on input line 67.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 67.
+LaTeX Font Info:    ... okay on input line 67.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 67.
+LaTeX Font Info:    ... okay on input line 67.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 67.
+LaTeX Font Info:    ... okay on input line 67.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 67.
+LaTeX Font Info:    Try loading font information for TS1+cmr on input line 67.
 
 ("C:\Users\User\AppData\Local\Programs\MiKTeX 2.9\tex\latex\base\ts1cmr.fd"
 File: ts1cmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
 )
-LaTeX Font Info:    ... okay on input line 68.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 68.
-LaTeX Font Info:    ... okay on input line 68.
-LaTeX Font Info:    Try loading font information for T1+lmr on input line 68.
+LaTeX Font Info:    ... okay on input line 67.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 67.
+LaTeX Font Info:    ... okay on input line 67.
+LaTeX Font Info:    Try loading font information for T1+lmr on input line 67.
 
 ("C:\Users\User\AppData\Local\Programs\MiKTeX 2.9\tex\latex\lm\t1lmr.fd"
 File: t1lmr.fd 2009/10/30 v1.6 Font defs for Latin Modern
@@ -891,7 +891,7 @@ G,.JBIG2,.JB2,.eps]
 (grfext)             \AppendGraphicsExtensions on input line 456.
 )
 \AtBeginShipoutBox=\box41
-Package hyperref Info: Link coloring ON on input line 68.
+Package hyperref Info: Link coloring ON on input line 67.
 
 ("C:\Users\User\AppData\Local\Programs\MiKTeX 2.9\tex\latex\hyperref\nameref.st
 y"
@@ -903,9 +903,9 @@ Package: gettitlestring 2016/05/16 v1.5 Cleanup title references (HO)
 )
 \c@section@level=\count140
 )
-LaTeX Info: Redefining \ref on input line 68.
-LaTeX Info: Redefining \pageref on input line 68.
-LaTeX Info: Redefining \nameref on input line 68.
+LaTeX Info: Redefining \ref on input line 67.
+LaTeX Info: Redefining \pageref on input line 67.
+LaTeX Info: Redefining \nameref on input line 67.
  (NoteConvergence.out) (NoteConvergence.out)
 \@outlinefile=\write5
 \openout5 = `NoteConvergence.out'.
@@ -913,44 +913,44 @@ LaTeX Info: Redefining \nameref on input line 68.
 <jsslogo.jpg, id=66, 540.0175pt x 393.47pt>
 File: jsslogo.jpg Graphic file (type jpg)
 <use jsslogo.jpg>
-Package pdftex.def Info: jsslogo.jpg  used on input line 68.
+Package pdftex.def Info: jsslogo.jpg  used on input line 67.
 (pdftex.def)             Requested size: 89.80768pt x 65.43607pt.
-LaTeX Font Info:    Try loading font information for T1+pzc on input line 68.
+LaTeX Font Info:    Try loading font information for T1+pzc on input line 67.
 
 ("C:\Users\User\AppData\Local\Programs\MiKTeX 2.9\tex\latex\psnfss\t1pzc.fd"
 File: t1pzc.fd 2001/06/04 font definitions for T1/pzc.
 )
 LaTeX Font Info:    Font shape `T1/pzc/m/n' in size <28> not available
-(Font)              Font shape `T1/pzc/mb/it' tried instead on input line 68.
-LaTeX Font Info:    Try loading font information for OT1+lmr on input line 68.
+(Font)              Font shape `T1/pzc/mb/it' tried instead on input line 67.
+LaTeX Font Info:    Try loading font information for OT1+lmr on input line 67.
 
 ("C:\Users\User\AppData\Local\Programs\MiKTeX 2.9\tex\latex\lm\ot1lmr.fd"
 File: ot1lmr.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
-LaTeX Font Info:    Try loading font information for OML+lmm on input line 68.
+LaTeX Font Info:    Try loading font information for OML+lmm on input line 67.
 
 ("C:\Users\User\AppData\Local\Programs\MiKTeX 2.9\tex\latex\lm\omllmm.fd"
 File: omllmm.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
-LaTeX Font Info:    Try loading font information for OMS+lmsy on input line 68.
+LaTeX Font Info:    Try loading font information for OMS+lmsy on input line 67.
 
 
 ("C:\Users\User\AppData\Local\Programs\MiKTeX 2.9\tex\latex\lm\omslmsy.fd"
 File: omslmsy.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
-LaTeX Font Info:    Try loading font information for OMX+lmex on input line 68.
+LaTeX Font Info:    Try loading font information for OMX+lmex on input line 67.
 
 
 ("C:\Users\User\AppData\Local\Programs\MiKTeX 2.9\tex\latex\lm\omxlmex.fd"
 File: omxlmex.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <10.95> on input line 68.
+(Font)              <10.95> on input line 67.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <8> on input line 68.
+(Font)              <8> on input line 67.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <6> on input line 68.
-LaTeX Font Info:    Try loading font information for T1+lmss on input line 68.
+(Font)              <6> on input line 67.
+LaTeX Font Info:    Try loading font information for T1+lmss on input line 67.
 
 ("C:\Users\User\AppData\Local\Programs\MiKTeX 2.9\tex\latex\lm\t1lmss.fd"
 File: t1lmss.fd 2009/10/30 v1.6 Font defs for Latin Modern
@@ -959,6 +959,11 @@ ABD: EveryShipout initializing macros [1
 
 {C:/Users/User/AppData/Local/MiKTeX/2.9/pdftex/config/pdftex.map} <./jsslogo.jp
 g>]
+LaTeX Font Info:    Try loading font information for T1+lmtt on input line 93.
+
+("C:\Users\User\AppData\Local\Programs\MiKTeX 2.9\tex\latex\lm\t1lmtt.fd"
+File: t1lmtt.fd 2009/10/30 v1.6 Font defs for Latin Modern
+)
 Overfull \hbox (11.82582pt too wide) in paragraph at lines 118--119
  [][] 
  []
@@ -969,21 +974,28 @@ Overfull \hbox (5.47499pt too wide) has occurred while \output is active
  []
 
 [2]
+
+Package natbib Warning: Citation `XYZ' on page 3 undefined on input line 152.
+
+
+Package natbib Warning: Citation `XYZ' on page 3 undefined on input line 152.
+
+
 Overfull \hbox (5.47499pt too wide) has occurred while \output is active
 [] \T1/lmr/m/n/10.95 3
  []
 
 [3]
+
+Package natbib Warning: Citation `veth19' on page 4 undefined on input line 158
+.
+
+
 Overfull \hbox (5.47499pt too wide) has occurred while \output is active
 \T1/lmr/m/n/10.95 4 []
  []
 
 [4]
-LaTeX Font Info:    Try loading font information for T1+lmtt on input line 266.
-
- ("C:\Users\User\AppData\Local\Programs\MiKTeX 2.9\tex\latex\lm\t1lmtt.fd"
-File: t1lmtt.fd 2009/10/30 v1.6 Font defs for Latin Modern
-)
 Overfull \hbox (5.47499pt too wide) has occurred while \output is active
 [] \T1/lmr/m/n/10.95 5
  []
@@ -994,22 +1006,25 @@ Overfull \hbox (5.47499pt too wide) has occurred while \output is active
  []
 
 [6]
-<Figures/convergence_diag.pdf, id=215, 597.23125pt x 420.57124pt>
+<Figures/convergence_diag.pdf, id=224, 597.23125pt x 420.57124pt>
 File: Figures/convergence_diag.pdf Graphic file (type pdf)
 <use Figures/convergence_diag.pdf>
-Package pdftex.def Info: Figures/convergence_diag.pdf  used on input line 357.
+Package pdftex.def Info: Figures/convergence_diag.pdf  used on input line 350.
 (pdftex.def)             Requested size: 354.12434pt x 249.37344pt.
 
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-<Figures/simulation_diag.pdf, id=216, 597.23125pt x 420.57124pt>
+<Figures/simulation_diag.pdf, id=225, 597.23125pt x 420.57124pt>
 File: Figures/simulation_diag.pdf Graphic file (type pdf)
 <use Figures/simulation_diag.pdf>
-Package pdftex.def Info: Figures/simulation_diag.pdf  used on input line 365.
+Package pdftex.def Info: Figures/simulation_diag.pdf  used on input line 358.
 (pdftex.def)             Requested size: 354.12434pt x 249.37344pt.
 
 LaTeX Warning: `h' float specifier changed to `ht'.
+
+
+Underfull \vbox (badness 2197) has occurred while \output is active []
 
 
 Overfull \hbox (5.47499pt too wide) has occurred while \output is active
@@ -1017,11 +1032,6 @@ Overfull \hbox (5.47499pt too wide) has occurred while \output is active
  []
 
 [7]
-
-Package natbib Warning: Citation `neym43' on page 8 undefined on input line 417
-.
-
-
 Overfull \hbox (5.47499pt too wide) has occurred while \output is active
 \T1/lmr/m/n/10.95 8 []
  []
@@ -1032,18 +1042,17 @@ Overfull \hbox (5.47499pt too wide) has occurred while \output is active
  []
 
 [9 <./Figures/simulation_diag.pdf>]
-Overfull \hbox (13.69044pt too wide) in paragraph at lines 454--455
+Overfull \hbox (3.46822pt too wide) in paragraph at lines 440--441
+[]\T1/lmr/m/n/10.95 The re-sults in this pa-per were ob-tained us-ing \T1/lmss/
+m/n/10.95 R \T1/lmr/m/n/10.95 3.6.1 [][]Core Team[][] ([][]2019[][]) with the \
+T1/lmr/b/n/10.95 mice \T1/lmr/m/n/10.95 3.6.0.9000
+ []
+
+
+Overfull \hbox (13.69044pt too wide) in paragraph at lines 447--448
 []\T1/lmr/bx/n/10.95 LEAVING THIS HERE FOR REF-ER-ENCE, PLEASE RE-MOVE BE-FORE 
 HAND-
  []
-
-<NoteConvergence-003.pdf, id=255, 433.62pt x 433.62pt>
-File: NoteConvergence-003.pdf Graphic file (type pdf)
-<use NoteConvergence-003.pdf>
-Package pdftex.def Info: NoteConvergence-003.pdf  used on input line 456.
-(pdftex.def)             Requested size: 354.12434pt x 354.14154pt.
-(NoteConvergence.bbl
-Underfull \vbox (badness 10000) has occurred while \output is active []
 
 
 Overfull \hbox (10.94998pt too wide) has occurred while \output is active
@@ -1051,6 +1060,12 @@ Overfull \hbox (10.94998pt too wide) has occurred while \output is active
  []
 
 [10]
+<NoteConvergence-003.pdf, id=277, 433.62pt x 433.62pt>
+File: NoteConvergence-003.pdf Graphic file (type pdf)
+<use NoteConvergence-003.pdf>
+Package pdftex.def Info: NoteConvergence-003.pdf  used on input line 449.
+(pdftex.def)             Requested size: 354.12434pt x 354.14154pt.
+ (NoteConvergence.bbl
 Overfull \hbox (10.94998pt too wide) has occurred while \output is active
 [] \T1/lmr/m/n/10.95 11
  []
@@ -1065,27 +1080,27 @@ Overfull \hbox (10.94998pt too wide) has occurred while \output is active
 Package natbib Warning: There were undefined citations.
 
 LaTeX Font Info:    Font shape `T1/pzc/m/n' in size <13> not available
-(Font)              Font shape `T1/pzc/mb/it' tried instead on input line 482.
+(Font)              Font shape `T1/pzc/mb/it' tried instead on input line 475.
 
 Overfull \hbox (10.94998pt too wide) has occurred while \output is active
 [] \T1/lmr/m/n/10.95 13
  []
 
 [13]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 482.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 482.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 475.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 475.
  (NoteConvergence.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 482.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 482.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 475.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 475.
 Package rerunfilecheck Info: File `NoteConvergence.out' has not changed.
-(rerunfilecheck)             Checksum: 5264F7958B8B61F05BF8FB148D5A9480;1370.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 482.
+(rerunfilecheck)             Checksum: 928A460D00990FAAB78D7BB4C4212C27;1318.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 475.
  ) 
 Here is how much of TeX's memory you used:
- 17624 strings out of 492965
- 330232 string characters out of 3126858
- 389466 words of memory out of 3000000
- 21089 multiletter control sequences out of 15000+200000
+ 17629 strings out of 492965
+ 330228 string characters out of 3126858
+ 390492 words of memory out of 3000000
+ 21093 multiletter control sequences out of 15000+200000
  84071 words of font info for 50 fonts, out of 3000000 for 9000
  1141 hyphenation exceptions out of 8191
  55i,20n,60p,2304b,793s stack positions out of 5000i,500n,10000p,200000b,50000s
@@ -1113,9 +1128,9 @@ MiKTeX 2.9/fonts/type1/public/lm/lmsy10.pfb><C:/Users/User/AppData/Local/Progra
 ms/MiKTeX 2.9/fonts/type1/public/lm/lmsy8.pfb><C:/Users/User/AppData/Local/Prog
 rams/MiKTeX 2.9/fonts/type1/public/lm/lmtt10.pfb><C:/Users/User/AppData/Local/P
 rograms/MiKTeX 2.9/fonts/type1/urw/zapfchan/uzcmi8a.pfb>
-Output written on NoteConvergence.pdf (13 pages, 430784 bytes).
+Output written on NoteConvergence.pdf (13 pages, 440041 bytes).
 PDF statistics:
- 382 PDF objects out of 1000 (max. 8388607)
- 62 named destinations out of 1000 (max. 500000)
+ 402 PDF objects out of 1000 (max. 8388607)
+ 63 named destinations out of 1000 (max. 500000)
  153 words of extra memory for PDF output out of 10000 (max. 10000000)
 

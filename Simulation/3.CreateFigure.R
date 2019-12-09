@@ -7,21 +7,27 @@ library("dplyr")
 library("ggplot2")
 library("ggpubr")
 
+# if necessary, load results
+# load("C:/Users/User/Desktop/shinyMice/Simulation/Results/results14.Rdata.Rdata")
+# results <- dat
 
-# remove 
+# rename variables
 names(results) <-
   c("it", "bias", "CIW", "CR",  "R_mean", "R_var", "AC_mean", "AC_var")
 
 # create
-R_plot <- results %>% .[-1, ] %>% 
+R_plot <- results %>% .[-1,] %>%
   ggplot(aes(x = it, y = R_var, color = "Chain variance")) +
   geom_line(linetype = "dashed", size = 1) +
   geom_line(aes(x = it, y = R_mean, color = "Chain mean")) +
   xlab("") +
-  ylab("PSRF") +
+  ylab(expression(paste(widehat(R)))) +
   scale_x_continuous(breaks = seq(0, 100, by = 10)) +
-  scale_color_manual(name = "Legend",
-                     values = c("Chain mean" = 1, "Chain variance" = 8), guide = "legend") +
+  scale_color_manual(
+    name = "Legend",
+    values = c("Chain mean" = 1, "Chain variance" = 8),
+    guide = "legend"
+  ) +
   guides(colour = guide_legend(override.aes = list(linetype = c(1, 8)))) +
   theme_bw() +
   theme(
@@ -35,7 +41,7 @@ R_plot <- results %>% .[-1, ] %>%
     legend.margin = margin(6, 6, 6, 6)
   )
 
-AC_plot <- results %>% .[-1, ] %>% 
+AC_plot <- results %>% .[-1,] %>%
   ggplot(aes(x = it, y = AC_var, color = "Chain variance")) +
   geom_line(linetype = "dashed", size = 1) +
   geom_line(aes(x = it, y = AC_mean, color = "Chain mean")) +
@@ -67,6 +73,13 @@ figure1
 
 bias_plot <- ggplot(results, aes(x = it, y = bias)) +
   geom_line() +
+  geom_smooth(
+    method = "loess",
+    se = FALSE,
+    colour = "black",
+    size = 0.5,
+    linetype = "dashed"
+  ) +
   xlab("") +
   ylab("Bias") +
   scale_x_continuous(breaks = seq(0, 100, by = 10)) +
@@ -80,6 +93,13 @@ bias_plot <- ggplot(results, aes(x = it, y = bias)) +
 
 CIW_plot <- ggplot(results, aes(x = it, y = CIW)) +
   geom_line() +
+  geom_smooth(
+    method = "loess",
+    se = FALSE,
+    colour = "black",
+    size = 0.5,
+    linetype = "dashed"
+  ) +
   xlab("") +
   ylab("CI width") +
   scale_x_continuous(breaks = seq(0, 100, by = 10)) +
@@ -93,6 +113,13 @@ CIW_plot <- ggplot(results, aes(x = it, y = CIW)) +
 
 cov_plot <- ggplot(results, aes(x = it, y = CR * 100)) +
   geom_line() +
+  geom_smooth(
+    method = "loess",
+    se = FALSE,
+    colour = "black",
+    size = 0.5,
+    linetype = "dashed"
+  ) +
   xlab("Number of iterations") +
   ylab("Coverage (%)") +
   scale_x_continuous(breaks = seq(0, 100, by = 10)) +
