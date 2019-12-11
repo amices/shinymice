@@ -81,5 +81,5 @@ results <- evaluate.sim(sims = out)
 ###
 
 # save for future reference
-save.Rdata(results, name = "final", path = "Simulation/Results")
+save.Rdata(results, name = "multivar_miss", path = "Simulation/Results")
 save.image("environment.Rdata")
