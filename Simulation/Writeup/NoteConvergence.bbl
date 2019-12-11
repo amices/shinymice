@@ -1,4 +1,4 @@
-\begin{thebibliography}{15}
+\begin{thebibliography}{16}
 \newcommand{\enquote}[1]{``#1''}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
@@ -31,6 +31,24 @@ Brooks SP, Gelman A (1998).
 \newblock Vienna, Austria.
 \newblock Tex.organization: R Foundation for Statistical Computing,
   \urlprefix\url{https://www.R-project.org/}.
+
+\bibitem[{Cowles and Carlin(1996)}]{cowl96}
+Cowles MK, Carlin BP (1996).
+\newblock \enquote{Markov chain {Monte} {Carlo} convergence diagnostics: a
+  comparative review.}
+\newblock \emph{Journal of the American Statistical Association},
+  \textbf{91}(434), 883--904.
+\newblock ISSN 0162-1459.
+
+\bibitem[{Gelman \emph{et~al.}(2013)Gelman, Carlin, Stern, Dunson, Vehtari, and
+  Rubin}]{gelm13}
+Gelman A, Carlin JB, Stern HS, Dunson DB, Vehtari A, Rubin DB (2013).
+\newblock \emph{Bayesian {Data} {Analysis}}.
+\newblock CRC Press LLC, Philadelphia, PA, UNITED STATES.
+\newblock ISBN 978-1-4398-9820-8.
+\newblock
+  Https://ebookcentral.proquest.com/lib/uunl/reader.action?docID=1438153\#,
+  \urlprefix\url{http://ebookcentral.proquest.com/lib/uunl/detail.action?docID=1438153}.
 
 \bibitem[{Gelman and Rubin(1992)}]{gelm92}
 Gelman A, Rubin DB (1992).
@@ -121,13 +139,5 @@ Vehtari A, Gelman A, Simpson D, Carpenter B, Bürkner PC (2019).
 Vink G (????).
 \newblock \enquote{Towards a standardized evaluation of multiple imputation
   routines.}
-
-\bibitem[{White \emph{et~al.}(2011)White, Royston, and Wood}]{whit11}
-White IR, Royston P, Wood AM (2011).
-\newblock \enquote{Multiple imputation using chained equations: {Issues} and
-  guidance for practice.}
-\newblock \emph{Statistics in Medicine}, \textbf{30}(4), 377--399.
-\newblock ISSN 1097-0258.
-\newblock \doi{10.1002/sim.4067}.
 
 \end{thebibliography}

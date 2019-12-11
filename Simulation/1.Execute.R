@@ -27,7 +27,7 @@ source("Simulation/Functions/Evaluate.R")
 # simulation parameters
 populationsize <- 1000 #n of simulated dataset
 n.iter <- 100 #nr of iterations (varying 1:n.iter)
-n.sim <- 3 #nr of simulations per iteration value
+n.sim <- 1000 #nr of simulations per iteration value
 true_effect <- 2 #regression coefficient to be estimated
 
 # start simulation study
@@ -81,5 +81,5 @@ results <- evaluate.sim(sims = out)
 ###
 
 # save for future reference
-save.Rdata(results, name = "results17.Rdata", path = "Simulation/Results")
-#save.image("environment.Rdata")
+save.Rdata(results, name = "final", path = "Simulation/Results")
+save.image("environment.Rdata")
