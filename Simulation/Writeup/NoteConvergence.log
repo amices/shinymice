@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.19 (MiKTeX 2.9.6880 64-bit) (preloaded format=pdflatex 2018.12.13)  12 DEC 2019 12:57
+This is pdfTeX, Version 3.14159265-2.6-1.40.19 (MiKTeX 2.9.6880 64-bit) (preloaded format=pdflatex 2018.12.13)  12 DEC 2019 17:46
 entering extended mode
 **./NoteConvergence.tex
 (NoteConvergence.tex
@@ -1014,16 +1014,19 @@ Overfull \hbox (5.47499pt too wide) has occurred while \output is active
 <Figures/convergence_diag.pdf, id=253, 597.23125pt x 420.57124pt>
 File: Figures/convergence_diag.pdf Graphic file (type pdf)
 <use Figures/convergence_diag.pdf>
-Package pdftex.def Info: Figures/convergence_diag.pdf  used on input line 380.
+Package pdftex.def Info: Figures/convergence_diag.pdf  used on input line 393.
 (pdftex.def)             Requested size: 354.12434pt x 249.37344pt.
 <Figures/simulation_diag.pdf, id=254, 597.23125pt x 420.57124pt>
 File: Figures/simulation_diag.pdf Graphic file (type pdf)
 <use Figures/simulation_diag.pdf>
-Package pdftex.def Info: Figures/simulation_diag.pdf  used on input line 388.
+Package pdftex.def Info: Figures/simulation_diag.pdf  used on input line 401.
 (pdftex.def)             Requested size: 354.12434pt x 249.37344pt.
 
 
 LaTeX Warning: `h' float specifier changed to `ht'.
+
+
+Underfull \vbox (badness 2435) has occurred while \output is active []
 
 
 Overfull \hbox (5.47499pt too wide) has occurred while \output is active
@@ -1041,7 +1044,7 @@ Overfull \hbox (10.94998pt too wide) has occurred while \output is active
  []
 
 [10]
-Overfull \hbox (3.46822pt too wide) in paragraph at lines 473--474
+Overfull \hbox (3.46822pt too wide) in paragraph at lines 486--487
 []\T1/lmr/m/n/10.95 The re-sults in this pa-per were ob-tained us-ing \T1/lmss/
 m/n/10.95 R \T1/lmr/m/n/10.95 3.6.1 [][]Core Team[][] ([][]2019[][]) with the \
 T1/lmr/b/n/10.95 mice \T1/lmr/m/n/10.95 3.6.0.9000
@@ -1052,42 +1055,47 @@ Overfull \hbox (10.94998pt too wide) has occurred while \output is active
 [] \T1/lmr/m/n/10.95 11
  []
 
-[11])
+[11]
 Overfull \hbox (10.94998pt too wide) has occurred while \output is active
 \T1/lmr/m/n/10.95 12 []
  []
 
-[12]
-LaTeX Font Info:    Font shape `T1/pzc/m/n' in size <13> not available
-(Font)              Font shape `T1/pzc/mb/it' tried instead on input line 505.
-
+[12])
 Overfull \hbox (10.94998pt too wide) has occurred while \output is active
 [] \T1/lmr/m/n/10.95 13
  []
 
 [13]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 505.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 505.
+LaTeX Font Info:    Font shape `T1/pzc/m/n' in size <13> not available
+(Font)              Font shape `T1/pzc/mb/it' tried instead on input line 518.
+
+Overfull \hbox (10.94998pt too wide) has occurred while \output is active
+\T1/lmr/m/n/10.95 14 []
+ []
+
+[14]
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 518.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 518.
  (NoteConvergence.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 505.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 505.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 518.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 518.
 Package rerunfilecheck Info: File `NoteConvergence.out' has not changed.
 (rerunfilecheck)             Checksum: F818C2532E1DAFAD1437BE41A163E716;1340.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 505.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 518.
  ) 
 Here is how much of TeX's memory you used:
- 17677 strings out of 492965
+ 17678 strings out of 492965
  330715 string characters out of 3126858
- 390248 words of memory out of 3000000
- 21126 multiletter control sequences out of 15000+200000
- 99976 words of font info for 63 fonts, out of 3000000 for 9000
+ 391200 words of memory out of 3000000
+ 21125 multiletter control sequences out of 15000+200000
+ 95705 words of font info for 62 fonts, out of 3000000 for 9000
  1141 hyphenation exceptions out of 8191
  55i,20n,60p,2304b,793s stack positions out of 5000i,500n,10000p,200000b,50000s
 {C:/Users/User/AppData/Local/Programs/MiKTeX 2.9/fonts/enc/dvips/lm/lm-ec.enc
-}{C:/Users/User/AppData/Local/Programs/MiKTeX 2.9/fonts/enc/dvips/lm/lm-mathsy.
-enc}{C:/Users/User/AppData/Local/Programs/MiKTeX 2.9/fonts/enc/dvips/lm/lm-rm.e
-nc}{C:/Users/User/AppData/Local/Programs/MiKTeX 2.9/fonts/enc/dvips/lm/lm-mathi
-t.enc}{C:/Users/User/AppData/Local/Programs/MiKTeX 2.9/fonts/enc/dvips/lm/lm-ma
+}{C:/Users/User/AppData/Local/Programs/MiKTeX 2.9/fonts/enc/dvips/lm/lm-mathit.
+enc}{C:/Users/User/AppData/Local/Programs/MiKTeX 2.9/fonts/enc/dvips/lm/lm-math
+sy.enc}{C:/Users/User/AppData/Local/Programs/MiKTeX 2.9/fonts/enc/dvips/lm/lm-r
+m.enc}{C:/Users/User/AppData/Local/Programs/MiKTeX 2.9/fonts/enc/dvips/lm/lm-ma
 thex.enc}{C:/Users/User/AppData/Local/Programs/MiKTeX 2.9/fonts/enc/dvips/base/
 8r.enc}<C:/Users/User/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/lm/l
 mb10.pfb><C:/Users/User/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/lm
@@ -1097,22 +1105,23 @@ lic/lm/lmbxi10.pfb><C:/Users/User/AppData/Local/Programs/MiKTeX 2.9/fonts/type1
 /public/lm/lmex10.pfb><C:/Users/User/AppData/Local/Programs/MiKTeX 2.9/fonts/ty
 pe1/public/lm/lmmi10.pfb><C:/Users/User/AppData/Local/Programs/MiKTeX 2.9/fonts
 /type1/public/lm/lmmi8.pfb><C:/Users/User/AppData/Local/Programs/MiKTeX 2.9/fon
-ts/type1/public/lm/lmr10.pfb><C:/Users/User/AppData/Local/Programs/MiKTeX 2.9/f
-onts/type1/public/lm/lmr12.pfb><C:/Users/User/AppData/Local/Programs/MiKTeX 2.9
-/fonts/type1/public/lm/lmr6.pfb><C:/Users/User/AppData/Local/Programs/MiKTeX 2.
-9/fonts/type1/public/lm/lmr8.pfb><C:/Users/User/AppData/Local/Programs/MiKTeX 2
-.9/fonts/type1/public/lm/lmr9.pfb><C:/Users/User/AppData/Local/Programs/MiKTeX 
-2.9/fonts/type1/public/lm/lmri10.pfb><C:/Users/User/AppData/Local/Programs/MiKT
-eX 2.9/fonts/type1/public/lm/lmro10.pfb><C:/Users/User/AppData/Local/Programs/M
-iKTeX 2.9/fonts/type1/public/lm/lmss10.pfb><C:/Users/User/AppData/Local/Program
-s/MiKTeX 2.9/fonts/type1/public/lm/lmss9.pfb><C:/Users/User/AppData/Local/Progr
-ams/MiKTeX 2.9/fonts/type1/public/lm/lmsy10.pfb><C:/Users/User/AppData/Local/Pr
-ograms/MiKTeX 2.9/fonts/type1/public/lm/lmsy8.pfb><C:/Users/User/AppData/Local/
-Programs/MiKTeX 2.9/fonts/type1/public/lm/lmtt10.pfb><C:/Users/User/AppData/Loc
-al/Programs/MiKTeX 2.9/fonts/type1/urw/zapfchan/uzcmi8a.pfb>
-Output written on NoteConvergence.pdf (13 pages, 495708 bytes).
+ts/type1/public/lm/lmmi9.pfb><C:/Users/User/AppData/Local/Programs/MiKTeX 2.9/f
+onts/type1/public/lm/lmr10.pfb><C:/Users/User/AppData/Local/Programs/MiKTeX 2.9
+/fonts/type1/public/lm/lmr12.pfb><C:/Users/User/AppData/Local/Programs/MiKTeX 2
+.9/fonts/type1/public/lm/lmr6.pfb><C:/Users/User/AppData/Local/Programs/MiKTeX 
+2.9/fonts/type1/public/lm/lmr8.pfb><C:/Users/User/AppData/Local/Programs/MiKTeX
+ 2.9/fonts/type1/public/lm/lmr9.pfb><C:/Users/User/AppData/Local/Programs/MiKTe
+X 2.9/fonts/type1/public/lm/lmri10.pfb><C:/Users/User/AppData/Local/Programs/Mi
+KTeX 2.9/fonts/type1/public/lm/lmro10.pfb><C:/Users/User/AppData/Local/Programs
+/MiKTeX 2.9/fonts/type1/public/lm/lmss10.pfb><C:/Users/User/AppData/Local/Progr
+ams/MiKTeX 2.9/fonts/type1/public/lm/lmss9.pfb><C:/Users/User/AppData/Local/Pro
+grams/MiKTeX 2.9/fonts/type1/public/lm/lmsy10.pfb><C:/Users/User/AppData/Local/
+Programs/MiKTeX 2.9/fonts/type1/public/lm/lmsy8.pfb><C:/Users/User/AppData/Loca
+l/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmtt10.pfb><C:/Users/User/AppData/L
+ocal/Programs/MiKTeX 2.9/fonts/type1/urw/zapfchan/uzcmi8a.pfb>
+Output written on NoteConvergence.pdf (14 pages, 503526 bytes).
 PDF statistics:
- 419 PDF objects out of 1000 (max. 8388607)
- 70 named destinations out of 1000 (max. 500000)
+ 427 PDF objects out of 1000 (max. 8388607)
+ 72 named destinations out of 1000 (max. 500000)
  148 words of extra memory for PDF output out of 10000 (max. 10000000)
 

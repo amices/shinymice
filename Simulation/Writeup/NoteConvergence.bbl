@@ -62,12 +62,11 @@ Hoff PD (2009).
 \newblock Springer {Texts} in {Statistics}. Springer New York, New York, NY.
 \newblock \doi{10.1007/978-0-387-92407-6}.
 
-\bibitem[{Lacerda \emph{et~al.}(2007)Lacerda, Ardington, and
-  Leibbrandt}]{lace07}
-Lacerda M, Ardington C, Leibbrandt M (2007).
-\newblock \enquote{Sequential regression multiple imputation for incomplete
-  multivariate data using {Markov} chain {Monte} {Carlo}.}
-\newblock \emph{Technical report}, University of Cape Town, South Africa.
+\bibitem[{Lynch(2007)}]{lync07}
+Lynch SM (2007).
+\newblock \emph{Introduction to applied {Bayesian} statistics and estimation
+  for social scientists}.
+\newblock Springer Science \& Business Media.
 
 \bibitem[{MacKay and Mac~Kay(2003)}]{mack03}
 MacKay DJ, Mac~Kay DJ (2003).
