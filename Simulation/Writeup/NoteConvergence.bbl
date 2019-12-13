@@ -1,4 +1,4 @@
-\begin{thebibliography}{21}
+\begin{thebibliography}{22}
 \newcommand{\enquote}[1]{``#1''}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
@@ -147,5 +147,13 @@ Vehtari A, Gelman A, Simpson D, Carpenter B, Bürkner PC (2019).
 Vink G (????).
 \newblock \enquote{Towards a standardized evaluation of multiple imputation
   routines.}
+
+\bibitem[{Vink and van Buuren(2014)}]{vink14}
+Vink G, van Buuren S (2014).
+\newblock \enquote{Pooling multiple imputations when the sample happens to be
+  the population.}
+\newblock \emph{arXiv:1409.8542 [math, stat]}.
+\newblock ArXiv: 1409.8542 version: 1,
+  \urlprefix\url{http://arxiv.org/abs/1409.8542}.
 
 \end{thebibliography}
