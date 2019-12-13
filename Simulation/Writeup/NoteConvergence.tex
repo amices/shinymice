@@ -168,7 +168,7 @@ Other convergence diagnostics are outside the scope of this study.\footnotemark
 
 % "In order to converge to a stationary distribution, a Markov chain needs to satisfy three important properties (Roberts 1996; Tierney 1996): irreducible, the chain must be able to reach all interesting parts of the state space; aperiodic, the chain should not oscillate between different states; recurrence, all interesting parts can be reached infinitely often, at least from almost all starting points. Do these properties hold for the MICE algorithm? Irreducibility is generally not a problem since the user has large control over the interesting parts of the state space. This flexibility is actually the main rationale for FCS instead of a joint model. Periodicity is a potential problem, and can arise in the situation where imputation models are clearly inconsistent. A rather artificial example of an oscillatory behavior occurs when Y 1 is imputed by Y 2 $\beta$ + $\epsilon$  1 and Y 2 is imputed by - Y 1 $\beta$ + $\epsilon$  2 for some fixed, nonzero $\beta$ . The sampler will oscillate between two qualitatively different states, so the correlation between Y 1 and Y 2 after imputing Y 1 will differ from that after imputing Y 2 . In general, we would like the statistical inferences to be independent of the stopping point. A way to diagnose the ping-pong problem, or order effect, is to stop the chain at different points. The stopping point should not affect the statistical inferences. The addition of noise to create imputations is a safeguard against periodicity, and allows the sampler to "break out" more easily. Non-recurrence may also be a potential difficulty, manifesting itself as explosive or non-stationary behavior. For example, if imputations are made by deterministic functions, the Markov chain may lock up. Such cases can sometimes be diagnosed from the trace lines of the sampler. See Section 6.5.2 for an example. As long as the parameters of imputation models are estimated from the data, non-recurrence is mild or absent. The required properties of the MCMC method can be translated into conditions on the eigenvalues of the matrix of transition probabilities (MacKay 2003, 372-73). The development of practical tools that put these conditions to work for multiple imputation is still an ongoing research problem." \cite[par.~4.5]{buur18}
 
-The convergence diagnostics under consideration are $\widehat{R}$ and autocorrelation. Perfect convergence is reached when the variance between imputation chains is equivalent to the variance within chains ($\widehat{R} = 1$), and there is no dependency between subsequent samples within imputation chains ($AC = 0$). 
+The convergence diagnostics under consideration are $\widehat{R}$ and autocorrelation. Perfect convergence is reached when the variance between imputation chains is equivalent to the variance within chains ($\widehat{R} = 1$), and there is no dependency between subsequent iterations of imputation chains ($AC = 0$). 
 %
 %%%%%%%%%%%%%%%%%
 %As potential scale reduction factor, $\widehat{R}$ tells us by how much the variance of an estimate could be shrunken down if the chains were to be infinitely long \citep[$t \to \infty$;][]{gelm92}. If there is no added value compared to infinitely many iterations, the chains have converged. 
@@ -181,17 +181,24 @@ The convergence diagnostics under consideration are $\widehat{R}$ and autocorrel
 %$\widehat{R}$ is then equal to one. 
 %
 %We can apply $\widehat{R}$ to the mean (or to the first two moments) of the variables of interest. 
+
 To define $\widehat{R}$, we follow notation by \citep[p.~5]{veht19}. % The scalar summary of interest in this study is the average of the imputed values per variable. %As recommended by \cite{veht19} $\widehat{R}$ is computed as .... to be able to detect ... in the tails of the distribution. \cite[p.~5]{veth19}
-Let $M$ be the number of chains, $N$ the number of iterations per chain, and $\theta$ the scalar summary of interest (e.g., chain mean or chain variance).
-We compute the variance within each chain of $\theta$ values ($W$) and between the $m$ chains ($B$) as follows:
+Let $M$ be the total number of chains, $T$ the number of iterations per chain, and $\theta$ the scalar summary of interest (e.g., chain mean or chain variance). For each chain ($m = 1, 2, \dots, M$), we estimate the variance of $\theta$, and average these to obtain within-chain variance $W$.
+
 %\textbf{REPHRASE: In the equations below, $N$ is the number of draws per chain, $M$ is the number of chains, and $S = MN$ is the total number of draws from all chains. For each scalar summary of interest $\theta$, we compute $B$ and $W$, the between- and within-chain variances:}
 
 \begin{align*}
-B&=\frac{N}{M-1} \sum_{m=1}^{M}\left(\bar{\theta}^{(\cdot m)}-\bar{\theta}^{(\cdot \cdot)}\right)^{2}, \text { where } \bar{\theta}^{(\cdot m)}=\frac{1}{N} \sum_{n=1}^{N} \theta^{(n m)}, \quad \bar{\theta}^{(\cdot \cdot)}=\frac{1}{M} \sum_{m=1}^{M} \bar{\theta}^{(\cdot m)} \\
-W&=\frac{1}{M} \sum_{m=1}^{M} s_{j}^{2},  \text { where } s_{m}^{2}=\frac{1}{N-1} \sum_{n=1}^{N}\left(\theta^{(n m)}-\bar{\theta}^{(\cdot m)}\right)^{2}. %\text{ \cite[p.~5]{veht19}} 
+W&=\frac{1}{M} \sum_{m=1}^{M} s_{j}^{2},  \text { where } s_{m}^{2}=\frac{1}{T-1} \sum_{t=1}^{T}\left(\theta^{(t m)}-\bar{\theta}^{(\cdot m)}\right)^{2}. %\text{ \cite[p.~5]{veht19}} 
 \end{align*}
 
-From the between and within chain variances we compute a weighted average, $\widehat{\operatorname{var}}^{+}$, which over-estimates the total variance of $\theta$. $\widehat{R}$ is then obtained as a ratio between the over-estimated total variance and the within chain variance:
+We then estimate between-chain variance $B$ as the variance of the collection of average $\theta$ per chain.
+
+\begin{align*}
+B&=\frac{T}{M-1} \sum_{m=1}^{M}\left(\bar{\theta}^{(\cdot m)}-\bar{\theta}^{(\cdot \cdot)}\right)^{2}, \text { where } \bar{\theta}^{(\cdot m)}=\frac{1}{T} \sum_{t=1}^{T} \theta^{(t m)}, \quad \bar{\theta}^{(\cdot \cdot)}=\frac{1}{M} \sum_{m=1}^{M} \bar{\theta}^{(\cdot m)} \\
+ %\text{ \cite[p.~5]{veht19}} 
+\end{align*}
+
+From the between- and within-chain variances we compute a weighted average, $\widehat{\operatorname{var}}^{+}$, which over-estimates the total variance of $\theta$. $\widehat{R}$ is then obtained as a ratio between the over-estimated total variance and the within-chain variance:
 
 \begin{equation*}
 \widehat{R}=\sqrt{\frac{\widehat{\operatorname{var}}^{+}(\theta | y)}{W}},
@@ -206,18 +213,24 @@ From the between and within chain variances we compute a weighted average, $\wid
 % \end{equation*}
 
 %The potential scale reduction factor $\widehat{R}$ is obtained as:
-We can interpret $\widehat{R}$ as potential scale reduction factor since it indicates by how much the variance of $\theta$ could be shrunken down if an infinite number of iterations per chain would be run \citep[$t \to \infty$;][]{gelm92}. High $\widehat{R}$-values, therefore, indicate slow mixing of chains, e.g., because of dependence across chains on initial values. Once there is no dependence on initial values anymore, there is no added value of continuing iterations. \textbf{[MOGELIJK OVERBODIGE ZIN HIER]} The measure then diagnoses algorithmic convergence ($\widehat{R} = 1$). 
+We can interpret $\widehat{R}$ as potential scale reduction factor since it indicates by how much the variance of $\theta$ could be shrunken down if an infinite number of iterations per chain would be run \citep{gelm92}. This interpretation assumes that chains are `over-dispersed' at $t=1$, and reach convergence as $T \to \infty$. Over-dispersion implies that the initial values of the chains are `far away' from the target distribution and each other. The iteration at which chains are independent of their initial values is the point where mixing occurs. This is diagnosed with $\widehat{R}$-values close to one. %If there is no added value 
+High $\widehat{R}$-values thus indicate slow mixing of chains, which is a sign of non-convergence. %, e.g., because chains may depend on their initial value. %are of dependence across chains on initial values. Once there is no dependence on initial values anymore, there is no added value of continuing iterations. \textbf{[MOGELIJK OVERBODIGE ZIN HIER]} The measure then diagnoses algorithmic convergence ($\widehat{R} = 1$). 
 %If there is no added value compared to infinitely many iterations, the chains have converged. 
-The conventionally acceptable threshold was $\widehat{R} < 1.2$ \cite{gelm92}. Recently, \cite{veht19} proposed a more stringent threshold: $\widehat{R} < 1.01$. 
+The conventionally acceptable threshold for this convergence diagnostic was $\widehat{R} < 1.2$ \citep{gelm92}. Recently, \cite{veht19} proposed a more stringent threshold: $\widehat{R} < 1.01$. 
 
-Following the same notation, autocorrelation is defined as the correlation between two subsequent $\theta$ values within the same chain. We only consider $AC$ at lag 1, i.e., between the $t^{th}$ and $t+1^{th}$ iteration of each chain: 
+Following the same notation, we define autocorrelation as the correlation between two subsequent $\theta$-values within the same chain\footnotemark  \citep[p.~147]{lync07}. %. 
 %
 \begin{equation*}
-AC = \left( \frac{T}{T-1} \right) \frac{\sum_{t=1}^{T-1}(\theta_t - \bar{\theta}^{(\cdot m)})(\theta_{t+1} - \bar{\theta}^{(\cdot m)})}{\sum_{t=1}^{T}(\theta_t - \bar{\theta}^{(\cdot m)})^2},
+AC = \left( \frac{T}{T-1} \right) \frac{\sum_{t=1}^{T-1}(\theta_t - \bar{\theta}^{(\cdot m)})(\theta_{t+1} - \bar{\theta}^{(\cdot m)})}{\sum_{t=1}^{T}(\theta_t - \bar{\theta}^{(\cdot m)})^2}.
 \end{equation*}
 %
-where $T$ is the total number of iterations per chain \citep[p.~147]{lync07}. We can interpret the sign of $AC$-values as a measure of dependence within chains ($-1 \leq AC \leq 1$). Positive $AC$-values indicate recurrence: similar $\theta$-values for subsequent iterations, which may lead to trending. Negative $AC$-values also indicate dependence, but do not threaten the stationarity component of convergence \textbf{[REMOVE INTERPRETATION HERE?]}. Instead of recurrence, there would be a `seesaw' effect within chains: subsequent $\theta$-values would deviate in opposite directions from the chain average $\theta^{(\cdot m)})$, increasing the variance of $\theta$. As convergence diagnostic, the interest is in positive $AC$-values.\footnotemark 
-\footnotetext{The magnitude of $AC$-values can also be evaluated statistically, but that is outside of this note's scope.}
+\footnotetext{In this study we only consider $AC$ at lag 1, i.e., the correlation between the $t^{th}$ and $t+1^{th}$ iteration of the same chain.}
+
+We can interpret %the sign and magnitude of ... Any non-zero $AC$-value ($-1 \leq AC \leq 1$) . $AC = 0$ indicates independence between $\theta$-values.
+$AC$-values as a measure of dependence within chains. Positive $AC$-values indicate recurrence (i.e., similarity between $\theta$-values of subsequent iterations), which may lead to trending. Negative $AC$-values occur when the $\theta$-values of subsequent iterations diverge from oneanother. Dependence in this sense does not threaten the stationarity component of convergence. %that we aim to evaluate with $AC$. 
+On the contrary even---it may increase the variance of $\theta$. \textbf{speed up convergence???}  %have also indicate dependence, but do not threaten the stationarity component of convergence \textbf{[REMOVE INTERPRETATION HERE?]}. Instead of recurrence, there would be a `seesaw' effect within chains: subsequent $\theta$-values would deviate in opposite directions from the chain average $\theta^{(\cdot m)})$, increasing the variance of $\theta$. 
+As convergence diagnostic, the interest is in positive $AC$-values.%\footnotemark 
+\footnote{The magnitude of $AC$-values can also be evaluated statistically, but that is outside of this note's scope.}
 
 %, where $\theta$ is a scalar summary of interest (i.e., chain means and chain variances).
 %Non-recurrence can be evaluated with autocorrelation. autocorrelation shows how dependent subsequent draws of an imputation chain are on the previous value. If there is a lot of dependence, draws at e.g. iteration five are significantly correlated with the value of the first draw. 
@@ -241,18 +254,20 @@ where $T$ is the total number of iterations per chain \citep[p.~147]{lync07}. We
 
 \subsection{Simulation Hypothesis} \label{sec:hypothesis}
 
-This study evaluates whether $\widehat{R}$ and $AC$ could diagnose convergence of multiple imputation algorithms. There is, however, no baseline measure available to evaluate their performance against.\footnote{Only severely pathological cases of non-convergence stand out when visually inspecting the imputation chains.} We will assess the appropriateness of the two convergence diagnostics by comparison with simulation quantities. The perfrormance diagnostics are the evaluation criteria  recommended by \citep[\S~2.5.2]{buur18}, whcih comprise of average bias, average confidence interval width, and empirical coverage rate across simulations.% %"We expect that in accordance with Neyman (1934), at least 95 percent of the confidence intervals should contain the true population value, although some room for simulation error should be taken into account to counteract the finite nature of our simulations"\cite{schou18}.
+This study evaluates whether $\widehat{R}$ and $AC$ could diagnose convergence of multiple imputation algorithms. There is, however, no baseline measure available to evaluate their performance against.
+\footnote{The current practice of visually inspecting imputation chains for signs of non-mixing or non-stationarity can only diagnose severely pathological cases of non-convergence.} 
+We will assess the appropriateness of the two convergence diagnostics in comparison to evaluation criteria recommended by \citep[\S~2.5.2]{buur18}. The performance diagnostics comprise of average bias, average confidence interval width, and empirical coverage rate across simulations.% %"We expect that in accordance with Neyman (1934), at least 95 percent of the confidence intervals should contain the true population value, although some room for simulation error should be taken into account to counteract the finite nature of our simulations"\cite{schou18}.
 \footnote{We could also look at distributional characteristics, and plausibility of imputed values, see \cite{vinknd} (n.d.). For now, this is outside of the scope of this study.} % Or use: Then evaluate the regular diagnostics of MI simulations, see Vink, n.d., and  convergence. Diagnostics include absolute bias of the estimated regression coefficient, confidence interval width, and empirical coverage rate across simulations. Convergence is evaluated with $\widehat{R}$, or potential scale reduction factor.
 
-
-\textbf{We hypothesize that $\widehat{R}$ will over-estimate non-convergence. No hypothesis was formulated about AC, results are exploratory.
-%
-[MOVE THIS TO DISCUSSION?] Assessing the stationarity component of convergence with $AC$ might be redundant, since high $AC$-values are implausible in MI procedures. That is, the randomness induced by the MI algorithm effectively mitigates the risk of dependency within chains. $AC$ would thus not be informative of the convergence of MI algorithms. 
-%
-Moreover, we hypothesize that $\widehat{R}$ may not be an appropriate diagnostic either, because it assumes over-dispersed initial values (i.e., the starting points of the chains are `far away' from the target distribution and each other). In \pkg{mice}, initial values of the algorithm are chosen randomly from the observed data. Therefore, we cannot be certain that the initial values are over-dispersed. %The initial parameter value is noodzakelijk. Daarom is het lastig om in MI that starten vanuit overdisp state. 
+\textbf{[HIER NOG ZOOI]} We hypothesize that $\widehat{R}$ may not be an appropriate diagnostic, because it assumes over-dispersed initial values. In \pkg{mice}, initial values of the algorithm are chosen randomly from the observed data. Therefore, we cannot be certain that the initial values are over-dispersed.
+%The initial parameter value is noodzakelijk. Daarom is het lastig om in MI that starten vanuit overdisp state. 
 % Starting values of MICE chains: "For each j, fill in starting imputations $Y^0_j$ by random draws from $Y^{obs}_j$." \cite[\S~4.5.2]{buur18} before for loops over variables and imputations, see \url{https://stefvanbuuren.name/fimd/sec-FCS.html#def:mice}
 Without over-dispersed initial states, $\widehat{R}$ may falsely diagnose convergence \citep{broo98}. %would not be sensitive enough to flag non-convergence of MI algorithms: "if over-dispersion does not hold, $\sigma_+^2$ can be too low, which can lead to falsely diagnosing convergence." \cite[p~437]{broo98}. 
-This suggests that $\widehat{R}$ would not be sensitive enough to flag non-convergence of MI algorithms. However, an empirical finding by \cite{lace07} shows that $\widehat{R}$ can indicate non-convergence at unconventionally long chain lengths. While the default number of iterations in \pkg{mice} is five, $\widehat{R} > 1.1$ was observed after 50 iterations, and $\widehat{R} > 1.01$ up-to 150 iterations. This suggests that $\widehat{R}$ would over-estimate non-convergence of MI algorithms. }
+This suggests that $\widehat{R}$ would not be sensitive enough to flag non-convergence of MI algorithms. However, an empirical finding by \cite{lace07} shows that $\widehat{R}$ can indicate non-convergence at unconventionally long chain lengths. While the default number of iterations in \pkg{mice} is five, $\widehat{R} > 1.1$ was observed after 50 iterations, and $\widehat{R} > 1.01$ up-to 150 iterations. This suggests that $\widehat{R}$ would over-estimate non-convergence of MI algorithms. 
+
+\textbf{We hypothesize that $\widehat{R}$ will over-estimate non-convergence. No hypothesis was formulated about AC, results are exploratory.}
+%
+%
 
 
 %Convergence diagnostics for MI methods have not been systematically studied \citep{buur18}.  Moreover, 
@@ -495,20 +510,28 @@ There is a discrepancy between what the convergence diagnostics and the performa
 
 \section{Summary and discussion} \label{sec:summary}
 
-\textbf{Answer RQ.} How to diagnose non-convergence? It's complicated.
+This note shows that the convergence of multiple imputation algorithms may be evaluated with convergence diagnostics $\widehat{R}$ and $AC$. These measures, however, indicate non-convergence at imputation chain lengths that produce acceptable simulation diagnostics. This may be due to the quantity of scientific interest chosen. More `complicated' $Q$s (e.g., higher order effects or variance components) might show bias, under- or over-coverage at higher $T$. 
+
+At least $\widehat{R}$ does not under-estimate non-convergence. It's better to be too strict than too lenient. According to this simulation study, the recently proposed threshold $\widehat{R}$ is too stringent for MI algorithms, and the conventionally acceptable $\widehat{R} <1.2$ is too lenient.     
+
+
+%\textbf{Answer RQ.} How to diagnose non-convergence? It's complicated.
 %We will evaluate how convergence of the imputation algorithm can be diagnosed.
 
 \textbf{Summary.}
 This note illustrates that conventional convergence diagnostics behave differently on MI data than other MCMC methods like Gibbs samplers in Bayesian analyses. The most recent recommended threshold for $\widehat{R}$ ($\widehat{R} < 1.01$) may be too stringent for MI data. \textbf{However, using the 1.2 threshold may be too lenient because this was observed at three iterations and then again after six. If we would use 1.2, we might miss this increase after three iterations. The 1.1 threshold seems OK. Also, ten iterations are computationally not terrible. With increased performance and storage capacities, doubling the default is fine I guess.}
 
-From the simulation diagnostics, it appears that as little as three iterations might be sufficient to obtain unbiased, confidence valid estimates. Convergence diagnostics $\widehat{R}$ and autocorrelation, however, indicate that convergence may only be reached after twenty or even forty iterations. 
+From the simulation diagnostics, it appears that as little as four iterations might be sufficient to obtain unbiased, confidence valid estimates. Convergence diagnostics $\widehat{R}$ and autocorrelation, however, indicate that convergence may only be reached after twenty or even forty iterations. 
 
 \textbf{R hat below 1.}
-$\widehat{R}$ could theoretically not be smaller than one, yet it occurred several times in this study (see online appendix XYZ). This can happen when the number of simulations is smaller than in `regular' MCMC processes [explain that fewer iterations is an advantage of MI, not a disadvantage compared to MCMC]. Increasing Rhat values mean that the initial values were not appropriately over-dispersed \citep[p~438]{broo98}. %Therefore, the `$(n-1/n)$' [add equation number] correction factor can influence the estimated potential scale reduction factor. This downwards bias is in the opposite direction than expected: ``The mixture-of-sequences variance, $V$, should stabilize as a function of $n$. (Before convergence, we expect $\sigma^2$ to decrease with n, only increasing if the sequences explore a new area of parameter space, which would imply that the original sequences were not overdispersed for the particular scalar summary being monitored.)'' \cite[p~438]{broo98}.
+$\widehat{R}$ could theoretically not be smaller than one, yet it occurred several times in this study (see online appendix XYZ). This can happen when the number of simulations is smaller than in `regular' MCMC processes [explain that fewer iterations is an advantage of MI, not a disadvantage compared to MCMC]. Increasing Rhat values can happen if the initial values were not appropriately over-dispersed \citep[p~438]{broo98}. %Therefore, the `$(n-1/n)$' [add equation number] correction factor can influence the estimated potential scale reduction factor. This downwards bias is in the opposite direction than expected: ``The mixture-of-sequences variance, $V$, should stabilize as a function of $n$. (Before convergence, we expect $\sigma^2$ to decrease with n, only increasing if the sequences explore a new area of parameter space, which would imply that the original sequences were not overdispersed for the particular scalar summary being monitored.)'' \cite[p~438]{broo98}.
 
 % \url{https://discourse.mc-stan.org/t/rhat-1-as-low-as-9-94e-01-why/9252/3}
 
-\textbf{Negative ACs.} autocorrelation is dangerous when positive. These autocorrelations are negative. Still, we want the iterations to be stable and independent. Default maxit is five iterations now, should this be different? Are the 'waves' most pronounced at iteration 5? But why the dip??  
+\textbf{Negative ACs.} autocorrelation is dangerous when positive. These autocorrelations are negative. Still, we want the iterations to be stable and independent. Default maxit is five iterations now, should this be different? Are the 'waves' most pronounced at iteration 5? But why the dip?? 
+
+Assessing the stationarity component of convergence with $AC$ might be redundant, since high $AC$-values are implausible in MI procedures. That is, the randomness induced by the MI algorithm effectively mitigates the risk of dependency within chains. $AC$ would thus not be informative of the convergence of MI algorithms. 
+
 
 The observed dip in AC implies that default maxit value of five iterations is the worst possible number of iterations.
 
