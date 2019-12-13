@@ -455,7 +455,8 @@ T & Bias & CI width & Cov. rate & $\widehat{R}_{mean}$ & $\widehat{R}_{var}$ & $
 \subsection{Convergence diagnostics}
 It is apparant that there is a relation between convergence diagnostics $\widehat{R}$ and $AC$, and the number of iterations per simulation condition($T$). Generally speaking, we see a trend towards convergence as $T$ increases with each simulation condition ($\widehat{R}$-values approache one, and $AC$-values approache zero). The convergence diagnostics show more or less equivalent trends for chain means versus chain variances. We, therefore, only discuss the $\widehat{R}$ and $AC$-values of chain means. %convergence diagnostics for the chain means. %do not differentiate in the interpretation of chain means . 
 
-Figure \ref{fig:conv}A shows that $\widehat{R}$-values generally decrease with increasing imputation chain lengths. The decline stabilizes somewhere between the simulation conditions $T=30$ and $T=50$. The downward trend is most pronounced for $T=3$, and between $T = 5$ and $T = 10$. In the intervening conditions ($3 \leq T \leq 5$), however, we observe a steep increase in $\widehat{R}$-values. This increase implies that convergence cannot be diagnosed at $T=3$, as would be the case based on the conventional threshold $\widehat{R} < 1.2$. \textbf{This may be spurious.} According to the widely used threshold $\widehat{R} < 1.1$, convergence can be diagnosed for conditions where $T>9$. If we use the recently recommended threshold $\widehat{R} < 1.01$, we would conclude that we cannot diagnose convergence in any simulation condition.
+Figure \ref{fig:conv}A shows that $\widehat{R}$-values generally decrease with increasing imputation chain lengths. The decline stabilizes somewhere between the simulation conditions $T=30$ and $T=50$. The downward trend is most pronounced for $T=3$, and between $T = 5$ and $T = 10$. In the intervening conditions ($3 \leq T \leq 5$), however, we observe a steep increase in $\widehat{R}$-values. This increase implies that convergence cannot be diagnosed at $T=3$, as would be the case based on the conventional threshold $\widehat{R} < 1.2$. \textbf{This may be spurious.} According to the widely used threshold $\widehat{R} < 1.1$, convergence can be diagnosed for conditions where $T>9$. If we use the recently recommended threshold $\widehat{R} < 1.01$, we would conclude that we cannot diagnose convergence in any simulation condition. \textbf{add something about Rh below 1.}
+
 
 %The $\widehat{R}$-values for chain means and chain variances show equivalent trends, neither is there a clear difference between the four variables. Roughly speaking, we see that $\widehat{R}$ is higher for simulation conditions with a lower number of iterations, and approaches one for conditions with more iterations. 
 
@@ -463,7 +464,6 @@ Figure \ref{fig:conv}A shows that $\widehat{R}$-values generally decrease with i
 %Figure \ref{fig:conv} shows an initial dip, a small bump upwards, and then a steep decline. This decline continues up-to iteration twenty, after which a more gradual decrease can be observed up-to iteration forty. The $\widehat{R}$-values are more or less stable after that. 
 %\textbf{[Remove stuff here]} %The conventionally acceptable threshold for convergence, maximum 
 %$\widehat{R} < 1.2$ is reached at $T =3$, and conditions with six iterations or more. The widely used threshold $\widehat{R} < 1.1$ is met in conditions with ten or more iterations. The most recent recommended threshold is not reached within the 100 iterations considered in this simulation study. $\widehat{R} > 1.01$ for all simulation conditions (see online appendix for the full table of results).
-\textbf{say something about Rh below 1.}
 %%%%
 
 The $AC$-values displayed in Figure \ref{fig:conv}B are almost uniformly increasing as a function of $T$. The only $AC$-value that deviates from this observation is for $T=2$. The lowest $AC$-value is obtained for $T=3$. At $T=5$, the $AC$-value reaches the level observed at $T=2$. Between $T=10$ and $T=30$ the increase plateaus off, and $AC$-values are stable around $T=70$. $AC$ is then indifferentiable from zero, indicating stationarity. %Simulation conditions where $T>5$ have $AC$-values greater than $T=2$. %We see an initial decrease between $T=2$ and $T=3$.
@@ -489,7 +489,11 @@ CIW is only clearly divergent for the simulation condition $T=1$. However, we wa
 
 \textbf{Empirical coverage rate seems more or less stable for conditions where $T>1$. We see some over-coverage at $T=2$. We might over-estimate the variance, but better than under-estimating it. On average, the coverage rate is somewhat higher than the expected nominal coverage of 95\% \cite{neym34}, namely \Sexpr{100*round(mean(dat[, "Cov. rate"]), 3)}\%. Loess line is never flat.}
 
-\textbf{give some implications for these measures. connect convergence and simulation diagnostics.}
+\textbf{From the simulation diagnostics, we see that simulation conditions where $T>3$ are generally ok. The performance measures indicate that for the current data, MI procedure, and quantity of interest, the algorithm should have maxit argument of four or more. This is, however, a simple simulation problem, with MCAR missingness mechanism, univariate missingness, and moderate fmi's [REMOVE?? COMPUTE??]. harder problems require more iterations.} %give some implications for these measures. connect convergence and simulation diagnostics.}
+
+
+There is a discrepancy between what the convergence diagnostics and the performance measures indicate. While $T=4$ is ok with repsect to simulation quantities, $T=3$ is the worst possible value according to the convergence diagnostics, and $T=4$ provides marginally better convergence diagnostics. 
+
 
 %% -- Summary/conclusions/discussion -------------------------------------------
 %%
@@ -500,6 +504,7 @@ CIW is only clearly divergent for the simulation condition $T=1$. However, we wa
 \section{Summary and discussion} \label{sec:summary}
 
 \textbf{Answer RQ.} How to diagnose non-convergence? It's complicated.
+%We will evaluate how convergence of the imputation algorithm can be diagnosed.
 
 \textbf{Summary.}
 This note illustrates that conventional convergence diagnostics behave differently on MI data than other MCMC methods like Gibbs samplers in Bayesian analyses. The most recent recommended threshold for $\widehat{R}$ ($\widehat{R} < 1.01$) may be too stringent for MI data. \textbf{However, using the 1.2 threshold may be too lenient because this was observed at three iterations and then again after six. If we would use 1.2, we might miss this increase after three iterations. The 1.1 threshold seems OK. Also, ten iterations are computationally not terrible. With increased performance and storage capacities, doubling the default is fine I guess.}
