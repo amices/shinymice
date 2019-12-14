@@ -13,15 +13,15 @@ library("ggpubr")
 
 # create
 R_plot <- results %>% .[-1, ] %>%
-  ggplot(aes(x = It., y = R_var_X, color = "Chain variance")) +
+  ggplot(aes(x = It., y = R_var_X, color = "Chain variances")) +
   geom_line(linetype = "dashed", size = 1) +
-  geom_line(aes(x = It., y = R_var_Z1, color = "Chain variance"), linetype = "dashed", size = 1) +
-  geom_line(aes(x = It., y = R_var_Z2, color = "Chain variance"), linetype = "dashed", size = 1) +
-  geom_line(aes(x = It., y = R_var_Y, color = "Chain variance"), linetype = "dashed", size = 1) +
-  geom_line(aes(x = It., y = R_mean_X, color = "Chain mean")) +
-  geom_line(aes(x = It., y = R_mean_Z1, color = "Chain mean")) +
-  geom_line(aes(x = It., y = R_mean_Z2, color = "Chain mean")) +
-  geom_line(aes(x = It., y = R_mean_Y, color = "Chain mean")) +
+  geom_line(aes(x = It., y = R_var_Z1, color = "Chain variances"), linetype = "dashed", size = 1) +
+  geom_line(aes(x = It., y = R_var_Z2, color = "Chain variances"), linetype = "dashed", size = 1) +
+  geom_line(aes(x = It., y = R_var_Y, color = "Chain variances"), linetype = "dashed", size = 1) +
+  geom_line(aes(x = It., y = R_mean_X, color = "Chain means")) +
+  geom_line(aes(x = It., y = R_mean_Z1, color = "Chain means")) +
+  geom_line(aes(x = It., y = R_mean_Z2, color = "Chain means")) +
+  geom_line(aes(x = It., y = R_mean_Y, color = "Chain means")) +
   #geom_hline(yintercept = 1.1) +
   #geom_hline(yintercept = 1.01) +
   xlab("") +
@@ -29,7 +29,7 @@ R_plot <- results %>% .[-1, ] %>%
   scale_x_continuous(breaks = seq(0, 100, by = 10)) +
   scale_color_manual(
     name = "Legend",
-    values = c("Chain mean" = 1, "Chain variance" = 8),
+    values = c("Chain means" = 1, "Chain variances" = 8),
     guide = "legend"
   ) +
   guides(colour = guide_legend(override.aes = list(linetype = c(1, 8)))) +
@@ -46,20 +46,20 @@ R_plot <- results %>% .[-1, ] %>%
   )
 
 AC_plot <- results %>% .[-1, ] %>%
-  ggplot(aes(x = It., y = AC_var_X, color = "Chain variance")) +
+  ggplot(aes(x = It., y = AC_var_X, color = "Chain variances")) +
   geom_line(linetype = "dashed", size = 1) +
-  geom_line(aes(x = It., y = AC_var_Z1, color = "Chain variance"), linetype = "dashed", size = 1) +
-  geom_line(aes(x = It., y = AC_var_Z2, color = "Chain variance"), linetype = "dashed", size = 1) +
-  geom_line(aes(x = It., y = AC_var_Y, color = "Chain variance"), linetype = "dashed", size = 1) +
-  geom_line(aes(x = It., y = AC_mean_X, color = "Chain mean")) +
-  geom_line(aes(x = It., y = AC_mean_Z1, color = "Chain mean")) +
-  geom_line(aes(x = It., y = AC_mean_Z2, color = "Chain mean")) +
-  geom_line(aes(x = It., y = AC_mean_Y, color = "Chain mean")) +
+  geom_line(aes(x = It., y = AC_var_Z1, color = "Chain variances"), linetype = "dashed", size = 1) +
+  geom_line(aes(x = It., y = AC_var_Z2, color = "Chain variances"), linetype = "dashed", size = 1) +
+  geom_line(aes(x = It., y = AC_var_Y, color = "Chain variances"), linetype = "dashed", size = 1) +
+  geom_line(aes(x = It., y = AC_mean_X, color = "Chain means")) +
+  geom_line(aes(x = It., y = AC_mean_Z1, color = "Chain means")) +
+  geom_line(aes(x = It., y = AC_mean_Z2, color = "Chain means")) +
+  geom_line(aes(x = It., y = AC_mean_Y, color = "Chain means")) +
   xlab("Number of iterations") +
   ylab("Auto-correlation") +
   scale_x_continuous(breaks = seq(0, 100, by = 10)) +
   scale_color_manual(name = "Legend",
-                     values = c("Chain mean" = 1, "Chain variance" = 8)) +
+                     values = c("Chain means" = 1, "Chain variances" = 8)) +
   theme_bw() +
   theme(
     panel.border = element_blank(),

@@ -27,7 +27,7 @@ source("Simulation/Functions/Evaluate.R")
 # simulation parameters
 populationsize <- 1000 #n of simulated dataset
 n.iter <- 100 #nr of iterations (varying 1:n.iter)
-n.sim <- 3 #nr of simulations per iteration value
+n.sim <- 100 #nr of simulations per iteration value
 true_effect <- 2 #regression coefficient to be estimated
 
 # start simulation study
@@ -40,7 +40,7 @@ data <- data.simulation(n = populationsize, true_effect)
 # run ampute once to get patterns object (and )to be able to adjust it for multivariate missingness)
 amp_patterns <- ampute(data)$patterns
 # for multivariable missingness, uncomment this
-# amp_patterns[1:4, 1] <- 0
+amp_patterns[1:4, 1] <- 0
 
 # combine separate functions into wrapper
 simulate <- function(data, n.iter, true_effect, patterns) {
@@ -81,5 +81,5 @@ results <- evaluate.sim(sims = out)
 ###
 
 # save for future reference
-save.Rdata(results, name = "results17.Rdata", path = "Simulation/Results")
-#save.image("environment.Rdata")
+save.Rdata(results, name = "multivar_miss", path = "Simulation/Results")
+save.image("environment.Rdata")
