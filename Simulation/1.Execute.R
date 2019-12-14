@@ -70,7 +70,7 @@ out <- replicate(n.sim, simulate(data = data, n.iter = n.iter, true_effect = tru
 ###
 
 # evaluate
-results <- evaluate.sim(sims = out, n.iter = n.iter, mean_or_SE = "mean")
+results <- evaluate.sim(sims = out, n.iter = n.iter)
 # uncomment for MCMC SEs
 MCMCSE <- evaluate.sim(sims = out, n.iter = n.iter, mean_or_SE = "se")
 # combine into one dataframe

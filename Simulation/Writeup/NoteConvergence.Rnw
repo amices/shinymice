@@ -405,8 +405,10 @@ Missing datapoints are imputed with the \pkg{mice} function \fct{mice}. All simu
 
 \subsection{Convergence Diagnostics}
 % Add ``post-processing steps (e.g. aggregation computations, summary statistics, regressions on the simulation results) used to transform simulation outputs to reported results''. %, see \url{http://jsterman.scripts.mit.edu/docs/Rahmandad-Sterman%20Simulation%20Reporting%20Standards3.30%20update.pdf}.
-We investigate convergence by extracting not only the imputed values of each MI procedure (where $t = T$), but also information from the intermediate iterations ($t = 1, 2, \dots, T$). The quantities of interest ($\theta$-values) are chain means and chain variances. We compute convergence diagnostics separately for each of the four variables in the dataset. \textbf{We report the maximum (absolute) value as the `worst linear predictor' of convergence [Rephrase or footnote??]}. $\widehat{R}$ is computed by implementing Vehtari et al.'s \citeyear{veht19} recommendations. $AC$ is computed with \pkg{stats} function \fct{acf}.
-
+We extract not only the imputed values of each MI procedure (where $t = T$), but also information from the intermediate iterations ($t = 1, 2, \dots, T$). The quantities of interest ($\theta$-values) are chain means and chain variances. We compute convergence diagnostics separately for each of the four variables in the dataset. \textbf{We report the maximum (absolute) value as the `worst linear predictor' of convergence [Rephrase or footnote??]}. $\widehat{R}$ is computed by implementing Vehtari et al.'s \citeyear{veht19} recommendations. $AC$ is computed with \pkg{stats} function \fct{acf}.
+%%%%%%%%%%%%%%%%
+%From each imputation chain, we extract imputed values, chain means and chain variances ($\theta$-values). $\theta$-values are information from the intermediate iterations ($t = 1, 2, \dots, T$). The quantities of interest ($\theta$-values) are . We compute convergence diagnostics separately for each of the four variables in the dataset. \textbf{We report the maximum (absolute) value as the `worst linear predictor' of convergence [Rephrase or footnote??]}. $\widehat{R}$ is computed by implementing Vehtari et al.'s \citeyear{veht19} recommendations. $AC$ is computed with \pkg{stats} function \fct{acf}.
+%%%%%%%%%%%%%
 % 
 % 
 % extract chain means and chain variances per iteration $t$. From the MI algorithm Convergence diagnostics are computed for chain means and chain variances.   
@@ -425,9 +427,9 @@ To estimate the quantity of scientific interest, $Q$, we perform multiple linear
 
 We compute bias as the difference between $\bar{Q}$ and $Q$. Confidence interval width (CIW) is defined as the difference between the lower and upper bound of the 95\% confidence interval around $\bar{Q}$ (CI95\%). We compute the CI95\% bounds as 
 
-$$\bar{Q} \pm 2.66 \times SE_{\bar{Q}},$$
+$$\bar{Q} \pm t_{(m-1)} \times SE_{\bar{Q}}, \text{ where } t_{(m-1)} = 2.66 \text{ if } \alpha = .05. $$
 
-where 2.66 is the quantile of a $t$-distribution with $m-1$ degrees of freedom, and $SE_{\bar{Q}}$ is the square root of the pooled variance estimate. From bias and CIW, we calculate empirical coverage rates. Coverage rate is the proportion of simulations in which $Q$ is between the bounds of the CI95\% around $\bar{Q}$. 
+$t_{(m-1)}$ is the quantile of a $t$-distribution with $m-1$ degrees of freedom, and $SE_{\bar{Q}}$ is the square root of the pooled variance estimate. From bias and CIW, we calculate empirical coverage rates. Coverage rate is the proportion of simulations in which $Q$ is between the bounds of the CI95\% around $\bar{Q}$. 
 
 %% -- Results ---------------------------------------------------------------
 
@@ -455,10 +457,26 @@ Figures \ref{fig:conv} and \ref{fig:sim} display results per simulation conditio
 
 \begin{figure}[h]
   \resizebox{\textwidth}{!}{ %notice the \resizebox{} command
+        \includegraphics{Figures/conv_diag_SEs.pdf}
+  }
+  \caption{Convergence diagnostics over 1000 MCMC simulations.}
+    \label{fig:conv2}
+\end{figure}
+
+\begin{figure}[h]
+  \resizebox{\textwidth}{!}{ %notice the \resizebox{} command
         \includegraphics{Figures/simulation_diag.pdf}
   }
   \caption{Simulation diagnostics over 1000 MCMC simulations.}
     \label{fig:sim}
+\end{figure}
+
+\begin{figure}[h]
+  \resizebox{\textwidth}{!}{ %notice the \resizebox{} command
+        \includegraphics{Figures/sim_diag_SEs.pdf}
+  }
+  \caption{Simulation diagnostics over 1000 MCMC simulations.}
+    \label{fig:sim2}
 \end{figure}
 
 % latex table generated in R 3.6.1 by xtable 1.8-4 package

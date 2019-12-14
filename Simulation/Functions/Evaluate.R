@@ -3,21 +3,20 @@
 
 evaluate.sim <-
   function(sims,
-           n.iter = n.iter,
+           n.iter,
            mean_or_SE = "mean"
            ) {
     # organize output for evaluation
     dt <- map(sims, as.data.table) %>% rbindlist(fill = TRUE)
     # determine whether we want averages per simulation condition or MCMC SEs
-    if (mean_or_SE == "mean") {
-      function_to_apply <- mean
-    } else if (mean_or_SE == "se") {
+    if (mean_or_SE == "se") {
       function_to_apply <- sd # or use: function(x) sqrt((var(x)))
     } else if (mean_or_SE == "lower") {
       function_to_apply <- function(x) quantile(x, .025, na.rm = TRUE)
     } else if (mean_or_SE == "upper") {
       function_to_apply <- function(x) quantile(x, .975, na.rm = TRUE)
-    }
+    } else {function_to_apply <- mean}
+
     
     # apply function to aggregate simulation runs per simulation condition
     d <- dt[, lapply(.SD, function_to_apply)] %>% as.data.frame
