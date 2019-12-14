@@ -12,21 +12,34 @@ library("ggpubr")
 # results <- dat
 
 # create
-R_plot <- results %>% .[-1, ] %>%
-  ggplot(aes(x = It., y = R_var_X, color = "Chain variances")) +
+R_plot <- results_with_CI %>% .[-1,] %>%
+  ggplot(aes(x = T, y = R_var_X, color = "Chain variances")) +
   geom_line(linetype = "dashed", size = 1) +
-  geom_line(aes(x = It., y = R_var_Z1, color = "Chain variances"), linetype = "dashed", size = 1) +
-  geom_line(aes(x = It., y = R_var_Z2, color = "Chain variances"), linetype = "dashed", size = 1) +
-  geom_line(aes(x = It., y = R_var_Y, color = "Chain variances"), linetype = "dashed", size = 1) +
-  geom_line(aes(x = It., y = R_mean_X, color = "Chain means")) +
-  geom_line(aes(x = It., y = R_mean_Z1, color = "Chain means")) +
-  geom_line(aes(x = It., y = R_mean_Z2, color = "Chain means")) +
-  geom_line(aes(x = It., y = R_mean_Y, color = "Chain means")) +
+  geom_line(aes(x = T, y = R_var_Z1, color = "Chain variances"),
+            linetype = "dashed",
+            size = 1) +
+  geom_line(aes(x = T, y = R_var_Z2, color = "Chain variances"),
+            linetype = "dashed",
+            size = 1) +
+  geom_line(aes(x = T, y = R_var_Y, color = "Chain variances"),
+            linetype = "dashed",
+            size = 1) +
+  geom_line(aes(x = T, y = R_mean_X, color = "Chain means")) +
+  geom_line(aes(x = T, y = R_mean_Z1, color = "Chain means")) +
+  geom_line(aes(x = T, y = R_mean_Z2, color = "Chain means")) +
+  geom_line(aes(x = T, y = R_mean_Y, color = "Chain means")) +
+  geom_errorbar(
+    aes(ymin = R_mean_X_LL, ymax = R_mean_X_UL),
+    width = .2,
+    position = position_dodge(0.05)
+  ) +
+  #geom_hline(yintercept = 1, color = "grey") +
   #geom_hline(yintercept = 1.1) +
   #geom_hline(yintercept = 1.01) +
   xlab("") +
   ylab(expression(paste(widehat(R)))) +
   scale_x_continuous(breaks = seq(0, 100, by = 10)) +
+  scale_y_continuous(breaks = seq(.8, 2.2, by = .2)) +
   scale_color_manual(
     name = "Legend",
     values = c("Chain means" = 1, "Chain variances" = 8),
@@ -45,19 +58,35 @@ R_plot <- results %>% .[-1, ] %>%
     legend.margin = margin(6, 6, 6, 6)
   )
 
-AC_plot <- results %>% .[-1, ] %>%
-  ggplot(aes(x = It., y = AC_var_X, color = "Chain variances")) +
+AC_plot <- results_with_CI %>% .[-1,] %>%
+  ggplot(aes(x = T, y = AC_var_X, color = "Chain variances")) +
   geom_line(linetype = "dashed", size = 1) +
-  geom_line(aes(x = It., y = AC_var_Z1, color = "Chain variances"), linetype = "dashed", size = 1) +
-  geom_line(aes(x = It., y = AC_var_Z2, color = "Chain variances"), linetype = "dashed", size = 1) +
-  geom_line(aes(x = It., y = AC_var_Y, color = "Chain variances"), linetype = "dashed", size = 1) +
-  geom_line(aes(x = It., y = AC_mean_X, color = "Chain means")) +
-  geom_line(aes(x = It., y = AC_mean_Z1, color = "Chain means")) +
-  geom_line(aes(x = It., y = AC_mean_Z2, color = "Chain means")) +
-  geom_line(aes(x = It., y = AC_mean_Y, color = "Chain means")) +
+  geom_line(
+    aes(x = T, y = AC_var_Z1, color = "Chain variances"),
+    linetype = "dashed",
+    size = 1
+  ) +
+  geom_line(
+    aes(x = T, y = AC_var_Z2, color = "Chain variances"),
+    linetype = "dashed",
+    size = 1
+  ) +
+  geom_line(aes(x = T, y = AC_var_Y, color = "Chain variances"),
+            linetype = "dashed",
+            size = 1) +
+  geom_line(aes(x = T, y = AC_mean_X, color = "Chain means")) +
+  geom_line(aes(x = T, y = AC_mean_Z1, color = "Chain means")) +
+  geom_line(aes(x = T, y = AC_mean_Z2, color = "Chain means")) +
+  geom_line(aes(x = T, y = AC_mean_Y, color = "Chain means")) +
+  geom_errorbar(
+    aes(ymin = AC_mean_X_LL, ymax = AC_mean_X_UL),
+    width = .2#,
+    #position = position_dodge(0.05)
+  ) +
   xlab("Number of iterations") +
   ylab("Auto-correlation") +
   scale_x_continuous(breaks = seq(0, 100, by = 10)) +
+  scale_y_continuous(breaks = seq(-.8, .6, by = .2)) +
   scale_color_manual(name = "Legend",
                      values = c("Chain means" = 1, "Chain variances" = 8)) +
   theme_bw() +
@@ -81,7 +110,7 @@ figure1 <-
 
 figure1
 
-bias_plot <- ggplot(results, aes(x = It., y = bias)) +
+bias_plot <- ggplot(results_with_CI, aes(x = T, y = bias)) +
   geom_line() +
   geom_smooth(
     method = "loess",
@@ -89,6 +118,11 @@ bias_plot <- ggplot(results, aes(x = It., y = bias)) +
     colour = "black",
     size = 0.5,
     linetype = "dashed"
+  ) +
+  geom_errorbar(
+    aes(ymin = bias_LL, ymax = bias_UL),
+    width = .2,
+    colour = "grey"
   ) +
   xlab("") +
   ylab("Bias") +
@@ -101,7 +135,7 @@ bias_plot <- ggplot(results, aes(x = It., y = bias)) +
     axis.line = element_line(colour = "black")
   )
 
-CIW_plot <- ggplot(results, aes(x = It., y = CIW)) +
+CIW_plot <- ggplot(results_with_CI, aes(x = T, y = CIW)) +
   geom_line() +
   geom_smooth(
     method = "loess",
@@ -109,6 +143,11 @@ CIW_plot <- ggplot(results, aes(x = It., y = CIW)) +
     colour = "black",
     size = 0.5,
     linetype = "dashed"
+  ) +
+  geom_errorbar(
+    aes(ymin = CIW_LL, ymax = CIW_UL),
+    width = .2,
+    colour = "grey"
   ) +
   xlab("") +
   ylab("CI width") +
@@ -121,7 +160,7 @@ CIW_plot <- ggplot(results, aes(x = It., y = CIW)) +
     axis.line = element_line(colour = "black")
   )
 
-cov_plot <- ggplot(results, aes(x = It., y = cov * 100)) +
+cov_plot <- ggplot(results_with_CI, aes(x = T, y = cov * 100)) +
   geom_line() +
   geom_smooth(
     method = "loess",
@@ -130,7 +169,13 @@ cov_plot <- ggplot(results, aes(x = It., y = cov * 100)) +
     size = 0.5,
     linetype = "dashed"
   ) +
-  xlab("Number of iterations") +
+  # CI is useless here!
+  # geom_errorbar(
+  #   aes(ymin = 100 * cov_LL, ymax = 100 * cov_UL),
+  #   width = .2,
+  #   colour = "grey"
+  # ) +
+  xlab("Number of iterations (T)") +
   ylab("Coverage (%)") +
   scale_x_continuous(breaks = seq(0, 100, by = 10)) +
   theme_bw() +

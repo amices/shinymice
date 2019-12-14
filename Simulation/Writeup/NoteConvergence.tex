@@ -509,7 +509,7 @@ Figure \ref{fig:sim}A shows that bias is fairly stable across simulation conditi
 
 CIW is only clearly divergent for the simulation condition $T=1$. However, we want to be on the safe side, and not under-estimate the variance. Otherwise, we might end up with spurious inferences. Conditions where $T>3$ have similar CIWs, which seems to be stable across iterations. \textbf{Loess line is never completely flat.}%One might argue that there is some downward trending up-to thirthy to forty iterations. %After about twenty-five iterations the average CIW across all simulation conditions and repetitions is reached 0.928. 
 
-\textbf{Empirical coverage rate seems more or less stable for conditions where $T>1$. We see some over-coverage at $T=2$. We might over-estimate the variance, but better than under-estimating it. On average, the coverage rate is somewhat higher than the expected nominal coverage of 95\% \cite{neym34}, namely 95.3\%. Loess line is never flat.}
+\textbf{Empirical coverage rate seems more or less stable for conditions where $T>1$. We see some over-coverage at $T=2$. We might over-estimate the variance, but better than under-estimating it. On average, the coverage rate is somewhat higher than the expected nominal coverage of 95\% \citep{neym34}, namely 95.3\%. Loess line is never flat.}
 
 \textbf{From the simulation diagnostics, we see that simulation conditions where $T>3$ are generally OK. The performance measures indicate that for the current data, MI procedure, and quantity of interest, the algorithm should have maxit argument of four or more. This is, however, a simple simulation problem, with MCAR missingness mechanism, univariate missingness, and moderate fmi's [REMOVE?? COMPUTE??]. harder problems require more iterations.} %give some implications for these measures. connect convergence and simulation diagnostics.}
 
@@ -538,6 +538,8 @@ This note illustrates that conventional convergence diagnostics behave different
 
 From the simulation diagnostics, it appears that as little as four iterations might be sufficient to obtain unbiased, confidence valid estimates. Convergence diagnostics $\widehat{R}$ and autocorrelation, however, indicate that convergence may only be reached after twenty or even forty iterations. 
 
+\textbf{Does this mean that conv is not nec to obtain correct inferences?}
+
 \textbf{R hat below 1.}
 $\widehat{R}$ could theoretically not be smaller than one, yet it occurred several times in this study (see online appendix XYZ). This can happen when the number of simulations is smaller than in `regular' MCMC processes [explain that fewer iterations is an advantage of MI, not a disadvantage compared to MCMC]. Increasing Rhat values can happen if the initial values were not appropriately over-dispersed \citep[p~438]{broo98}. %Therefore, the `$(n-1/n)$' [add equation number] correction factor can influence the estimated potential scale reduction factor. This downwards bias is in the opposite direction than expected: ``The mixture-of-sequences variance, $V$, should stabilize as a function of $n$. (Before convergence, we expect $\sigma^2$ to decrease with n, only increasing if the sequences explore a new area of parameter space, which would imply that the original sequences were not overdispersed for the particular scalar summary being monitored.)'' \cite[p~438]{broo98}.
 
@@ -552,6 +554,7 @@ The observed dip in AC implies that default maxit value of five iterations is th
 
 \textbf{Future research.} This study considered only an MCAR missingness mechanism. Necessary but not sufficient to demonstrate the performance of convergence diagnostics. This is just a proof of concept. Further research is needed to investigate the performance under violation of convergence, e.g. dependency between predictors (very high correlations). %We would like to have convergence measures for multivariable statistics (scalars?) of interest. This is, however, dependent on the complete data model. The eigenvector decomposition method proposed by McKay (?) should be implemented. I could not find any resources to apply this method and it is outside the scope of this thesis to investigate how this approach could be implemented. \textbf{[this paragraph is too negative, explain scope in intro instead.]}
 
+Also, conv diag for substantive model? wald test for AC = 0? 
 %% -- Optional special unnumbered sections -------------------------------------
 
 \section*{Computational details}

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.19 (MiKTeX 2.9.6880 64-bit) (preloaded format=pdflatex 2018.12.13)  14 DEC 2019 13:19
+This is pdfTeX, Version 3.14159265-2.6-1.40.19 (MiKTeX 2.9.6880 64-bit) (preloaded format=pdflatex 2018.12.13)  14 DEC 2019 20:53
 entering extended mode
 **./NoteConvergence.tex
 (NoteConvergence.tex
@@ -1046,14 +1046,11 @@ Overfull \hbox (10.94998pt too wide) has occurred while \output is active
  []
 
 [10]
-Overfull \hbox (3.46822pt too wide) in paragraph at lines 559--560
+Overfull \hbox (3.46822pt too wide) in paragraph at lines 562--563
 []\T1/lmr/m/n/10.95 The re-sults in this pa-per were ob-tained us-ing \T1/lmss/
 m/n/10.95 R \T1/lmr/m/n/10.95 3.6.1 [][]Core Team[][] ([][]2019[][]) with the \
 T1/lmr/b/n/10.95 mice \T1/lmr/m/n/10.95 3.6.0.9000
  []
-
-
-Underfull \vbox (badness 10000) has occurred while \output is active []
 
 
 Overfull \hbox (10.94998pt too wide) has occurred while \output is active
@@ -1072,21 +1069,21 @@ Overfull \hbox (10.94998pt too wide) has occurred while \output is active
 
 [13]
 LaTeX Font Info:    Font shape `T1/pzc/m/n' in size <13> not available
-(Font)              Font shape `T1/pzc/mb/it' tried instead on input line 591.
+(Font)              Font shape `T1/pzc/mb/it' tried instead on input line 594.
 
 Overfull \hbox (10.94998pt too wide) has occurred while \output is active
 \T1/lmr/m/n/10.95 14 []
  []
 
 [14]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 591.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 591.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 594.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 594.
  (NoteConvergence.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 591.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 591.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 594.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 594.
 Package rerunfilecheck Info: File `NoteConvergence.out' has not changed.
 (rerunfilecheck)             Checksum: F818C2532E1DAFAD1437BE41A163E716;1340.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 591.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 594.
  ) 
 Here is how much of TeX's memory you used:
  17691 strings out of 492965
@@ -1124,7 +1121,7 @@ ams/MiKTeX 2.9/fonts/type1/public/lm/lmsy10.pfb><C:/Users/User/AppData/Local/Pr
 ograms/MiKTeX 2.9/fonts/type1/public/lm/lmsy8.pfb><C:/Users/User/AppData/Local/
 Programs/MiKTeX 2.9/fonts/type1/public/lm/lmtt10.pfb><C:/Users/User/AppData/Loc
 al/Programs/MiKTeX 2.9/fonts/type1/urw/zapfchan/uzcmi8a.pfb>
-Output written on NoteConvergence.pdf (14 pages, 506271 bytes).
+Output written on NoteConvergence.pdf (14 pages, 506380 bytes).
 PDF statistics:
  432 PDF objects out of 1000 (max. 8388607)
  78 named destinations out of 1000 (max. 500000)

@@ -70,8 +70,15 @@ out <- replicate(n.sim, simulate(data = data, n.iter = n.iter, true_effect = tru
 ###
 
 # evaluate
-results <- evaluate.sim(sims = out)
-#names(results) <- c("It.", "Bias", "CI width", "Cov. rate", "R chain mean", "R chain var", "AC chain mean", "AC chain var")
+results <- evaluate.sim(sims = out, n.iter = n.iter, mean_or_SE = "mean")
+# uncomment for MCMC SEs
+MCMCSE <- evaluate.sim(sims = out, n.iter = n.iter, mean_or_SE = "se")
+# combine into one dataframe
+results_with_SE <- left_join(results, MCMCSE, by = "T", suffix = c("", "_SE"))
+# with empirical CI
+CI_lower <- evaluate.sim(sims = out, n.iter = n.iter, mean_or_SE = "lower")
+CI_upper <- evaluate.sim(sims = out, n.iter = n.iter, mean_or_SE = "upper")
+results_with_CI <- results %>% left_join(CI_lower, by = "T", suffix = c("", "_LL")) %>% left_join(CI_upper, by = "T", suffix = c("", "_UL"))
 
 # plot
 #plot.ts(results[c(5:8, 2:4)], main = "Convergence and Simulation Diagnostics", xlab = "Number of iterations")
