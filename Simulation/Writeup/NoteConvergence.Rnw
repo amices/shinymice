@@ -84,7 +84,7 @@ To obtain valid inferences with MI, the variability between imputations should b
 %Therefore, I will answer the following question: 'Which measures are vital for evaluating the validity of multiply imputed data?'.
 
 The goal of this research project is to develop novel methodology and guidelines for evaluating MI methods. These tools will subsequently be implemented in an interactive evaluation framework for multiple imputation to aid applied researchers in drawing valid inference from incomplete datasets. This note provides the theoretical foundation towards the diagnostic evaluation of the convergence of MI algorithms. % for diagnostics for evalua one of these evaluation measures that is vital in evaluating MI procedures: a diagnostic to assess convergence of the MI algorithm. 
-For reasons of brevity, this note only focuses on the MI algorithm implemented in \pkg{mice} \cite{mice}. %The implementation limits itself to the MI algorithm 
+For reasons of brevity, this note only focuses on the MI algorithm implemented in \pkg{mice} \citep{mice}. %The implementation limits itself to the MI algorithm 
 %More specifically, this note focuses on the MI algorithm that is implemented in the \proglang{R} package \pkg{mice}: `Multiple Imputation using Chained Equations' (MICE) \textbf{[can be removed, can be found in the mice ref]}. 
 To this end, we will evaluate how convergence of the imputation algorithm can be diagnosed.
 
@@ -101,7 +101,7 @@ The convergence properties of the MI algorithm in \pkg{mice} are investigated th
 \subsection{Terminology} \label{sec:terms}
 
 The intended audience of this note consists of anyone who uses multiple imputation to solve missing data problems. Basic familiarity with MI methodology is assumed.\footnote{For the theoretical foundation of MI, see \cite{rubin87}. For an accessible and comprehensive introduction to MI from an applied perspective, see \cite{buur18}.}  
-This note follows notation and conventions of \cite{mice}. % to suit the \pkg{mice} environment. %Deviations from the `original' notation by \cite{rubin87} are described in \citep[\S~2.2.3]{buur18}. 
+This note follows notation and conventions of \pkg{mice} \citep{mice}. % to suit the \pkg{mice} environment. %Deviations from the `original' notation by \cite{rubin87} are described in \citep[\S~2.2.3]{buur18}. 
 
 Let $Y$ denote an $n \times p$ matrix containing the data values on $p$ variables for all $n$ units in a sample. The collection of observed data values in $Y$ is denoted by $Y_{obs}$, and will be referred to as `incomplete' or `observed' data interchangeably. The missing part of $Y$ is denoted by $Y_{mis}$. Which parts of $Y$ are missing is determined by the `missingness mechanism'. %The relation between $Y_{obs}$ and $Y_{mis}$ \textbf{REMOVE? Response indicator $R$ shows whether a data value in $Y$ is missing or observed.} The relation between $R$, $Y_{obs}$, and $Y_{mis}$ determines the missingness mechanism. 
 This note only considers a `missing completely at random' (MCAR) mechanism, where the probability of being missing is equal for all $n \times p$ cells in $Y$.
@@ -191,7 +191,7 @@ The convergence diagnostics under consideration are $\widehat{R}$ and autocorrel
 %
 %We can apply $\widehat{R}$ to the mean (or to the first two moments) of the variables of interest. 
 
-To define $\widehat{R}$, we follow notation by \citep[p.~5]{veht19}. % The scalar summary of interest in this study is the average of the imputed values per variable. %As recommended by \cite{veht19} $\widehat{R}$ is computed as .... to be able to detect ... in the tails of the distribution. \cite[p.~5]{veth19}
+To define $\widehat{R}$, we follow notation by \cite[p.~5]{veht19}. % The scalar summary of interest in this study is the average of the imputed values per variable. %As recommended by \cite{veht19} $\widehat{R}$ is computed as .... to be able to detect ... in the tails of the distribution. \cite[p.~5]{veth19}
 Let $M$ be the total number of chains, $T$ the number of iterations per chain, and $\theta$ the scalar summary of interest (e.g., chain mean or chain variance). For each chain ($m = 1, 2, \dots, M$), we estimate the variance of $\theta$, and average these to obtain within-chain variance $W$.
 
 %\textbf{REPHRASE: In the equations below, $N$ is the number of draws per chain, $M$ is the number of chains, and $S = MN$ is the total number of draws from all chains. For each scalar summary of interest $\theta$, we compute $B$ and $W$, the between- and within-chain variances:}
@@ -265,7 +265,7 @@ As convergence diagnostic, the interest is in positive $AC$-values.%\footnotemar
 
 This study evaluates whether $\widehat{R}$ and $AC$ could diagnose convergence of multiple imputation algorithms. There is, however, no baseline measure available to evaluate their performance against.
 \footnote{The current practice of visually inspecting imputation chains for signs of non-mixing or non-stationarity can only diagnose severely pathological cases of non-convergence.} 
-We will assess the appropriateness of the two convergence diagnostics in comparison to evaluation criteria recommended by \citep[\S~2.5.2]{buur18}. The performance diagnostics comprise of average bias, average confidence interval width, and empirical coverage rate across simulations.% %"We expect that in accordance with Neyman (1934), at least 95 percent of the confidence intervals should contain the true population value, although some room for simulation error should be taken into account to counteract the finite nature of our simulations"\cite{schou18}.
+We will assess the appropriateness of the two convergence diagnostics in comparison to evaluation criteria recommended by \cite[\S~2.5.2]{buur18}. The performance diagnostics comprise of average bias, average confidence interval width, and empirical coverage rate across simulations.% %"We expect that in accordance with Neyman (1934), at least 95 percent of the confidence intervals should contain the true population value, although some room for simulation error should be taken into account to counteract the finite nature of our simulations"\cite{schou18}.
 \footnote{We could also look at distributional characteristics, and plausibility of imputed values, see \cite{vinknd} (n.d.). For now, this is outside of the scope of this study.} % Or use: Then evaluate the regular diagnostics of MI simulations, see Vink, n.d., and  convergence. Diagnostics include absolute bias of the estimated regression coefficient, confidence interval width, and empirical coverage rate across simulations. Convergence is evaluated with $\widehat{R}$, or potential scale reduction factor.
 
 \textbf{[HIER NOG ZOOI]} We hypothesize that $\widehat{R}$ may not be an appropriate diagnostic, because it assumes over-dispersed initial values. In \pkg{mice}, initial values of the algorithm are chosen randomly from the observed data. Therefore, we cannot be certain that the initial values are over-dispersed.
@@ -354,7 +354,11 @@ aggregate convergence and simulation diagnostics
 \end{Code}
 
 \subsection{Data simulation}
-The point of origin for all simulation conditions is a finite population of $N=1000$. The data are simulated to solve a multiple linear regression problem, where dependent variable $Y$ is regressed on independent variable $X$, and covariates $Z_1$ and $Z_2$: $Y \sim \beta_1 X + \beta_2 Z_1 + \beta_3 Z_2$. The quantity of scientific interest is regression coefficient $\beta_1$. The data generating model is a multivariate normal distribution with means structure $\mu$ and variance-covariance matrix $\Sigma$. 
+The point of origin for all simulation conditions is a finite population of $N=1000$. The data are simulated to solve a multiple linear regression problem, where dependent variable $Y$ is regressed on independent variable $X$, and covariates $Z_1$ and $Z_2$: 
+
+$$Y \sim \beta_1 X + \beta_2 Z_1 + \beta_3 Z_2.$$
+
+The quantity of scientific interest is regression coefficient $\beta_1$. The data generating model is a multivariate normal distribution with means structure $\mu$ and variance-covariance matrix $\Sigma$. 
 
 \begin{align*}
 \begin{pmatrix}X\\
@@ -378,7 +382,9 @@ Z_{2}\\
 \end{bmatrix}\\[2\jot]
 \end{align*}
 
-Outcome variable $Y$ is subsequently calculated as $Y =  2X + .5Z_1 - Z_2 + \epsilon$.
+Outcome variable $Y$ is subsequently calculated as 
+
+$$Y =  2X + .5Z_1 - Z_2 + \epsilon .$$
 
 \subsection{Amputation}
 The complete dataset is `amputed' once in each simulation repetition. That is, the \pkg{mice} function \fct{ampute} is used to impose a missingness mechanism upon the data. The missingness is univariate, and the probability to be missing is the same for all variables, namely 20\% (\texttt{prop = 0.8, mech = "MCAR"}). This leaves 20\% of the rows completely observed. %The resulting amputed data is equal for all simulation conditions in the same repetition. %"Furthermore, we generate three kinds of missingness proportions: 0.1, 0.5, and 0.9. Note that these values indicate the sampled proportion of incomplete cases in Y" \cite{schou18}.
@@ -390,7 +396,7 @@ Missing data points are imputed with the \pkg{mice} function \fct{mice}. All sim
 
 \subsection{Convergence Diagnostics}
 % Add ``post-processing steps (e.g. aggregation computations, summary statistics, regressions on the simulation results) used to transform simulation outputs to reported results''. %, see \url{http://jsterman.scripts.mit.edu/docs/Rahmandad-Sterman%20Simulation%20Reporting%20Standards3.30%20update.pdf}.
-We investigate convergence by extracting not only the imputed values of each MI procedure (the $T^{th}$ iteration), but also information ($\theta$-values) from the intermediate iterations ($t = 1, 2, \dots, T$). The $\theta$s of interest are chain means and chain variances per variable. We compute convergence diagnostics separately for each of the four variables in the dataset, and report the maximum (absolute) value as the `worst linear predictor' of convergence \textbf{[Rephrase or footnote??]}. $\widehat{R}$ is computed by implementing the definition given in \textbf{EQUATION NR}. $AC$ is computed with \pkg{stats} function \fct{acf}.
+We investigate convergence by extracting not only the imputed values of each MI procedure (the $T^{th}$ iteration), but also information ($\theta$-values) from the intermediate iterations ($t = 1, 2, \dots, T$). The $\theta$s of interest are chain means and chain variances per variable. We compute convergence diagnostics separately for each of the four variables in the dataset, and report the maximum (absolute) value as the `worst linear predictor' of convergence \textbf{[Rephrase or footnote??]}. $\widehat{R}$ is computed by implementing Vehtari et al.'s \citeyear{veht19} recommendations. $AC$ is computed with \pkg{stats} function \fct{acf}.
 
 % 
 % 
@@ -408,7 +414,11 @@ To estimate the quantity of scientific interest, $Q$, we perform multiple linear
 % Distributional characteristics: In practice, the distribution of the incomplete data may differ greatly from the observed data. Under anything but the MCAR assumption, this can be expected. When evaluating imputations, the distributional shapes should be checked and diagnostic evaluations should be performed (see Abayomi et al., 2008, for an detailed overview of diagnostic evaluation for multivariate imputations). When anomalies are found, and if the imputation method is valid, there should be an explanation, especially in the controlled environment of a properly executed simulation study. 
 % Plausibility of the imputed values: Plausible imputations - imputations that could be real values if they had been observed - are not a necessary condition for obtaining valid inference. However, in practice, especially when the imputer and the analyst are different persons, plausibility of imputations may be a desired property. When evaluating imputation routines, the evaluator should mention whether the routine is prone to deliver implausible value
 
-We compute bias as the difference between $\bar{Q}$ and $Q$. Confidence interval width (CIW) is defined as the difference between the lower and upper bound of the 95\% confidence interval around $\bar{Q}$ (CI95\%). We compute the CI95\% bounds as $\bar{Q} \pm 2.66 \times SE_{\bar{Q}}$, where 2.66 is the quantile of a $t$-distribution with $m-1$ degrees of freedom, and $SE_{\bar{Q}}$ is the square root of the pooled variance estimate. From bias and CIW, we calculate empirical coverage rates. Coverage rate is the proportion of simulations in which $Q$ is between the bounds of the CI95\% around $\bar{Q}$. 
+We compute bias as the difference between $\bar{Q}$ and $Q$. Confidence interval width (CIW) is defined as the difference between the lower and upper bound of the 95\% confidence interval around $\bar{Q}$ (CI95\%). We compute the CI95\% bounds as 
+
+$$\bar{Q} \pm 2.66 \times SE_{\bar{Q}},$$
+
+where 2.66 is the quantile of a $t$-distribution with $m-1$ degrees of freedom, and $SE_{\bar{Q}}$ is the square root of the pooled variance estimate. From bias and CIW, we calculate empirical coverage rates. Coverage rate is the proportion of simulations in which $Q$ is between the bounds of the CI95\% around $\bar{Q}$. 
 
 %% -- Results ---------------------------------------------------------------
 
@@ -507,7 +517,7 @@ Figure \ref{fig:sim}A shows that bias is fairly stable across simulation conditi
 
 CIW is only clearly divergent for the simulation condition $T=1$. However, we want to be on the safe side, and not under-estimate the variance. Otherwise, we might end up with spurious inferences. Conditions where $T>3$ have similar CIWs, which seems to be stable across iterations. \textbf{Loess line is never completely flat.}%One might argue that there is some downward trending up-to thirthy to forty iterations. %After about twenty-five iterations the average CIW across all simulation conditions and repetitions is reached \Sexpr{round(mean(dat[, "CI width"]), 3)}. 
 
-\textbf{Empirical coverage rate seems more or less stable for conditions where $T>1$. We see some over-coverage at $T=2$. We might over-estimate the variance, but better than under-estimating it. On average, the coverage rate is somewhat higher than the expected nominal coverage of 95\% \cite{neym34}, namely \Sexpr{100*round(mean(dat[, "Cov. rate"]), 3)}\%. Loess line is never flat.}
+\textbf{Empirical coverage rate seems more or less stable for conditions where $T>1$. We see some over-coverage at $T=2$. We might over-estimate the variance, but better than under-estimating it. On average, the coverage rate is somewhat higher than the expected nominal coverage of 95\% \citep{neym34}, namely \Sexpr{100*round(mean(dat[, "Cov. rate"]), 3)}\%. Loess line is never flat.}
 
 \textbf{From the simulation diagnostics, we see that simulation conditions where $T>3$ are generally OK. The performance measures indicate that for the current data, MI procedure, and quantity of interest, the algorithm should have maxit argument of four or more. This is, however, a simple simulation problem, with MCAR missingness mechanism, univariate missingness, and moderate fmi's [REMOVE?? COMPUTE??]. harder problems require more iterations.} %give some implications for these measures. connect convergence and simulation diagnostics.}
 
@@ -536,6 +546,8 @@ This note illustrates that conventional convergence diagnostics behave different
 
 From the simulation diagnostics, it appears that as little as four iterations might be sufficient to obtain unbiased, confidence valid estimates. Convergence diagnostics $\widehat{R}$ and autocorrelation, however, indicate that convergence may only be reached after twenty or even forty iterations. 
 
+\textbf{Does this mean that conv is not nec to obtain correct inferences?}
+
 \textbf{R hat below 1.}
 $\widehat{R}$ could theoretically not be smaller than one, yet it occurred several times in this study (see online appendix XYZ). This can happen when the number of simulations is smaller than in `regular' MCMC processes [explain that fewer iterations is an advantage of MI, not a disadvantage compared to MCMC]. Increasing Rhat values can happen if the initial values were not appropriately over-dispersed \citep[p~438]{broo98}. %Therefore, the `$(n-1/n)$' [add equation number] correction factor can influence the estimated potential scale reduction factor. This downwards bias is in the opposite direction than expected: ``The mixture-of-sequences variance, $V$, should stabilize as a function of $n$. (Before convergence, we expect $\sigma^2$ to decrease with n, only increasing if the sequences explore a new area of parameter space, which would imply that the original sequences were not overdispersed for the particular scalar summary being monitored.)'' \cite[p~438]{broo98}.
 
@@ -550,6 +562,7 @@ The observed dip in AC implies that default maxit value of five iterations is th
 
 \textbf{Future research.} This study considered only an MCAR missingness mechanism. Necessary but not sufficient to demonstrate the performance of convergence diagnostics. This is just a proof of concept. Further research is needed to investigate the performance under violation of convergence, e.g. dependency between predictors (very high correlations). %We would like to have convergence measures for multivariable statistics (scalars?) of interest. This is, however, dependent on the complete data model. The eigenvector decomposition method proposed by McKay (?) should be implemented. I could not find any resources to apply this method and it is outside the scope of this thesis to investigate how this approach could be implemented. \textbf{[this paragraph is too negative, explain scope in intro instead.]}
 
+Also, conv diag for substantive model? wald test for AC = 0? 
 %% -- Optional special unnumbered sections -------------------------------------
 
 \section*{Computational details}
