@@ -28,11 +28,11 @@ R_plot <- results_with_CI %>% .[-1,] %>%
   geom_line(aes(x = T, y = R_mean_Z1, color = "Chain means")) +
   geom_line(aes(x = T, y = R_mean_Z2, color = "Chain means")) +
   geom_line(aes(x = T, y = R_mean_Y, color = "Chain means")) +
-  geom_errorbar(
-    aes(ymin = R_mean_X_LL, ymax = R_mean_X_UL),
-    width = .2,
-    position = position_dodge(0.05)
-  ) +
+  # geom_errorbar(
+  #   aes(ymin = R_mean_X_LL, ymax = R_mean_X_UL),
+  #   width = .2,
+  #   position = position_dodge(0.05)
+  # ) +
   #geom_hline(yintercept = 1, color = "grey") +
   #geom_hline(yintercept = 1.1) +
   #geom_hline(yintercept = 1.01) +
@@ -78,11 +78,11 @@ AC_plot <- results_with_CI %>% .[-1,] %>%
   geom_line(aes(x = T, y = AC_mean_Z1, color = "Chain means")) +
   geom_line(aes(x = T, y = AC_mean_Z2, color = "Chain means")) +
   geom_line(aes(x = T, y = AC_mean_Y, color = "Chain means")) +
-  geom_errorbar(
-    aes(ymin = AC_mean_X_LL, ymax = AC_mean_X_UL),
-    width = .2#,
-    #position = position_dodge(0.05)
-  ) +
+  # geom_errorbar(
+  #   aes(ymin = AC_mean_X_LL, ymax = AC_mean_X_UL),
+  #   width = .2#,
+  #   #position = position_dodge(0.05)
+  # ) +
   xlab("Number of iterations") +
   ylab("Auto-correlation") +
   scale_x_continuous(breaks = seq(0, 100, by = 10)) +
@@ -119,11 +119,11 @@ bias_plot <- ggplot(results_with_CI, aes(x = T, y = bias)) +
     size = 0.5,
     linetype = "dashed"
   ) +
-  geom_errorbar(
-    aes(ymin = bias_LL, ymax = bias_UL),
-    width = .2,
-    colour = "grey"
-  ) +
+  # geom_errorbar(
+  #   aes(ymin = bias_LL, ymax = bias_UL),
+  #   width = .2,
+  #   colour = "grey"
+  # ) +
   xlab("") +
   ylab("Bias") +
   scale_x_continuous(breaks = seq(0, 100, by = 10)) +
@@ -144,11 +144,11 @@ CIW_plot <- ggplot(results_with_CI, aes(x = T, y = CIW)) +
     size = 0.5,
     linetype = "dashed"
   ) +
-  geom_errorbar(
-    aes(ymin = CIW_LL, ymax = CIW_UL),
-    width = .2,
-    colour = "grey"
-  ) +
+  # geom_errorbar(
+  #   aes(ymin = CIW_LL, ymax = CIW_UL),
+  #   width = .2,
+  #   colour = "grey"
+  # ) +
   xlab("") +
   ylab("CI width") +
   scale_x_continuous(breaks = seq(0, 100, by = 10)) +
@@ -198,3 +198,17 @@ figure2 <-
   )
 
 figure2
+
+figure3 <-
+  ggarrange(
+    R_plot,
+    AC_plot,
+    bias_plot,
+    CIW_plot,
+    cov_plot,
+    labels = c("A", "B", "C", "D", "E"),
+    ncol = 1,
+    nrow = 5,
+    align = "v"
+  )
+figure3

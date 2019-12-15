@@ -88,5 +88,5 @@ results_with_CI <- results %>% left_join(CI_lower, by = "T", suffix = c("", "_LL
 ###
 
 # save for future reference
-save.Rdata(results, name = "multivar_miss", path = "Simulation/Results")
-save.image("environment.Rdata")
+save.Rdata(results_with_CI, name = "full_results", path = "Simulation/Results")
+save.image("environment_full_results.Rdata")
