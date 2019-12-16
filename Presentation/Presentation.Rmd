@@ -65,10 +65,8 @@ You can find all related materials, links and references there.
 
 
 ## Algorithmic convergence
-<br><br>
-
 <center>
-<img src="figures/traceplot.png" alt="HTML5 Icon" width = 100%>
+<img src="figures/non-conv.png" alt="HTML5 Icon" width = 77%>
 <br>
 
 <!-- Iteration number -->
@@ -76,7 +74,8 @@ You can find all related materials, links and references there.
 
 # Methodology
 
-## Mock code
+## Mock code | 
+Steps in the simulation study
 ```{r eval=FALSE}
 simulation <- function() {
   mvtnorm(X,Z1,Z2) %>% 
@@ -98,17 +97,28 @@ replicate(simulation, n = 1000)
 
 # Simulation Results
 
-## Results 
-
+## Simulation diagnostics
 <center>
-<img src="figures/results.png" alt="HTML5 Icon" width = 100%>
+<img src="figures/results_sim.png" alt="HTML5 Icon" width = 100%>
 <br>
 
 </center>
 
+## Convergence diagnostics
+<center>
+<img src="figures/results_conv.png" alt="HTML5 Icon" width = 100%>
+<br>
 
-## Results | simulation diagnostics versus convergence diagnostics
+</center>
 
+## Results 
+<center>
+<img src="figures/results_sim_conv.png" alt="HTML5 Icon" width = 100%>
+<br>
+
+</center>
+
+## Results | Simulation diagnostics versus convergence diagnostics
 ```{r echo=FALSE}
 dat %>% select("It.", "bias", "CIW", "cov", "R_mean_X", "AC_mean_X") %>% round(3) %>% datatable(options = list(pageLength = 5), rownames = FALSE)
 ```
