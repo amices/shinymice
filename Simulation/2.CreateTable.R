@@ -13,7 +13,7 @@ tab <- results %>%
   xtable(caption = "Simulation and convergence diagnostics over 1000 MCMC simulations.", label = "tab:results", digits = 3)
 
 # adjust table attributes
-names(tab) <- c("It.", "Bias", "CI width", "Cov. rate",  "$\\widehat{R}_{mean}$", "$\\widehat{R}_{var}$", "$AC_{mean}$", "$AC_{var}$")
+names(tab) <- c("$T$", "Bias", "CI width", "Cov. rate",  "$\\widehat{R}_{mean}$", "$\\widehat{R}_{var}$", "$AC_{mean}$", "$AC_{var}$")
 attr(tab, "align")[1] <- "l"
 
 # # add footnote
