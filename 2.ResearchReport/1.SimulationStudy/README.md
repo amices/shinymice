@@ -13,7 +13,7 @@ And the following folders:
 
 - `Results` | Archive of the results and/or R environment created by running `1.Execute.R`.
 
-- `Writeup` | Research report about the simulation study (e.g., R Markdown, PDF, literature, figures)
+- `Writeup` | Research report about the simulation study (e.g., R Markdown, PDF, literature, figures).
 
 
 Note: *The ShinyMICE project will **not** be complete before June 2020. There will be errors. You have been warned.*
