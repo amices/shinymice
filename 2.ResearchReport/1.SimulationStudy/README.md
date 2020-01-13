@@ -15,6 +15,7 @@ And the following folders:
 
 - `Writeup` | Research report about the simulation study (e.g., R Markdown, PDF, literature, figures).
 
+To reproduce the simulation results, run `1.Execute.R`, display these results with `2.CreateTable.R`, and visualize these results with `3.CreateFigure.R`.
 
 Note: *The ShinyMICE project will **not** be complete before June 2020. There will be errors. You have been warned.*
 
