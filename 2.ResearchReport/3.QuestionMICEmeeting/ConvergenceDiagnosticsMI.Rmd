@@ -1,0 +1,103 @@
+---
+title: "Convergence of MI algorithms"
+output:
+  html_document:
+    df_print: paged
+---
+
+This file describes how convergence diagnostic $\widehat{R}$ is computed in the simulation study I ran for my Research Report. $\widehat{R}$ is also called 'potential scale reduction factor'. It tells us how much the variance of an estimate could be shrunken down if we would have infinitely many iterations.
+
+# Step 1: Impute some data
+
+It's easiest to show how $\widehat{R}$ is computed by applying it on a simple example. Load the nhanes data and impute the variables with missingness.
+```{r echo=TRUE, warning=FALSE}
+# load required packages/functions
+library(mice)
+library(magrittr)
+source("Functions/Convergence.R")
+source("Functions/Convergence_supplement.R")
+
+# set parameters
+maxit <- 10
+n.var <- 3 
+
+# run imputation
+imp <- mice(nhanes[,-1], maxit = maxit, print = F)
+
+```
+
+# Step 2: Evaluate the functions to use
+
+We are going to compute $\widehat{R}$ values per imputed variable. As recommended by Vehtari et al. (2019), we compute split-half, rank-normalized $\widehat{R}$ values for the bulk and the tails of the distribution. For the latter, we need to fold the imputation chains before splitting them in half and rank-normalizing them. Then, $\widehat{R}$ is computed for both (bulk and tails). The highest of these two $\widehat{R}$ values is extracted. This is performed for each of the imputed variables, and only the maximum $\widehat{R}$ value across variables is reported. 
+
+The rhat_function function is the wrapper that performs all of this. Within the function, we call 4 other functions (explaination below): fold_sims(), split_chains(), z_scale(), and get.rhat(). 
+
+```{r}
+# show the contents of the function
+rhat_function
+
+```
+
+
+The first function inside rhat_function is split_chains(). This 'chops' the chains in two, to assess trending within chains. 
+```{r warning=FALSE}
+# show the contents of the function
+split_chains
+
+```
+
+Then the halved chains are rank-normalized.
+```{r}
+# show the contents of the function
+z_scale
+
+```
+
+To detect non-convergence in the tails, $\widehat{R}$ is also computed on the folded chains (which are also split and rank-normalized).
+```{r}
+# show the contents of the function
+fold_sims
+
+```
+
+Only then do we get to the actual $\widehat{R}$ function. In the get.rhat function, the following equations are applied:
+
+"In the equations below, $N$ is the number of draws per chain, $M$ is the number of chains, and $S = MN$ is the total number of draws from all chains. For each scalar summary of interest $\theta$, we compute $B$ and $W$, the between- and within-chain variances:
+
+\begin{align*}
+B=\frac{N}{M-1} \sum_{m=1}^{M}\left(\bar{\theta}^{(\cdot m)}-\bar{\theta}^{(\cdot \cdot)}\right)^{2}, \text { where } \bar{\theta}^{(\cdot m)}=\frac{1}{N} \sum_{n=1}^{N} \theta^{(n m)}, \quad \bar{\theta}^{(\cdot \cdot)}=\frac{1}{M} \sum_{m=1}^{M} \bar{\theta}^{(\cdot m)} \\
+W=\frac{1}{M} \sum_{m=1}^{M} s_{j}^{2},  \text { where } s_{m}^{2}=\frac{1}{N-1} \sum_{n=1}^{N}\left(\theta^{(n m)}-\bar{\theta}^{(\cdot m)}\right)^{2}". \text{ Vehtari et al., 2019, p. 5} 
+\end{align*}
+
+The between and within chain variances are computed from the chain means of the mids object, that underwent the previous transformations (folding, splitting, rank-normalizing). The average of the chain means per imputation $m$ is $\bar{\theta}^{(\cdot m)}$. The average of these $m$ values is $\bar{\theta}^{(\cdot \cdot)}$. $N$ is the number of iterations ('maxit'). So we compute $B$ as `maxit * var(apply(sims, 2, mean))`. And $W$ is computed as `mean(apply(sims, 2, var))`.  
+
+To get $\widehat{R}$ we need to compute the weighted average of $B$ and $W$, $\widehat{\operatorname{var}}^{+}$, and evaluate this against the within chain variance W. The weighted average is is computed as follows: 
+
+\begin{equation*}
+\widehat{\operatorname{var}}^{+}(\theta | y)=\frac{N-1}{N} W+\frac{1}{N} B,
+\end{equation*}
+
+Then finally, potential scale reduction factor $\widehat{R}$ is obtained as:
+
+\begin{equation*}
+\widehat{R}=\sqrt{\frac{\widehat{\operatorname{var}}^{+}(\theta | y)}{W}}.
+\end{equation*}
+
+$\widehat{R}$ is computed for each variable with the function 'get.rhat()'. 
+```{r warning=FALSE}
+# show the contents of the function
+get.rhat
+
+```
+
+# Step 3: Apply these functions to get $\widehat{R}$ values
+
+Now we know what's happening, let's apply it.
+```{r}
+rhat_function(imp, maxit, n.var = n.var)
+
+```
+
+This $\widehat{R}$ value is nice and high, but I also got values below one. Which is theoretically impossible.  
+
+# So my question to you is: How is it possible that we can obtain  $\widehat{R}$ values < 1?

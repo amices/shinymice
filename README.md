@@ -1,10 +1,12 @@
-**This repository serves as a Master's thesis working directory. The ShinyMICE project will not be complete before June 2020. There will be errors. You have been warned.**
+This repository serves as a Master's thesis working directory. It contains the following folders:
 
-This repository contains the research archive of my thesis project, subdivided into the following folders:
-- Thesis Proposal (September-October 2019)
-- Research Report (October-December 2019)
-- Thesis (January-May 2020)
+- `1.ThesisProposal` | Research archive September-October 2019  (see `README.md` inside folder).
 
-See the README files within these folders for a more detailed overview of the contents.
+- `2.ResearchReport` | Research archive October-December 2019  (see `README.md` inside folder).
 
-Hanne.
+- `3.Thesis` | Research archive January-May 2020  (see `README.md` inside folder).
+
+
+Note: *The ShinyMICE project will **not** be complete before June 2020. There will be errors. You have been warned.*
+
+-Hanne

@@ -1,0 +1,126 @@
+\begin{thebibliography}{14}
+\newcommand{\enquote}[1]{``#1''}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\providecommand{\urlprefix}{URL }
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi:\discretionary{}{}{}#1}\else
+  \providecommand{\doi}{doi:\discretionary{}{}{}\begingroup
+  \urlstyle{rm}\Url}\fi
+\providecommand{\eprint}[2][]{\url{#2}}
+
+\bibitem[{Abayomi \emph{et~al.}(2008)Abayomi, Gelman, and Levy}]{abay08}
+Abayomi K, Gelman A, Levy M (2008).
+\newblock \enquote{Diagnostics for multivariate imputations.}
+\newblock \emph{Journal of the Royal Statistical Society: Series C (Applied
+  Statistics)}, \textbf{57}(3), 273--291.
+\newblock ISSN 0035-9254, 1467-9876.
+\newblock \doi{10.1111/j.1467-9876.2007.00613.x}.
+\newblock
+  \urlprefix\url{http://doi.wiley.com/10.1111/j.1467-9876.2007.00613.x}.
+
+\bibitem[{Allison(2001)}]{alli02}
+Allison PD (2001).
+\newblock \emph{Missing data}, volume 136.
+\newblock Sage publications.
+
+\bibitem[{Chang \emph{et~al.}(2017)Chang, Cheng, Allaire, Xie, and
+  McPherson}]{shiny}
+Chang W, Cheng J, Allaire J, Xie Y, McPherson J (2017).
+\newblock \enquote{Shiny: web application framework for {R}.}
+\newblock \urlprefix\url{https://CRAN.R-project.org/package=shiny}.
+
+\bibitem[{Gelman and Rubin(1992)}]{gelm92}
+Gelman A, Rubin DB (1992).
+\newblock \enquote{Inference from {Iterative} {Simulation} {Using} {Multiple}
+  {Sequences}.}
+\newblock \emph{Statistical Science}, \textbf{7}(4), 457--472.
+\newblock ISSN 0883-4237, 2168-8745.
+\newblock \doi{10.1214/ss/1177011136}.
+\newblock \urlprefix\url{https://projecteuclid.org/euclid.ss/1177011136}.
+
+\bibitem[{Lacerda \emph{et~al.}(2007)Lacerda, Ardington, and
+  Leibbrandt}]{lace07}
+Lacerda M, Ardington C, Leibbrandt M (2007).
+\newblock \enquote{Sequential regression multiple imputation for incomplete
+  multivariate data using {Markov} chain {Monte} {Carlo}.}
+
+\bibitem[{Meng(1994)}]{meng94}
+Meng XL (1994).
+\newblock \enquote{Multiple-{Imputation} {Inferences} with {Uncongenial}
+  {Sources} of {Input}.}
+\newblock \emph{Statistical Science}, \textbf{9}(4), 538--558.
+\newblock ISSN 0883-4237, 2168-8745.
+\newblock \doi{10.1214/ss/1177010269}.
+\newblock \urlprefix\url{https://projecteuclid.org/euclid.ss/1177010269}.
+
+\bibitem[{Murray(2018)}]{murr18}
+Murray JS (2018).
+\newblock \enquote{Multiple {Imputation}: {A} {Review} of {Practical} and
+  {Theoretical} {Findings}.}
+\newblock \emph{Statistical Science}, \textbf{33}(2), 142--159.
+\newblock ISSN 0883-4237.
+\newblock \doi{10.1214/18-STS644}.
+\newblock \urlprefix\url{https://projecteuclid.org/euclid.ss/1525313139}.
+
+\bibitem[{Nguyen \emph{et~al.}(2017)Nguyen, Carlin, and Lee}]{nguy17}
+Nguyen CD, Carlin JB, Lee KJ (2017).
+\newblock \enquote{Model checking in multiple imputation: an overview and case
+  study.}
+\newblock \emph{Emerging Themes in Epidemiology}, \textbf{14}(1), 8.
+\newblock ISSN 1742-7622.
+\newblock \doi{10.1186/s12982-017-0062-6}.
+\newblock \urlprefix\url{https://doi.org/10.1186/s12982-017-0062-6}.
+
+\bibitem[{Rubin(1987)}]{rubin87}
+Rubin DB (1987).
+\newblock \emph{Multiple {Imputation} for nonresponse in surveys}.
+\newblock Wiley series in probability and mathematical statistics {Applied}
+  probability and statistics. Wiley, New York, NY.
+\newblock ISBN 978-0-471-08705-2.
+
+\bibitem[{Rubin(1996)}]{rubin96}
+Rubin DB (1996).
+\newblock \enquote{Multiple {Imputation} {After} 18+ {Years}.}
+\newblock \emph{Journal of the American Statistical Association},
+  \textbf{91}(434), 473--489.
+\newblock ISSN 01621459.
+\newblock \doi{10.2307/2291635}.
+\newblock \urlprefix\url{http://www.jstor.org/stable/2291635}.
+
+\bibitem[{Takahashi(2017)}]{taka17}
+Takahashi M (2017).
+\newblock \enquote{Statistical {Inference} in {Missing} {Data} by {MCMC} and
+  {Non}-{MCMC} {Multiple} {Imputation} {Algorithms}: {Assessing} the {Effects}
+  of {Between}-{Imputation} {Iterations}.}
+\newblock \emph{Data Science Journal}, \textbf{16}, 37.
+\newblock ISSN 1683-1470.
+\newblock \doi{10.5334/dsj-2017-037}.
+\newblock
+  \urlprefix\url{http://datascience.codata.org/articles/10.5334/dsj-2017-037/}.
+
+\bibitem[{Van~Buuren(2018)}]{buur18}
+Van~Buuren S (2018).
+\newblock \emph{Flexible imputation of missing data}.
+\newblock Chapman and Hall/CRC.
+\newblock ISBN 0-429-96035-2.
+
+\bibitem[{Van~Buuren and Groothuis-Oudshoorn(2011)}]{mice}
+Van~Buuren S, Groothuis-Oudshoorn K (2011).
+\newblock \enquote{mice: {Multivariate} {Imputation} by {Chained} {Equations}
+  in {R}.}
+\newblock \emph{Journal of Statistical Software}, \textbf{45}(1), 1--67.
+\newblock ISSN 1548-7660.
+\newblock \doi{10.18637/jss.v045.i03}.
+\newblock
+  \urlprefix\url{https://www.jstatsoft.org/index.php/jss/article/view/v045i03}.
+
+\bibitem[{White \emph{et~al.}(2011)White, Royston, and Wood}]{whit11}
+White IR, Royston P, Wood AM (2011).
+\newblock \enquote{Multiple imputation using chained equations: {Issues} and
+  guidance for practice.}
+\newblock \emph{Statistics in Medicine}, \textbf{30}(4), 377--399.
+\newblock ISSN 1097-0258.
+\newblock \doi{10.1002/sim.4067}.
+
+\end{thebibliography}
