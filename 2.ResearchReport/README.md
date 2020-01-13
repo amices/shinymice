@@ -1,6 +1,6 @@
 This folder contains the research archive of the research report handed in on December 15, 2019. It contains the following folders:
 
-- `1.SimulationStudy` | R code, results and manuscript of the simulation study.
+- `1.SimulationStudy` | R code, results and manuscript of the simulation study (see `README.md` inside folder).
 
 - `2.Presentation` | Presentation of research report results for Research Seminar.
 

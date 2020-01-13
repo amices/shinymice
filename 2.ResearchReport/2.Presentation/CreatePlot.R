@@ -1,4 +1,4 @@
-# Figure for presentation
+# Figure for presentation, adapted from 'CreateFigure.R' in ResearchReport/SimulationStudy
 # create figure to display results
 # requires the packages "dplyr", "ggplot2"
 # and the object 'results' created with '1.Excecute'
@@ -9,7 +9,7 @@ library("ggplot2")
 library("ggpubr")
 
 # if necessary, load results
-# load("C:/Users/User/Desktop/shinyMice/Simulation/Results/results17.Rdata.Rdata")
+# load("C:/Users/User/Desktop/shinyMice/Simulation/Results/results.Rdata")
 # results <- dat
 
 bias_plot <- ggplot(results_with_CI, aes(x = T, y = bias)) +
@@ -77,7 +77,6 @@ figure2 <-
     bias_plot,
     CIW_plot,
     cov_plot,
-    #labels = c("A", "B", "C"),
     ncol = 1,
     nrow = 3,
     align = "hv"
@@ -134,7 +133,6 @@ figure1 <-
   ggarrange(
     R_plot,
     AC_plot,
-    #labels = c("A", "B"),
     ncol = 1,
     nrow = 2,
     align = "v"
@@ -170,7 +168,6 @@ figure3 <-
     cov_plot2,
     R_plot,
     AC_plot,
-    #labels = c("A", "B", "C", "D", "E"),
     ncol = 1,
     nrow = 5,
     align = "v"
