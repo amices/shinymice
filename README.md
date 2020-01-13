@@ -6,6 +6,8 @@ This repository serves as a Master's thesis working directory. It contains the f
 
 - `3.Thesis` | Research archive January-May 2020  (see `README.md` inside folder).
 
+And the file `EthicalApproval.pdf` with proof of ethical clearance by the FETC (Utrecht University).
+
 
 Note: *The ShinyMICE project will **not** be complete before June 2020. There will be errors. You have been warned.*
 
