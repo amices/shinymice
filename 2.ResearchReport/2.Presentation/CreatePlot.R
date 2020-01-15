@@ -140,7 +140,7 @@ figure1 <-
 
 figure1
 
-# cov without x label
+# cov without x label for combined figure
 cov_plot2 <- ggplot(results_with_CI, aes(x = T, y = cov * 100)) +
   geom_line() +
   geom_smooth(
