@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.19 (MiKTeX 2.9.6880 64-bit) (preloaded format=pdflatex 2018.12.13)  13 JAN 2020 17:00
+This is pdfTeX, Version 3.14159265-2.6-1.40.19 (MiKTeX 2.9.6880 64-bit) (preloaded format=pdflatex 2018.12.13)  20 JAN 2020 10:50
 entering extended mode
 **./Thesis.tex
 (Thesis.tex
@@ -655,6 +655,9 @@ Overfull \hbox (2.39346pt too wide) in paragraph at lines 150--151
  []
 
 
+Underfull \vbox (badness 1490) has occurred while \output is active []
+
+
 Overfull \hbox (5.47499pt too wide) has occurred while \output is active
 [] \T1/lmr/m/n/10.95 3
  []
@@ -700,11 +703,11 @@ Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 555.
 Here is how much of TeX's memory you used:
  8007 strings out of 492965
  117935 string characters out of 3126858
- 207883 words of memory out of 3000000
+ 207169 words of memory out of 3000000
  11695 multiletter control sequences out of 15000+200000
  75554 words of font info for 48 fonts, out of 3000000 for 9000
  1141 hyphenation exceptions out of 8191
- 37i,9n,39p,2295b,430s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 37i,9n,39p,2295b,428s stack positions out of 5000i,500n,10000p,200000b,50000s
 {C:/Users/User/AppData/Local/Programs/MiKTeX 2.9/fonts/enc/dvips/lm/lm-rm.enc
 }{C:/Users/User/AppData/Local/Programs/MiKTeX 2.9/fonts/enc/dvips/lm/lm-ec.enc}
 {C:/Users/User/AppData/Local/Programs/MiKTeX 2.9/fonts/enc/dvips/lm/lm-mathex.e
@@ -727,7 +730,7 @@ onts/type1/public/lm/lmri12.pfb><C:/Users/User/AppData/Local/Programs/MiKTeX 2.
 TeX 2.9/fonts/type1/public/lm/lmsy10.pfb><C:/Users/User/AppData/Local/Programs/
 MiKTeX 2.9/fonts/type1/public/lm/lmtt10.pfb><C:/Users/User/AppData/Local/Progra
 ms/MiKTeX 2.9/fonts/type1/urw/zapfchan/uzcmi8a.pfb>
-Output written on Thesis.pdf (7 pages, 343181 bytes).
+Output written on Thesis.pdf (7 pages, 343408 bytes).
 PDF statistics:
  309 PDF objects out of 1000 (max. 8388607)
  59 named destinations out of 1000 (max. 500000)
