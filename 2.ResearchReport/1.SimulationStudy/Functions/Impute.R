@@ -24,7 +24,7 @@ test.impute <- function(true_effect,
   
   # compute convergence diagnostics
   if (maxit < 2) {
-    R_mean <- R_var <- AC_mean <- AC_var <- c(rep(NA, 4))
+    R_mean <- R_var <- AC_mean <- AC_var <- between_mean <- between_var <- within_mean <- within_var <- c(rep(NA, 4))
   } else {
     R_mean <-
       rhat_function(impsim, maxit) #maximum Rhat across variables
@@ -34,6 +34,14 @@ test.impute <- function(true_effect,
       autocorr_function(impsim, maxit) #auto-correlation at lag 1
     AC_var <-
       autocorr_function(impsim, maxit, moment = "variance") #auto-correlation at lag 1
+    between_mean <-
+      between_function(impsim, maxit) #between chain variance of the chain means 
+    between_var <-
+      between_function(impsim, maxit, moment = "variance") #between chain variance of the chain variances
+    within_mean <-
+      within_function(impsim, maxit) #between chain variance of the chain means 
+    within_var <-
+      within_function(impsim, maxit, moment = "variance") #between chain variance of the chain variances
   }
   
 
@@ -75,7 +83,23 @@ test.impute <- function(true_effect,
       AC_var_Z1 = AC_var["Z1"],
       AC_var_Z2 = AC_var["Z2"],
       AC_var_Y  = AC_var["Y"],
-      max_AC_var = min(AC_var)
+      max_AC_var = min(AC_var),
+      between_mean_X = between_mean["X"],
+      between_mean_Z1 = between_mean["Z1"],
+      between_mean_Z2 = between_mean["Z2"],
+      between_mean_Y  = between_mean["Y"],
+      between_var_X = between_var["X"],
+      between_var_Z1 = between_var["Z1"],
+      between_var_Z2 = between_var["Z2"],
+      between_var_Y  = between_var["Y"],
+      within_mean_X = within_mean["X"],
+      within_mean_Z1 = within_mean["Z1"],
+      within_mean_Z2 = within_mean["Z2"],
+      within_mean_Y  = within_mean["Y"],
+      within_var_X = within_var["X"],
+      within_var_Z1 = within_var["Z1"],
+      within_var_Z2 = within_var["Z2"],
+      within_var_Y  = within_var["Y"]
     )
   )
 }

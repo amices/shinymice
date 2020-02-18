@@ -43,7 +43,23 @@ evaluate.sim <-
         "AC_var_X",
         "AC_var_Z1",
         "AC_var_Z2",
-        "AC_var_Y"
+        "AC_var_Y",
+        "between_mean_X",
+        "between_mean_Z1",
+        "between_mean_Z2",
+        "between_mean_Y",
+        "between_var_X",
+        "between_var_Z1",
+        "between_var_Z2",
+        "between_var_Y",
+        "within_mean_X",
+        "within_mean_Z1",
+        "within_mean_Z2",
+        "within_mean_Y",
+        "within_var_X",
+        "within_var_Z1",
+        "within_var_Z2",
+        "within_var_Y"
       )
     for (var in vars) {
       output <- cbind(output, d[, grep(var, names(d))] %>% t)

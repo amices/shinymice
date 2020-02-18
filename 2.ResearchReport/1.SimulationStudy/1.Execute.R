@@ -20,6 +20,8 @@ library(tidyverse)
 source("2.ResearchReport/1.SimulationStudy/Functions/CreateData.R")
 source("2.ResearchReport/1.SimulationStudy/Functions/Convergence.R")
 source("2.ResearchReport/1.SimulationStudy/Functions/Convergence_supplement.R")
+source("2.ResearchReport/1.SimulationStudy/Functions/Between.R")
+source("2.ResearchReport/1.SimulationStudy/Functions/Within.R")
 source("2.ResearchReport/1.SimulationStudy/Functions/Autocorrelation.R")
 source("2.ResearchReport/1.SimulationStudy/Functions/Impute.R")
 source("2.ResearchReport/1.SimulationStudy/Functions/Evaluate.R")
@@ -27,7 +29,7 @@ source("2.ResearchReport/1.SimulationStudy/Functions/Evaluate.R")
 # simulation parameters
 populationsize <- 1000 #n of simulated dataset
 n.iter <- 100 #nr of iterations (varying 1:n.iter)
-n.sim <- 100 #nr of simulations per iteration value
+n.sim <- 10 #nr of simulations per iteration value
 true_effect <- 2 #regression coefficient to be estimated
 
 # start simulation study
@@ -84,6 +86,9 @@ results_with_CI <- results %>% left_join(CI_lower, by = "T", suffix = c("", "_LL
 #plot.ts(results[c(5:8, 2:4)], main = "Convergence and Simulation Diagnostics", xlab = "Number of iterations")
 #plot.ts(results[2:4], main = "Simulation Diagnostics", xlab = "Number of iterations")
 #plot.ts(results[5:12], main = "Convergence Diagnostics", xlab = "Number of iterations")
+#plot.ts(results[13:20], main = "Convergence Diagnostics", xlab = "Number of iterations")
+#plot.ts(results[21:28], main = "Convergence Diagnostics", xlab = "Number of iterations")
+#plot.ts(results[29:36], main = "Convergence Diagnostics", xlab = "Number of iterations")
 
 ###
 
