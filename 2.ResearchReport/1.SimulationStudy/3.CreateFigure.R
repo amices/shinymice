@@ -38,12 +38,8 @@ R_plot <- results_with_CI %>% .[-1,] %>%
   ylab(expression(paste(widehat(R)))) +
   scale_x_continuous(breaks = seq(0, 100, by = 10)) +
   scale_y_continuous(breaks = seq(.8, 2.2, by = .2)) +
-  scale_color_manual(
-    name = "Legend",
-    values = c("Chain means" = 1, "Chain variances" = 8),
-    guide = "legend"
-  ) +
-  guides(colour = guide_legend(override.aes = list(linetype = c(1, 8)))) +
+  scale_color_manual(name = "Legend", labels = c("Chain means", "Chain variances"), values = c("black", "grey"), guide = "legend") +
+  guides(color = guide_legend(override.aes = list(linetype = c(1, 8)))) +
   theme_bw() +
   theme(
     panel.border = element_blank(),
@@ -87,8 +83,7 @@ AC_plot <- results_with_CI %>% .[-1,] %>%
   ylab("Auto-correlation") +
   scale_x_continuous(breaks = seq(0, 100, by = 10)) +
   scale_y_continuous(breaks = seq(-.8, .6, by = .2)) +
-  scale_color_manual(name = "Legend",
-                     values = c("Chain means" = 1, "Chain variances" = 8)) +
+  scale_color_manual(name = "Legend", labels = c("Chain means", "Chain variances"), values = c("black", "grey"), guide = "legend") +
   theme_bw() +
   theme(
     panel.border = element_blank(),

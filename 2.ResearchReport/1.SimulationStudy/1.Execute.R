@@ -17,12 +17,12 @@ library(tidyverse)
 # library(tibble)
 
 # load simulation/evaluation functions
-source("Simulation/Functions/CreateData.R")
-source("Simulation/Functions/Convergence.R")
-source("Simulation/Functions/Convergence_supplement.R")
-source("Simulation/Functions/Autocorrelation.R")
-source("Simulation/Functions/Impute.R")
-source("Simulation/Functions/Evaluate.R")
+source("2.ResearchReport/1.SimulationStudy/Functions/CreateData.R")
+source("2.ResearchReport/1.SimulationStudy/Functions/Convergence.R")
+source("2.ResearchReport/1.SimulationStudy/Functions/Convergence_supplement.R")
+source("2.ResearchReport/1.SimulationStudy/Functions/Autocorrelation.R")
+source("2.ResearchReport/1.SimulationStudy/Functions/Impute.R")
+source("2.ResearchReport/1.SimulationStudy/Functions/Evaluate.R")
 
 # simulation parameters
 populationsize <- 1000 #n of simulated dataset
@@ -88,5 +88,5 @@ results_with_CI <- results %>% left_join(CI_lower, by = "T", suffix = c("", "_LL
 ###
 
 # save for future reference
-save.Rdata(results_with_CI, name = "full_results", path = "Simulation/Results")
+save.Rdata(results_with_CI, name = "full_results", path = "2.ResearchReport/1.SimulationStudy/Results")
 save.image("environment_full_results.Rdata")
