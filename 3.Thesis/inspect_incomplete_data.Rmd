@@ -108,22 +108,47 @@ Also create the density plots for all missingness indicators.
 
 ```{r}
 # plot this for each missingness indicator
-dat %>%
-  map(~{ggplot(data=dat, aes(x = age, fill = is.na(.x))) +
+vars <- names(dat)
+vars %>%
+  map(~{ggplot(data=dat, aes(x = age, fill = is.na(.data[[.x]]))) +
   geom_histogram(aes(y = 100 * ..density..),
                  alpha = 0.5,
                  position = 'identity') +
   xlab("Age (years)") +
   ylab("Percentage observed") +
   scale_fill_manual(
-    name = names(.),
+    name = .x,
     breaks = c("FALSE", "TRUE"),
-    labels = c("Observed", "Missing"),
+    labels = c("observed", "missing"),
     values = c("#006CC2", "#B61A51")
   )})
 
-# only the name of the legend does not work. maybe look into pmap?
+# now for all vars as outcome
 ```
+# Part 2B: Apply to all variables as outcome
 
+This works for age now, with all missingness indicators. But not yet for other variables as outcome. 
+
+```{r}
+# apply map to our own problem
+interc_only <- dat %>% lm(age ~ 1, data = .)
+vars <- names(dat)
+#dat %>% map(~class(.x)=="numeric")
+#dat[ ,map_lgl(dat, is.numeric)]
+#dat %>% map(~is.numeric(.x)) select_if(x, is.numeric)
+cont_vars <- dat %>% select_if(is.numeric) %>% names()
+#walk(cont_vars,~ walk(vars, ~ print(paste(.x, .y, sep = "-")),.y=.x))
+#test <- map(cont_vars, function(x) map(vars, function(y) c(x,y)))
+#test <- map(cont_vars, function(x) map(vars, function(y) c(dat[1,x],is.na(dat[1,y]))))
+test <- map(cont_vars, function(x) map(vars, function(y) lm(dat[,x]~is.na(dat[,y]))))
+
+# this works for the lm, but not yet for the intercep-only model
+#all_interc_only <- cont_vars %>% map(~lm(dat[,.x] ~ 1))
+# test2 <- map(cont_vars, function(x) map(vars, function(y) lm(dat[,x]~is.na(dat[,y])) %>% anova(interc_only[[x]], .)))
+# map(test, function(x) map(interc_only, function(y) anova(y,x)))
+test <- map(cont_vars, function(x) map(vars, function(y) {anova(lm(dat[,x]~1), lm(dat[,x]~is.na(dat[,y])))}))
+
+
+```
 
 # Part 3: Use any variable from any dataset
