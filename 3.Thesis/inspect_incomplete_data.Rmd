@@ -146,9 +146,29 @@ test <- map(cont_vars, function(x) map(vars, function(y) lm(dat[,x]~is.na(dat[,y
 #all_interc_only <- cont_vars %>% map(~lm(dat[,.x] ~ 1))
 # test2 <- map(cont_vars, function(x) map(vars, function(y) lm(dat[,x]~is.na(dat[,y])) %>% anova(interc_only[[x]], .)))
 # map(test, function(x) map(interc_only, function(y) anova(y,x)))
-test <- map(cont_vars, function(x) map(vars, function(y) {anova(lm(dat[,x]~1), lm(dat[,x]~is.na(dat[,y])))}))
+test2 <- map(cont_vars, function(x) map(vars, function(y) {anova(lm(dat[,x]~1), lm(dat[,x]~is.na(dat[,y])))}))
 
 
 ```
+ Ok, I think this works. Now get it to work for the density plots.
 
+```{r}
+# create density plots for all continuous variables and all missingness indicators
+test <- map(cont_vars, function(x) map(vars, function(y) lm(dat[,x]~is.na(dat[,y]))))
+
+plots <- map(cont_vars, function(x) map(vars, function(z) {ggplot(data = dat, aes(x = dat[,x], fill = is.na(dat[,z]))) +
+  geom_histogram(alpha = 0.5, position = 'identity') +
+  xlab(paste0(x)) +
+  ylab("number of cases") +
+  scale_fill_manual(
+    name = z,
+    breaks = c("FALSE", "TRUE"),
+    labels = c("observed", "missing"),
+    values = c("#006CC2", "#B61A51")
+  )
+  }))
+
+```
+
+ 
 # Part 3: Use any variable from any dataset
