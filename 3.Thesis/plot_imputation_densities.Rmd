@@ -1,0 +1,55 @@
+---
+title: "Plot density of imputations"
+output: html_notebook
+---
+
+
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+# set-up environment
+library(mice) # Data imputation
+library(dplyr) # Data manipulation
+# library(magrittr)
+# library(broom)
+library(ggplot2)
+# library(purrr)
+set.seed(123)
+dat <- nhanes
+mids <- list()
+
+# impute missingness with one iteration
+M <- 20
+mids <- mice(dat, maxit = 1, m = M, print = FALSE)
+
+####
+# this should be repeated T times
+####
+# add an iteration
+mids <- mice.mids(mids, maxit = 1, printFlag = FALSE)
+# # traceplots
+# plot(mids)
+
+# plot density of imputed values
+imputed_values <- mids[["imp"]]$bmi %>% mutate(case = row_number()) %>%  tidyr::gather("imp", "value", 1:M) %>% .[order(.$case, .$imp), ] #%>% group_by(case) %>% mutate(case_mean = mean(value)) %>% ungroup()
+case_mean <- imputed_values %>% group_by(case) %>% summarise(mu = mean(value)) 
+# # for one case
+# imputed_values %>% filter(case==3) %>%  ggplot() +
+#   geom_histogram(aes(x = value)) + 
+#   geom_vline(xintercept = mean(imputed_values$value))
+
+# # store names of cases
+# missing_cases <- 1:max(imputed_values$case)#unique(imputed_values$case)
+# # plot histograms
+# missing_cases %>%
+#   purrr::map(function(z) {imputed_values %>% filter(case==z) %>% ggplot() +
+#   geom_histogram(aes(x = value)) 
+#   })
+
+# plot hist per case
+imputed_values %>% ggplot(aes(x = value)) + 
+  geom_histogram() +
+  geom_vline(data = case_mean, mapping = aes(xintercept = mu)) +
+  facet_wrap(~case)
+
+```
+
