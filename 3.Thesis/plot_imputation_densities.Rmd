@@ -1,6 +1,8 @@
 ---
 title: "Plot density of imputations"
-output: html_notebook
+output:
+  html_document:
+    df_print: paged
 ---
 
 ```{r echo=TRUE, message=FALSE, warning=FALSE}
@@ -10,62 +12,126 @@ library(dplyr) # Data manipulation
 # library(magrittr)
 # library(broom)
 library(ggplot2)
-# library(purrr)
+library(purrr)
 set.seed(123)
+dat <- nhanes
 
 # parameters
 M <- 20
-T_max <- 100
+T_max <- 10
 
-# impute missingness with one iteration
-dat <- nhanes
+```
 
-####
-# this should be repeated T times
-####
+
+```{r}
+# for BMI only
+# objects
 plot <- list()
 distr <- list()
 
-for (it in 1:T_max){
-if (it == 1) {
-  mids <- mice(dat, maxit = 1, m = M, print = FALSE)
-} else {
-# add an iteration
-mids <- mice.mids(mids, maxit = 1, printFlag = FALSE)}
-
-# plot density of imputed values
-imputed_values <- mids[["imp"]]$bmi %>% mutate(case = row_number()) %>%  tidyr::gather("imp", "value", 1:M) %>% .[order(.$case, .$imp), ] #%>% group_by(case) %>% mutate(case_mean = mean(value)) %>% ungroup()
-distr[[it]] <- case_mean <- imputed_values %>% group_by(case) %>% summarise(mu = mean(value), sigma = sd(value)) 
-
-# plot hist per case
-plot[[it]] <- imputed_values %>% ggplot(aes(x = value)) + 
-  geom_histogram() +
-  geom_vline(data = case_mean, mapping = aes(xintercept = mu)) +
-  facet_wrap(~case)
- 
-# # plot density per case
-# imputed_values %>% ggplot(aes(x = value)) +
-#   geom_histogram(aes(y = ..density..)) +
-#   geom_density() +
-#   geom_vline(data = case_mean, mapping = aes(xintercept = mu)) +
-#   facet_wrap(~case)
+# this should be repeated T times
+for (it in 1:T_max) {
+  if (it == 1) {
+    # impute missingness with one iteration
+    mids <- mice(dat,
+                 maxit = 1,
+                 m = M,
+                 print = FALSE)
+  } else {
+    # add an iteration
+    mids <- mice.mids(mids, maxit = 1, printFlag = FALSE)
+  }
+  
+  # plot density of imputed values
+  imputed_values <-
+    mids[["imp"]]$bmi %>% mutate(case = row_number()) %>%  tidyr::gather("imp", "value", 1:M) %>% .[order(.$case, .$imp),] #%>% group_by(case) %>% mutate(case_mean = mean(value)) %>% ungroup()
+  distr[[it]] <-
+    case_mean <-
+    imputed_values %>% group_by(case) %>% summarise(mu = mean(value), sigma = sd(value))
+  
+  # plot hist per case
+  plot[[it]] <- imputed_values %>% ggplot(aes(x = value)) +
+    geom_histogram() +
+    geom_vline(data = case_mean, mapping = aes(xintercept = mu)) +
+    facet_wrap( ~ case)
+  # would be nice to have these overlapping per case!
+  
+  # # plot density per case
+  # imputed_values %>% ggplot(aes(x = value)) +
+  #   geom_histogram(aes(y = ..density..)) +
+  #   geom_density() +
+  #   geom_vline(data = case_mean, mapping = aes(xintercept = mu)) +
+  #   facet_wrap(~case)
+  
+  ############################ make it work for all other vars
+  # vars <- map_dfr(dat, ~is.na(.x) %>% sum() > 0)
+  # imputed_values_list <- mids[["imp"]] %>% map(~{filter(.x %in% vars)})
+  #
+  # #filter(length(row.names(.x)))}) %>% map(~{mutate(case = row_number()) %>%  tidyr::gather("imp", "value", 1:M) %>% .[order(.$case, .$imp), ]})
+  ############################
 }
 
 # # this is just the between chain variance, right?
 # average_sd <- distr %>% purrr::map(~{mean(.$sigma)})
 # plot.ts(average_sd) #is this == plot(mids)?
 
-# now split by case
-purrr::map(1:9, function(x) purrr::map(distr, ~{.$sigma[.$case==x]})) %>% purrr::map(~plot.ts(.x))
+# # now split by case abd plot time series
+# purrr::map(1:9, function(x) purrr::map(distr, ~{.$sigma[.$case==x]})) %>% purrr::map(~plot.ts(.x))
 
-# or with ggplot
-sd_per_case_per_it <- purrr::map(1:9, function(x) purrr::map_dbl(distr, ~{.$sigma[.$case==x]})) %>% as.data.frame() %>% mutate(nr_it = row_number()) 
+# or with ggplot to put them in 1 plot
+sd_per_case_per_it <-
+  purrr::map(1:9, function(x)
+    purrr::map_dbl(distr, ~ {
+      .$sigma[.$case == x]
+    })) %>% as.data.frame() %>% mutate(nr_it = row_number())
 
-colnames(sd_per_case_per_it) <- c(1:9, "nr_it") 
+colnames(sd_per_case_per_it) <- c(1:9, "nr_it")
 
-sd_per_case_per_it %>%  tidyr::gather("case", "sd", 1:9) %>% ggplot() + geom_line(aes(x = nr_it, y = sd)) + facet_wrap(~case)
-sd_per_case_per_it %>%  tidyr::gather("case", "sd", 1:9) %>% ggplot(aes(x = nr_it, y = sd, col = case)) + geom_line() + geom_smooth(se = F) 
+#sd_per_case_per_it %>%  tidyr::gather("case", "sd", 1:9) %>% ggplot() + geom_line(aes(x = nr_it, y = sd)) + facet_wrap(~case)
+sd_per_case_per_it %>%  tidyr::gather("case", "sd", 1:9) %>% ggplot(aes(x = nr_it, y = sd, col = case)) + geom_line() + geom_smooth(se = F)
 
+```
+
+Now for any variable
+```{r}
+# objects
+imputed_values <- plot <- distr <- list()
+
+# which vars?
+nmis <- dat %>% map_dbl(~{is.na(.x) %>% sum()}) #%>% which(.>0) %>% names()
+#nmis <- apply(is.na(dat), 2, sum)
+vars <- names(nmis[nmis>0])
+
+# this should be repeated T times
+for (it in 1:T_max) {
+  if (it == 1) {
+    # impute missingness with one iteration
+    mids <- mice(dat,
+                 maxit = 1,
+                 m = M,
+                 print = FALSE)
+  } else {
+    # add an iteration
+    mids <- mice.mids(mids, maxit = 1, printFlag = FALSE)
+  }
+  
+  # plot density of imputed values
+imputed_values[[it]] <-  mids[["imp"]][vars]
+} 
+
+# #test3 <- map(1:T_max, function(x) map(imputed_values, function(y) y[vars]))
+# test4 <- map(imputed_values, function(x) x[vars])
+
+imputed_values[[1]]$bmi %>% mutate(case = row_number())
+#map(imputed_values, function(x) map(vars, function(y) {print(x)}))#mutate(case = row_number())})) #%>%  tidyr::gather("imp", "value", 1:M) %>% .[order(.$case, .$imp),]}) 
+test5 <- map(imputed_values, function(x) map(x, function(y) {as.data.frame(y) %>% mutate(case = row_number()) %>%  tidyr::gather("imp", "value", 1:M)}))  #%>% .[order(.$case, .$imp),]}) })) 
+# case_mean <- imputed_values %>% group_by(case) %>% summarise(mu = mean(value), sigma = sd(value))
+  
+# # plot hist per case
+# test4[[1]] %>% map(~{ggplot(aes(x = value)) +
+#     geom_histogram() +
+#     geom_vline(data = case_mean, mapping = aes(xintercept = mu)) +
+#     facet_wrap( ~ case)}) 
 
 ```
 
