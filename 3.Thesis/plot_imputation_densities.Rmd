@@ -124,9 +124,11 @@ imputed_values[[it]] <-  mids[["imp"]][vars]
 
 imputed_values[[1]]$bmi %>% mutate(case = row_number())
 #map(imputed_values, function(x) map(vars, function(y) {print(x)}))#mutate(case = row_number())})) #%>%  tidyr::gather("imp", "value", 1:M) %>% .[order(.$case, .$imp),]}) 
-test5 <- map(imputed_values, function(x) map(x, function(y) {as.data.frame(y) %>% mutate(case = row_number()) %>%  tidyr::gather("imp", "value", 1:M)}))  #%>% .[order(.$case, .$imp),]}) })) 
+test5 <- map(imputed_values, function(.x) map(.x, function(.y) {as.data.frame(.y) %>% mutate(case = row_number()) %>%  tidyr::gather("imp", "value", 1:M)  %>% .[order(.$case),] %>% mutate(.x = .$value) }))#group_by(.$case) %>% summarise(mu = mean(.$value), sigma = sd(.$value))}) ) 
 # case_mean <- imputed_values %>% group_by(case) %>% summarise(mu = mean(value), sigma = sd(value))
-  
+# test5[[1]]$bmi %>% group_by(case) %>% summarise(mu = mean(value), sigma = sd(value))  
+test5[[1]] %>% map(vars, ~{.x %>% rename(bmi = value)})
+
 # # plot hist per case
 # test4[[1]] %>% map(~{ggplot(aes(x = value)) +
 #     geom_histogram() +
