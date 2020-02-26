@@ -8,11 +8,11 @@ library("ggplot2")
 library("ggpubr")
 
 # # if necessary, load results
-# load("C:/Users/User/Desktop/shinyMice/Simulation/Results/results.Rdata")
+# load("C:/Users/User/Desktop/shinyMice/2.ResearchReport/1.SimulationStudy/Results/full_results.Rdata")
 # results <- dat
 
 # create plot for autocorrelations
-new_AC_plot <- results_with_CI %>% .[-1,] %>%
+new_AC_plot <- results %>% .[-1,] %>%
   # ggplot(aes(x = T, y = AC_var_X, color = "Chain variances")) +
   # geom_line(linetype = "dashed", size = 1) +
   # geom_line(
@@ -58,7 +58,7 @@ new_AC_plot <- results_with_CI %>% .[-1,] %>%
   )
 
 # create between chain variances plot
-between_plot <- results_with_CI %>% .[-1,] %>%
+between_plot <- results %>% .[-1,] %>%
   # ggplot(aes(x = T, y = between_var_X, color = "Chain variances")) +
   # geom_line(linetype = "dashed", size = 1) +
   # geom_line(
@@ -93,7 +93,7 @@ between_plot <- results_with_CI %>% .[-1,] %>%
     legend.position = ""
   )
 
-within_plot <- results_with_CI %>% .[-1,] %>%
+within_plot <- results %>% .[-1,] %>%
   ggplot() +
   # ggplot(aes(x = T, y = within_mean_X, color = "Chain variances")) +
   # geom_line(linetype = "dashed", size = 1) +
@@ -142,3 +142,29 @@ new_figure <-
 # print figure
 new_figure
 
+####
+
+# now create scatterplot with B and AC
+B_AC_plot <- results %>% .[-1,] %>%
+  ggplot() +
+  geom_point(aes(x = AC_mean_X, y = between_mean_X)) +
+  geom_point(aes(x = AC_mean_Y, y = between_mean_Y), color = "red") +
+  geom_point(aes(x = AC_mean_Z1, y = between_mean_Z1), color = "blue") +
+  geom_point(aes(x = AC_mean_Z2, y = between_mean_Z2), color = "green") +
+  xlab("Auto-correlation in the chain means") + 
+  ylab("Between chain variance")
+  #geom_smooth(aes(x = AC_mean_X, y = between_mean_X))
+
+# print
+B_AC_plot
+
+B_AC_plot_log <- results %>% .[-1,] %>%
+  ggplot() +
+  geom_point(aes(x = AC_mean_X, y = log(between_mean_X))) +
+  geom_point(aes(x = AC_mean_Y, y = log(between_mean_Y)), color = "red") +
+  geom_point(aes(x = AC_mean_Z1, y = log(between_mean_Z1)), color = "blue") +
+  geom_point(aes(x = AC_mean_Z2, y = log(between_mean_Z2)), color = "green") +
+  xlab("Auto-correlation in the chain means") + 
+  ylab("Between chain variance (logarithmic scale)")
+
+B_AC_plot_log

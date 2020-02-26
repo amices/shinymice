@@ -46,17 +46,18 @@ test.impute <- function(true_effect,
   
 
   # perform analysis
-  # mip <- unlist(pool(with(impsim, lm(Y ~ X + Z1 + Z2))))
-  mip <- impsim %>% with(lm(Y ~ X + Z1 + Z2)) %>% pool %>% .$pooled
+  # # mip <- unlist(pool(with(impsim, lm(Y ~ X + Z1 + Z2))))
+  # mip <- impsim %>% with(lm(Y ~ X + Z1 + Z2)) %>% pool %>% .$pooled
+  mip <- impsim %>% mice::complete() %>% .[,"Y"] %>%  mean #mean(complete(mids)[,2])
   
   # compute simulation diagnostics
-  est <- mip$estimate[2] #estimated regression coefficient
+  est <-  mip # mip$estimate[2] #estimated regression coefficient
   bias <- est - true_effect #bias
-  SE <- sqrt(mip$b[2] + (mip$b[2] / m)) #pooled finite SE
-  CI.low <- est - qt(.975, df = m - 1) * SE #lower bound CI
-  CI.up <- est + qt(.975, df = m - 1) * SE #upper bound CI
-  CIW <- CI.up - CI.low #confidence interval width
-  cov <- CI.low < true_effect & true_effect < CI.up #coverage
+  SE <- 1 # sqrt(mip$b[2] + (mip$b[2] / m)) #pooled finite SE
+  CI.low <- 1 # est - qt(.975, df = m - 1) * SE #lower bound CI
+  CI.up <- 1 # est + qt(.975, df = m - 1) * SE #upper bound CI
+  CIW <- 1 # CI.up - CI.low #confidence interval width
+  cov <- 1 # CI.low < true_effect & true_effect < CI.up #coverage
   
   # output
   return(

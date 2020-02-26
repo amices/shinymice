@@ -19,7 +19,7 @@ data.simulation <- function(n = populationsize, true_effect = 2) {
     true_effect * simdata$X + 0.5 * simdata$Z1 - 1 * simdata$Z2 + rnorm(n = populationsize, sd = 10)
   
   # estimate comlpete data parameter
-  true_effect <<- unname(lm(Y ~ X + Z1 + Z2, data = simdata)[["coefficients"]]["X"])
+  true_effect <<- mean(simdata$Y)# unname(lm(Y ~ X + Z1 + Z2, data = simdata)[["coefficients"]]["X"])
 
   # output
   return(simdata)
