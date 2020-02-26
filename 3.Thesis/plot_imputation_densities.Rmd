@@ -14,11 +14,11 @@ library(dplyr) # Data manipulation
 library(ggplot2)
 library(purrr)
 set.seed(123)
-dat <- nhanes
+dat <- boys
 
 # parameters
 M <- 20
-T_max <- 10
+T_max <- 50
 
 ```
 
@@ -35,6 +35,7 @@ for (it in 1:T_max) {
     # impute missingness with one iteration
     mids <- mice(dat,
                  maxit = 1,
+                 #method = "norm",
                  m = M,
                  print = FALSE)
   } else {
@@ -88,19 +89,50 @@ sd_per_case_per_it <-
 colnames(sd_per_case_per_it) <- c(1:9, "nr_it")
 
 #sd_per_case_per_it %>%  tidyr::gather("case", "sd", 1:9) %>% ggplot() + geom_line(aes(x = nr_it, y = sd)) + facet_wrap(~case)
-sd_per_case_per_it %>%  tidyr::gather("case", "sd", 1:9) %>% ggplot(aes(x = nr_it, y = sd, col = case)) + geom_line() + geom_smooth(se = F)
+sd_per_case_per_it %>%  tidyr::gather("case", "sd", 1:9) %>% ggplot(aes(x = nr_it, y = sd, col = case)) + geom_point() + geom_smooth(se = F)
 
 ```
 
-Now for any variable
+Now for any variable, for one iteration nr. only.
 ```{r}
-# objects
-imputed_values <- plot <- distr <- list()
-
 # which vars?
+# only numeric
+num_vars <- dat %>% map(~{is.numeric(.x)})
+dat <- dat[,num_vars==T]
+# only with missings
 nmis <- dat %>% map_dbl(~{is.na(.x) %>% sum()}) #%>% which(.>0) %>% names()
 #nmis <- apply(is.na(dat), 2, sum)
 vars <- names(nmis[nmis>0])
+
+# extract imputed values, reshape data
+imp_long <- mids[["imp"]][vars] %>% map( ~{
+  mutate(., case = rownames(.)) %>%  tidyr::gather("imp", "value", 1:M)
+  })
+
+# compute mean and sd for each case
+imp_descr <- imp_long %>% map( ~{
+  group_by(., case) %>% summarise(mu = mean(value), sigma = sd(value), sd1 = mu+sigma, sd2 = mu-sigma)
+})
+
+# plot each case with mean and sd per variable
+map2(imp_long, imp_descr, ~{
+  ggplot(.x, aes(x = value)) +
+    geom_histogram() +
+    geom_vline(.y, mapping = aes(xintercept = mu)) +
+    geom_vline(.y, mapping = aes(xintercept = sd1), linetype = "dotted") +
+    geom_vline(.y, mapping = aes(xintercept = sd2), linetype = "dotted") +
+    ggtitle("Distribution of imputed values per case (mean and 1 SD indicated)") +
+    #xlab(.y) +
+    facet_wrap( ~ case)
+})
+
+```
+
+Now try to automate this for all nrs of iterations
+```{r eval=FALSE, include=FALSE}
+# objects
+imputed_values <- plot <- distr <- list()
+
 
 # this should be repeated T times
 for (it in 1:T_max) {
@@ -124,16 +156,19 @@ imputed_values[[it]] <-  mids[["imp"]][vars]
 
 imputed_values[[1]]$bmi %>% mutate(case = row_number())
 #map(imputed_values, function(x) map(vars, function(y) {print(x)}))#mutate(case = row_number())})) #%>%  tidyr::gather("imp", "value", 1:M) %>% .[order(.$case, .$imp),]}) 
-test5 <- map(imputed_values, function(.x) map(.x, function(.y) {as.data.frame(.y) %>% mutate(case = row_number()) %>%  tidyr::gather("imp", "value", 1:M)  %>% .[order(.$case),] %>% mutate(.x = .$value) }))#group_by(.$case) %>% summarise(mu = mean(.$value), sigma = sd(.$value))}) ) 
+test5 <- map(imputed_values, function(.x) map(.x, function(.y) {as.data.frame(.y) %>% mutate(case = row_number()) %>%  tidyr::gather("imp", .y, 1:M)  %>% .[order(.$case),] %>% mutate(.x = .$value) }))#group_by(.$case) %>% summarise(mu = mean(.$value), sigma = sd(.$value))}) ) 
 # case_mean <- imputed_values %>% group_by(case) %>% summarise(mu = mean(value), sigma = sd(value))
 # test5[[1]]$bmi %>% group_by(case) %>% summarise(mu = mean(value), sigma = sd(value))  
-test5[[1]] %>% map(vars, ~{.x %>% rename(bmi = value)})
+
+#test5[[1]] %>% map(function(x) map(x, function(y) {rename(., y = .$value)}))
 
 # # plot hist per case
 # test4[[1]] %>% map(~{ggplot(aes(x = value)) +
 #     geom_histogram() +
 #     geom_vline(data = case_mean, mapping = aes(xintercept = mu)) +
 #     facet_wrap( ~ case)}) 
+
+
 
 ```
 
