@@ -25,9 +25,13 @@ evaluate.sim <-
     # attatch diagnostics
     vars <-
       c(
-        "bias",
-        "CIW",
-        "cov",
+        # "bias",
+        # "CIW",
+        # "cov",
+        "bias_X",
+        "bias_Y",
+        "bias_Z1",
+        "bias_Z2",
         "R_mean_X",
         "R_mean_Z1",
         "R_mean_Z2",

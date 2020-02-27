@@ -1,5 +1,5 @@
 ---
-title: "Investigate relations in incomplete datasets to inform imputation model"
+title: "ShinyMICE: Investigate relations in incomplete datasets to inform imputation model"
 output:
   html_document:
     df_print: paged
@@ -111,11 +111,10 @@ Also create the density plots for all missingness indicators.
 vars <- names(dat)
 vars %>%
   map(~{ggplot(data=dat, aes(x = age, fill = is.na(.data[[.x]]))) +
-  geom_histogram(aes(y = 100 * ..density..),
-                 alpha = 0.5,
+  geom_histogram(alpha = 0.5,
                  position = 'identity') +
   xlab("Age (years)") +
-  ylab("Percentage observed") +
+  ylab("Count of cases") +
   scale_fill_manual(
     name = .x,
     breaks = c("FALSE", "TRUE"),
@@ -172,3 +171,4 @@ plots <- map(cont_vars, function(x) map(vars, function(z) {ggplot(data = dat, ae
 
  
 # Part 3: Use any variable from any dataset
+

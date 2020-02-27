@@ -48,7 +48,8 @@ test.impute <- function(true_effect,
   # perform analysis
   # # mip <- unlist(pool(with(impsim, lm(Y ~ X + Z1 + Z2))))
   # mip <- impsim %>% with(lm(Y ~ X + Z1 + Z2)) %>% pool %>% .$pooled
-  mip <- impsim %>% mice::complete() %>% .[,"Y"] %>%  mean #mean(complete(mids)[,2])
+  # mip <- impsim %>% mice::complete(., "long") %>% .[,"Y"] %>%  mean #mean(complete(mids)[,2])
+  mip <- impsim %>% mice::complete(., "long") %>% .[,-c(1:2)] %>% colMeans()
   
   # compute simulation diagnostics
   est <-  mip # mip$estimate[2] #estimated regression coefficient
@@ -62,9 +63,13 @@ test.impute <- function(true_effect,
   # output
   return(
     data.frame(
-      bias = bias,
-      CIW = CIW,
-      cov = cov,
+      # bias = bias,
+      # CIW = CIW,
+      # cov = cov,
+      bias_X = bias["X"],
+      bias_Y = bias["Y"],
+      bias_Z1 = bias["Z1"],
+      bias_Z2 = bias["Z2"],
       R_mean_X = R_mean["X"],
       R_mean_Z1 = R_mean["Z1"],
       R_mean_Z2 = R_mean["Z2"],

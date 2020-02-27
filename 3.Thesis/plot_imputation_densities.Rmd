@@ -72,6 +72,7 @@ for (it in 1:T_max) {
   ############################
 }
 
+
 # # this is just the between chain variance, right?
 # average_sd <- distr %>% purrr::map(~{mean(.$sigma)})
 # plot.ts(average_sd) #is this == plot(mids)?
@@ -92,6 +93,11 @@ colnames(sd_per_case_per_it) <- c(1:9, "nr_it")
 sd_per_case_per_it %>%  tidyr::gather("case", "sd", 1:9) %>% ggplot(aes(x = nr_it, y = sd, col = case)) + geom_point() + geom_smooth(se = F)
 
 ```
+Bij it 1 is de random component gewoon een groter aandeel. Ookal is het numeriek niet geconv, maar de uitkomst klopt. Nu is het niet geconv, maar op de onzekerheid heeft het geen effect. Maak deze ook voor mu! Nu niet met 9 waarden, maar met de 21 van boys. En met hgt ipv bmi.
+
+Waarom itereren we dan nog? Bij it 2 zijn we al volledig onafh van de startwaarden.
+
+Mahal op complete set ipv missing data. wel de hele set nemen. misschien dat ie nodeloos stabiel wordt als je weinig missing hebt (maar dan conv ie ook heel snel).
 
 Now for any variable, for one iteration nr. only.
 ```{r}
@@ -126,7 +132,15 @@ map2(imp_long, imp_descr, ~{
     facet_wrap( ~ case)
 })
 
+map2(imp_long, imp_descr, ~{
+  ggplot(.x, aes(y = value, color = case)) +
+    geom_boxplot() 
+})
+
 ```
+
+Boxplot is makkelijker te zien! Gelijke var en means. Na imp heb je 1 plotje dat een boxpl is van alle geimp. x as cases, y as variatie. sommige cases heel veel spreiding en andere heel weinig. Dat is leuk! miss op y en kolommen op x as, dan boxplot met wel/niet een bepaalde var missing.
+
 
 Now try to automate this for all nrs of iterations
 ```{r eval=FALSE, include=FALSE}

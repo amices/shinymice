@@ -29,7 +29,7 @@ source("2.ResearchReport/1.SimulationStudy/Functions/Evaluate.R")
 # simulation parameters
 populationsize <- 1000 #n of simulated dataset
 n.iter <- 30 #nr of iterations (varying 1:n.iter)
-n.sim <- 50 #nr of simulations per iteration value
+n.sim <- 10 #nr of simulations per iteration value
 true_effect <- 2 #regression coefficient to be estimated
 
 # start simulation study

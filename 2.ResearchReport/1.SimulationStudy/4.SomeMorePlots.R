@@ -8,8 +8,8 @@ library("ggplot2")
 library("ggpubr")
 
 # # if necessary, load results
-# load("C:/Users/User/Desktop/shinyMice/2.ResearchReport/1.SimulationStudy/Results/full_results.Rdata")
-# results <- dat
+load("C:/Users/User/Desktop/shinyMice/2.ResearchReport/1.SimulationStudy/Results/full_results.Rdata")
+results <- dat
 
 # create plot for autocorrelations
 new_AC_plot <- results %>% .[-1,] %>%

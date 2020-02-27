@@ -8,9 +8,9 @@ library("ggplot2")
 library("ggpubr")
 
 # # if necessary, load results
-# load("C:/Users/User/Desktop/shinyMice/Simulation/Results/results.Rdata")
+load("C:/Users/User/Desktop/shinyMice/2.ResearchReport/1.SimulationStudy/Results/full_results.Rdata")
 # results <- dat
-
+results_with_CI <- dat #results
 # create plot for R hat
 R_plot <- results_with_CI %>% .[-1,] %>%
   ggplot(aes(x = T, y = R_var_X, color = "Chain variances")) +
@@ -108,7 +108,7 @@ figure1
 
 # create plot for bias
 bias_plot <- ggplot(results_with_CI, aes(x = T, y = bias)) +
-  geom_line() +
+  geom_point() +
   geom_smooth(
     method = "loess",
     se = FALSE,
@@ -116,12 +116,11 @@ bias_plot <- ggplot(results_with_CI, aes(x = T, y = bias)) +
     size = 0.5,
     linetype = "dashed"
   ) +
-  # # add error bar when `results_withSEs` is used
-  # geom_errorbar(
-  #   aes(ymin = bias_LL, ymax = bias_UL),
-  #   width = .2,
-  #   colour = "grey"
-  # ) +
+  geom_errorbar(
+    aes(ymin = bias_LL, ymax = bias_UL),
+    width = .2,
+    colour = "grey"
+  ) +
   xlab("") +
   ylab("Bias") +
   scale_x_continuous(breaks = seq(0, 100, by = 10)) +
@@ -132,6 +131,7 @@ bias_plot <- ggplot(results_with_CI, aes(x = T, y = bias)) +
     panel.grid.minor = element_blank(),
     axis.line = element_line(colour = "black")
   )
+
 
 # create plot for confidence interval width
 CIW_plot <- ggplot(results_with_CI, aes(x = T, y = CIW)) +
@@ -211,3 +211,85 @@ figure3 <-
   )
 # print figure
 figure3
+
+###################
+
+bias_univ_plot <- ggplot(results_with_CI, aes(x = T, y = bias_X, color = "X")) +
+  geom_point() +
+  geom_smooth(se = F) +
+  # geom_errorbar(
+  #   aes(ymin = bias_X_LL, ymax = bias_X_UL),
+  #   width = .2,
+  #   colour = "grey"
+  # ) +
+  geom_point(aes(x = T, y = bias_Y, color = "Y")) +
+  geom_smooth(aes(x = T, y = bias_Y, color = "Y"), se = F) +
+  geom_point(aes(x = T, y = bias_Z1, color = "Z1")) +
+  geom_smooth(aes(x = T, y = bias_Z1, color = "Z1"), se = F) +
+  geom_point(aes(x = T, y = bias_Z2, color = "Z2")) +
+  geom_smooth(aes(x = T, y = bias_Z2, color = "Z2"), se = F) +
+  xlab("Number of iterations") +
+  ylab("Bias") +
+  #scale_x_continuous(breaks = seq(0, 100, by = 10)) +
+  theme_bw() +
+  theme(
+    panel.border = element_blank(),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    axis.line = element_line(colour = "black")
+  )
+
+AC_means_plot <- results_with_CI %>% .[-1,] %>%
+  ggplot() +
+  geom_point(aes(x = T, y = AC_mean_X, color = "X")) +
+  geom_point(aes(x = T, y = AC_mean_Y, color = "Y")) +
+  geom_point(aes(x = T, y = AC_mean_Z1, color = "Z1")) +
+  geom_point(aes(x = T, y = AC_mean_Z2, color = "Z2")) +
+  geom_smooth(aes(x = T, y = AC_mean_X, color = "X"), se = FALSE) +
+  geom_smooth(aes(x = T, y = AC_mean_Y, color = "Y"), se = FALSE) +
+  geom_smooth(aes(x = T, y = AC_mean_Z1, color = "Z1"), se = FALSE) +
+  geom_smooth(aes(x = T, y = AC_mean_Z2, color = "Z2"), se = FALSE) +
+  xlab("Number of iterations") +
+  ylab("Auto-correlation") +
+  theme_bw() +
+  theme(
+    panel.border = element_blank(),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    axis.line = element_line(colour = "black") #,
+    #legend.position = ""
+  )
+
+R_means_plot <- results_with_CI %>% .[-1,] %>%
+  ggplot() +
+  geom_point(aes(x = T, y = R_mean_X, color = "X")) +
+  geom_point(aes(x = T, y = R_mean_Y, color = "Y")) +
+  geom_point(aes(x = T, y = R_mean_Z1, color = "Z1")) +
+  geom_point(aes(x = T, y = R_mean_Z2, color = "Z2")) +
+  geom_smooth(aes(x = T, y = R_mean_X, color = "X"), se = FALSE) +
+  geom_smooth(aes(x = T, y = R_mean_Y, color = "Y"), se = FALSE) +
+  geom_smooth(aes(x = T, y = R_mean_Z1, color = "Z1"), se = FALSE) +
+  geom_smooth(aes(x = T, y = R_mean_Z2, color = "Z2"), se = FALSE) +
+  xlab("Number of iterations") +
+  #ylab(expression(paste(widehat(R), " (in chain means)"))) +
+  ylab(expression(paste(widehat(R)))) +
+  theme_bw() +
+  theme(
+    panel.border = element_blank(),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    axis.line = element_line(colour = "black") #,
+    #legend.position = ""
+  )
+
+univar_plot <-
+  ggarrange(
+    R_means_plot,
+    AC_means_plot,
+    bias_univ_plot,
+    ncol = 1,
+    nrow = 3,
+    align = "v"
+  )
+# print figure
+univar_plot
