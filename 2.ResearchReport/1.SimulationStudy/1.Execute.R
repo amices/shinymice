@@ -28,9 +28,10 @@ source("2.ResearchReport/1.SimulationStudy/Functions/Evaluate.R")
 
 # simulation parameters
 populationsize <- 1000 #n of simulated dataset
-n.iter <- 30 #nr of iterations (varying 1:n.iter)
+n.iter <- 50 #nr of iterations (varying 1:n.iter)
 n.sim <- 10 #nr of simulations per iteration value
 true_effect <- 2 #regression coefficient to be estimated
+true_mean <- true_sd <- NA
 
 # start simulation study
 set.seed(1111)
@@ -49,7 +50,7 @@ simulate <- function(data, n.iter, true_effect, patterns) {
   pb <- txtProgressBar(min = 0, max = n.iter, style = 3)
   
   # remove values at random with 20 percent probability to be missing
-  ampdata <- ampute(data, patterns = amp_patterns, prop = 0.8, mech = "MCAR")$amp
+  ampdata <- ampute(data, patterns = amp_patterns, prop = 0.9, mech = "MAR")$amp
   
   # object for output
   res <- list()
@@ -76,11 +77,11 @@ results <- evaluate.sim(sims = out, n.iter = n.iter)
 # uncomment for MCMC SEs
 MCMCSE <- evaluate.sim(sims = out, n.iter = n.iter, mean_or_SE = "se")
 # combine into one dataframe
-results_with_SE <- left_join(results, MCMCSE, by = "T", suffix = c("", "_SE"))
+results_with_SE <- left_join(results, MCMCSE, by = "T", suffix = c("", ".SE"))
 # with empirical CI
 CI_lower <- evaluate.sim(sims = out, n.iter = n.iter, mean_or_SE = "lower")
 CI_upper <- evaluate.sim(sims = out, n.iter = n.iter, mean_or_SE = "upper")
-results_with_CI <- results %>% left_join(CI_lower, by = "T", suffix = c("", "_LL")) %>% left_join(CI_upper, by = "T", suffix = c("", "_UL"))
+results_with_CI <- results %>% left_join(CI_lower, by = "T", suffix = c("", ".LL")) %>% left_join(CI_upper, by = "T", suffix = c("", ".UL"))
 
 # plot
 #plot.ts(results[c(5:8, 2:4)], main = "Convergence and Simulation Diagnostics", xlab = "Number of iterations")
