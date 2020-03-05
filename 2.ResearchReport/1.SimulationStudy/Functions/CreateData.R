@@ -27,3 +27,9 @@ data.simulation <- function(n = populationsize, true_effect = 2) {
   return(simdata)
   
 }
+
+###
+# ampute
+# 50% univar miss
+# sapply(A, function(x) sample(c(0, NA), length(x))
+# 

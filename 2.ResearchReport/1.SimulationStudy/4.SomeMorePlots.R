@@ -7,8 +7,8 @@ library("dplyr")
 library("ggplot2")
 library("ggpubr")
 
-# # if necessary, load results
-load("C:/Users/User/Desktop/shinyMice/2.ResearchReport/1.SimulationStudy/Results/full_results.Rdata")
+# # # if necessary, load results
+# load("C:/Users/User/Desktop/shinyMice/2.ResearchReport/1.SimulationStudy/Results/full_results.Rdata")
 results <- dat
 
 # create plot for autocorrelations
@@ -29,10 +29,10 @@ new_AC_plot <- results %>% .[-1,] %>%
   #           linetype = "dashed",
   #           size = 1) +
   ggplot() + 
-  geom_line(aes(x = T, y = AC_mean_X, color = "Chain means")) +
-  geom_line(aes(x = T, y = AC_mean_Z1, color = "Chain means")) +
-  geom_line(aes(x = T, y = AC_mean_Z2, color = "Chain means")) +
-  geom_line(aes(x = T, y = AC_mean_Y, color = "Chain means")) +
+  geom_line(aes(x = T, y = AC.mean.X, color = "Chain means")) +
+  geom_line(aes(x = T, y = AC.mean.Z1, color = "Chain means")) +
+  geom_line(aes(x = T, y = AC.mean.Z2, color = "Chain means")) +
+  geom_line(aes(x = T, y = AC.mean.Y, color = "Chain means")) +
   xlab(" ") +
   ylab("Auto-correlation") +
   scale_x_continuous(breaks = seq(0, 100, by = 10)) +
@@ -75,10 +75,10 @@ between_plot <- results %>% .[-1,] %>%
   #           linetype = "dashed",
   #           size = 1) +
   ggplot() +
-  geom_line(aes(x = T, y = between_mean_X, color = "Chain means")) +
-  geom_line(aes(x = T, y = between_mean_Z1, color = "Chain means")) +
-  geom_line(aes(x = T, y = between_mean_Z2, color = "Chain means")) +
-  geom_line(aes(x = T, y = between_mean_Y, color = "Chain means")) +
+  geom_line(aes(x = T, y = between.mean.X, color = "Chain means")) +
+  geom_line(aes(x = T, y = between.mean.Z1, color = "Chain means")) +
+  geom_line(aes(x = T, y = between.mean.Z2, color = "Chain means")) +
+  geom_line(aes(x = T, y = between.mean.Y, color = "Chain means")) +
   xlab(" ") +
   ylab("Between chain variance") +
   scale_x_continuous(breaks = seq(0, 100, by = 10)) +
@@ -95,7 +95,7 @@ between_plot <- results %>% .[-1,] %>%
 
 within_plot <- results %>% .[-1,] %>%
   ggplot() +
-  # ggplot(aes(x = T, y = within_mean_X, color = "Chain variances")) +
+  # ggplot(aes(x = T, y = within.mean.X, color = "Chain variances")) +
   # geom_line(linetype = "dashed", size = 1) +
   # geom_line(
   #   aes(x = T, y = within_var_Z1, color = "Chain variances"),
@@ -110,10 +110,10 @@ within_plot <- results %>% .[-1,] %>%
   # geom_line(aes(x = T, y = within_var_Y, color = "Chain variances"),
   #           linetype = "dashed",
   #           size = 1) +
-  geom_line(aes(x = T, y = within_mean_X, color = "Chain means")) +
-  geom_line(aes(x = T, y = within_mean_Z1, color = "Chain means")) +
-  geom_line(aes(x = T, y = within_mean_Z2, color = "Chain means")) +
-  geom_line(aes(x = T, y = within_mean_Y, color = "Chain means")) +
+  geom_line(aes(x = T, y = within.mean.X, color = "Chain means")) +
+  geom_line(aes(x = T, y = within.mean.Z1, color = "Chain means")) +
+  geom_line(aes(x = T, y = within.mean.Z2, color = "Chain means")) +
+  geom_line(aes(x = T, y = within.mean.Y, color = "Chain means")) +
   xlab("Number of iterations") +
   ylab("Within chain variance") +
   scale_x_continuous(breaks = seq(0, 100, by = 10)) +
@@ -147,23 +147,23 @@ new_figure
 # now create scatterplot with B and AC
 B_AC_plot <- results %>% .[-1,] %>%
   ggplot() +
-  geom_point(aes(x = AC_mean_X, y = between_mean_X)) +
-  geom_point(aes(x = AC_mean_Y, y = between_mean_Y), color = "red") +
-  geom_point(aes(x = AC_mean_Z1, y = between_mean_Z1), color = "blue") +
-  geom_point(aes(x = AC_mean_Z2, y = between_mean_Z2), color = "green") +
+  geom_point(aes(x = AC.mean.X, y = between.mean.X)) +
+  geom_point(aes(x = AC.mean.Y, y = between.mean.Y), color = "red") +
+  geom_point(aes(x = AC.mean.Z1, y = between.mean.Z1), color = "blue") +
+  geom_point(aes(x = AC.mean.Z2, y = between.mean.Z2), color = "green") +
   xlab("Auto-correlation in the chain means") + 
   ylab("Between chain variance")
-  #geom_smooth(aes(x = AC_mean_X, y = between_mean_X))
+  #geom_smooth(aes(x = AC.mean.X, y = between.mean.X))
 
 # print
 B_AC_plot
 
 B_AC_plot_log <- results %>% .[-1,] %>%
   ggplot() +
-  geom_point(aes(x = AC_mean_X, y = log(between_mean_X))) +
-  geom_point(aes(x = AC_mean_Y, y = log(between_mean_Y)), color = "red") +
-  geom_point(aes(x = AC_mean_Z1, y = log(between_mean_Z1)), color = "blue") +
-  geom_point(aes(x = AC_mean_Z2, y = log(between_mean_Z2)), color = "green") +
+  geom_point(aes(x = AC.mean.X, y = log(between.mean.X))) +
+  geom_point(aes(x = AC.mean.Y, y = log(between.mean.Y)), color = "red") +
+  geom_point(aes(x = AC.mean.Z1, y = log(between.mean.Z1)), color = "blue") +
+  geom_point(aes(x = AC.mean.Z2, y = log(between.mean.Z2)), color = "green") +
   xlab("Auto-correlation in the chain means") + 
   ylab("Between chain variance (logarithmic scale)")
 

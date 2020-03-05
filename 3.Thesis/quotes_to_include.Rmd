@@ -1,0 +1,27 @@
+---
+title: "Literature on non-convergence"
+author: "Hanne Oberman"
+date: "4-3-2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+"As MICE is an iterative procedure, it is important that convergence is achieved. This may be checked by computing, at
+each cycle, the means of imputed values and/or the values of regression coefficients, and seeing if they are stable. For the
+example in Section 9, these values appeared stable from the very first cycle. We have never found 10 cycles inadequate,
+but larger numbers of cycles might in principle be required when incomplete variables are very strongly associated" (@whit11, p. 394).
+
+# For ShinyMICE
+"Determining How Many Imputations Are Needed
+Working back from the computation of statistics and confidence intervals, we need
+to ask how many imputations are required to generate useful statistical inferences. Surprisingly, the answer is often no more than five and sometimes as little as two or three.
+The relative efficiency (RE) of the m imputations given a fraction of missing data
+(Rubin, 1987, p. 114) is computed in standard error units as
+...
+Even when γ is .9, five imputations give a relative efficiency of .92. Consequently,
+one rarely has to create more than five imputations, and 10 imputations are more than
+suitable in almost any realistic application" (https://journals.sagepub.com/doi/pdf/10.1177/1094428103255532, p. 291).
+

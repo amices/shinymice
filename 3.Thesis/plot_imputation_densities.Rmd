@@ -16,6 +16,8 @@ library(purrr)
 set.seed(123)
 dat <- boys
 
+#### hetzelfde met case nrs omgedraaid!
+
 # parameters
 M <- 20
 T_max <- 50
@@ -33,7 +35,7 @@ distr <- list()
 for (it in 1:T_max) {
   if (it == 1) {
     # impute missingness with one iteration
-    mids <- mice(dat,
+    mids <- mice(dat, 
                  maxit = 1,
                  #method = "norm",
                  m = M,
@@ -45,7 +47,7 @@ for (it in 1:T_max) {
   
   # plot density of imputed values
   imputed_values <-
-    mids[["imp"]]$bmi %>% mutate(case = row_number()) %>%  tidyr::gather("imp", "value", 1:M) %>% .[order(.$case, .$imp),] #%>% group_by(case) %>% mutate(case_mean = mean(value)) %>% ungroup()
+    mids[["imp"]]$hgt %>% mutate(case = row_number()) %>%  tidyr::gather("imp", "value", 1:M) %>% .[order(.$case, .$imp),] #%>% group_by(case) %>% mutate(case_mean = mean(value)) %>% ungroup()
   distr[[it]] <-
     case_mean <-
     imputed_values %>% group_by(case) %>% summarise(mu = mean(value), sigma = sd(value))
@@ -80,17 +82,31 @@ for (it in 1:T_max) {
 # # now split by case abd plot time series
 # purrr::map(1:9, function(x) purrr::map(distr, ~{.$sigma[.$case==x]})) %>% purrr::map(~plot.ts(.x))
 
+n_cases <- max(distr[[1]]$case)
 # or with ggplot to put them in 1 plot
 sd_per_case_per_it <-
-  purrr::map(1:9, function(x)
+  purrr::map(1:n_cases, function(x)
     purrr::map_dbl(distr, ~ {
       .$sigma[.$case == x]
     })) %>% as.data.frame() %>% mutate(nr_it = row_number())
 
-colnames(sd_per_case_per_it) <- c(1:9, "nr_it")
+colnames(sd_per_case_per_it) <- c(1:n_cases, "nr_it")
 
 #sd_per_case_per_it %>%  tidyr::gather("case", "sd", 1:9) %>% ggplot() + geom_line(aes(x = nr_it, y = sd)) + facet_wrap(~case)
-sd_per_case_per_it %>%  tidyr::gather("case", "sd", 1:9) %>% ggplot(aes(x = nr_it, y = sd, col = case)) + geom_point() + geom_smooth(se = F)
+sd_per_case_per_it %>%  tidyr::gather("case", "sd", 1:n_cases) %>% ggplot(aes(x = nr_it, y = sd, col = case)) + geom_point() + geom_smooth(se = F)
+
+############# means
+# or with ggplot to put them in 1 plot
+mean_per_case_per_it <-
+  purrr::map(1:n_cases, function(x)
+    purrr::map_dbl(distr, ~ {
+      .$mu[.$case == x]
+    })) %>% as.data.frame() %>% mutate(nr_it = row_number())
+
+colnames(mean_per_case_per_it) <- c(1:n_cases, "nr_it")
+
+#sd_per_case_per_it %>%  tidyr::gather("case", "sd", 1:9) %>% ggplot() + geom_line(aes(x = nr_it, y = sd)) + facet_wrap(~case)
+mean_per_case_per_it %>%  tidyr::gather("case", "mean", 1:n_cases) %>% ggplot(aes(x = nr_it, y = mean, col = case)) + geom_point() + geom_smooth(se = F)
 
 ```
 Bij it 1 is de random component gewoon een groter aandeel. Ookal is het numeriek niet geconv, maar de uitkomst klopt. Nu is het niet geconv, maar op de onzekerheid heeft het geen effect. Maak deze ook voor mu! Nu niet met 9 waarden, maar met de 21 van boys. En met hgt ipv bmi.

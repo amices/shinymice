@@ -7,7 +7,7 @@ library("dplyr")
 library("ggplot2")
 library("ggpubr")
 
-# # if necessary, load results
+# if necessary, load results
 # load("C:/Users/User/Desktop/shinyMice/2.ResearchReport/1.SimulationStudy/Results/full_results.Rdata")
 # results <- dat
 # results_with_CI <- dat #results
@@ -383,7 +383,7 @@ sds_plot
 
 ################################
 
-PCA_plot <- results_with_CI %>% 
+PCA_plot <- results_with_CI %>% #.[-1,] %>%
   ggplot() +
   geom_point(aes(x = T, y = pca.1, color = "1")) +
   geom_point(aes(x = T, y = pca.2, color = "2")) +
@@ -411,7 +411,7 @@ PCA_plot <- results_with_CI %>%
     #legend.position = ""
   )
 
-bias_ests_plot <- results_with_CI %>% 
+bias_ests_plot <- results_with_CI %>% #.[-1,] %>% 
   ggplot() +
   #geom_point(aes(x = T, y = bias.est..Intercept., color = "Intercept")) +
   geom_point(aes(x = T, y = bias.est.X, color = "X")) +

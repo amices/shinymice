@@ -53,7 +53,7 @@ test.impute <- function(true_effect,
   imputed <- mice::complete(impsim, "all") # equal to: map(1:5, ~{impsim %>% mice::complete(., .x)})
   # covs <- map(imputed, ~{cov(.)})
   # mah <- mahalanobis(imputed[[1]], colMeans(imputed[[1]]), covs[[1]])
-  pca <- map_dbl(imputed, ~{princomp(., cor = TRUE)$sdev[1]})
+  pca <- map_dbl(imputed, ~{princomp(., cor = TRUE) %>% loadings() %>% .[1,1]})
   
   # perform analysis
   # # mip <- unlist(pool(with(impsim, lm(Y ~ X + Z1 + Z2))))
