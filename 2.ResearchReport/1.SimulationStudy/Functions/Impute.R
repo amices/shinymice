@@ -24,7 +24,7 @@ test.impute <- function(true_effect,
   # compute convergence diagnostics
   if (maxit < 2) {
     R_mean <- c(rep(NA, 4))
-    names(R_mean) <- c("X", "Z1", "Z2", "Y")
+    names(R_mean) <- c("X1", "X2", "X3", "Y")
     R_var <-
       AC_mean <-
       AC_var <-
@@ -67,7 +67,7 @@ test.impute <- function(true_effect,
   bias_sd <- true_sd - apply(mip, 2, sd)
   
   # compute multivariate diagnostics
-  bias_est <- true_effect - map(imputed, lm, formula = Y~X+Z1+Z2) %>% pool() %>% .$pooled %>% .$estimate #%>% .[2]
+  bias_est <- true_effect - map(imputed, lm, formula = Y~X1+X2+X3) %>% pool() %>% .$pooled %>% .$estimate #%>% .[2]
   
   # bias_est <- pool(with(impsim, lm(Y ~ X + Z1 + Z2)))$pooled$estimate[2] #a <- pool(with(impsim, lm(Y ~ X + Z1 + Z2)))$pooled$estimate[2]
   # est <-  mip # mip$estimate[2] #estimated regression coefficient

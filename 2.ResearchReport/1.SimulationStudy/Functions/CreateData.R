@@ -12,14 +12,14 @@ data.simulation <- function(n = populationsize, true_effect = 2) {
   sigma <- diag(sqrt(vars)) %*% R %*% diag(sqrt(vars)) #variance-covariance matrix
   simdata <-
     as.data.frame(rmvnorm(n = populationsize, mean = means, sigma = sigma)) #create data
-  colnames(simdata) <- c("X", "Z1", "Z2") #set predictors names
+  colnames(simdata) <- c("X1", "X2", "X3") #set predictors names
   
   # compute  outcome variable from predictors
   simdata$Y <-
-    true_effect * simdata$X + 0.5 * simdata$Z1 - 1 * simdata$Z2 + rnorm(n = populationsize, sd = 10)
+    true_effect * simdata$X1 + 0.5 * simdata$X2 - 1 * simdata$X3 + rnorm(n = populationsize, sd = 10)
   
   # estimate comlpete data parameter
-  true_effect <<- lm(Y ~ X + Z1 + Z2, data = simdata)[["coefficients"]]
+  true_effect <<- lm(Y ~ X1 + X2 + X3, data = simdata)[["coefficients"]]
   true_mean <<- apply(simdata, 2, mean)#colMeans(simdata)
   true_sd <<- apply(simdata, 2, sd)
   

@@ -27,8 +27,8 @@ source("2.ResearchReport/1.SimulationStudy/Functions/Impute.R")
 source("2.ResearchReport/1.SimulationStudy/Functions/Evaluate.R")
 
 # simulation parameters
-populationsize <- 1000 #n of simulated dataset
-n.iter <- 20 #nr of iterations (varying 1:n.iter)
+populationsize <- 10000 #n of simulated dataset
+n.iter <- 50 #nr of iterations (varying 1:n.iter)
 n.sim <- 10 #nr of simulations per iteration value
 true_effect <- 2 #regression coefficient to be estimated
 true_mean <- true_sd <- NA
@@ -41,16 +41,18 @@ set.seed(1111)
 # simulate data once
 data <- data.simulation(n = populationsize, true_effect)
 # run ampute once to get patterns object (and )to be able to adjust it for multivariate missingness)
-amp_patterns <- ampute(data)$patterns
+old_amp_patterns <- ampute(data)$patterns
 # for multivariable missingness, uncomment this
-amp_patterns[1:4, 1] <- 0
+# amp_patterns[1:4, 1] <- 0
+amp_patterns <- expand.grid(c(0,1),c(0,1), c(0,1), c(0,1)) %>% .[c(-1, -16),]# %>% unname()
+names(amp_patterns) <- names(old_amp_patterns)
 
 # combine separate functions into wrapper
 simulate <- function(data, n.iter, true_effect, patterns) {
   pb <- txtProgressBar(min = 0, max = n.iter, style = 3)
   
   # remove values at random with 20 percent probability to be missing
-  ampdata <- ampute(data, patterns = amp_patterns, prop = 0.5, mech = "MCAR")$amp
+  ampdata <- ampute(data, patterns = amp_patterns, prop = 0.95, mech = "MCAR")$amp
   
   # object for output
   res <- list()
@@ -94,5 +96,5 @@ results_with_CI <- results %>% left_join(CI_lower, by = "T", suffix = c("", ".LL
 ###
 
 # save for future reference
-save.Rdata(results_with_CI, name = "full_results", path = "2.ResearchReport/1.SimulationStudy/Results")
+#save.Rdata(results_with_CI, name = "full_results", path = "2.ResearchReport/1.SimulationStudy/Results")
 # save.image("environment_full_results.Rdata")

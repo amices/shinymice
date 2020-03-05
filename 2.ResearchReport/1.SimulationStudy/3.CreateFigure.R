@@ -14,24 +14,24 @@ library("ggpubr")
 
 # # create plot for R hat
 # R_plot <- results_with_CI %>% .[-1,] %>%
-#   ggplot(aes(x = T, y = R.var.X, color = "Chain variances")) +
+#   ggplot(aes(x = T, y = R.var.X1, color = "Chain variances")) +
 #   geom_line(linetype = "dashed", size = 1) +
-#   geom_line(aes(x = T, y = R.var.Z1, color = "Chain variances"),
+#   geom_line(aes(x = T, y = R.var.X2, color = "Chain variances"),
 #             linetype = "dashed",
 #             size = 1) +
-#   geom_line(aes(x = T, y = R.var.Z2, color = "Chain variances"),
+#   geom_line(aes(x = T, y = R.var.X3, color = "Chain variances"),
 #             linetype = "dashed",
 #             size = 1) +
 #   geom_line(aes(x = T, y = R.var.Y, color = "Chain variances"),
 #             linetype = "dashed",
 #             size = 1) +
-#   geom_line(aes(x = T, y = R.mean.X, color = "Chain means")) +
-#   geom_line(aes(x = T, y = R.mean.Z1, color = "Chain means")) +
-#   geom_line(aes(x = T, y = R.mean.Z2, color = "Chain means")) +
+#   geom_line(aes(x = T, y = R.mean.X1, color = "Chain means")) +
+#   geom_line(aes(x = T, y = R.mean.X2, color = "Chain means")) +
+#   geom_line(aes(x = T, y = R.mean.X3, color = "Chain means")) +
 #   geom_line(aes(x = T, y = R.mean.Y, color = "Chain means")) +
 #   # # add error bar when `results_withSEs` is used
 #   # geom_errorbar(
-#   #   aes(ymin = R.mean.X_LL, ymax = R.mean.X_UL),
+#   #   aes(ymin = R.mean.X1_LL, ymax = R.mean.X1_UL),
 #   #   width = .2,
 #   #   position = position_dodge(0.05)
 #   # ) +
@@ -55,28 +55,28 @@ library("ggpubr")
 # 
 # # create plot for autocorrelations
 # AC_plot <- results_with_CI %>% .[-1,] %>%
-#   ggplot(aes(x = T, y = AC.var.X, color = "Chain variances")) +
+#   ggplot(aes(x = T, y = AC.var.X1, color = "Chain variances")) +
 #   geom_line(linetype = "dashed", size = 1) +
 #   geom_line(
-#     aes(x = T, y = AC.var.Z1, color = "Chain variances"),
+#     aes(x = T, y = AC.var.X2, color = "Chain variances"),
 #     linetype = "dashed",
 #     size = 1
 #   ) +
 #   geom_line(
-#     aes(x = T, y = AC.var.Z2, color = "Chain variances"),
+#     aes(x = T, y = AC.var.X3, color = "Chain variances"),
 #     linetype = "dashed",
 #     size = 1
 #   ) +
 #   geom_line(aes(x = T, y = AC.var.Y, color = "Chain variances"),
 #             linetype = "dashed",
 #             size = 1) +
-#   geom_line(aes(x = T, y = AC.mean.X, color = "Chain means")) +
-#   geom_line(aes(x = T, y = AC.mean.Z1, color = "Chain means")) +
-#   geom_line(aes(x = T, y = AC.mean.Z2, color = "Chain means")) +
+#   geom_line(aes(x = T, y = AC.mean.X1, color = "Chain means")) +
+#   geom_line(aes(x = T, y = AC.mean.X2, color = "Chain means")) +
+#   geom_line(aes(x = T, y = AC.mean.X3, color = "Chain means")) +
 #   geom_line(aes(x = T, y = AC.mean.Y, color = "Chain means")) +
 #   # # add error bar when `results_withSEs` is used
 #   # geom_errorbar(
-#   #   aes(ymin = AC.mean.X_LL, ymax = AC.mean.X_UL),
+#   #   aes(ymin = AC.mean.X1_LL, ymax = AC.mean.X1_UL),
 #   #   width = .2#,
 #   #   #position = position_dodge(0.05)
 #   # ) +
@@ -215,20 +215,25 @@ library("ggpubr")
 
 ###################
 
-bias_means_plot <- ggplot(results_with_CI, aes(x = T, y = bias.mean.X, color = "X")) +
+bias_means_plot <- ggplot(results_with_CI, aes(x = T, y = bias.mean.X1, color = "X1")) +
   geom_point() +
   geom_smooth(se = F) +
   # geom_errorbar(
-  #   aes(ymin = bias_X_LL, ymax = bias_X_UL),
+  #   aes(ymin = bias_X1_LL, ymax = bias_X1_UL),
   #   width = .2,
   #   colour = "grey"
   # ) +
   geom_point(aes(x = T, y = bias.mean.Y, color = "Y")) +
   geom_smooth(aes(x = T, y = bias.mean.Y, color = "Y"), se = F) +
-  geom_point(aes(x = T, y = bias.mean.Z1, color = "Z1")) +
-  geom_smooth(aes(x = T, y = bias.mean.Z1, color = "Z1"), se = F) +
-  geom_point(aes(x = T, y = bias.mean.Z2, color = "Z2")) +
-  geom_smooth(aes(x = T, y = bias.mean.Z2, color = "Z2"), se = F) +
+  geom_point(aes(x = T, y = bias.mean.X2, color = "X2")) +
+  geom_smooth(aes(x = T, y = bias.mean.X2, color = "X2"), se = F) +
+  geom_point(aes(x = T, y = bias.mean.X3, color = "X3")) +
+  geom_smooth(aes(x = T, y = bias.mean.X3, color = "X3"), se = F) +
+  # geom_errorbar(
+  #       aes(x = T, ymin = bias.mean.Y.LL, ymax = bias.mean.Y.UL),
+  #       width = .2,
+  #       color = "grey"
+  #     ) +
   xlab("") +
   ylab("Bias") +
   ggtitle("Univariate means") + 
@@ -243,14 +248,14 @@ bias_means_plot <- ggplot(results_with_CI, aes(x = T, y = bias.mean.X, color = "
 
 AC_means_plot <- results_with_CI %>% .[-1,] %>%
   ggplot() +
-  geom_point(aes(x = T, y = AC.mean.X, color = "X")) +
+  geom_point(aes(x = T, y = AC.mean.X1, color = "X1")) +
   geom_point(aes(x = T, y = AC.mean.Y, color = "Y")) +
-  geom_point(aes(x = T, y = AC.mean.Z1, color = "Z1")) +
-  geom_point(aes(x = T, y = AC.mean.Z2, color = "Z2")) +
-  geom_smooth(aes(x = T, y = AC.mean.X, color = "X"), se = FALSE) +
+  geom_point(aes(x = T, y = AC.mean.X2, color = "X2")) +
+  geom_point(aes(x = T, y = AC.mean.X3, color = "X3")) +
+  geom_smooth(aes(x = T, y = AC.mean.X1, color = "X1"), se = FALSE) +
   geom_smooth(aes(x = T, y = AC.mean.Y, color = "Y"), se = FALSE) +
-  geom_smooth(aes(x = T, y = AC.mean.Z1, color = "Z1"), se = FALSE) +
-  geom_smooth(aes(x = T, y = AC.mean.Z2, color = "Z2"), se = FALSE) +
+  geom_smooth(aes(x = T, y = AC.mean.X2, color = "X2"), se = FALSE) +
+  geom_smooth(aes(x = T, y = AC.mean.X3, color = "X3"), se = FALSE) +
   xlab("Number of iterations") +
   ylab("Auto-correlation") +
   theme_bw() +
@@ -264,14 +269,14 @@ AC_means_plot <- results_with_CI %>% .[-1,] %>%
 
 R_means_plot <- results_with_CI %>% .[-1,] %>%
   ggplot() +
-  geom_point(aes(x = T, y = R.mean.X, color = "X")) +
+  geom_point(aes(x = T, y = R.mean.X1, color = "X1")) +
   geom_point(aes(x = T, y = R.mean.Y, color = "Y")) +
-  geom_point(aes(x = T, y = R.mean.Z1, color = "Z1")) +
-  geom_point(aes(x = T, y = R.mean.Z2, color = "Z2")) +
-  geom_smooth(aes(x = T, y = R.mean.X, color = "X"), se = FALSE) +
+  geom_point(aes(x = T, y = R.mean.X2, color = "X2")) +
+  geom_point(aes(x = T, y = R.mean.X3, color = "X3")) +
+  geom_smooth(aes(x = T, y = R.mean.X1, color = "X1"), se = FALSE) +
   geom_smooth(aes(x = T, y = R.mean.Y, color = "Y"), se = FALSE) +
-  geom_smooth(aes(x = T, y = R.mean.Z1, color = "Z1"), se = FALSE) +
-  geom_smooth(aes(x = T, y = R.mean.Z2, color = "Z2"), se = FALSE) +
+  geom_smooth(aes(x = T, y = R.mean.X2, color = "X2"), se = FALSE) +
+  geom_smooth(aes(x = T, y = R.mean.X3, color = "X3"), se = FALSE) +
   xlab("") +
   #ylab(expression(paste(widehat(R), " (in chain means)"))) +
   ylab(expression(paste(widehat(R)))) +
@@ -299,20 +304,20 @@ means_plot
 
 #########################
 
-bias_sds_plot <- ggplot(results_with_CI, aes(x = T, y = bias.sd.X, color = "X")) +
+bias_sds_plot <- ggplot(results_with_CI, aes(x = T, y = bias.sd.X1, color = "X1")) +
   geom_point() +
   geom_smooth(se = F) +
   # geom_errorbar(
-  #   aes(ymin = bias_X_LL, ymax = bias_X_UL),
+  #   aes(ymin = bias_X1_LL, ymax = bias_X1_UL),
   #   width = .2,
   #   colour = "grey"
   # ) +
   geom_point(aes(x = T, y = bias.sd.Y, color = "Y")) +
   geom_smooth(aes(x = T, y = bias.sd.Y, color = "Y"), se = F) +
-  geom_point(aes(x = T, y = bias.sd.Z1, color = "Z1")) +
-  geom_smooth(aes(x = T, y = bias.sd.Z1, color = "Z1"), se = F) +
-  geom_point(aes(x = T, y = bias.sd.Z2, color = "Z2")) +
-  geom_smooth(aes(x = T, y = bias.sd.Z2, color = "Z2"), se = F) +
+  geom_point(aes(x = T, y = bias.sd.X2, color = "X2")) +
+  geom_smooth(aes(x = T, y = bias.sd.X2, color = "X2"), se = F) +
+  geom_point(aes(x = T, y = bias.sd.X3, color = "X3")) +
+  geom_smooth(aes(x = T, y = bias.sd.X3, color = "X3"), se = F) +
   xlab("") +
   ylab("Bias") +
   ggtitle("Univariate variances") + 
@@ -327,14 +332,14 @@ bias_sds_plot <- ggplot(results_with_CI, aes(x = T, y = bias.sd.X, color = "X"))
 
 AC_sds_plot <- results_with_CI %>% .[-1,] %>%
   ggplot() +
-  geom_point(aes(x = T, y = AC.var.X, color = "X")) +
+  geom_point(aes(x = T, y = AC.var.X1, color = "X1")) +
   geom_point(aes(x = T, y = AC.var.Y, color = "Y")) +
-  geom_point(aes(x = T, y = AC.var.Z1, color = "Z1")) +
-  geom_point(aes(x = T, y = AC.var.Z2, color = "Z2")) +
-  geom_smooth(aes(x = T, y = AC.var.X, color = "X"), se = FALSE) +
+  geom_point(aes(x = T, y = AC.var.X2, color = "X2")) +
+  geom_point(aes(x = T, y = AC.var.X3, color = "X3")) +
+  geom_smooth(aes(x = T, y = AC.var.X1, color = "X1"), se = FALSE) +
   geom_smooth(aes(x = T, y = AC.var.Y, color = "Y"), se = FALSE) +
-  geom_smooth(aes(x = T, y = AC.var.Z1, color = "Z1"), se = FALSE) +
-  geom_smooth(aes(x = T, y = AC.var.Z2, color = "Z2"), se = FALSE) +
+  geom_smooth(aes(x = T, y = AC.var.X2, color = "X2"), se = FALSE) +
+  geom_smooth(aes(x = T, y = AC.var.X3, color = "X3"), se = FALSE) +
   xlab("Number of iterations") +
   ylab("Auto-correlation") +
   theme_bw() +
@@ -348,14 +353,14 @@ AC_sds_plot <- results_with_CI %>% .[-1,] %>%
 
 R_sds_plot <- results_with_CI %>% .[-1,] %>%
   ggplot() +
-  geom_point(aes(x = T, y = R.var.X, color = "X")) +
+  geom_point(aes(x = T, y = R.var.X1, color = "X1")) +
   geom_point(aes(x = T, y = R.var.Y, color = "Y")) +
-  geom_point(aes(x = T, y = R.var.Z1, color = "Z1")) +
-  geom_point(aes(x = T, y = R.var.Z2, color = "Z2")) +
-  geom_smooth(aes(x = T, y = R.var.X, color = "X"), se = FALSE) +
+  geom_point(aes(x = T, y = R.var.X2, color = "X2")) +
+  geom_point(aes(x = T, y = R.var.X3, color = "X3")) +
+  geom_smooth(aes(x = T, y = R.var.X1, color = "X1"), se = FALSE) +
   geom_smooth(aes(x = T, y = R.var.Y, color = "Y"), se = FALSE) +
-  geom_smooth(aes(x = T, y = R.var.Z1, color = "Z1"), se = FALSE) +
-  geom_smooth(aes(x = T, y = R.var.Z2, color = "Z2"), se = FALSE) +
+  geom_smooth(aes(x = T, y = R.var.X2, color = "X2"), se = FALSE) +
+  geom_smooth(aes(x = T, y = R.var.X3, color = "X3"), se = FALSE) +
   xlab("") +
   #ylab(expression(paste(widehat(R), " (in chain means)"))) +
   ylab(expression(paste(widehat(R)))) +
@@ -385,21 +390,21 @@ sds_plot
 
 PCA_plot <- results_with_CI %>% #.[-1,] %>%
   ggplot() +
-  geom_point(aes(x = T, y = pca.1, color = "1")) +
-  geom_point(aes(x = T, y = pca.2, color = "2")) +
-  geom_point(aes(x = T, y = pca.3, color = "3")) +
-  geom_point(aes(x = T, y = pca.4, color = "4")) +
-  geom_point(aes(x = T, y = pca.5, color = "5")) +
-  # geom_line(aes(x = T, y = pca.1, color = "1")) +
-  # geom_line(aes(x = T, y = pca.2, color = "2")) +
-  # geom_line(aes(x = T, y = pca.3, color = "3")) +
-  # geom_line(aes(x = T, y = pca.4, color = "4")) +
-  # geom_line(aes(x = T, y = pca.5, color = "5")) +
-  geom_smooth(aes(x = T, y = pca.1, color = "1"), se = FALSE) +
-  geom_smooth(aes(x = T, y = pca.2, color = "2"), se = FALSE) +
-  geom_smooth(aes(x = T, y = pca.3, color = "3"), se = FALSE) +
-  geom_smooth(aes(x = T, y = pca.4, color = "4"), se = FALSE) +
-  geom_smooth(aes(x = T, y = pca.5, color = "5"), se = FALSE) +
+  geom_point(aes(x = T, y = pca.1, color = "m1")) +
+  geom_point(aes(x = T, y = pca.2, color = "m2")) +
+  geom_point(aes(x = T, y = pca.3, color = "m3")) +
+  geom_point(aes(x = T, y = pca.4, color = "m4")) +
+  geom_point(aes(x = T, y = pca.5, color = "m5")) +
+  # geom_line(aes(x = T, y = pca.1, color = "m1")) +
+  # geom_line(aes(x = T, y = pca.2, color = "m2")) +
+  # geom_line(aes(x = T, y = pca.3, color = "m3")) +
+  # geom_line(aes(x = T, y = pca.4, color = "m4")) +
+  # geom_line(aes(x = T, y = pca.5, color = "m5")) +
+  geom_smooth(aes(x = T, y = pca.1, color = "m1"), se = FALSE) +
+  geom_smooth(aes(x = T, y = pca.2, color = "m2"), se = FALSE) +
+  geom_smooth(aes(x = T, y = pca.3, color = "m3"), se = FALSE) +
+  geom_smooth(aes(x = T, y = pca.4, color = "m4"), se = FALSE) +
+  geom_smooth(aes(x = T, y = pca.5, color = "m5"), se = FALSE) +
   xlab("Number of iterations") +
   ylab("First PCA component") +
   theme_bw() +
@@ -414,13 +419,18 @@ PCA_plot <- results_with_CI %>% #.[-1,] %>%
 bias_ests_plot <- results_with_CI %>% #.[-1,] %>% 
   ggplot() +
   #geom_point(aes(x = T, y = bias.est..Intercept., color = "Intercept")) +
-  geom_point(aes(x = T, y = bias.est.X, color = "X")) +
-  geom_point(aes(x = T, y = bias.est.Z1, color = "Z1")) +
-  geom_point(aes(x = T, y = bias.est.Z2, color = "Z2")) +
+  geom_point(aes(x = T, y = bias.est.X1, color = "X1")) +
+  geom_point(aes(x = T, y = bias.est.X2, color = "X2")) +
+  geom_point(aes(x = T, y = bias.est.X3, color = "X3")) +
   #geom_smooth(aes(x = T, y = bias.est..Intercept., color = "Intercept"), se = FALSE) +
-  geom_smooth(aes(x = T, y = bias.est.X, color = "X"), se = FALSE) +
-  geom_smooth(aes(x = T, y = bias.est.Z1, color = "Z1"), se = FALSE) +
-  geom_smooth(aes(x = T, y = bias.est.Z2, color = "Z2"), se = FALSE) +
+  geom_smooth(aes(x = T, y = bias.est.X1, color = "X1"), se = FALSE) +
+  geom_smooth(aes(x = T, y = bias.est.X2, color = "X2"), se = FALSE) +
+  geom_smooth(aes(x = T, y = bias.est.X3, color = "X3"), se = FALSE) +
+  # geom_errorbar(
+  #       aes(x = T, ymin = bias.est.X1.LL, ymax = bias.est.X1.UL),
+  #       width = .2,
+  #       color = "grey"
+  #     ) +
   xlab("") +
   ylab("Bias in regression coefficient") +
   ggtitle("Multivariate estimates") +
