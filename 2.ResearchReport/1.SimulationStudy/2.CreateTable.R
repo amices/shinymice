@@ -2,6 +2,9 @@
 # requires the packages "dplyr", "xtable
 # and the object 'results' created with '1. Excecute'
 
+# Creating a conflict because I want to keep the master files of this folder, does this work?
+
+
 # load package
 library("dplyr")
 library("xtable")

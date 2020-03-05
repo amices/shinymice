@@ -1,6 +1,8 @@
 # Compute the maximum auto-correlation at lag 1
 # Used within imputation function
 
+# Creating a conflict because I want to keep the master files of this folder, does this work?
+
 autocorr_function <- function(imp, maxit, m = 5, n.var = 4, moment = "mean"){
   
   # object for for loop

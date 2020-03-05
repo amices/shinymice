@@ -1,6 +1,8 @@
 # Extract aggregated simulation results by averaging over runs
 # requires the packages "purrr" and "data.table"
 
+# Creating a conflict because I want to keep the master files of this folder, does this work?
+
 evaluate.sim <-
   function(sims,
            n.iter,

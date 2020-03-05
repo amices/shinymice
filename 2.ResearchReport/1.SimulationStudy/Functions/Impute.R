@@ -1,6 +1,8 @@
 # Perform mi on mids object with varying maxit values
 # requires the package 'mice' and the function 'get.rhat'
 
+# Creating a conflict because I want to keep the master files of this folder, does this work?
+
 test.impute <- function(true_effect,
                         data,
                         m = 5,

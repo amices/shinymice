@@ -2,6 +2,8 @@
 # Used within imputation function
 # Requires package 'magrittr'/'dplyr', and the functions in Convergence_supplement.R
 
+# Creating a conflict because I want to keep the master files of this folder, does this work?
+
 rhat_function <- function(imp, maxit, n.var = 4, moment = "mean") {
   # extract convergence diagnostic Rhat from mids object
   

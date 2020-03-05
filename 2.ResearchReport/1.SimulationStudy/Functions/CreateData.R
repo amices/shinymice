@@ -1,6 +1,8 @@
 # function to create data and ampute it
 # requires the packages 'mice' and 'mvtnorm'
 
+# Creating a conflict because I want to keep the master files of this folder, does this work?
+
 data.simulation <- function(n = populationsize, true_effect = 2) {
   
   # simulate multivariate normal predictors

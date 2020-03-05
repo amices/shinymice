@@ -1,6 +1,8 @@
 # Supplementary functions for Rhat function (see Convergence.R)
 # To get folded, split-half, rank-normalized Rhat
 
+# Creating a conflict because I want to keep the master files of this folder, does this work?
+
 # fold chains for rhat of tails
 fold_sims <- function(sims) {
   # fold Markov chain for rhat of tails, adapted from rstan
