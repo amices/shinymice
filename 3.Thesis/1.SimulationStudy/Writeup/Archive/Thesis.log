@@ -1,7 +1,7 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.19 (MiKTeX 2.9.6880 64-bit) (preloaded format=pdflatex 2018.12.13)  13 JAN 2020 16:53
+This is pdfTeX, Version 3.14159265-2.6-1.40.19 (MiKTeX 2.9.6880 64-bit) (preloaded format=pdflatex 2018.12.13)  20 JAN 2020 10:50
 entering extended mode
-**./article.tex
-(article.tex
+**./Thesis.tex
+(Thesis.tex
 LaTeX2e <2018-04-01> patch level 5
 (jss.cls
 Document Class: jss 2015/09/01 3.0 jss class by Achim Zeileis
@@ -420,7 +420,7 @@ Package hyperref Info: Option `plainpages' set `false' on input line 466.
 Package: thumbpdf 2018/09/07 v3.17 Inclusion of thumbnails (HO)
 
 
-Package thumbpdf Warning: Thumbnail data file `article.tpt' not found.
+Package thumbpdf Warning: Thumbnail data file `Thesis.tpt' not found.
 
 ) ("C:\Users\User\AppData\Local\Programs\MiKTeX 2.9\tex\latex\lm\lmodern.sty"
 Package: lmodern 2009/10/30 v1.6 Latin Modern Fonts
@@ -516,8 +516,8 @@ LaTeX Font Info:    Redeclaring font encoding OMS on input line 713.
 \mathdisplay@stack=\toks19
 LaTeX Info: Redefining \[ on input line 2817.
 LaTeX Info: Redefining \] on input line 2818.
-) (article.aux)
-\openout1 = `article.aux'.
+) (Thesis.aux)
+\openout1 = `Thesis.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 68.
 LaTeX Font Info:    ... okay on input line 68.
@@ -591,9 +591,9 @@ Package: gettitlestring 2016/05/16 v1.5 Cleanup title references (HO)
 LaTeX Info: Redefining \ref on input line 68.
 LaTeX Info: Redefining \pageref on input line 68.
 LaTeX Info: Redefining \nameref on input line 68.
- (article.out) (article.out)
+ (Thesis.out) (Thesis.out)
 \@outlinefile=\write4
-\openout4 = `article.out'.
+\openout4 = `Thesis.out'.
 
 <jsslogo.jpg, id=71, 540.0175pt x 393.47pt>
 File: jsslogo.jpg Graphic file (type jpg)
@@ -655,6 +655,9 @@ Overfull \hbox (2.39346pt too wide) in paragraph at lines 150--151
  []
 
 
+Underfull \vbox (badness 1490) has occurred while \output is active []
+
+
 Overfull \hbox (5.47499pt too wide) has occurred while \output is active
 [] \T1/lmr/m/n/10.95 3
  []
@@ -669,7 +672,7 @@ Overfull \hbox (5.47499pt too wide) has occurred while \output is active
 \T1/lmr/m/n/10.95 4 []
  []
 
-[4] (article.bbl
+[4] (Thesis.bbl
 Overfull \hbox (5.47499pt too wide) has occurred while \output is active
 [] \T1/lmr/m/n/10.95 5
  []
@@ -690,21 +693,21 @@ Overfull \hbox (5.47499pt too wide) has occurred while \output is active
 
 [7]
 Package atveryend Info: Empty hook `AfterLastShipout' on input line 555.
- (article.aux)
+ (Thesis.aux)
 Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 555.
 Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 555.
-Package rerunfilecheck Info: File `article.out' has not changed.
+Package rerunfilecheck Info: File `Thesis.out' has not changed.
 (rerunfilecheck)             Checksum: 632EF00E51ABCE6EEA1FFF89563DAC08;2190.
 Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 555.
  ) 
 Here is how much of TeX's memory you used:
- 8006 strings out of 492965
- 117880 string characters out of 3126858
- 207883 words of memory out of 3000000
+ 8007 strings out of 492965
+ 117935 string characters out of 3126858
+ 207169 words of memory out of 3000000
  11695 multiletter control sequences out of 15000+200000
  75554 words of font info for 48 fonts, out of 3000000 for 9000
  1141 hyphenation exceptions out of 8191
- 37i,9n,39p,2296b,430s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 37i,9n,39p,2295b,428s stack positions out of 5000i,500n,10000p,200000b,50000s
 {C:/Users/User/AppData/Local/Programs/MiKTeX 2.9/fonts/enc/dvips/lm/lm-rm.enc
 }{C:/Users/User/AppData/Local/Programs/MiKTeX 2.9/fonts/enc/dvips/lm/lm-ec.enc}
 {C:/Users/User/AppData/Local/Programs/MiKTeX 2.9/fonts/enc/dvips/lm/lm-mathex.e
@@ -727,7 +730,7 @@ onts/type1/public/lm/lmri12.pfb><C:/Users/User/AppData/Local/Programs/MiKTeX 2.
 TeX 2.9/fonts/type1/public/lm/lmsy10.pfb><C:/Users/User/AppData/Local/Programs/
 MiKTeX 2.9/fonts/type1/public/lm/lmtt10.pfb><C:/Users/User/AppData/Local/Progra
 ms/MiKTeX 2.9/fonts/type1/urw/zapfchan/uzcmi8a.pfb>
-Output written on article.pdf (7 pages, 343181 bytes).
+Output written on Thesis.pdf (7 pages, 343408 bytes).
 PDF statistics:
  309 PDF objects out of 1000 (max. 8388607)
  59 named destinations out of 1000 (max. 500000)

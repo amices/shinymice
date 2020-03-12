@@ -14,7 +14,11 @@
 
 %% For Sweave-based articles about R packages:
 %% need no \usepackage{Sweave}
-
+\SweaveOpts{engine=R, eps=FALSE, keep.source = TRUE}
+<<preliminaries, echo=FALSE, results=hide>>=
+options(prompt = "R> ", continue = "+  ", width = 70, useFancyQuotes = FALSE)
+library("MASS")
+@
 
 
 %% -- Article metainformation (author, title, ...) -----------------------------
@@ -39,7 +43,7 @@
 
 %% - \Abstract{} almost as usual
 \Abstract{
-  The goal of this Master's thesis was to develop novel methodology and guidelines for evaluating multiple imputation methods, and implement these in an interactive evaluation framework for multiple imputation: \pkg{ShinyMICE}.
+  The goal of this Master's thesis was to develop novel methodology and guidelines for evaluating multiple imputation methods, and implement these in an interactive evaluation framework for multiple imputation: \pkg{ShinyMICE}. Feedback BoS: Good proposal addressing research to develop novel methodology and guidelines for evaluating MI methods, including implementation in an interactive evaluation framework for multiple imputation (R based Shiny Webapp). Pro-tip: organize an UX meeting and contact Evolve-It. 
   }
 
 %% - \Keywords{} with LaTeX markup, at least one required
@@ -390,6 +394,7 @@ Blue points are observed, the red points are imputed.
 %
 % <<data>>=
 % data("quine", package = "MASS")
+@
 %
 % and a basic frequency distribution of the response variable is displayed in
 % Figure~\ref{fig:quine}.
@@ -417,6 +422,7 @@ Blue points are observed, the red points are imputed.
 % axis(1, at = 0:16 * 5, labels = FALSE)
 % axis(1, at = 0:8 * 10)
 % box()
+@
 % \caption{\label{fig:quine} Frequency distribution for number of days absent
 % from school.}
 % \end{figure}
@@ -428,6 +434,7 @@ Blue points are observed, the red points are imputed.
 % <<poisson>>=
 % m_pois <- glm(Days ~ (Eth + Sex + Age + Lrn)^2, data = quine,
 %   family = poisson)
+@
 %
 % To account for potential overdispersion we also consider a negative binomial
 % GLM.
@@ -435,16 +442,19 @@ Blue points are observed, the red points are imputed.
 % <<negbin>>=
 % library("MASS")
 % m_nbin <- glm.nb(Days ~ (Eth + Sex + Age + Lrn)^2, data = quine)
+@
 %
 % In a comparison with the BIC the latter model is clearly preferred.
 % %
 % <<comparison>>=
 % BIC(m_pois, m_nbin)
+@
 % %
 % Hence, the full summary of that model is shown below.
 % %
 % <<summary>>=
 % summary(m_nbin)
+@
 
 
 
@@ -470,7 +480,7 @@ Blue points are observed, the red points are imputed.
 % maps, tables, \dots) that are not cited in the main text can be credited here.
 % \end{leftbar}
 
-The results in this paper were obtained using \proglang{R}~3.6.2 with the \pkg{mice}~3.7.0 package. \proglang{R} itself and all packages used are available from the Comprehensive \proglang{R} Archive Network (CRAN) at \url{https://CRAN.R-project.org/}.
+The results in this paper were obtained using \proglang{R}~\Sexpr{paste(R.Version()[6:7], collapse = ".")} with the \pkg{mice}~\Sexpr{paste(packageVersion("mice"), collapse = ".")} package. \proglang{R} itself and all packages used are available from the Comprehensive \proglang{R} Archive Network (CRAN) at \url{https://CRAN.R-project.org/}.
 
 
 \section*{Acknowledgments}
