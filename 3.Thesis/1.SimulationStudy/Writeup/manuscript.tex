@@ -36,52 +36,12 @@
 \IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
 \IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
 \hypersetup{
-  pdftitle={Manuscript},
+  pdftitle={Missing the Point: Convergence of Multiple Imputation using Chained Equations Algorithms},
   pdfauthor={Hanne Oberman},
   hidelinks,
   pdfcreator={LaTeX via pandoc}}
 \urlstyle{same} % disable monospaced font for URLs
 \usepackage[margin=1in]{geometry}
-\usepackage{color}
-\usepackage{fancyvrb}
-\newcommand{\VerbBar}{|}
-\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
-\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
-% Add ',fontsize=\small' for more characters per line
-\usepackage{framed}
-\definecolor{shadecolor}{RGB}{248,248,248}
-\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
-\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
-\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
-\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
-\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
-\newcommand{\BuiltInTok}[1]{#1}
-\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
-\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
-\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
-\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
-\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
-\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
-\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
-\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
-\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
-\newcommand{\ExtensionTok}[1]{#1}
-\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
-\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
-\newcommand{\ImportTok}[1]{#1}
-\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
-\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
-\newcommand{\NormalTok}[1]{#1}
-\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
-\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
-\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
-\newcommand{\RegionMarkerTok}[1]{#1}
-\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
-\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
-\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
-\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
-\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
-\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
 \usepackage{graphicx,grffile}
 \makeatletter
 \def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
@@ -100,48 +60,149 @@
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
 \setcounter{secnumdepth}{-\maxdimen} % remove section numbering
 
-\title{Manuscript}
+\title{Missing the Point: Convergence of Multiple Imputation using Chained
+Equations Algorithms}
 \author{Hanne Oberman}
 \date{16-3-2020}
 
 \begin{document}
 \maketitle
 
-\hypertarget{r-markdown}{%
-\subsection{R Markdown}\label{r-markdown}}
+\hypertarget{introduction}{%
+\section{Introduction}\label{introduction}}
 
-This is an R Markdown document. Markdown is a simple formatting syntax
-for authoring HTML, PDF, and MS Word documents. For more details on
-using R Markdown see \url{http://rmarkdown.rstudio.com}.
+Feedback:
 
-When you click the \textbf{Knit} button a document will be generated
-that includes both content as well as the output of any embedded R code
-chunks within the document. You can embed an R code chunk like this:
+\begin{itemize}
+\item
+  Focus on convergence, not evaluation of MI in general.
+\item
+  Combine Theoretical Background and Intro.
+\end{itemize}
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{summary}\NormalTok{(cars)}
-\end{Highlighting}
-\end{Shaded}
+At some point, any scientist conducting statistical analyses will run
+into a missing data problem (Allison 2001). Missingness is problematic
+because statistical inference cannot be performed on incomplete data
+without employing \emph{ad hoc} solutions (e.g., list-wise deletion),
+which may yield wildly invalid results (Van Buuren 2018). A popular
+answer to the ubiquitous problem of missing information is to use the
+framework of multiple imputation (MI), proposed by Rubin (1987). MI is
+an iterative algorithmic procedure in which missing datapoints are
+`imputed' (i.e.~filled in) several times. The variability between
+imputations is used to reflect how much uncertainty in the inference is
+introduced by the missingness. Therefore, MI can provide valid
+inferences despite missing information (\textbf{maybe add that this
+refers to CIs/p-values}).
 
-\begin{verbatim}
-##      speed           dist       
-##  Min.   : 4.0   Min.   :  2.00  
-##  1st Qu.:12.0   1st Qu.: 26.00  
-##  Median :15.0   Median : 36.00  
-##  Mean   :15.4   Mean   : 42.98  
-##  3rd Qu.:19.0   3rd Qu.: 56.00  
-##  Max.   :25.0   Max.   :120.00
-\end{verbatim}
+To obtain valid inferences with MI, the variability between imputations
+should be properly represented (Rubin 1987; Van Buuren 2018). If this
+variability is under-estimated, confidence intervals around estimates
+will be too narrow, which can yield spurious results. Over-estimation of
+the variance between imputations results in unnecessarily wide
+confidence intervals, which can be costly because it lowers the
+statistical power (\textbf{maybe add why this is costly}). Since both of
+these situations are undesirable, imputations and their variability
+should be evaluated. Evaluation measures, however, are currently missing
+or under-developed in MI software, like the world-leading \texttt{mice}
+package (Van Buuren and Groothuis-Oudshoorn 2011) in \texttt{R} (R Core
+Team 2019). The goal of this research project is to develop novel
+methodology and guidelines for evaluating MI methods. These tools will
+subsequently be implemented in an interactive evaluation framework for
+multiple imputation, which will aid applied researchers in drawing valid
+inference from incomplete datasets.
 
-\hypertarget{including-plots}{%
-\subsection{Including Plots}\label{including-plots}}
+This note provides the theoretical foundation towards the diagnostic
+evaluation of multiple imputation algorithms. For reasons of brevity, we
+only focus on the MI algorithm implemented in \texttt{mice} (Van Buuren
+and Groothuis-Oudshoorn 2011). The convergence properties of this MI
+algorithm are investigated through model-based simulation.\footnote{All
+  programming code used in this note is available from
+  {[}github.com/gerkovink/shinyMice/simulation{]}\{\url{https://github.com/gerkovink/ShinyMICE/simulation}\}.}
+The results of this simulation study are guidelines for assessing
+convergence of MI algorithms.
 
-You can also embed plots, for example:
+\hypertarget{terminology}{%
+\subsubsection{Terminology}\label{terminology}}
 
-\includegraphics{manuscript_files/figure-latex/pressure-1.pdf}
+This note follows notation and conventions of \texttt{mice} (Van Buuren
+and Groothuis-Oudshoorn 2011). Basic familiarity with MI methodology is
+assumed. For the theoretical foundation of MI, see Rubin (1987). For an
+accessible and comprehensive introduction to MI from an applied
+perspective, see e.g.~Van Buuren (2018).
 
-Note that the \texttt{echo\ =\ FALSE} parameter was added to the code
-chunk to prevent printing of the R code that generated the plot.
+Let \(Y\) denote an \(n \times p\) matrix containing the data values on
+\(p\) variables for all \(n\) units in a sample. The collection of
+observed data values in \(Y\) is denoted by \(Y_{obs}\), and will be
+referred to as `incomplete' or `observed' data. The missing part of
+\(Y\) is denoted by \(Y_{mis}\). Which parts of \(Y\) are missing is
+determined by the `missingness mechanism'.\\
+This note only considers a `missing completely at random' (MCAR)
+mechanism, where the probability of being missing is equal for all
+\(n \times p\) cells in \(Y\) (Rubin 1987).
+
+Figure 1 provides an overview of the steps involved with MI---from
+incomplete data, to \(m\) completed datasets, to \(m\) estimated
+quantities of interest (\(\hat{Q}\)s), to a single pooled estimate
+\(\bar{Q}\). This note focuses on the algorithmic properties of the
+imputation step.
+
+The MI algorithm in \texttt{mice} has an iterative nature. For each
+missing datapoint in \(Y_{mis}\), \(m\) `chains' of potential values are
+sampled. Only the ultimate sample that each chain lands on is imputed.
+The number of iterations per chain will be denoted with \(T\), where
+\(t\) varies over the integers \(1, 2, \dots, T\). This is repeated
+\(m\) times. Imputed values are the ultimate samples of a `chain' of For
+each imputed value (\(t = T\)), a s for each missing datapoint in
+\(Y_{mis}\), . Each of the \(m\) chains starts with an initial value,
+drawn randomly from \(Y_{obs}\). The chains are terminated after a
+predefined number of iterations. , and subsequently used in the analysis
+and pooling steps. The collection of samples between the initial value
+(at \(t=1\)) and the imputed value (at \(t=T\)) will be referred to as
+an `imputation chain'.
+
+\hypertarget{methods}{%
+\section{Methods}\label{methods}}
+
+\hypertarget{results}{%
+\section{Results}\label{results}}
+
+Feedback:
+
+\begin{itemize}
+\item
+  Remove the table.
+\item
+  Add more info about figure legends and axes.
+\end{itemize}
+
+\hypertarget{discussion}{%
+\section{Discussion}\label{discussion}}
+
+\hypertarget{references}{%
+\section*{References}\label{references}}
+\addcontentsline{toc}{section}{References}
+
+\hypertarget{refs}{}
+\leavevmode\hypertarget{ref-alli02}{}%
+Allison, Paul D. 2001. \emph{Missing Data}. Sage publications.
+
+\leavevmode\hypertarget{ref-R}{}%
+R Core Team. 2019. \emph{R: A Language and Environment for Statistical
+Computing}. Vienna, Austria. \url{https://www.R-project.org/}.
+
+\leavevmode\hypertarget{ref-rubin87}{}%
+Rubin, Donald B. 1987. \emph{Multiple Imputation for Nonresponse in
+Surveys}. Wiley Series in Probability and Mathematical Statistics
+Applied Probability and Statistics. New York, NY: Wiley.
+
+\leavevmode\hypertarget{ref-buur18}{}%
+Van Buuren, Stef. 2018. \emph{Flexible Imputation of Missing Data}.
+Chapman; Hall/CRC.
+
+\leavevmode\hypertarget{ref-mice}{}%
+Van Buuren, Stef, and Karin Groothuis-Oudshoorn. 2011. ``Mice:
+Multivariate Imputation by Chained Equations in R.'' \emph{Journal of
+Statistical Software} 45 (1): 1--67.
+\url{https://doi.org/10.18637/jss.v045.i03}.
 
 \end{document}

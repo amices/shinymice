@@ -1,33 +1,63 @@
 ---
-title: "Manuscript"
+title: "Missing the Point: Convergence of Multiple Imputation using Chained Equations Algorithms"
 author: "Hanne Oberman"
 date: "16-3-2020"
 output: 
   pdf_document:
     keep_tex: true
-  
+bibliography: thesis.bib
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## R Markdown
+# Introduction
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+Feedback:
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+- Focus on convergence, not evaluation of MI in general.
 
-```{r cars}
-summary(cars)
-```
+- Combine Theoretical Background and Intro.
 
-## Including Plots
 
-You can also embed plots, for example:
+At some point, any scientist conducting statistical analyses will run into a missing data problem [@alli02]. Missingness is problematic because statistical inference cannot be performed on incomplete data without employing \emph{ad hoc} solutions (e.g., list-wise deletion), which may yield wildly invalid results [@buur18]. A popular answer to the ubiquitous problem of missing information is to use the framework of multiple imputation (MI), proposed by @rubin87. MI is an iterative algorithmic procedure in which missing datapoints are `imputed' (i.e. filled in) several times. The variability between imputations is used to reflect how much uncertainty in the inference is introduced by the missingness. Therefore, MI can provide valid inferences despite missing information (**maybe add that this refers to CIs/p-values**). 
 
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
+To obtain valid inferences with MI, the variability between imputations should be properly represented [@rubin87; @buur18]. If this variability is under-estimated, confidence intervals around estimates will be too narrow, which can yield spurious results. Over-estimation of the variance between imputations results in unnecessarily wide confidence intervals, which can be costly because it lowers the statistical power (**maybe add why this is costly**). Since both of these situations are undesirable, imputations and their variability should be evaluated. Evaluation measures, however, are currently missing or under-developed in MI software, like the world-leading `mice` package [@mice] in `R` [@R]. 
+The goal of this research project is to develop novel methodology and guidelines for evaluating MI methods. These tools will subsequently be implemented in an interactive evaluation framework for multiple imputation, which will aid applied researchers in drawing valid inference from incomplete datasets. 
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+This note provides the theoretical foundation towards the diagnostic evaluation of multiple imputation algorithms. For reasons of brevity, we only focus on the MI algorithm implemented in `mice` [@mice]. The convergence properties of this MI algorithm are investigated through model-based simulation [^1]. The results of this simulation study are guidelines for assessing convergence of MI algorithms. 
+<!-- These guidelines will be implemented in an interactive evaluation tool for `mice`, 'ShinyMICE', which is currently under development. We will evaluate how convergence of the MI algorithm can be diagnosed. -->
+
+[^1]: All programming code used in this note is available from [github.com/gerkovink/shinyMice/simulation]{https://github.com/gerkovink/ShinyMICE/simulation}.
+
+### Terminology
+
+<!-- The intended audience of this note consists of anyone who uses multiple imputation to solve missing data problem.  -->
+This note follows notation and conventions of `mice` [@mice]. 
+<!-- Deviations from the 'original' notation by @rubin87 are described in [@buur18, \S~2.2.3].  -->
+Basic familiarity with MI methodology is assumed. For the theoretical foundation of MI, see @rubin87. For an accessible and comprehensive introduction to MI from an applied perspective, see e.g. @buur18. 
+
+Let $Y$ denote an $n \times p$ matrix containing the data values on $p$ variables for all $n$ units in a sample. The collection of observed data values in $Y$ is denoted by $Y_{obs}$, and will be referred to as 'incomplete' or 'observed' data. The missing part of $Y$ is denoted by $Y_{mis}$. Which parts of $Y$ are missing is determined by the `missingness mechanism'.  
+This note only considers a 'missing completely at random' (MCAR) mechanism, where the probability of being missing is equal for all $n \times p$ cells in $Y$ [@rubin87].
+
+Figure 1 provides an overview of the steps involved with MI---from incomplete data, to $m$ completed datasets, to $m$ estimated quantities of interest ($\hat{Q}$s), to a single pooled estimate $\bar{Q}$.
+This note focuses on the algorithmic properties of the imputation step. 
+
+The MI algorithm in `mice` has an iterative nature. For each missing datapoint in $Y_{mis}$, $m$ 'chains' of potential values are sampled. Only the ultimate sample that each chain lands on is imputed. The number of iterations per chain will be denoted with $T$, where $t$ varies over the integers $1, 2, \dots, T$.  This is repeated $m$ times. Imputed values are the ultimate samples of a `chain' of For each imputed value ($t = T$), a s for each missing datapoint in $Y_{mis}$, . Each of the $m$ chains starts with an initial value, drawn randomly from $Y_{obs}$. The chains are terminated after a predefined number of iterations. , and subsequently used in the analysis and pooling steps. 
+The collection of samples between the initial value (at $t=1$) and the imputed value (at $t=T$) will be referred to as an 'imputation chain'. 
+
+# Methods
+
+
+# Results
+
+Feedback:
+
+- Remove the table.
+
+- Add more info about figure legends and axes.
+
+# Discussion
+
+# References
