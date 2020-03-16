@@ -17,19 +17,19 @@ library(tidyverse)
 # library(tibble)
 
 # load simulation/evaluation functions
-source("2.ResearchReport/1.SimulationStudy/Functions/CreateData.R")
-source("2.ResearchReport/1.SimulationStudy/Functions/Convergence.R")
-source("2.ResearchReport/1.SimulationStudy/Functions/Convergence_supplement.R")
-source("2.ResearchReport/1.SimulationStudy/Functions/Between.R")
-source("2.ResearchReport/1.SimulationStudy/Functions/Within.R")
-source("2.ResearchReport/1.SimulationStudy/Functions/Autocorrelation.R")
-source("2.ResearchReport/1.SimulationStudy/Functions/Impute.R")
-source("2.ResearchReport/1.SimulationStudy/Functions/Evaluate.R")
+source("3.Thesis/1.SimulationStudy/Functions/CreateData.R")
+source("3.Thesis/1.SimulationStudy/Functions/Convergence.R")
+source("3.Thesis/1.SimulationStudy/Functions/Convergence_supplement.R")
+source("3.Thesis/1.SimulationStudy/Functions/Between.R")
+source("3.Thesis/1.SimulationStudy/Functions/Within.R")
+source("3.Thesis/1.SimulationStudy/Functions/Autocorrelation.R")
+source("3.Thesis/1.SimulationStudy/Functions/Impute.R")
+source("3.Thesis/1.SimulationStudy/Functions/Evaluate.R")
 
 # simulation parameters
 populationsize <- 10000 #n of simulated dataset
-n.iter <- 50 #nr of iterations (varying 1:n.iter)
-n.sim <- 10 #nr of simulations per iteration value
+n.iter <- 30 #nr of iterations (varying 1:n.iter)
+n.sim <- 20 #nr of simulations per iteration value
 true_effect <- 2 #regression coefficient to be estimated
 true_mean <- true_sd <- NA
 

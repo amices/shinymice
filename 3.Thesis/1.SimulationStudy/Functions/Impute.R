@@ -68,6 +68,24 @@ test.impute <- function(true_effect,
   
   # compute multivariate diagnostics
   bias_est <- true_effect - map(imputed, lm, formula = Y~X1+X2+X3) %>% pool() %>% .$pooled %>% .$estimate #%>% .[2]
+  #predicted_Y <- map(imputed, ~{true_effect[1] + true_effect["X1"] * .$X1 })
+  # bias_pred <- 1
+  # vars <- names(data)
+  R_sq <- lm.mids(Y~X1+X2+X3, impsim) %>% pool.r.squared() %>% .[1]
+  RMSE <- lm.mids(Y~X1+X2+X3, impsim) %>% .$analyses %>% map_dbl(., function(x){x$residuals %>% .^2 %>% mean() %>%  sqrt()})
+  MAE <- lm.mids(Y~X1+X2+X3, impsim) %>% .$analyses %>% map_dbl(., function(x){x$residuals %>% abs() %>% mean()})
+  error_var <- lm.mids(Y~X1+X2+X3, impsim) %>% .$analyses %>% map_dbl(., function(x){x$residuals %>% var()})
+  
+  # bias in pred is aggr measure
+  # bias variance of pred is R2 so bias in R2 summarises it quite nicely. so sq of correlation
+  # cell 1 and pred f cell 1: average absolute bias, mean abs error MEE (mean over errors)
+  # R2 is similarity in sign and effect 
+  # R2 is a nice measure with fisher trans first, then combine then combine, and transform again
+  # like RMSE R2 tells you how wrong you are and some info about spread.
+  # variance in pred vector 
+  # variance of the MAE and its variance is separate instead of seesaw
+  # MAE and variance is "I'm wrong on average, but if I have extremes I am far more wrong on"
+  # just compute all 4
   
   # bias_est <- pool(with(impsim, lm(Y ~ X + Z1 + Z2)))$pooled$estimate[2] #a <- pool(with(impsim, lm(Y ~ X + Z1 + Z2)))$pooled$estimate[2]
   # est <-  mip # mip$estimate[2] #estimated regression coefficient
@@ -89,7 +107,12 @@ test.impute <- function(true_effect,
     R.var = t(R_var),
     AC.var = t(AC_var),
     pca = t(pca),
-    bias.est = t(bias_est)
+    bias.est = t(bias_est),
+    R.sq = R_sq,
+    RMSE = t(RMSE),
+    MAE = t(MAE),
+    error.var = t(error_var)
+    
   )) #data.frame(a = t(a), bias  =t(bias))
   #   # bias = bias,
   #   # CIW = CIW,

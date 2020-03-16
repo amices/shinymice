@@ -443,9 +443,11 @@ bias_ests_plot <- results_with_CI %>% #.[-1,] %>%
     #legend.position = ""
   )
 
+
 ests_plot <-
   ggarrange(
     bias_ests_plot,
+    #R_sq_plot,
     PCA_plot,
     ncol = 1,
     nrow = 2,
@@ -454,3 +456,109 @@ ests_plot <-
 
 # print figure
 ests_plot
+
+####################################################################
+
+# prediction
+
+R_sq_plot <- results_with_CI %>% #.[-1,] %>% 
+  ggplot() +
+  geom_point(aes(x = T, y = R.sq, color = "R^2")) +
+  geom_smooth(aes(x = T, y = R.sq, color = "R^2"), se = FALSE) +
+  xlab("") +
+  ylab("Explained variance") +
+  #ggtitle("Multivariate estimates") +
+  theme_bw() +
+  theme(
+    panel.border = element_blank(),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    axis.line = element_line(colour = "black") #,
+    #legend.position = ""
+  )
+
+RMSE_plot <- results_with_CI %>% #.[-1,] %>% 
+  ggplot() +
+  geom_point(aes(x = T, y = RMSE.1, color = "m1")) +
+  geom_point(aes(x = T, y = RMSE.2, color = "m2")) +
+  geom_point(aes(x = T, y = RMSE.3, color = "m3")) +
+  geom_point(aes(x = T, y = RMSE.4, color = "m4")) +
+  geom_point(aes(x = T, y = RMSE.5, color = "m5")) +
+  geom_smooth(aes(x = T, y = RMSE.1, color = "m1"), se = FALSE) +
+  geom_smooth(aes(x = T, y = RMSE.2, color = "m2"), se = FALSE) +
+  geom_smooth(aes(x = T, y = RMSE.3, color = "m3"), se = FALSE) +
+  geom_smooth(aes(x = T, y = RMSE.4, color = "m4"), se = FALSE) +
+  geom_smooth(aes(x = T, y = RMSE.5, color = "m5"), se = FALSE) +
+  xlab("") +
+  ylab("Root mean squared error") +
+  #ggtitle("Multivariate estimates") +
+  theme_bw() +
+  theme(
+    panel.border = element_blank(),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    axis.line = element_line(colour = "black") #,
+    #legend.position = ""
+  )
+
+MAE_plot <- results_with_CI %>% #.[-1,] %>% 
+  ggplot() +
+  geom_point(aes(x = T, y = MAE.1, color = "m1")) +
+  geom_point(aes(x = T, y = MAE.2, color = "m2")) +
+  geom_point(aes(x = T, y = MAE.3, color = "m3")) +
+  geom_point(aes(x = T, y = MAE.4, color = "m4")) +
+  geom_point(aes(x = T, y = MAE.5, color = "m5")) +
+  geom_smooth(aes(x = T, y = MAE.1, color = "m1"), se = FALSE) +
+  geom_smooth(aes(x = T, y = MAE.2, color = "m2"), se = FALSE) +
+  geom_smooth(aes(x = T, y = MAE.3, color = "m3"), se = FALSE) +
+  geom_smooth(aes(x = T, y = MAE.4, color = "m4"), se = FALSE) +
+  geom_smooth(aes(x = T, y = MAE.5, color = "m5"), se = FALSE) +
+  xlab("") +
+  ylab("Mean absolute error") +
+  #ggtitle("Multivariate estimates") +
+  theme_bw() +
+  theme(
+    panel.border = element_blank(),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    axis.line = element_line(colour = "black") #,
+    #legend.position = ""
+  )
+
+err_plot <- results_with_CI %>% #.[-1,] %>% 
+  ggplot() +
+  geom_point(aes(x = T, y = error.var.1, color = "m1")) +
+  geom_point(aes(x = T, y = error.var.2, color = "m2")) +
+  geom_point(aes(x = T, y = error.var.3, color = "m3")) +
+  geom_point(aes(x = T, y = error.var.4, color = "m4")) +
+  geom_point(aes(x = T, y = error.var.5, color = "m5")) +
+  geom_smooth(aes(x = T, y = error.var.1, color = "m1"), se = FALSE) +
+  geom_smooth(aes(x = T, y = error.var.2, color = "m2"), se = FALSE) +
+  geom_smooth(aes(x = T, y = error.var.3, color = "m3"), se = FALSE) +
+  geom_smooth(aes(x = T, y = error.var.4, color = "m4"), se = FALSE) +
+  geom_smooth(aes(x = T, y = error.var.5, color = "m5"), se = FALSE) +
+  xlab("") +
+  ylab("Error variance") +
+  #ggtitle("Multivariate estimates") +
+  theme_bw() +
+  theme(
+    panel.border = element_blank(),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    axis.line = element_line(colour = "black") #,
+    #legend.position = ""
+  )
+
+pred_plot <-
+  ggarrange(
+    R_sq_plot,
+    RMSE_plot,
+    MAE_plot,
+    err_plot,
+    ncol = 1,
+    nrow = 4,
+    align = "v"
+  )
+
+# print figure
+pred_plot
