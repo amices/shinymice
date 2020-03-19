@@ -160,6 +160,13 @@ algorithm are investigated through model-based simulation.\footnote{All
 The results of this simulation study are guidelines for assessing
 convergence of MI algorithms.
 
+Add: MICE is an MCMC method, and convergence of MCMC is not from scalar
+to a point, but from one distribution to another. Generated values will
+vary even after convergence.
+
+``a weak diagnostics is better than no diagnostic at all'' (Cowles and
+Carlin 1996).
+
 \hypertarget{terminology}{%
 \subsubsection{Terminology}\label{terminology}}
 
@@ -258,7 +265,6 @@ average these to obtain within-chain variance \(W\).
 
 \begin{align*}
 W&=\frac{1}{M} \sum_{m=1}^{M} s_{j}^{2},  \text { where } s_{m}^{2}=\frac{1}{T-1} \sum_{t=1}^{T}\left(\theta^{(t m)}-\bar{\theta}^{(\cdot m)}\right)^{2}. 
-<!-- %\text{ \cite[p.~5]{veht19}}  -->
 \end{align*}
 
 We then estimate between-chain variance \(B\) as the variance of the
@@ -266,7 +272,6 @@ collection of average \(\theta\) per chain.
 
 \begin{align*}
 B&=\frac{T}{M-1} \sum_{m=1}^{M}\left(\bar{\theta}^{(\cdot m)}-\bar{\theta}^{(\cdot \cdot)}\right)^{2}, \text { where } \bar{\theta}^{(\cdot m)}=\frac{1}{T} \sum_{t=1}^{T} \theta^{(t m)}, \quad \bar{\theta}^{(\cdot \cdot)}=\frac{1}{M} \sum_{m=1}^{M} \bar{\theta}^{(\cdot m)}. 
-<!-- %\text{ \cite[p.~5]{veht19}}  -->
 \end{align*}
 
 From the between- and within-chain variances we compute a weighted

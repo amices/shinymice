@@ -87,6 +87,10 @@ test.impute <- function(true_effect,
   # MAE and variance is "I'm wrong on average, but if I have extremes I am far more wrong on"
   # just compute all 4
   
+  # var over 20 sims is sampling verd over MAE
+  # bij weinig it zouen we hogere var van MAE verwachten 
+  
+  
   # bias_est <- pool(with(impsim, lm(Y ~ X + Z1 + Z2)))$pooled$estimate[2] #a <- pool(with(impsim, lm(Y ~ X + Z1 + Z2)))$pooled$estimate[2]
   # est <-  mip # mip$estimate[2] #estimated regression coefficient
   # bias <- est - true_effect #bias

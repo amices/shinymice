@@ -33,6 +33,11 @@ This note provides the theoretical foundation towards the diagnostic evaluation 
 
 [^1]: All programming code used in this note is available from [github.com/gerkovink/shinyMice](https://github.com/gerkovink/shinyMice/tree/master/3.Thesis/1.SimulationStudy).
 
+
+Add: MICE is an MCMC method, and convergence of MCMC is not from scalar to a point, but from one distribution to another. Generated values will vary even after convergence.
+
+"a weak diagnostics is better than no diagnostic at all" [@cowl96]. 
+
 ### Terminology
 
 <!-- The intended audience of this note consists of anyone who uses multiple imputation to solve missing data problem.  -->
@@ -67,15 +72,15 @@ To define $\widehat{R}$, we follow notation by [@veht19, p.~5]. Let $M$ be the t
 
 \begin{align*}
 W&=\frac{1}{M} \sum_{m=1}^{M} s_{j}^{2},  \text { where } s_{m}^{2}=\frac{1}{T-1} \sum_{t=1}^{T}\left(\theta^{(t m)}-\bar{\theta}^{(\cdot m)}\right)^{2}. 
-<!-- %\text{ \cite[p.~5]{veht19}}  -->
 \end{align*}
+<!-- %\text{ \cite[p.~5]{veht19}}  -->
 
 We then estimate between-chain variance $B$ as the variance of the collection of average $\theta$ per chain.
 
 \begin{align*}
 B&=\frac{T}{M-1} \sum_{m=1}^{M}\left(\bar{\theta}^{(\cdot m)}-\bar{\theta}^{(\cdot \cdot)}\right)^{2}, \text { where } \bar{\theta}^{(\cdot m)}=\frac{1}{T} \sum_{t=1}^{T} \theta^{(t m)}, \quad \bar{\theta}^{(\cdot \cdot)}=\frac{1}{M} \sum_{m=1}^{M} \bar{\theta}^{(\cdot m)}. 
-<!-- %\text{ \cite[p.~5]{veht19}}  -->
 \end{align*}
+<!-- %\text{ \cite[p.~5]{veht19}}  -->
 
 From the between- and within-chain variances we compute a weighted average, $\widehat{\operatorname{var}}^{+}$, which over-estimates the total variance of $\theta$. $\widehat{R}$ is then obtained as a ratio between the over-estimated total variance and the within-chain variance:
 

@@ -96,5 +96,5 @@ results_with_CI <- results %>% left_join(CI_lower, by = "T", suffix = c("", ".LL
 ###
 
 # save for future reference
-#save.Rdata(results_with_CI, name = "full_results", path = "2.ResearchReport/1.SimulationStudy/Results")
+save.Rdata(results_with_CI, name = "results", path = "3.Thesis/1.SimulationStudy/Results")
 # save.image("environment_full_results.Rdata")

@@ -463,7 +463,9 @@ ests_plot
 
 R_sq_plot <- results_with_CI %>% #.[-1,] %>% 
   ggplot() +
+  geom_hline(yintercept = 0.2062, color = "grey", lwd = 2) +
   geom_point(aes(x = T, y = R.sq, color = "R^2")) +
+  geom_line(aes(x = T, y = R.sq, color = "R^2")) +
   geom_smooth(aes(x = T, y = R.sq, color = "R^2"), se = FALSE) +
   xlab("") +
   ylab("Explained variance") +
@@ -513,6 +515,11 @@ MAE_plot <- results_with_CI %>% #.[-1,] %>%
   geom_smooth(aes(x = T, y = MAE.3, color = "m3"), se = FALSE) +
   geom_smooth(aes(x = T, y = MAE.4, color = "m4"), se = FALSE) +
   geom_smooth(aes(x = T, y = MAE.5, color = "m5"), se = FALSE) +
+  geom_errorbar(
+        aes(x = T, ymin = MAE.1.LL, ymax = MAE.1.UL),
+        width = .2,
+        color = "grey"
+      ) +
   xlab("") +
   ylab("Mean absolute error") +
   #ggtitle("Multivariate estimates") +
