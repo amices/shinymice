@@ -97,7 +97,7 @@
 \setlength{\emergencystretch}{3em} % prevent overfull lines
 \providecommand{\tightlist}{%
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
-\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\setcounter{secnumdepth}{5}
 
 \title{Missing the Point: Convergence of Multiple Imputation using Chained
 Equations Algorithms}
@@ -107,17 +107,8 @@ Equations Algorithms}
 \begin{document}
 \maketitle
 
-\hypertarget{background}{%
-\section{Background}\label{background}}
-
-Feedback:
-
-\begin{itemize}
-\item
-  Focus on convergence, not evaluation of MI in general.
-\item
-  Combine Theoretical Background and Intro.
-\end{itemize}
+\hypertarget{introduction}{%
+\section{Introduction}\label{introduction}}
 
 At some point, any scientist conducting statistical analyses will run
 into a missing data problem (Allison 2001). Missingness is problematic
@@ -125,56 +116,63 @@ because statistical inference cannot be performed on incomplete data
 without employing \emph{ad hoc} solutions (e.g., list-wise deletion),
 which may yield wildly invalid results (Van Buuren 2018). A popular
 answer to the ubiquitous problem of missing information is to use the
-framework of multiple imputation (MI), proposed by Rubin (1987). MI is
-an iterative algorithmic procedure in which missing datapoints are
-`imputed' (i.e.~filled in) several times. The variability between
-imputations is used to reflect how much uncertainty in the inference is
-introduced by the missingness. Therefore, MI can provide valid
-inferences despite missing information (\textbf{maybe add that this
-refers to CIs/p-values}).
+framework of multiple imputation (MI), proposed by Rubin (1987). For the
+theoretical foundation of MI, see Rubin (1987). For an accessible and
+comprehensive introduction to MI from an applied perspective, see
+e.g.~Van Buuren (2018). With MI, missing datapoints are `imputed' (i.e.,
+filled in) via an \emph{imputation model}. The imputation model can be a
+joint model for all variables, or several univariate conditional
+distributions (fully conditional specification). FCS is more flexible
+and ``avoids the problem of specifying an appropriate joint imputation
+distribution and replaces this by the selection of appropriate
+univariate conditional distributions''. With FCS, an iterative
+algorithmic procedure is used to \ldots{} multiple imputation using
+chained equations \ldots{} ``The values for imputing the missing data
+are drawn from the posterior predictive distribution of the missing data
+conditional on the observed data.'' There is no scientific consensus on
+the convergence properties of FCS algorithms (Takahashi 2017). Some
+default techniques in \texttt{mice} might not yield converged states at
+all (Murray 2018). Therefore, algorithmic convergence should be
+monitored carefully.
 
-To obtain valid inferences with MI, the variability between imputations
-should be properly represented (Rubin 1987; Van Buuren 2018). If this
-variability is under-estimated, confidence intervals around estimates
-will be too narrow, which can yield spurious results. Over-estimation of
-the variance between imputations results in unnecessarily wide
-confidence intervals, which can be costly because it lowers the
-statistical power (\textbf{maybe add why this is costly}). Since both of
-these situations are undesirable, imputations and their variability
-should be evaluated. Evaluation measures, however, are currently missing
-or under-developed in MI software, like the world-leading \texttt{mice}
-package (Van Buuren and Groothuis-Oudshoorn 2011) in \texttt{R} (R Core
-Team 2019). The goal of this research project is to develop novel
-methodology and guidelines for evaluating MI methods. These tools will
-subsequently be implemented in an interactive evaluation framework for
-multiple imputation, which will aid applied researchers in drawing valid
-inference from incomplete datasets.
+Current practice is visually inspecting imputation chains for signs of
+non-convergence, but may be challenging to the untrained eye (Van Buuren
+2018, \textasciitilde6.5.2). Therefore diagnostic evaluation of
+convergence would be preferred. However, not known whether MCMC
+diagnostics are appropriate for MICE \ldots{} The application of
+convergence diagnostics to MI methods has not been systematically
+studied (Van Buuren 2018). How can non-convergence be diagnosed? How
+many iterations are sufficient/required? What are the effects of
+non-convergence on estimates, predictions and inference? What is an
+appropriate non-convergence diagnostic? Are the default number of
+iterations sufficient?
 
-This note provides the theoretical foundation towards the diagnostic
-evaluation of multiple imputation algorithms. For reasons of brevity, we
-only focus on the MI algorithm implemented in \texttt{mice} (Van Buuren
-and Groothuis-Oudshoorn 2011). The convergence properties of this MI
-algorithm are investigated through model-based simulation.\footnote{All
-  programming code used in this note is available from
-  \href{https://github.com/gerkovink/shinyMice/tree/master/3.Thesis/1.SimulationStudy}{github.com/gerkovink/shinyMice}.}
-The results of this simulation study are guidelines for assessing
-convergence of MI algorithms.
+Convergence cannot be determined for sure, because MICE is an MCMC
+method, and convergence of MCMC is not from scalar to a point, but from
+one distribution to another. Generated values will vary even after
+convergence. Therefore we can only diagnose non-convergence, not
+convergence (Hoff 2009). ``a weak diagnostics is better than no
+diagnostic at all'' (Cowles and Carlin 1996).
 
-Add: MICE is an MCMC method, and convergence of MCMC is not from scalar
-to a point, but from one distribution to another. Generated values will
-vary even after convergence.
+Defaults is: SPSS (10;
+\url{https://www.ibm.com/support/knowledgecenter/SSLVMB_24.0.0/spss/mva/syn_multiple_imputation_impute.html}),
+Mplus (100??;
+\url{https://pdfs.semanticscholar.org/e20e/29e008592cbfbaa567931f74cdfdb5451405.pdf?_ga=2.55354671.54033656.1584698748-527613517.1584698748}),
+Stata (10; \url{https://www.stata.com/manuals13/mi.pdf}, p.~139), Amelia
+(NA, because resampling, not convergence;
+\url{https://cran.r-project.org/web/packages/Amelia/Amelia.pdf}), en MI
+(30; \url{https://cran.r-project.org/web/packages/mi/mi.pdf}).
 
-``a weak diagnostics is better than no diagnostic at all'' (Cowles and
-Carlin 1996).
+For reasons of brevity, we only focus on the MI algorithm implemented in
+the world-leading MI software: the \texttt{R} (R Core Team 2019) package
+\texttt{mice} (Van Buuren and Groothuis-Oudshoorn 2011). The convergence
+properties of this MI algorithm are investigated through model-based
+simulation. The results of this simulation study are guidelines for
+assessing convergence of MI algorithms, which will aid applied
+researchers in drawing valid inference from incomplete datasets.
 
 \hypertarget{terminology}{%
-\subsubsection{Terminology}\label{terminology}}
-
-This note follows notation and conventions of \texttt{mice} (Van Buuren
-and Groothuis-Oudshoorn 2011). Basic familiarity with MI methodology is
-assumed. For the theoretical foundation of MI, see Rubin (1987). For an
-accessible and comprehensive introduction to MI from an applied
-perspective, see e.g.~Van Buuren (2018).
+\subsection{Terminology}\label{terminology}}
 
 Let \(Y\) denote an \(n \times p\) matrix containing the data values on
 \(p\) variables for all \(n\) units in a sample. The collection of
@@ -206,25 +204,13 @@ and pooling steps. The collection of samples between the initial value
 (at \(t=1\)) and the imputed value (at \(t=T\)) will be referred to as
 an `imputation chain'.
 
-\hypertarget{theoretical-background}{%
-\subsubsection{Theoretical Background}\label{theoretical-background}}
+\hypertarget{convergence-diagnostics}{%
+\section{Convergence diagnostics}\label{convergence-diagnostics}}
 
-There is no scientific consensus on the convergence properties of
-multiple imputation algorithms (Takahashi 2017). Some default techniques
-in \texttt{mice} might not yield converged states at all (Murray 2018).
-Therefore, algorithmic convergence should be monitored carefully. The
-diagnostic evaluation of convergence is preferred over the current
-practice---visually inspecting imputation chains for signs of
-non-convergence---since the latter may be challenging to the untrained
-eye (Van Buuren 2018, \textasciitilde6.5.2).
-
-The application of convergence diagnostics to MI methods has not been
-systematically studied (Van Buuren 2018). The measures that are
-available for diagnosing convergence of iterative algorithmic procedures
-(Markov chain Monte Carlo methods; e.g., \texttt{mice} algorithms or
-Gibbs samplers) generally evaluate signs of non-convergence (Hoff 2009).
-Non-convergence may be present as non-stationarity within chains (i.e.,
-trending), or as slow mixing between chains (i.e., no intermingling).
+In iterative algorithmic procedures (Markov chain Monte Carlo methods;
+e.g., \texttt{mice} algorithms or Gibbs samplers) non-convergence may be
+present as non-stationarity within chains (i.e., trending), or as slow
+mixing between chains (i.e., no intermingling).
 
 The stationarity component of convergence may be evaluated with
 autocorrelation (\(AC\); Schafer 1997; Gelman et al. 2013), numeric
@@ -329,7 +315,7 @@ intermingle such that the only difference between the chains is caused
 by the randomness induced by the algorithm (\(\widehat{R} = 1\)).
 
 \hypertarget{simulation-hypothesis}{%
-\subsubsection{Simulation Hypothesis}\label{simulation-hypothesis}}
+\subsection{Simulation Hypothesis}\label{simulation-hypothesis}}
 
 This study evaluates whether \(\widehat{R}\) and \(AC\) could diagnose
 convergence of multiple imputation algorithms. We assess the performance
@@ -357,8 +343,8 @@ over-dispersed. We expect this to have little effect on the hypothesized
 performance of \(\widehat{R}\). No hypothesis was formulated about the
 performance of \(AC\) as convergence diagnostic.
 
-\hypertarget{methods}{%
-\section{Methods}\label{methods}}
+\hypertarget{simulation-study}{%
+\section{Simulation study}\label{simulation-study}}
 
 We use model-based simulation in \texttt{R} to perform multiple
 imputation under 100 simulation conditions. In each condition, the MI
@@ -488,8 +474,9 @@ Feedback:
 Figures 2 and 3 display results per simulation condition
 (\(T = 1,2,\dots,100\)).
 
-\hypertarget{convergence-diagnostics}{%
-\subsubsection{Convergence Diagnostics}\label{convergence-diagnostics}}
+\hypertarget{convergence-diagnostics-1}{%
+\subsubsection{Convergence
+Diagnostics}\label{convergence-diagnostics-1}}
 
 It is apparent that there is a relation between the number of iterations
 per simulation condition (\(T\)) and the convergence diagnostics.

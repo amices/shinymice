@@ -29,7 +29,7 @@ source("3.Thesis/1.SimulationStudy/Functions/Evaluate.R")
 # simulation parameters
 populationsize <- 10000 #n of simulated dataset
 n.iter <- 30 #nr of iterations (varying 1:n.iter)
-n.sim <- 20 #nr of simulations per iteration value
+n.sim <- 2 #nr of simulations per iteration value
 true_effect <- 2 #regression coefficient to be estimated
 true_mean <- true_sd <- NA
 
@@ -40,12 +40,10 @@ set.seed(1111)
 
 # simulate data once
 data <- data.simulation(n = populationsize, true_effect)
-# run ampute once to get patterns object (and )to be able to adjust it for multivariate missingness)
-old_amp_patterns <- ampute(data)$patterns
-# for multivariable missingness, uncomment this
-# amp_patterns[1:4, 1] <- 0
-amp_patterns <- expand.grid(c(0,1),c(0,1), c(0,1), c(0,1)) %>% .[c(-1, -16),]# %>% unname()
-names(amp_patterns) <- names(old_amp_patterns)
+
+# create patterns object with multivariate missingness
+amp_patterns <- expand.grid(c(0,1),c(0,1), c(0,1), c(0,1)) %>% .[c(-1, -16),]
+names(amp_patterns) <- ampute(data)$patterns %>% names()
 
 # combine separate functions into wrapper
 simulate <- function(data, n.iter, true_effect, patterns) {
@@ -76,25 +74,19 @@ out <- replicate(n.sim, simulate(data = data, n.iter = n.iter, true_effect = tru
 
 # evaluate
 results <- evaluate.sim(sims = out, n.iter = n.iter)
-# uncomment for MCMC SEs
-MCMCSE <- evaluate.sim(sims = out, n.iter = n.iter, mean_or_SE = "se")
-# combine into one dataframe
-results_with_SE <- left_join(results, MCMCSE, by = "T", suffix = c("", ".SE"))
-# with empirical CI
+
+# # uncomment for MCMC SEs
+# MCMCSE <- evaluate.sim(sims = out, n.iter = n.iter, mean_or_SE = "se")
+# # combine into one dataframe
+# results_with_SE <- left_join(results, MCMCSE, by = "T", suffix = c("", ".SE"))
+
+# results with empirical CI
 CI_lower <- evaluate.sim(sims = out, n.iter = n.iter, mean_or_SE = "lower")
 CI_upper <- evaluate.sim(sims = out, n.iter = n.iter, mean_or_SE = "upper")
 results_with_CI <- results %>% left_join(CI_lower, by = "T", suffix = c("", ".LL")) %>% left_join(CI_upper, by = "T", suffix = c("", ".UL"))
 
-# plot
-#plot.ts(results[c(5:8, 2:4)], main = "Convergence and Simulation Diagnostics", xlab = "Number of iterations")
-#plot.ts(results[2:4], main = "Simulation Diagnostics", xlab = "Number of iterations")
-#plot.ts(results[5:12], main = "Convergence Diagnostics", xlab = "Number of iterations")
-#plot.ts(results[13:20], main = "Convergence Diagnostics", xlab = "Number of iterations")
-#plot.ts(results[21:28], main = "Convergence Diagnostics", xlab = "Number of iterations")
-#plot.ts(results[29:36], main = "Convergence Diagnostics", xlab = "Number of iterations")
 
 ###
 
 # save for future reference
-save.Rdata(results_with_CI, name = "results", path = "3.Thesis/1.SimulationStudy/Results")
-# save.image("environment_full_results.Rdata")
+# save.Rdata(results_with_CI, name = "results", path = "3.Thesis/1.SimulationStudy/Results")
