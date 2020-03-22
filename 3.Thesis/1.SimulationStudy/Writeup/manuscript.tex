@@ -36,7 +36,7 @@
 \IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
 \IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
 \hypersetup{
-  pdftitle={Missing the Point: Convergence of Multiple Imputation using Chained Equations Algorithms},
+  pdftitle={Missing the Point: Convergence of Multiple Imputation by Chained Equations Algorithms},
   pdfauthor={Hanne I. Oberman},
   hidelinks,
   pdfcreator={LaTeX via pandoc}}
@@ -99,7 +99,7 @@
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
 \setcounter{secnumdepth}{5}
 
-\title{Missing the Point: Convergence of Multiple Imputation using Chained
+\title{Missing the Point: Convergence of Multiple Imputation by Chained
 Equations Algorithms}
 \author{Hanne I. Oberman}
 \date{16-3-2020}
@@ -126,26 +126,14 @@ distributions (fully conditional specification). FCS is more flexible
 and ``avoids the problem of specifying an appropriate joint imputation
 distribution and replaces this by the selection of appropriate
 univariate conditional distributions''. With FCS, an iterative
-algorithmic procedure is used to \ldots{} multiple imputation using
-chained equations \ldots{} ``The values for imputing the missing data
-are drawn from the posterior predictive distribution of the missing data
+algorithmic procedure is used to \ldots{} multiple imputation by chained
+equations \ldots{} ``The values for imputing the missing data are drawn
+from the posterior predictive distribution of the missing data
 conditional on the observed data.'' There is no scientific consensus on
 the convergence properties of FCS algorithms (Takahashi 2017). Some
 default techniques in \texttt{mice} might not yield converged states at
 all (Murray 2018). Therefore, algorithmic convergence should be
 monitored carefully.
-
-Current practice is visually inspecting imputation chains for signs of
-non-convergence, but may be challenging to the untrained eye (Van Buuren
-2018, \textasciitilde6.5.2). Therefore diagnostic evaluation of
-convergence would be preferred. However, not known whether MCMC
-diagnostics are appropriate for MICE \ldots{} The application of
-convergence diagnostics to MI methods has not been systematically
-studied (Van Buuren 2018). How can non-convergence be diagnosed? How
-many iterations are sufficient/required? What are the effects of
-non-convergence on estimates, predictions and inference? What is an
-appropriate non-convergence diagnostic? Are the default number of
-iterations sufficient?
 
 Convergence cannot be determined for sure, because MICE is an MCMC
 method, and convergence of MCMC is not from scalar to a point, but from
@@ -154,14 +142,26 @@ convergence. Therefore we can only diagnose non-convergence, not
 convergence (Hoff 2009). ``a weak diagnostics is better than no
 diagnostic at all'' (Cowles and Carlin 1996).
 
-Defaults is: SPSS (10;
-\url{https://www.ibm.com/support/knowledgecenter/SSLVMB_24.0.0/spss/mva/syn_multiple_imputation_impute.html}),
-Mplus (100??;
-\url{https://pdfs.semanticscholar.org/e20e/29e008592cbfbaa567931f74cdfdb5451405.pdf?_ga=2.55354671.54033656.1584698748-527613517.1584698748}),
-Stata (10; \url{https://www.stata.com/manuals13/mi.pdf}, p.~139), Amelia
-(NA, because resampling, not convergence;
-\url{https://cran.r-project.org/web/packages/Amelia/Amelia.pdf}), en MI
-(30; \url{https://cran.r-project.org/web/packages/mi/mi.pdf}).
+Current practice is visually inspecting imputation chains for signs of
+non-convergence, but may be challenging to the untrained eye (Van Buuren
+2018, \(\S\) 6.5.2). Therefore diagnostic evaluation of convergence
+would be preferred. However, not known whether MCMC diagnostics are
+appropriate for MICE \ldots{} The application of convergence diagnostics
+to MI methods has not been systematically studied (Van Buuren 2018). How
+can non-convergence be diagnosed? How many iterations are
+sufficient/required? What are the effects of non-convergence on
+estimates, predictions and inference? What is an appropriate
+non-convergence diagnostic? Are the default number of iterations
+sufficient? Defaults in: SPSS = 10
+\href{https://www.ibm.com/support/knowledgecenter/SSLVMB_24.0.0/spss/mva/syn_multiple_imputation_impute.html}{(link)},
+Mplus = 100??
+\href{https://pdfs.semanticscholar.org/e20e/29e008592cbfbaa567931f74cdfdb5451405.pdf?_ga=2.55354671.54033656.1584698748-527613517.1584698748}{(link)},
+Stata = 1;
+\href{https://www.stata.com/manuals13/mi.pdf,\%20p.\%20139}{(link)},
+Amelia = NA, because resampling, not convergence
+\href{https://cran.r-project.org/web/packages/Amelia/Amelia.pdf}{(link)},
+en MI = 30
+\href{https://cran.r-project.org/web/packages/mi/mi.pdf}{(link)}.
 
 For reasons of brevity, we only focus on the MI algorithm implemented in
 the world-leading MI software: the \texttt{R} (R Core Team 2019) package
@@ -171,38 +171,20 @@ simulation. The results of this simulation study are guidelines for
 assessing convergence of MI algorithms, which will aid applied
 researchers in drawing valid inference from incomplete datasets.
 
-\hypertarget{terminology}{%
-\subsection{Terminology}\label{terminology}}
+\hypertarget{notation}{%
+\subsection{Notation}\label{notation}}
 
-Let \(Y\) denote an \(n \times p\) matrix containing the data values on
-\(p\) variables for all \(n\) units in a sample. The collection of
-observed data values in \(Y\) is denoted by \(Y_{obs}\), and will be
-referred to as `incomplete' or `observed' data. The missing part of
-\(Y\) is denoted by \(Y_{mis}\). Which parts of \(Y\) are missing is
-determined by the `missingness mechanism'.\\
-This note only considers a `missing completely at random' (MCAR)
-mechanism, where the probability of being missing is equal for all
-\(n \times p\) cells in \(Y\) (Rubin 1987).
-
-Figure 1 provides an overview of the steps involved with MI---from
-incomplete data, to \(m\) completed datasets, to \(m\) estimated
-quantities of interest (\(\hat{Q}\)s), to a single pooled estimate
-\(\bar{Q}\). This note focuses on the algorithmic properties of the
-imputation step.
-
-The MI algorithm in \texttt{mice} has an iterative nature. For each
-missing datapoint in \(Y_{mis}\), \(m\) `chains' of potential values are
-sampled. Only the ultimate sample that each chain lands on is imputed.
-The number of iterations per chain will be denoted with \(T\), where
-\(t\) varies over the integers \(1, 2, \dots, T\). This is repeated
-\(m\) times. Imputed values are the ultimate samples of a `chain' of For
-each imputed value (\(t = T\)), a s for each missing datapoint in
-\(Y_{mis}\), . Each of the \(m\) chains starts with an initial value,
-drawn randomly from \(Y_{obs}\). The chains are terminated after a
-predefined number of iterations. , and subsequently used in the analysis
-and pooling steps. The collection of samples between the initial value
-(at \(t=1\)) and the imputed value (at \(t=T\)) will be referred to as
-an `imputation chain'.
+Let \(y\) denote an \(n \times p\) matrix containing the data values on
+\(p\) variables for all \(n\) units in a sample. The data value of unit
+\(i\) (\(i = 1, \dots, n\)) on variable \(j\) (\(j = 1, \dots, p\)) may
+be either observed or missing. The collection of observed data values in
+\(y\) is denoted by \(y_{obs}\); the missing part of \(y\) is referred
+to as \(y_{mis}\). For each datapoint in \(y_{mis}\) \(M \times T\)
+times plausible values are sampled, where \(M\) is the number of
+imputations (\(m = 1, \dots, M\)) and \(T\) is the number of iterations
+(\(t = 1, \dots, T\)). The collection of samples between the initial
+value (at \(t=1\)) and the imputed value (at \(t=T\)) will be referred
+to as an `imputation chain'.
 
 \hypertarget{convergence-diagnostics}{%
 \section{Convergence diagnostics}\label{convergence-diagnostics}}
@@ -210,7 +192,8 @@ an `imputation chain'.
 In iterative algorithmic procedures (Markov chain Monte Carlo methods;
 e.g., \texttt{mice} algorithms or Gibbs samplers) non-convergence may be
 present as non-stationarity within chains (i.e., trending), or as slow
-mixing between chains (i.e., no intermingling).
+mixing between chains (i.e., no intermingling). (\textbf{add
+example/guidelines visual inspection here?})
 
 The stationarity component of convergence may be evaluated with
 autocorrelation (\(AC\); Schafer 1997; Gelman et al. 2013), numeric
@@ -225,27 +208,24 @@ of convergence. This would make \(\widehat{R}\) a general convergence
 diagnostic. The application of \(\widehat{R}\) to assess stationarity
 has not been thoroughly investigated. Therefore, this study employs both
 \(\widehat{R}\) and autocorrelation to investigate convergence, as
-recommended by (Cowles and Carlin 1996, \textasciitilde898).
+recommended by (Cowles and Carlin 1996, 898).
 
-The mixing component of convergence may be evaluated with the potential
-scale reduction factor, \(\widehat{R}\) (a.k.a. `Gelman-Rubin
-statistic'; Gelman and Rubin 1992). The stationarity component may be
-assessed through autocorrelations. An adapted version of \(\widehat{R}\)
-might also be used to diagnose non-stationarity. Other convergence
-diagnostics are outside of the scope of this study.
-
-All of these methods evaluate the convergence of univariate scalar
-summaries (e.g., chain means or variances). These convergence
+Note that all of these methods evaluate the convergence of univariate
+scalar summaries (e.g., chain means or variances). These convergence
 diagnostics cannot diagnose convergence of multivariable statistics
 (i.e., relations between scalar summaries). Van Buuren (2018) proposed
 to implement multivariable evaluation through eigenvalue decomposition
 (MacKay and Mac Kay 2003). This method is outside of the scope of the
 current study (\textbf{not anymore!}).
 
+\hypertarget{potential-scale-reduction-factor}{%
+\subsection{Potential scale reduction
+factor}\label{potential-scale-reduction-factor}}
+
 To define \(\widehat{R}\), we follow notation by (Vehtari et al. 2019,
-\textasciitilde5). Let \(M\) be the total number of chains, \(T\) the
-number of iterations per chain, and \(\theta\) the scalar summary of
-interest (e.g., chain mean or chain variance). For each chain
+5). Let \(M\) be the total number of chains, \(T\) the number of
+iterations per chain, and \(\theta\) the scalar summary of interest
+(e.g., chain mean or chain variance). For each chain
 (\(m = 1, 2, \dots, M\)), we estimate the variance of \(\theta\), and
 average these to obtain within-chain variance \(W\).
 
@@ -286,11 +266,14 @@ conventionally acceptable threshold for convergence was
 al. (2019) proposed a more stringent threshold of
 \(\widehat{R} < 1.01\).
 
+\hypertarget{autocorrelation}{%
+\subsection{Autocorrelation}\label{autocorrelation}}
+
 Following the same notation, we define autocorrelation as the
 correlation between two subsequent \(\theta\)-values within the same
-chain (Lynch 2007, \textasciitilde147). In this study we only consider
-\(AC\) at lag 1, i.e., the correlation between the \(t^{th}\) and
-\(t+1^{th}\) iteration of the same chain.
+chain (Lynch 2007, 147). In this study we only consider \(AC\) at lag 1,
+i.e., the correlation between the \(t^{th}\) and \(t+1^{th}\) iteration
+of the same chain.
 
 \begin{equation*}
 AC = \left( \frac{T}{T-1} \right) \frac{\sum_{t=1}^{T-1}(\theta_t - \bar{\theta}^{(\cdot m)})(\theta_{t+1} - \bar{\theta}^{(\cdot m)})}{\sum_{t=1}^{T}(\theta_t - \bar{\theta}^{(\cdot m)})^2}.
@@ -322,13 +305,13 @@ convergence of multiple imputation algorithms. We assess the performance
 of the two convergence diagnostics against the recommended evaluation
 criteria for MI methods (i.e., average bias, average confidence interval
 width, and empirical coverage rate across simulations; Van Buuren 2018,
-\textasciitilde2.5.2). That is, there is no baseline measure available
-to evaluate performance against.The current practice of visually
-inspecting imputation chains for signs of non-mixing or non-stationarity
-can only diagnose severely pathological cases of non-convergence. We
-could also look at distributional characteristics, and plausibility of
-imputed values, see Vink (n.d.). For now, this is outside of the scope
-of this study.
+\(\S\) 2.5.2). That is, there is no baseline measure available to
+evaluate performance against.The current practice of visually inspecting
+imputation chains for signs of non-mixing or non-stationarity can only
+diagnose severely pathological cases of non-convergence. We could also
+look at distributional characteristics, and plausibility of imputed
+values, see Vink (n.d.). For now, this is outside of the scope of this
+study.
 
 Based on an empirical finding (Lacerda, Ardington, and Leibbrandt 2007),
 we hypothesize that \(\widehat{R}\) will over-estimate non-convergence
@@ -336,28 +319,20 @@ of MI algorithms. The threshold of \(\widehat{R} < 1.01\) will then be
 too stringent for diagnosing convergence. This over-estimation may,
 however, be diminished because \(\widehat{R}\) can falsely diagnose
 convergence if initial values of the algorithm are not appropriately
-over-dispersed (Brooks and Gelman 1998, p\textasciitilde437). In
-\texttt{mice}, initial values are chosen randomly from the observed
-data. Therefore, we cannot be certain that the initial values are
-over-dispersed. We expect this to have little effect on the hypothesized
-performance of \(\widehat{R}\). No hypothesis was formulated about the
-performance of \(AC\) as convergence diagnostic.
+over-dispersed (Brooks and Gelman 1998, 437). In \texttt{mice}, initial
+values are chosen randomly from the observed data. Therefore, we cannot
+be certain that the initial values are over-dispersed. We expect this to
+have little effect on the hypothesized performance of \(\widehat{R}\).
+No hypothesis was formulated about the performance of \(AC\) as
+convergence diagnostic.
 
 \hypertarget{simulation-study}{%
 \section{Simulation study}\label{simulation-study}}
 
-We use model-based simulation in \texttt{R} to perform multiple
-imputation under 100 simulation conditions. In each condition, the MI
-algorithm comprises of a different imputation chain length
-(\(T = 1, 2, \dots, 100\)). The number of simulation runs per condition
-is 1000. For each simulation condition (i.e., number of iterations) and
-each repetition (i.e., simulation run) we compute convergence
-diagnostics (\(\widehat{R}\) and autocorrelation) and simulation
-diagnostics (bias, confidence interval width and coverage). These
-diagnostics are aggregated across repetitions to obtain their average
-value per simulation condition. The simulation set-up is summarized in
-the pseudo-code below. The complete \texttt{R} script of the simulation
-study is available from
+The convergence of \texttt{mice} is investigated through model-based
+simulation in \texttt{R} (version 3.6.3; R Core Team 2019). The
+simulation set-up is summarized in the pseudo-code below. The complete
+\texttt{R} script of the simulation study is available from
 \href{https://github.com/gerkovink/shinyMice/tree/master/3.Thesis/1.SimulationStudy}{github.com/gerkovink/shinyMice}.
 
 \begin{Shaded}
@@ -376,20 +351,13 @@ study is available from
 \end{Highlighting}
 \end{Shaded}
 
-\hypertarget{data-simulation}{%
-\subsubsection{Data Simulation}\label{data-simulation}}
-
-The point of origin for all simulation conditions is a finite population
-of \(N=1000\). The data are simulated to solve a multiple linear
-regression problem, where dependent variable \(Y\) is regressed on
-independent variables \(X_1\), \(X_2\) and \(X_3\):
+A finite population of \(N=1000\) is simulated to solve a multiple
+linear regression problem, where dependent variable \(Y\) is regressed
+on independent variables \(X_1\), \(X_2\) and \(X_3\):
 
 \[Y \sim \beta_1 X_1 + \beta_2 X_2 + \beta_3 X_3.\]
 
-The quantity of scientific interest is regression coefficient
-\(\beta_1\). The data generating model is a multivariate normal
-distribution with the following means structure and variance-covariance
-matrix:
+The data generating model is a multivariate normal distribution
 
 \begin{align*}
 \begin{pmatrix}X_1\\
@@ -410,19 +378,19 @@ X_3\\
 1.8 & 4.8 & 9 & 0\\
 0 & 0 & 0 & 100
 \end{pmatrix}
-\end{bmatrix}\\[2\jot].
+\end{bmatrix}\\[2\jot]
 \end{align*}
 
-Data is simulated with the function \texttt{mvtnorm::rmvnorm()}, and
-outcome variable \(Y\) is subsequently calculated as
-\[Y =  2X_1 + .5X_2 - X_3 + \epsilon .\] The complete data is `amputed'
-once for each simulation repetition. That is, the function
-\texttt{mice::ampute()} is used to impose a missingness mechanism upon
-the data. The missingness is univariate, and the probability to be
-missing is the same for all four variables, namely 20\%
-(\texttt{prop\ =\ 0.8,\ mech\ =\ "MCAR"}). This leaves 20\% of the rows
-completely observed. \%The resulting amputed data is equal for all
-simulation conditions in the same repetition.
+and simulated with the function \texttt{mvtnorm::rmvnorm()}. Outcome
+variable \(Y\) is subsequently calculated as
+\[Y =  2X_1 + .5X_2 - X_3 + \epsilon .\]
+
+The complete data is `amputed' once for each simulation repetition. That
+is, the function \texttt{mice::ampute()} is used to impose a missingness
+mechanism upon the data. \textbf{(change this: The missingness is
+univariate, and the probability to be missing is the same for all four
+variables, namely 20\% (\texttt{prop\ =\ 0.8,\ mech\ =\ "MCAR"}). This
+leaves 20\% of the rows completely observed). }
 
 Missing datapoints are imputed with the function \texttt{mice::mice()}.
 All MI procedures are performed with Bayesian linear regression
@@ -430,11 +398,8 @@ imputation (\texttt{method\ =\ "norm"}), and five imputation chains
 (\texttt{m\ =\ 5}). The number of iterations varies between simulation
 conditions (\texttt{maxit\ =\ 1,\ 2,\ \textbackslash{}dots,\ 100}).
 
-From the imputation step, we extract chain means and chain variances
-across iterations (\(\theta\) at \(t = 1,2,\dots,T\)).\\
-We compute convergence diagnostics separately for both \(\theta\)s, and
-for each of the four variables in the dataset. We report the maximum
-(absolute) value as the `worst linear predictor' of convergence.
+\textbf{(tot hier doorgelezen)}
+
 \(\widehat{R}\) is computed by implementing Vehtari et al.'s (2019)
 recommendations. \(AC\) is computed with function \texttt{stats::acf()}.
 
@@ -465,18 +430,20 @@ coverage rates. Coverage rate is the proportion of simulations in which
 Feedback:
 
 \begin{itemize}
-\item
-  Remove the table.
+\tightlist
 \item
   Add more info about figure legends and axes.
 \end{itemize}
 
-Figures 2 and 3 display results per simulation condition
-(\(T = 1,2,\dots,100\)).
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# plot results}
+\KeywordTok{load}\NormalTok{(}\StringTok{"../Results/results.Rdata"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
 
 \hypertarget{convergence-diagnostics-1}{%
-\subsubsection{Convergence
-Diagnostics}\label{convergence-diagnostics-1}}
+\subsection{Convergence Diagnostics}\label{convergence-diagnostics-1}}
 
 It is apparent that there is a relation between the number of iterations
 per simulation condition (\(T\)) and the convergence diagnostics.
@@ -527,7 +494,7 @@ is, however, not sufficient, since we overlook the increase in
 convergence diagnostics only reach stability at \(T>20\).
 
 \hypertarget{simulation-diagnostics}{%
-\subsubsection{Simulation Diagnostics}\label{simulation-diagnostics}}
+\subsection{Simulation Diagnostics}\label{simulation-diagnostics}}
 
 We use average bias, average confidence interval width, and coverage
 rate as performance measures to evaluate \(\widehat{R}\) and \(AC\). We
