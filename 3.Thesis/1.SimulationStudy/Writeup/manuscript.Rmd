@@ -178,6 +178,14 @@ Missing datapoints are imputed with the function `mice::mice()`. All MI procedur
 
 **(tot hier doorgelezen)**
 
+What to evaluate?
+
+- bias in regression coefficients
+
+- bias in $R^2$ (= coefficient of determination)
+
+- 
+
 
 <!-- From the imputation step, we extract chain means and chain variances across iterations ($\theta$ at $t = 1,2,\dots,T$).   -->
 <!-- We compute convergence diagnostics separately for both $\theta$s, and for each of the four variables in the dataset. We report the maximum (absolute) value as the 'worst linear predictor' of convergence.  -->
