@@ -29,7 +29,7 @@ source("3.Thesis/1.SimulationStudy/Functions/Evaluate.R")
 # simulation parameters
 populationsize <- 10000 #n of simulated dataset
 n.iter <- 30 #nr of iterations (varying 1:n.iter)
-n.sim <- 2 #nr of simulations per iteration value
+n.sim <- 20 #nr of simulations per iteration value
 true_effect <- 2 #regression coefficient to be estimated
 true_mean <- true_sd <- NA
 
@@ -88,5 +88,5 @@ results_with_CI <- results %>% left_join(CI_lower, by = "T", suffix = c("", ".LL
 
 ###
 
-# save for future reference
+# # save for future reference
 # save.Rdata(results_with_CI, name = "results", path = "3.Thesis/1.SimulationStudy/Results")

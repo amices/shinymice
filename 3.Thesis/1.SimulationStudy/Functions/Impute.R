@@ -67,14 +67,25 @@ test.impute <- function(true_effect,
   bias_sd <- true_sd - apply(mip, 2, sd)
   
   # compute multivariate diagnostics
-  bias_est <- true_effect - map(imputed, lm, formula = Y~X1+X2+X3) %>% pool() %>% .$pooled %>% .$estimate #%>% .[2]
+  est <- map(imputed, lm, formula = Y~X1+X2+X3) %>% pool() %>% .$pooled %>% .$estimate #%>% .[2]
+  bias_est <- true_effect - est
+  var_est <- map(imputed, lm, formula = Y~X1+X2+X3) %>% pool() %>% .$pooled %>% .$b
+  SE <- sqrt(var_est + (var_est / m)) #pooled finite SE
+  CI.low <- est - qt(.975, df = m - 1) * SE #lower bound CI
+  CI.up <- est + qt(.975, df = m - 1) * SE #upper bound CI
+  # CIW <- 1 # CI.up - CI.low #confidence interval width
+  cov_est <- CI.low < true_effect & true_effect < CI.up #coverage
+  
+  
   #predicted_Y <- map(imputed, ~{true_effect[1] + true_effect["X1"] * .$X1 })
   # bias_pred <- 1
   # vars <- names(data)
   R_sq <- lm.mids(Y~X1+X2+X3, impsim) %>% pool.r.squared() %>% .[1]
+  bias_R_sq <- true_R_sq - R_sq
   RMSE <- lm.mids(Y~X1+X2+X3, impsim) %>% .$analyses %>% map_dbl(., function(x){x$residuals %>% .^2 %>% mean() %>%  sqrt()})
   MAE <- lm.mids(Y~X1+X2+X3, impsim) %>% .$analyses %>% map_dbl(., function(x){x$residuals %>% abs() %>% mean()})
-  error_var <- lm.mids(Y~X1+X2+X3, impsim) %>% .$analyses %>% map_dbl(., function(x){x$residuals %>% var()})
+  error_var <- lm.mids(Y~X1+X2+X3, impsim) %>% .$analyses %>% map_dbl(., function(x){x$residuals %>% var()}) %>% mean()
+  bias_error_var <- true_sigma - error_var
   
   # bias in pred is aggr measure
   # bias variance of pred is R2 so bias in R2 summarises it quite nicely. so sq of correlation
@@ -112,10 +123,13 @@ test.impute <- function(true_effect,
     AC.var = t(AC_var),
     pca = t(pca),
     bias.est = t(bias_est),
+    cov.est = t(cov_est),
     R.sq = R_sq,
+    bias.R.s = bias_R_sq,
     RMSE = t(RMSE),
     MAE = t(MAE),
-    error.var = t(error_var)
+    error.var = t(error_var),
+    bias.sigma = t(bias_error_var)
     
   )) #data.frame(a = t(a), bias  =t(bias))
   #   # bias = bias,

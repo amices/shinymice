@@ -23,7 +23,7 @@ data.simulation <- function(n = populationsize, true_effect = 2) {
   true_R_sq <<- lm(Y ~ X1 + X2 + X3, data = simdata) %>% summary() %>% .$r.squared
   true_mean <<- apply(simdata, 2, mean)
   true_sd <<- apply(simdata, 2, sd)
-  
+  true_sigma <<- lm(Y ~ X1 + X2 + X3, data = simdata)[["residuals"]] %>% var()
   
   # output
   return(simdata)
