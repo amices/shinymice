@@ -5,239 +5,30 @@
 # load package
 library("dplyr")
 library("ggplot2")
-library("ggpubr")
+library("patchwork")
 
-# if necessary, load results
-# load("C:/Users/User/Desktop/shinyMice/2.ResearchReport/1.SimulationStudy/Results/full_results.Rdata")
-# results <- dat
-# results_with_CI <- dat #results
+# # if necessary, load results
+# load("C:/Users/User/Desktop/shinyMice/3.Thesis/1.SimulationStudy/Results/results.Rdata")
+# results_with_CI <- dat
 
-# # create plot for R hat
-# R_plot <- results_with_CI %>% .[-1,] %>%
-#   ggplot(aes(x = T, y = R.var.X1, color = "Chain variances")) +
-#   geom_line(linetype = "dashed", size = 1) +
-#   geom_line(aes(x = T, y = R.var.X2, color = "Chain variances"),
-#             linetype = "dashed",
-#             size = 1) +
-#   geom_line(aes(x = T, y = R.var.X3, color = "Chain variances"),
-#             linetype = "dashed",
-#             size = 1) +
-#   geom_line(aes(x = T, y = R.var.Y, color = "Chain variances"),
-#             linetype = "dashed",
-#             size = 1) +
-#   geom_line(aes(x = T, y = R.mean.X1, color = "Chain means")) +
-#   geom_line(aes(x = T, y = R.mean.X2, color = "Chain means")) +
-#   geom_line(aes(x = T, y = R.mean.X3, color = "Chain means")) +
-#   geom_line(aes(x = T, y = R.mean.Y, color = "Chain means")) +
-#   # # add error bar when `results_withSEs` is used
-#   # geom_errorbar(
-#   #   aes(ymin = R.mean.X1_LL, ymax = R.mean.X1_UL),
-#   #   width = .2,
-#   #   position = position_dodge(0.05)
-#   # ) +
-#   xlab("") +
-#   ylab(expression(paste(widehat(R)))) +
-#   scale_x_continuous(breaks = seq(0, 100, by = 10)) +
-#   scale_y_continuous(breaks = seq(.8, 2.2, by = .2)) +
-#   scale_color_manual(name = "Legend", labels = c("Chain means", "Chain variances"), values = c("black", "grey"), guide = "legend") +
-#   guides(color = guide_legend(override.aes = list(linetype = c(1, 8)))) +
-#   theme_bw() +
-#   theme(
-#     panel.border = element_blank(),
-#     panel.grid.major = element_blank(),
-#     panel.grid.minor = element_blank(),
-#     axis.line = element_line(colour = "black"),
-#     legend.position =  c(.95, .95),
-#     legend.justification = c("right", "top"),
-#     legend.box.just = "right",
-#     legend.margin = margin(6, 6, 6, 6)
-#   )
-# 
-# # create plot for autocorrelations
-# AC_plot <- results_with_CI %>% .[-1,] %>%
-#   ggplot(aes(x = T, y = AC.var.X1, color = "Chain variances")) +
-#   geom_line(linetype = "dashed", size = 1) +
-#   geom_line(
-#     aes(x = T, y = AC.var.X2, color = "Chain variances"),
-#     linetype = "dashed",
-#     size = 1
-#   ) +
-#   geom_line(
-#     aes(x = T, y = AC.var.X3, color = "Chain variances"),
-#     linetype = "dashed",
-#     size = 1
-#   ) +
-#   geom_line(aes(x = T, y = AC.var.Y, color = "Chain variances"),
-#             linetype = "dashed",
-#             size = 1) +
-#   geom_line(aes(x = T, y = AC.mean.X1, color = "Chain means")) +
-#   geom_line(aes(x = T, y = AC.mean.X2, color = "Chain means")) +
-#   geom_line(aes(x = T, y = AC.mean.X3, color = "Chain means")) +
-#   geom_line(aes(x = T, y = AC.mean.Y, color = "Chain means")) +
-#   # # add error bar when `results_withSEs` is used
-#   # geom_errorbar(
-#   #   aes(ymin = AC.mean.X1_LL, ymax = AC.mean.X1_UL),
-#   #   width = .2#,
-#   #   #position = position_dodge(0.05)
-#   # ) +
-#   xlab("Number of iterations") +
-#   ylab("Auto-correlation") +
-#   scale_x_continuous(breaks = seq(0, 100, by = 10)) +
-#   scale_y_continuous(breaks = seq(-.8, .6, by = .2)) +
-#   scale_color_manual(name = "Legend", labels = c("Chain means", "Chain variances"), values = c("black", "grey"), guide = "legend") +
-#   theme_bw() +
-#   theme(
-#     panel.border = element_blank(),
-#     panel.grid.major = element_blank(),
-#     panel.grid.minor = element_blank(),
-#     axis.line = element_line(colour = "black") ,
-#     legend.position = ""
-#   )
-# 
-# # combine convergence plots into figure
-# figure1 <-
-#   ggarrange(
-#     R_plot,
-#     AC_plot,
-#     labels = c("A", "B"),
-#     ncol = 1,
-#     nrow = 2,
-#     align = "v"
-#   )
-# # print figure
-# figure1
-
-# create plot for bias
-# bias_plot <- ggplot(results_with_CI, aes(x = T, y = bias)) +
-#   geom_point() +
-#   geom_smooth(
-#     method = "loess",
-#     se = FALSE,
-#     colour = "black",
-#     size = 0.5,
-#     linetype = "dashed"
-#   ) +
-#   geom_errorbar(
-#     aes(ymin = bias_LL, ymax = bias_UL),
-#     width = .2,
-#     colour = "grey"
-#   ) +
-#   xlab("") +
-#   ylab("Bias") +
-#   scale_x_continuous(breaks = seq(0, 100, by = 10)) +
-#   theme_bw() +
-#   theme(
-#     panel.border = element_blank(),
-#     panel.grid.major = element_blank(),
-#     panel.grid.minor = element_blank(),
-#     axis.line = element_line(colour = "black")
-#   )
-# 
-# 
-# # create plot for confidence interval width
-# CIW_plot <- ggplot(results_with_CI, aes(x = T, y = CIW)) +
-#   geom_line() +
-#   geom_smooth(
-#     method = "loess",
-#     se = FALSE,
-#     colour = "black",
-#     size = 0.5,
-#     linetype = "dashed"
-#   ) +
-#   # # add error bar when `results_withSEs` is used
-#   # geom_errorbar(
-#   #   aes(ymin = CIW_LL, ymax = CIW_UL),
-#   #   width = .2,
-#   #   colour = "grey"
-#   # ) +
-#   xlab("") +
-#   ylab("CI width") +
-#   scale_x_continuous(breaks = seq(0, 100, by = 10)) +
-#   theme_bw() +
-#   theme(
-#     panel.border = element_blank(),
-#     panel.grid.major = element_blank(),
-#     panel.grid.minor = element_blank(),
-#     axis.line = element_line(colour = "black")
-#   )
-# 
-# # create plot for coverage rate
-# cov_plot <- ggplot(results_with_CI, aes(x = T, y = cov * 100)) +
-#   geom_line() +
-#   geom_smooth(
-#     method = "loess",
-#     se = FALSE,
-#     colour = "black",
-#     size = 0.5,
-#     linetype = "dashed"
-#   ) +
-#   # regular CI is useless here! No error bars added.
-#   xlab("Number of iterations (T)") +
-#   ylab("Coverage (%)") +
-#   scale_x_continuous(breaks = seq(0, 100, by = 10)) +
-#   theme_bw() +
-#   theme(
-#     panel.border = element_blank(),
-#     panel.grid.major = element_blank(),
-#     panel.grid.minor = element_blank(),
-#     axis.line = element_line(colour = "black")
-#   )
-# 
-# # combine plots of simulation diagnostics into figure
-# figure2 <-
-#   ggarrange(
-#     bias_plot,
-#     CIW_plot,
-#     cov_plot,
-#     labels = c("A", "B", "C"),
-#     ncol = 1,
-#     nrow = 3,
-#     align = "hv"
-#   )
-# # print figure
-# figure2
-# 
-# # combine all plots together for presentation
-# figure3 <-
-#   ggarrange(
-#     R_plot,
-#     AC_plot,
-#     bias_plot,
-#     CIW_plot,
-#     cov_plot,
-#     labels = c("A", "B", "C", "D", "E"),
-#     ncol = 1,
-#     nrow = 5,
-#     align = "v"
-#   )
-# # print figure
-# figure3
-
-###################
-
-bias_means_plot <- ggplot(results_with_CI, aes(x = T, y = bias.mean.X1, color = "X1")) +
-  geom_point() +
-  geom_smooth(se = F) +
-  # geom_errorbar(
-  #   aes(ymin = bias_X1_LL, ymax = bias_X1_UL),
-  #   width = .2,
-  #   colour = "grey"
-  # ) +
+######################################################
+## Univariate estimates: variable means ##############
+######################################################
+bias_means_plot <- ggplot(results_with_CI) +
+  geom_hline(yintercept = 0,
+             color = "grey",
+             lwd = 2) +
   geom_point(aes(x = T, y = bias.mean.Y, color = "Y")) +
-  geom_smooth(aes(x = T, y = bias.mean.Y, color = "Y"), se = F) +
+  geom_point(aes(x = T, y = bias.mean.X1, color = "X1")) +
   geom_point(aes(x = T, y = bias.mean.X2, color = "X2")) +
-  geom_smooth(aes(x = T, y = bias.mean.X2, color = "X2"), se = F) +
   geom_point(aes(x = T, y = bias.mean.X3, color = "X3")) +
-  geom_smooth(aes(x = T, y = bias.mean.X3, color = "X3"), se = F) +
-  # geom_errorbar(
-  #       aes(x = T, ymin = bias.mean.Y.LL, ymax = bias.mean.Y.UL),
-  #       width = .2,
-  #       color = "grey"
-  #     ) +
+  geom_line(aes(x = T, y = bias.mean.Y, color = "Y")) +
+  geom_line(aes(x = T, y = bias.mean.X1, color = "X1")) +
+  geom_line(aes(x = T, y = bias.mean.X2, color = "X2")) +
+  geom_line(aes(x = T, y = bias.mean.X3, color = "X3")) +
   xlab("") +
-  ylab("Bias") +
-  ggtitle("Univariate means") + 
-  #scale_x_continuous(breaks = seq(0, 100, by = 10)) +
+  ylab("Bias in means") +
+  labs(colour = "Legend") +
   theme_bw() +
   theme(
     panel.border = element_blank(),
@@ -246,82 +37,22 @@ bias_means_plot <- ggplot(results_with_CI, aes(x = T, y = bias.mean.X1, color = 
     axis.line = element_line(colour = "black")
   )
 
-AC_means_plot <- results_with_CI %>% .[-1,] %>%
+R_means_plot <- results_with_CI %>% .[-1, ] %>%
   ggplot() +
-  geom_point(aes(x = T, y = AC.mean.X1, color = "X1")) +
-  geom_point(aes(x = T, y = AC.mean.Y, color = "Y")) +
-  geom_point(aes(x = T, y = AC.mean.X2, color = "X2")) +
-  geom_point(aes(x = T, y = AC.mean.X3, color = "X3")) +
-  geom_smooth(aes(x = T, y = AC.mean.X1, color = "X1"), se = FALSE) +
-  geom_smooth(aes(x = T, y = AC.mean.Y, color = "Y"), se = FALSE) +
-  geom_smooth(aes(x = T, y = AC.mean.X2, color = "X2"), se = FALSE) +
-  geom_smooth(aes(x = T, y = AC.mean.X3, color = "X3"), se = FALSE) +
-  xlab("Number of iterations") +
-  ylab("Auto-correlation") +
-  theme_bw() +
-  theme(
-    panel.border = element_blank(),
-    panel.grid.major = element_blank(),
-    panel.grid.minor = element_blank(),
-    axis.line = element_line(colour = "black") #,
-    #legend.position = ""
-  )
-
-R_means_plot <- results_with_CI %>% .[-1,] %>%
-  ggplot() +
+  geom_hline(yintercept = 1,
+             color = "grey",
+             lwd = 2) +
   geom_point(aes(x = T, y = R.mean.X1, color = "X1")) +
   geom_point(aes(x = T, y = R.mean.Y, color = "Y")) +
   geom_point(aes(x = T, y = R.mean.X2, color = "X2")) +
   geom_point(aes(x = T, y = R.mean.X3, color = "X3")) +
-  geom_smooth(aes(x = T, y = R.mean.X1, color = "X1"), se = FALSE) +
-  geom_smooth(aes(x = T, y = R.mean.Y, color = "Y"), se = FALSE) +
-  geom_smooth(aes(x = T, y = R.mean.X2, color = "X2"), se = FALSE) +
-  geom_smooth(aes(x = T, y = R.mean.X3, color = "X3"), se = FALSE) +
+  geom_line(aes(x = T, y = R.mean.X1, color = "X1")) +
+  geom_line(aes(x = T, y = R.mean.Y, color = "Y")) +
+  geom_line(aes(x = T, y = R.mean.X2, color = "X2")) +
+  geom_line(aes(x = T, y = R.mean.X3, color = "X3")) +
   xlab("") +
-  #ylab(expression(paste(widehat(R), " (in chain means)"))) +
   ylab(expression(paste(widehat(R)))) +
-  theme_bw() +
-  theme(
-    panel.border = element_blank(),
-    panel.grid.major = element_blank(),
-    panel.grid.minor = element_blank(),
-    axis.line = element_line(colour = "black") #,
-    #legend.position = ""
-  )
-
-means_plot <-
-  ggarrange(
-    bias_means_plot,
-    R_means_plot,
-    AC_means_plot,
-    ncol = 1,
-    nrow = 3,
-    align = "v"
-  )
-
-# print figure
-means_plot
-
-#########################
-
-bias_sds_plot <- ggplot(results_with_CI, aes(x = T, y = bias.sd.X1, color = "X1")) +
-  geom_point() +
-  geom_smooth(se = F) +
-  # geom_errorbar(
-  #   aes(ymin = bias_X1_LL, ymax = bias_X1_UL),
-  #   width = .2,
-  #   colour = "grey"
-  # ) +
-  geom_point(aes(x = T, y = bias.sd.Y, color = "Y")) +
-  geom_smooth(aes(x = T, y = bias.sd.Y, color = "Y"), se = F) +
-  geom_point(aes(x = T, y = bias.sd.X2, color = "X2")) +
-  geom_smooth(aes(x = T, y = bias.sd.X2, color = "X2"), se = F) +
-  geom_point(aes(x = T, y = bias.sd.X3, color = "X3")) +
-  geom_smooth(aes(x = T, y = bias.sd.X3, color = "X3"), se = F) +
-  xlab("") +
-  ylab("Bias") +
-  ggtitle("Univariate variances") + 
-  #scale_x_continuous(breaks = seq(0, 100, by = 10)) +
+  labs(colour = "Legend") +
   theme_bw() +
   theme(
     panel.border = element_blank(),
@@ -330,127 +61,304 @@ bias_sds_plot <- ggplot(results_with_CI, aes(x = T, y = bias.sd.X1, color = "X1"
     axis.line = element_line(colour = "black")
   )
 
-AC_sds_plot <- results_with_CI %>% .[-1,] %>%
+AC_means_plot <- results_with_CI %>% .[-1, ] %>%
   ggplot() +
+  geom_hline(yintercept = 0,
+             color = "grey",
+             lwd = 2) +
+  geom_point(aes(x = T, y = AC.mean.X1, color = "X1")) +
+  geom_point(aes(x = T, y = AC.mean.Y, color = "Y")) +
+  geom_point(aes(x = T, y = AC.mean.X2, color = "X2")) +
+  geom_point(aes(x = T, y = AC.mean.X3, color = "X3")) +
+  geom_line(aes(x = T, y = AC.mean.X1, color = "X1")) +
+  geom_line(aes(x = T, y = AC.mean.Y, color = "Y")) +
+  geom_line(aes(x = T, y = AC.mean.X2, color = "X2")) +
+  geom_line(aes(x = T, y = AC.mean.X3, color = "X3")) +
+  xlab("Number of iterations") +
+  ylab("Auto-correlation") +
+  labs(colour = "Legend") +
+  theme_bw() +
+  theme(
+    panel.border = element_blank(),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    axis.line = element_line(colour = "black")
+  )
+
+bias_means_plot + R_means_plot + AC_means_plot + plot_layout(nrow = 3, guides = "collect")
+
+
+######################################################
+## Univariate estimates: variable variances ##########
+######################################################
+bias_sds_plot <- ggplot(results_with_CI) +
+  geom_hline(yintercept = 0,
+             color = "grey",
+             lwd = 2) +
+  geom_point(aes(x = T, y = bias.sd.Y, color = "Y")) +
+  geom_point(aes(x = T, y = bias.sd.X1, color = "X1")) +
+  geom_point(aes(x = T, y = bias.sd.X2, color = "X2")) +
+  geom_point(aes(x = T, y = bias.sd.X3, color = "X3")) +
+  geom_line(aes(x = T, y = bias.sd.Y, color = "Y")) +
+  geom_line(aes(x = T, y = bias.sd.X1, color = "X1")) +
+  geom_line(aes(x = T, y = bias.sd.X2, color = "X2")) +
+  geom_line(aes(x = T, y = bias.sd.X3, color = "X3")) +
+  xlab("") +
+  ylab("Bias in variances") +
+  labs(colour = "Legend") +
+  theme_bw() +
+  theme(
+    panel.border = element_blank(),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    axis.line = element_line(colour = "black")
+  )
+
+AC_sds_plot <- results_with_CI %>% .[-1, ] %>%
+  ggplot() +
+  geom_hline(yintercept = 0,
+             color = "grey",
+             lwd = 2) +
   geom_point(aes(x = T, y = AC.var.X1, color = "X1")) +
   geom_point(aes(x = T, y = AC.var.Y, color = "Y")) +
   geom_point(aes(x = T, y = AC.var.X2, color = "X2")) +
   geom_point(aes(x = T, y = AC.var.X3, color = "X3")) +
-  geom_smooth(aes(x = T, y = AC.var.X1, color = "X1"), se = FALSE) +
-  geom_smooth(aes(x = T, y = AC.var.Y, color = "Y"), se = FALSE) +
-  geom_smooth(aes(x = T, y = AC.var.X2, color = "X2"), se = FALSE) +
-  geom_smooth(aes(x = T, y = AC.var.X3, color = "X3"), se = FALSE) +
+  geom_line(aes(x = T, y = AC.var.X1, color = "X1")) +
+  geom_line(aes(x = T, y = AC.var.Y, color = "Y")) +
+  geom_line(aes(x = T, y = AC.var.X2, color = "X2")) +
+  geom_line(aes(x = T, y = AC.var.X3, color = "X3")) +
   xlab("Number of iterations") +
   ylab("Auto-correlation") +
+  labs(colour = "Legend") +
   theme_bw() +
   theme(
     panel.border = element_blank(),
     panel.grid.major = element_blank(),
     panel.grid.minor = element_blank(),
-    axis.line = element_line(colour = "black") #,
-    #legend.position = ""
+    axis.line = element_line(colour = "black")
   )
 
-R_sds_plot <- results_with_CI %>% .[-1,] %>%
+R_sds_plot <- results_with_CI %>% .[-1, ] %>%
   ggplot() +
+  geom_hline(yintercept = 1,
+             color = "grey",
+             lwd = 2) +
   geom_point(aes(x = T, y = R.var.X1, color = "X1")) +
   geom_point(aes(x = T, y = R.var.Y, color = "Y")) +
   geom_point(aes(x = T, y = R.var.X2, color = "X2")) +
   geom_point(aes(x = T, y = R.var.X3, color = "X3")) +
-  geom_smooth(aes(x = T, y = R.var.X1, color = "X1"), se = FALSE) +
-  geom_smooth(aes(x = T, y = R.var.Y, color = "Y"), se = FALSE) +
-  geom_smooth(aes(x = T, y = R.var.X2, color = "X2"), se = FALSE) +
-  geom_smooth(aes(x = T, y = R.var.X3, color = "X3"), se = FALSE) +
+  geom_line(aes(x = T, y = R.var.X1, color = "X1")) +
+  geom_line(aes(x = T, y = R.var.Y, color = "Y")) +
+  geom_line(aes(x = T, y = R.var.X2, color = "X2")) +
+  geom_line(aes(x = T, y = R.var.X3, color = "X3")) +
   xlab("") +
-  #ylab(expression(paste(widehat(R), " (in chain means)"))) +
   ylab(expression(paste(widehat(R)))) +
+  labs(colour = "Legend") +
   theme_bw() +
   theme(
     panel.border = element_blank(),
     panel.grid.major = element_blank(),
     panel.grid.minor = element_blank(),
-    axis.line = element_line(colour = "black") #,
-    #legend.position = ""
+    axis.line = element_line(colour = "black")
   )
 
-sds_plot <-
-  ggarrange(
-    bias_sds_plot,
-    R_sds_plot,
-    AC_sds_plot,
-    ncol = 1,
-    nrow = 3,
-    align = "v"
+bias_sds_plot + R_sds_plot + AC_sds_plot + plot_layout(nrow = 3, guides = "collect")
+
+######################################################
+## Multivariate estimates: regression coeff. #########
+######################################################
+bias_ests_plot <- results_with_CI %>% #.[-1,] %>%
+  ggplot() +
+  geom_hline(yintercept = 0,
+             color = "grey",
+             lwd = 2) +
+  geom_point(aes(x = T, y = bias.est.X1, color = "X1")) +
+  geom_point(aes(x = T, y = bias.est.X2, color = "X2")) +
+  geom_point(aes(x = T, y = bias.est.X3, color = "X3")) +
+  geom_line(aes(x = T, y = bias.est.X1, color = "X1")) +
+  geom_line(aes(x = T, y = bias.est.X2, color = "X2")) +
+  geom_line(aes(x = T, y = bias.est.X3, color = "X3")) +
+  xlab("") +
+  ylab(expression(paste("Bias in ", beta, "s"))) +
+  labs(colour = "Legend") +
+  theme_bw() +
+  theme(
+    panel.border = element_blank(),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    axis.line = element_line(colour = "black")
   )
 
-# print figure
-sds_plot
+cov_plot <- results_with_CI %>% #.[-1,] %>%
+  ggplot() +
+  geom_hline(yintercept = .95,
+             color = "grey",
+             lwd = 2) +
+  geom_point(aes(x = T, y = cov.est.X1, color = "X1")) +
+  geom_point(aes(x = T, y = cov.est.X2, color = "X2")) +
+  geom_point(aes(x = T, y = cov.est.X3, color = "X3")) +
+  geom_line(aes(x = T, y = cov.est.X1, color = "X1")) +
+  geom_line(aes(x = T, y = cov.est.X2, color = "X2")) +
+  geom_line(aes(x = T, y = cov.est.X3, color = "X3")) +
+  xlab("") +
+  ylab(expression(paste("Coverage of ", beta, "s"))) +
+  labs(colour = "Legend") +
+  theme_bw() +
+  theme(
+    panel.border = element_blank(),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    axis.line = element_line(colour = "black")
+  )
 
-################################
+ciw_plot <- results_with_CI %>% 
+  ggplot() +
+  geom_point(aes(x = T, y = CIW.est.2, color = "X1")) +
+  geom_point(aes(x = T, y = CIW.est.3, color = "X2")) +
+  geom_point(aes(x = T, y = CIW.est.4, color = "X3")) +
+  geom_line(aes(x = T, y = CIW.est.2, color = "X1")) +
+  geom_line(aes(x = T, y = CIW.est.3, color = "X2")) +
+  geom_line(aes(x = T, y = CIW.est.4, color = "X3")) +
+  xlab("") +
+  ylab(expression(paste("CI width of ", beta, "s"))) +
+  labs(colour = "Legend") +
+  theme_bw() +
+  theme(
+    panel.border = element_blank(),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    axis.line = element_line(colour = "black")
+  )
 
-PCA_plot <- results_with_CI %>% #.[-1,] %>%
+bias_ests_plot + ciw_plot + cov_plot + plot_layout(nrow = 3, guides = "collect")
+
+######################################################
+## Multivariate estimates: predictive perf. ##########
+######################################################
+bias_R_sq_plot <- results_with_CI %>% 
+  ggplot() +
+  geom_hline(yintercept = 0,
+             color = "grey",
+             lwd = 2) +
+  geom_point(aes(x = T, y = bias.R.s), color = "black") +
+  geom_line(aes(x = T, y = bias.R.s), color = "black") +
+  xlab("") +
+  ylab(expression(paste("Bias in ", R ^ 2))) +
+  theme_bw() +
+  theme(
+    panel.border = element_blank(),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    axis.line = element_line(colour = "black")
+  )
+
+bias_sigma_plot <- results_with_CI %>% 
+  ggplot() +
+  geom_hline(yintercept = 0,
+             color = "grey",
+             lwd = 2) +
+  geom_point(aes(x = T, y = bias.sigma), color = "black") +
+  geom_line(aes(x = T, y = bias.sigma), color = "black") +
+  xlab("") +
+  ylab(expression(paste("Bias in ", sigma ^ 2, epsilon))) +
+  labs(colour = "Legend") +
+  theme_bw() +
+  theme(
+    panel.border = element_blank(),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    axis.line = element_line(colour = "black")
+  )
+
+
+bias_R_sq_plot + bias_sigma_plot + plot_layout(nrow = 2, guides = "collect")
+
+######################################################
+## Multivariate estimates: NOG IETS MEE DOEN #########
+######################################################
+RMSE_plot <- results_with_CI %>%
+  ggplot() +
+  geom_point(aes(x = T, y = RMSE.1, color = "m1")) +
+  geom_point(aes(x = T, y = RMSE.2, color = "m2")) +
+  geom_point(aes(x = T, y = RMSE.3, color = "m3")) +
+  geom_point(aes(x = T, y = RMSE.4, color = "m4")) +
+  geom_point(aes(x = T, y = RMSE.5, color = "m5")) +
+  geom_line(aes(x = T, y = RMSE.1, color = "m1")) +
+  geom_line(aes(x = T, y = RMSE.2, color = "m2")) +
+  geom_line(aes(x = T, y = RMSE.3, color = "m3")) +
+  geom_line(aes(x = T, y = RMSE.4, color = "m4")) +
+  geom_line(aes(x = T, y = RMSE.5, color = "m5")) +
+  xlab("") +
+  ylab("Root mean squared error") +
+  labs(colour = "Legend") +
+  theme_bw() +
+  theme(
+    panel.border = element_blank(),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    axis.line = element_line(colour = "black")
+  )
+
+MAE_plot <- results_with_CI %>%
+  ggplot() +
+  geom_point(aes(x = T, y = MAE.1, color = "m1")) +
+  geom_point(aes(x = T, y = MAE.2, color = "m2")) +
+  geom_point(aes(x = T, y = MAE.3, color = "m3")) +
+  geom_point(aes(x = T, y = MAE.4, color = "m4")) +
+  geom_point(aes(x = T, y = MAE.5, color = "m5")) +
+  geom_line(aes(x = T, y = MAE.1, color = "m1")) +
+  geom_line(aes(x = T, y = MAE.2, color = "m2")) +
+  geom_line(aes(x = T, y = MAE.3, color = "m3")) +
+  geom_line(aes(x = T, y = MAE.4, color = "m4")) +
+  geom_line(aes(x = T, y = MAE.5, color = "m5")) +
+  xlab("") +
+  ylab("Mean absolute error") +
+  labs(colour = "Legend") +
+  theme_bw() +
+  theme(
+    panel.border = element_blank(),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    axis.line = element_line(colour = "black")
+  )
+
+PCA_plot <- results_with_CI %>% 
   ggplot() +
   geom_point(aes(x = T, y = pca.1, color = "m1")) +
   geom_point(aes(x = T, y = pca.2, color = "m2")) +
   geom_point(aes(x = T, y = pca.3, color = "m3")) +
   geom_point(aes(x = T, y = pca.4, color = "m4")) +
   geom_point(aes(x = T, y = pca.5, color = "m5")) +
-  # geom_line(aes(x = T, y = pca.1, color = "m1")) +
-  # geom_line(aes(x = T, y = pca.2, color = "m2")) +
-  # geom_line(aes(x = T, y = pca.3, color = "m3")) +
-  # geom_line(aes(x = T, y = pca.4, color = "m4")) +
-  # geom_line(aes(x = T, y = pca.5, color = "m5")) +
-  geom_smooth(aes(x = T, y = pca.1, color = "m1"), se = FALSE) +
-  geom_smooth(aes(x = T, y = pca.2, color = "m2"), se = FALSE) +
-  geom_smooth(aes(x = T, y = pca.3, color = "m3"), se = FALSE) +
-  geom_smooth(aes(x = T, y = pca.4, color = "m4"), se = FALSE) +
-  geom_smooth(aes(x = T, y = pca.5, color = "m5"), se = FALSE) +
+  geom_line(aes(x = T, y = pca.1, color = "m1")) +
+  geom_line(aes(x = T, y = pca.2, color = "m2")) +
+  geom_line(aes(x = T, y = pca.3, color = "m3")) +
+  geom_line(aes(x = T, y = pca.4, color = "m4")) +
+  geom_line(aes(x = T, y = pca.5, color = "m5")) +
   xlab("Number of iterations") +
   ylab("First PCA component") +
+  labs(colour = "Legend") +
   theme_bw() +
   theme(
     panel.border = element_blank(),
     panel.grid.major = element_blank(),
     panel.grid.minor = element_blank(),
-    axis.line = element_line(colour = "black") #,
-    #legend.position = ""
+    axis.line = element_line(colour = "black")
   )
 
-bias_ests_plot <- results_with_CI %>% #.[-1,] %>% 
-  ggplot() +
-  #geom_point(aes(x = T, y = bias.est..Intercept., color = "Intercept")) +
-  geom_point(aes(x = T, y = bias.est.X1, color = "X1")) +
-  geom_point(aes(x = T, y = bias.est.X2, color = "X2")) +
-  geom_point(aes(x = T, y = bias.est.X3, color = "X3")) +
-  #geom_smooth(aes(x = T, y = bias.est..Intercept., color = "Intercept"), se = FALSE) +
-  geom_smooth(aes(x = T, y = bias.est.X1, color = "X1"), se = FALSE) +
-  geom_smooth(aes(x = T, y = bias.est.X2, color = "X2"), se = FALSE) +
-  geom_smooth(aes(x = T, y = bias.est.X3, color = "X3"), se = FALSE) +
-  # geom_errorbar(
-  #       aes(x = T, ymin = bias.est.X1.LL, ymax = bias.est.X1.UL),
-  #       width = .2,
-  #       color = "grey"
-  #     ) +
-  xlab("") +
-  ylab("Bias in regression coefficient") +
-  ggtitle("Multivariate estimates") +
-  theme_bw() +
-  theme(
-    panel.border = element_blank(),
-    panel.grid.major = element_blank(),
-    panel.grid.minor = element_blank(),
-    axis.line = element_line(colour = "black") #,
-    #legend.position = ""
-  )
+RMSE_plot + MAE_plot + PCA_plot + plot_layout(nrow = 3, guides = "collect")
 
-ests_plot <-
-  ggarrange(
-    bias_ests_plot,
-    PCA_plot,
-    ncol = 1,
-    nrow = 2,
-    align = "v"
-  )
 
-# print figure
-ests_plot
+######################################################
+
+# # if wanted, add CI based on MCMC SEs
+# geom_errorbar(
+#       aes(x = T, ymin = bias.mean.Y.LL, ymax = bias.mean.Y.UL),
+#       width = .2,
+#       color = "grey"
+#     ) +
+
+# # if wanted, add loess line or average or stepwise line
+# geom_smooth(aes(x = T, y = R.mean.X1, color = "X1"), se = FALSE) +
+# geom_smooth(aes(x = T, y = CIW.est.4, color = "X3"), method = "lm", formula = "y ~1", se = F) +
+# geom_step(aes(x = T, y = 100 * R.sq, color = "R^2"), direction = "mid") +
+

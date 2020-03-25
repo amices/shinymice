@@ -16,12 +16,14 @@ data.simulation <- function(n = populationsize, true_effect = 2) {
   
   # compute  outcome variable from predictors
   simdata$Y <-
-    true_effect * simdata$X1 + 0.5 * simdata$X2 - 1 * simdata$X3 + rnorm(n = populationsize, sd = 10)
+    1 + true_effect * simdata$X1 + 0.5 * simdata$X2 - 1 * simdata$X3 + rnorm(n = populationsize, sd = 10)
   
   # estimate comlpete data parameter
   true_effect <<- lm(Y ~ X1 + X2 + X3, data = simdata)[["coefficients"]]
-  true_mean <<- apply(simdata, 2, mean)#colMeans(simdata)
+  true_R_sq <<- lm(Y ~ X1 + X2 + X3, data = simdata) %>% summary() %>% .$r.squared
+  true_mean <<- apply(simdata, 2, mean)
   true_sd <<- apply(simdata, 2, sd)
+  true_sigma <<- lm(Y ~ X1 + X2 + X3, data = simdata)[["residuals"]] %>% var()
   
   # output
   return(simdata)

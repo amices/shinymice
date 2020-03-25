@@ -49,90 +49,84 @@ test.impute <- function(true_effect,
       within_function(impsim, maxit, moment = "variance") #between chain variance of the chain variances
   }
   
-  # Get Mahal
-  imputed <- mice::complete(impsim, "all") # equal to: map(1:5, ~{impsim %>% mice::complete(., .x)})
-  # covs <- map(imputed, ~{cov(.)})
-  # mah <- mahalanobis(imputed[[1]], colMeans(imputed[[1]]), covs[[1]])
-  pca <- map_dbl(imputed, ~{princomp(., cor = TRUE) %>% loadings() %>% .[1,1]})
-  
-  # perform analysis
-  # # mip <- unlist(pool(with(impsim, lm(Y ~ X + Z1 + Z2))))
-  # mip <- impsim %>% with(lm(Y ~ X + Z1 + Z2)) %>% pool %>% .$pooled
-  # mip <- impsim %>% mice::complete(., "long") %>% .[,"Y"] %>%  mean #mean(complete(mids)[,2])
-  mip <-
-    impsim %>% mice::complete(., "long") %>% .[,-c(1:2)] #%>% colMeans()
+  # combine y_obs and y_imp
+  imputed <-
+    mice::complete(impsim, "all") # equal to: map(1:5, ~{impsim %>% mice::complete(., .x)})
   
   # compute univariate diagnostics
-  bias_mean <- true_mean - apply(mip, 2, mean)
-  bias_sd <- true_sd - apply(mip, 2, sd)
+  bias_mean <-
+    true_mean - imputed %>% map_df(., ~ {
+      apply(., 2, mean)
+    }) %>% apply(., 1, mean) #bias in est mean per variable
+  bias_sd <-
+    true_sd - imputed %>% map_df(., ~ {
+      apply(., 2, sd)
+    }) %>% apply(., 1, mean) #bias in est var per variable
   
   # compute multivariate diagnostics
-  bias_est <- true_effect - map(imputed, lm, formula = Y~X1+X2+X3) %>% pool() %>% .$pooled %>% .$estimate #%>% .[2]
+  est <-
+    map(imputed, lm, formula = Y ~ X1 + X2 + X3) %>% pool() %>% .$pooled %>% .$estimate #regression coefficients
+  bias_est <- true_effect - est #bias in reg. coeff.
+  var_est <-
+    map(imputed, lm, formula = Y ~ X1 + X2 + X3) %>% pool() %>% .$pooled %>% .$b #est finite pop variance
+  SE <- sqrt(var_est + (var_est / m)) #pooled finite SE
+  CI.low <- est - qt(.975, df = m - 1) * SE #lower bound CI
+  CI.up <- est + qt(.975, df = m - 1) * SE #upper bound CI
+  CIW <- CI.up - CI.low #confidence interval width
+  cov_est <- CI.low < true_effect & true_effect < CI.up #coverage
   
-  # bias_est <- pool(with(impsim, lm(Y ~ X + Z1 + Z2)))$pooled$estimate[2] #a <- pool(with(impsim, lm(Y ~ X + Z1 + Z2)))$pooled$estimate[2]
-  # est <-  mip # mip$estimate[2] #estimated regression coefficient
-  # bias <- est - true_effect #bias
-  # # SE <- 1 # sqrt(mip$b[2] + (mip$b[2] / m)) #pooled finite SE
-  # CI.low <- 1 # est - qt(.975, df = m - 1) * SE #lower bound CI
-  # CI.up <- 1 # est + qt(.975, df = m - 1) * SE #upper bound CI
-  # CIW <- 1 # CI.up - CI.low #confidence interval width
-  # cov <- 1 # CI.low < true_effect & true_effect < CI.up #coverage
- 
-  # output
-  return(data.frame(
-    bias.mean = t(bias_mean),
-    R.mean = t(R_mean),
-    AC.mean = t(AC_mean),
-    between.mean = t(between_mean),
-    within.mean = t(within_mean),
-    bias.sd = t(bias_sd),
-    R.var = t(R_var),
-    AC.var = t(AC_var),
-    pca = t(pca),
-    bias.est = t(bias_est)
-  )) #data.frame(a = t(a), bias  =t(bias))
-  #   # bias = bias,
-  #   # CIW = CIW,
-  #   # cov = cov,
-  #   bias.X = bias["X"],
-  #   bias_Y = bias["Y"],
-  #   bias_Z1 = bias["Z1"],
-  #   bias_Z2 = bias["Z2"],
-  #   R_mean_X = R_mean["X"],
-  #   R_mean_Z1 = R_mean["Z1"],
-  #   R_mean_Z2 = R_mean["Z2"],
-  #   R_mean_Y = R_mean["Y"],
-  #   max_R_mean = max(R_mean),
-  #   R_var_X = R_var["X"],
-  #   R_var_Z1 = R_var["Z1"],
-  #   R_var_Z2 = R_var["Z2"],
-  #   R_var_Y  = R_var["Y"],
-  #   max_R_var = max(R_var),
-  #   AC_mean_X = AC_mean["X"],
-  #   AC_mean_Z1 = AC_mean["Z1"],
-  #   AC_mean_Z2 = AC_mean["Z2"],
-  #   AC_mean_Y = AC_mean["Y"],
-  #   max_AC_mean = min(AC_mean),
-  #   AC_var_X = AC_var["X"],
-  #   AC_var_Z1 = AC_var["Z1"],
-  #   AC_var_Z2 = AC_var["Z2"],
-  #   AC_var_Y  = AC_var["Y"],
-  #   max_AC_var = min(AC_var),
-  #   between_mean_X = between_mean["X"],
-  #   between_mean_Z1 = between_mean["Z1"],
-  #   between_mean_Z2 = between_mean["Z2"],
-  #   between_mean_Y  = between_mean["Y"],
-  #   between_var_X = between_var["X"],
-  #   between_var_Z1 = between_var["Z1"],
-  #   between_var_Z2 = between_var["Z2"],
-  #   between_var_Y  = between_var["Y"],
-  #   within_mean_X = within_mean["X"],
-  #   within_mean_Z1 = within_mean["Z1"],
-  #   within_mean_Z2 = within_mean["Z2"],
-  #   within_mean_Y  = within_mean["Y"],
-  #   within_var_X = within_var["X"],
-  #   within_var_Z1 = within_var["Z1"],
-  #   within_var_Z2 = within_var["Z2"],
-  #   within_var_Y  = within_var["Y"]
-  # ))
+  # compute predictive performance
+  R_sq <-
+    lm.mids(Y ~ X1 + X2 + X3, impsim) %>% pool.r.squared() %>% .[1] #coeff of determination
+  bias_R_sq <- true_R_sq - R_sq #bias in R squared
+  RMSE <-
+    lm.mids(Y ~ X1 + X2 + X3, impsim) %>% .$analyses %>% map_dbl(., function(x) {
+      x$residuals %>% . ^ 2 %>% mean() %>%  sqrt()
+    }) #root mean squared error
+  MAE <-
+    lm.mids(Y ~ X1 + X2 + X3, impsim) %>% .$analyses %>% map_dbl(., function(x) {
+      x$residuals %>% abs() %>% mean()
+    }) #mean absolute error
+  # bij (te) weinig iteraties zouen we hogere var van MAE verwachten
+  error_var <-
+    lm.mids(Y ~ X1 + X2 + X3, impsim) %>% .$analyses %>% map_dbl(., function(x) {
+      x$residuals %>% var()
+    }) %>% mean() #residual variance
+  bias_error_var <-
+    true_sigma - error_var #bias in residual variance
+  
+  # # get Mahalanobis distance as multivariate convergence measure
+  # covs <- map(imputed, ~{cov(.)})
+  # mah <- mahalanobis(imputed[[1]], colMeans(imputed[[1]]), covs[[1]])
+  
+  # compute PCA loading instead
+  pca <-
+    map_dbl(imputed, ~ {
+      princomp(., cor = TRUE) %>% loadings() %>% .[1, 1]
+    })
+  
+  # collect output
+  return(
+    data.frame(
+      bias.mean = t(bias_mean),
+      R.mean = t(R_mean),
+      AC.mean = t(AC_mean),
+      between.mean = t(between_mean),
+      within.mean = t(within_mean),
+      bias.sd = t(bias_sd),
+      R.var = t(R_var),
+      AC.var = t(AC_var),
+      pca = t(pca),
+      bias.est = t(bias_est),
+      CIW.est = t(CIW),
+      cov.est = t(cov_est),
+      R.sq = R_sq,
+      bias.R.s = bias_R_sq,
+      RMSE = t(RMSE),
+      MAE = t(MAE),
+      error.var = t(error_var),
+      bias.sigma = t(bias_error_var)
+      
+    )
+  )
 }
