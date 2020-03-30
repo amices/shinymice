@@ -1,22 +1,33 @@
 ---
-title: "Missing the Point: Convergence of Multiple Imputation by Chained Equations Algorithms"
-author: "Hanne I. Oberman"
-date: "16-3-2020"
-output: 
-  pdf_document:
-    keep_tex: true
-    number_sections: true
+title: Missing the Point$\colon$ Non-Convergence in Multiple Imputation Procedures
+runninghead: Oberman
+author:
+- name: H. I. Oberman
+  num: 1
+address:
+- num: 1
+  org: Department of Methodology and Statistics, Utrecht University, Utrecht, The Netherlands
+corrauth: "Hanne Oberman, Sjoerd Groenman building, Utrecht Science Park, Utrecht, The Netherlands."
+email: h.i.oberman@uu.nl
+abstract: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean ut elit odio. Donec fermentum tellus neque, vitae fringilla orci pretium vitae. Fusce maximus finibus facilisis. Donec ut ullamcorper turpis. Donec ut porta ipsum. Nullam cursus mauris a sapien ornare pulvinar. Aenean malesuada molestie erat quis mattis. Praesent scelerisque posuere faucibus. Praesent nunc nulla, ullamcorper ut ullamcorper sed, molestie ut est. Donec consequat libero nisi, non semper velit vulputate et. Quisque eleifend tincidunt ligula, bibendum finibus massa cursus eget."
+keywords: MICE; convergence; 
+classoption:
+  - Royal
+  - times
 bibliography: thesis.bib
-documentclass: sagej
-classoption: Royal, times, sageapa
+bibliographystyle: sageh
+output:
+  rticles::sage_article:
+    keep_tex: yes
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+#knitr::opts_chunk$set(echo = TRUE)
 load("../Results/results.Rdata")
 source("../2.CreateFigures.R")
 
 ```
+
 
 # Introduction
 
@@ -204,21 +215,19 @@ where $t_{(m-1)}$ is the quantile of a $t$-distribution with $m-1$ degrees of fr
 
 # Results
 
-Feedback:
-
-- Add more info about figure legends and axes.
+**Add more info about figure legends and axes.**
 
 <!-- Figures 2 and 3 display results per simulation condition ($T = 1,2,\dots,100$).  -->
 
-```{r, echo=FALSE, fig.cap="Convergence diagnostics (means)"}
+```{r, fig.cap="Convergence diagnostics (means)"}
 bias_means_plot + R_means_plot + AC_means_plot + plot_layout(nrow = 3, guides = "collect")
 ```
 
-```{r, echo=FALSE, fig.cap="Convergence diagnostics (variances)"}
+```{r, fig.cap="Convergence diagnostics (variances)"}
 bias_sds_plot + R_sds_plot + AC_sds_plot + plot_layout(nrow = 3, guides = "collect")
 ```
 
-```{r, echo=FALSE, fig.cap="Convergence diagnostics (regression coefficients)"}
+```{r, fig.cap="Convergence diagnostics (regression coefficients)"}
 bias_ests_plot + bias_R_sq_plot + cov_plot + plot_layout(nrow = 3, guides = "collect")
 ```
 
@@ -265,4 +274,4 @@ Since this study only considers only an MCAR missingness mechanism, results may 
 
 Further research is needed to investigate their performance under clear violation of convergence, e.g. dependency between predictors (predictors with very high correlations). Until then, we have only shown that the convergence diagnostics can diagnose non-convergence of MI algorithms that trend towards a converged state. Also for future research, implement Wernicke diagnostic, and look at developing a convergence diagnostic for substantive models, and implement a Wald test for $AC = 0$. 
 
-# References
+<!-- # References -->

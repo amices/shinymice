@@ -320,16 +320,16 @@ centering]{geometry}
     {\raggedright\titlesize\textbf{\@title} \par}%
     \vskip 1.5em%
     \vskip 12.5mm%
-    \end{minipage}\hspace{15mm}\begin{minipage}[t]{42.625mm} 
-\hbox{}{\raggedleft\scriptsize\journalname\\
-2020, Vol. \volumenumber(\issuenumber) \startpage--\endpage\\ 
-\copyright The Author(s) \volumeyear\\
-Article reuse guidelines:\\
-sagepub.com/journals-permissions\\
-DOI: 10.1177/ToBeAssigned\\
-journals.sagepub.com/home/smr\\[2.3pt]}
-\raggedleft\includegraphics[height=4mm]{SAGE_Logo}
-%\hbox{}{\fboxsep 1.5pt\framebox[14mm]{{\normalsize SAGE}}}
+    \end{minipage}\hspace{15mm}\begin{minipage}[t]{42.625mm}
+\hbox{}\scriptsize\journalname\\
+\hbox{}\volumenumber(\issuenumber):\startpage--\endpage\\ 
+\hbox{}\copyright The Author(s) \volumeyear\\
+\hbox{}Reprints and permission:\\
+\hbox{}sagepub.co.uk/journalsPermissions.nav\\
+\hbox{}DOI: 10.1177/ToBeAssigned\\
+\hbox{}www.sagepub.com/\\[2.3pt]
+%\hbox{}\includegraphics[height=4mm]{SAGE_Logo}
+\hbox{}{\fboxsep 1.5pt\framebox[14mm]{{\normalsize SAGE}}}
 \end{minipage}
 {\par\large%
 \if@Royal
@@ -364,11 +364,10 @@ journals.sagepub.com/home/smr\\[2.3pt]}
  
 \def\startpage{\pageref{FirstPage}}
 \def\endpage{\pageref{LastPage}}
-\def\volumeyear{2020}
-\def\volumenumber{49}
-\def\issuenumber{?}
-\def\journalname{Sociological Methods \& Research}
-\def\authorname{Oberman}
+\def\volumeyear{0000}
+\def\volumenumber{XX}
+\def\issuenumber{X}
+\def\journalname{Journal Title}
 
 \def\runninghead#1{\markboth{{#1}}{}}
 
@@ -378,7 +377,7 @@ journals.sagepub.com/home/smr\\[2.3pt]}
 }}%
 \let\@evenhead\@oddhead
 \def\@oddfoot{\parbox[t]{\textwidth}{%
-{\scriptsize{\it }}}}
+{\scriptsize{\it Prepared using \textsf{\journalclass} [Version: \update]}}}}
 \let\@evenfoot\@oddfoot}
 
 \def\ps@sagepage{%
@@ -387,10 +386,10 @@ journals.sagepub.com/home/smr\\[2.3pt]}
 \normalsize\sagesf\thepage\hfill\itshape\journalname\ \volumenumber(\issuenumber)\\[-6pt]
 \noindent\rule{\textwidth}{0.25pt}}}
 \def\@oddhead{\parbox{\textwidth}{%
-\normalsize\sagesf \itshape\authorname\hfill\thepage\\[-6pt]
+\normalsize\sagesf{\itshape{\leftmark}}\hfill\thepage\\[-6pt]
 \noindent\rule{\textwidth}{0.25pt}}}
 \def\@evenfoot{\parbox[t]{\textwidth}{%
-\scriptsize{\it }}}
+\scriptsize{\it Prepared using \textsf{\journalclass}}}}
 \def\@oddfoot{\@evenfoot}
 }
 
