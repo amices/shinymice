@@ -9,12 +9,12 @@ library("patchwork")
 
 # # if necessary, load results
 # load("C:/Users/User/Desktop/shinyMice/3.Thesis/1.SimulationStudy/Results/results.Rdata")
-# results_with_CI <- dat
+# dat <- results_with_CI # <- dat
 
 ######################################################
 ## Univariate estimates: variable means ##############
 ######################################################
-bias_means_plot <- ggplot(results_with_CI) +
+bias_means_plot <- dat %>% .[1:50,] %>% ggplot() +
   geom_hline(yintercept = 0,
              color = "grey",
              lwd = 2) +
@@ -27,7 +27,7 @@ bias_means_plot <- ggplot(results_with_CI) +
   geom_line(aes(x = T, y = bias.mean.X2, color = "X2")) +
   geom_line(aes(x = T, y = bias.mean.X3, color = "X3")) +
   xlab("") +
-  ylab("Bias in means") +
+  ylab(expression(paste("Bias in ", hat(mu)))) +
   labs(colour = "Legend") +
   theme_bw() +
   theme(
@@ -37,7 +37,7 @@ bias_means_plot <- ggplot(results_with_CI) +
     axis.line = element_line(colour = "black")
   )
 
-R_means_plot <- results_with_CI %>% .[-1, ] %>%
+R_means_plot <- dat %>% .[2:50, ] %>%
   ggplot() +
   geom_hline(yintercept = 1,
              color = "grey",
@@ -61,7 +61,7 @@ R_means_plot <- results_with_CI %>% .[-1, ] %>%
     axis.line = element_line(colour = "black")
   )
 
-AC_means_plot <- results_with_CI %>% .[-1, ] %>%
+AC_means_plot <- dat %>% .[2:50,] %>%
   ggplot() +
   geom_hline(yintercept = 0,
              color = "grey",
@@ -87,11 +87,10 @@ AC_means_plot <- results_with_CI %>% .[-1, ] %>%
 
 bias_means_plot + R_means_plot + AC_means_plot + plot_layout(nrow = 3, guides = "collect")
 
-
 ######################################################
 ## Univariate estimates: variable variances ##########
 ######################################################
-bias_sds_plot <- ggplot(results_with_CI) +
+bias_sds_plot <- dat %>% .[1:50,] %>% ggplot() +
   geom_hline(yintercept = 0,
              color = "grey",
              lwd = 2) +
@@ -104,7 +103,7 @@ bias_sds_plot <- ggplot(results_with_CI) +
   geom_line(aes(x = T, y = bias.sd.X2, color = "X2")) +
   geom_line(aes(x = T, y = bias.sd.X3, color = "X3")) +
   xlab("") +
-  ylab("Bias in variances") +
+  ylab(expression(paste("Bias in ", hat(sigma)))) +
   labs(colour = "Legend") +
   theme_bw() +
   theme(
@@ -114,7 +113,7 @@ bias_sds_plot <- ggplot(results_with_CI) +
     axis.line = element_line(colour = "black")
   )
 
-AC_sds_plot <- results_with_CI %>% .[-1, ] %>%
+AC_sds_plot <- dat %>% .[2:50,] %>%
   ggplot() +
   geom_hline(yintercept = 0,
              color = "grey",
@@ -138,7 +137,7 @@ AC_sds_plot <- results_with_CI %>% .[-1, ] %>%
     axis.line = element_line(colour = "black")
   )
 
-R_sds_plot <- results_with_CI %>% .[-1, ] %>%
+R_sds_plot <- dat %>% .[2:50,] %>%
   ggplot() +
   geom_hline(yintercept = 1,
              color = "grey",
@@ -167,7 +166,7 @@ bias_sds_plot + R_sds_plot + AC_sds_plot + plot_layout(nrow = 3, guides = "colle
 ######################################################
 ## Multivariate estimates: regression coeff. #########
 ######################################################
-bias_ests_plot <- results_with_CI %>% #.[-1,] %>%
+bias_ests_plot <- dat %>% .[1:50,] %>%
   ggplot() +
   geom_hline(yintercept = 0,
              color = "grey",
@@ -179,7 +178,7 @@ bias_ests_plot <- results_with_CI %>% #.[-1,] %>%
   geom_line(aes(x = T, y = bias.est.X2, color = "X2")) +
   geom_line(aes(x = T, y = bias.est.X3, color = "X3")) +
   xlab("") +
-  ylab(expression(paste("Bias in ", beta, "s"))) +
+  ylab(expression(paste("Bias in ", hat(beta)))) +
   labs(colour = "Legend") +
   theme_bw() +
   theme(
@@ -189,7 +188,7 @@ bias_ests_plot <- results_with_CI %>% #.[-1,] %>%
     axis.line = element_line(colour = "black")
   )
 
-cov_plot <- results_with_CI %>% #.[-1,] %>%
+cov_plot <- dat %>% .[1:50,] %>%
   ggplot() +
   geom_hline(yintercept = .95,
              color = "grey",
@@ -200,8 +199,8 @@ cov_plot <- results_with_CI %>% #.[-1,] %>%
   geom_line(aes(x = T, y = cov.est.X1, color = "X1")) +
   geom_line(aes(x = T, y = cov.est.X2, color = "X2")) +
   geom_line(aes(x = T, y = cov.est.X3, color = "X3")) +
-  xlab("") +
-  ylab(expression(paste("Coverage of ", beta, "s"))) +
+  ylab(expression(paste("Coverage of ", hat(beta)))) +
+  xlab("Number of iterations") +
   labs(colour = "Legend") +
   theme_bw() +
   theme(
@@ -211,7 +210,7 @@ cov_plot <- results_with_CI %>% #.[-1,] %>%
     axis.line = element_line(colour = "black")
   )
 
-ciw_plot <- results_with_CI %>% 
+ciw_plot <- dat %>% .[1:50,] %>%
   ggplot() +
   geom_point(aes(x = T, y = CIW.est.2, color = "X1")) +
   geom_point(aes(x = T, y = CIW.est.3, color = "X2")) +
@@ -220,7 +219,7 @@ ciw_plot <- results_with_CI %>%
   geom_line(aes(x = T, y = CIW.est.3, color = "X2")) +
   geom_line(aes(x = T, y = CIW.est.4, color = "X3")) +
   xlab("") +
-  ylab(expression(paste("CI width of ", beta, "s"))) +
+  ylab(expression(paste("CI width of ", hat(beta)))) +
   labs(colour = "Legend") +
   theme_bw() +
   theme(
@@ -235,7 +234,7 @@ bias_ests_plot + ciw_plot + cov_plot + plot_layout(nrow = 3, guides = "collect")
 ######################################################
 ## Multivariate estimates: predictive perf. ##########
 ######################################################
-bias_R_sq_plot <- results_with_CI %>% 
+bias_R_sq_plot <- dat %>% .[1:50,] %>%
   ggplot() +
   geom_hline(yintercept = 0,
              color = "grey",
@@ -243,7 +242,7 @@ bias_R_sq_plot <- results_with_CI %>%
   geom_point(aes(x = T, y = bias.R.s), color = "black") +
   geom_line(aes(x = T, y = bias.R.s), color = "black") +
   xlab("") +
-  ylab(expression(paste("Bias in ", R ^ 2))) +
+  ylab(expression(paste("Bias in ", hat(R ^ 2)))) +
   theme_bw() +
   theme(
     panel.border = element_blank(),
@@ -252,7 +251,7 @@ bias_R_sq_plot <- results_with_CI %>%
     axis.line = element_line(colour = "black")
   )
 
-bias_sigma_plot <- results_with_CI %>% 
+bias_sigma_plot <- dat %>% .[1:50,] %>%
   ggplot() +
   geom_hline(yintercept = 0,
              color = "grey",
@@ -260,7 +259,7 @@ bias_sigma_plot <- results_with_CI %>%
   geom_point(aes(x = T, y = bias.sigma), color = "black") +
   geom_line(aes(x = T, y = bias.sigma), color = "black") +
   xlab("") +
-  ylab(expression(paste("Bias in ", sigma ^ 2, epsilon))) +
+  ylab(expression(paste("Bias in ", hat(sigma[epsilon]^2)))) +
   labs(colour = "Legend") +
   theme_bw() +
   theme(
@@ -276,7 +275,7 @@ bias_R_sq_plot + bias_sigma_plot + plot_layout(nrow = 2, guides = "collect")
 ######################################################
 ## Multivariate estimates: NOG IETS MEE DOEN #########
 ######################################################
-RMSE_plot <- results_with_CI %>%
+RMSE_plot <- dat %>% .[1:50,] %>%
   ggplot() +
   geom_point(aes(x = T, y = RMSE.1, color = "m1")) +
   geom_point(aes(x = T, y = RMSE.2, color = "m2")) +
@@ -289,7 +288,7 @@ RMSE_plot <- results_with_CI %>%
   geom_line(aes(x = T, y = RMSE.4, color = "m4")) +
   geom_line(aes(x = T, y = RMSE.5, color = "m5")) +
   xlab("") +
-  ylab("Root mean squared error") +
+  ylab("RMSE") +
   labs(colour = "Legend") +
   theme_bw() +
   theme(
@@ -299,7 +298,7 @@ RMSE_plot <- results_with_CI %>%
     axis.line = element_line(colour = "black")
   )
 
-MAE_plot <- results_with_CI %>%
+MAE_plot <- dat %>% .[1:50,] %>%
   ggplot() +
   geom_point(aes(x = T, y = MAE.1, color = "m1")) +
   geom_point(aes(x = T, y = MAE.2, color = "m2")) +
@@ -322,7 +321,7 @@ MAE_plot <- results_with_CI %>%
     axis.line = element_line(colour = "black")
   )
 
-PCA_plot <- results_with_CI %>% 
+PCA_plot <- dat %>% .[1:50,] %>%
   ggplot() +
   geom_point(aes(x = T, y = pca.1, color = "m1")) +
   geom_point(aes(x = T, y = pca.2, color = "m2")) +

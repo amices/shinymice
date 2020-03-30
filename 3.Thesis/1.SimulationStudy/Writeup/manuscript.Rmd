@@ -13,6 +13,9 @@ classoption: Royal, times, sageapa
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+load("../Results/results.Rdata")
+source("../2.CreateFigures.R")
+
 ```
 
 # Introduction
@@ -207,10 +210,16 @@ Feedback:
 
 <!-- Figures 2 and 3 display results per simulation condition ($T = 1,2,\dots,100$).  -->
 
-```{r}
-# plot results
-load("../Results/results.Rdata")
+```{r, echo=FALSE, fig.cap="Convergence diagnostics (means)"}
+bias_means_plot + R_means_plot + AC_means_plot + plot_layout(nrow = 3, guides = "collect")
+```
 
+```{r, echo=FALSE, fig.cap="Convergence diagnostics (variances)"}
+bias_sds_plot + R_sds_plot + AC_sds_plot + plot_layout(nrow = 3, guides = "collect")
+```
+
+```{r, echo=FALSE, fig.cap="Convergence diagnostics (regression coefficients)"}
+bias_ests_plot + bias_R_sq_plot + cov_plot + plot_layout(nrow = 3, guides = "collect")
 ```
 
 ## Convergence Diagnostics
