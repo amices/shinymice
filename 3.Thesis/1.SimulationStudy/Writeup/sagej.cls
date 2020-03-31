@@ -324,10 +324,10 @@ centering]{geometry}
 \hbox{}\scriptsize\journalname\\
 \hbox{}\volumenumber(\issuenumber):\startpage--\endpage\\ 
 \hbox{}\copyright The Author(s) \volumeyear\\
-\hbox{}Reprints and permission:\\
-\hbox{}sagepub.co.uk/journalsPermissions.nav\\
+\hbox{}Article reuse guidelines:\\
+\hbox{}sagepub.com/journals-permissions\\
 \hbox{}DOI: 10.1177/ToBeAssigned\\
-\hbox{}www.sagepub.com/\\[2.3pt]
+\hbox{}journals.sagepub.com/home/smr\\[2.3pt]
 %\hbox{}\includegraphics[height=4mm]{SAGE_Logo}
 \hbox{}{\fboxsep 1.5pt\framebox[14mm]{{\normalsize SAGE}}}
 \end{minipage}
@@ -364,10 +364,10 @@ centering]{geometry}
  
 \def\startpage{\pageref{FirstPage}}
 \def\endpage{\pageref{LastPage}}
-\def\volumeyear{0000}
-\def\volumenumber{XX}
-\def\issuenumber{X}
-\def\journalname{Journal Title}
+\def\volumeyear{2020}
+\def\volumenumber{2020, Vol. 49}
+\def\issuenumber{?}
+\def\journalname{Sociological Methods \& Research}
 
 \def\runninghead#1{\markboth{{#1}}{}}
 
@@ -377,7 +377,7 @@ centering]{geometry}
 }}%
 \let\@evenhead\@oddhead
 \def\@oddfoot{\parbox[t]{\textwidth}{%
-{\scriptsize{\it Prepared using \textsf{\journalclass} [Version: \update]}}}}
+{\scriptsize{ }}}}
 \let\@evenfoot\@oddfoot}
 
 \def\ps@sagepage{%
@@ -389,7 +389,7 @@ centering]{geometry}
 \normalsize\sagesf{\itshape{\leftmark}}\hfill\thepage\\[-6pt]
 \noindent\rule{\textwidth}{0.25pt}}}
 \def\@evenfoot{\parbox[t]{\textwidth}{%
-\scriptsize{\it Prepared using \textsf{\journalclass}}}}
+\scriptsize{ }}}
 \def\@oddfoot{\@evenfoot}
 }
 

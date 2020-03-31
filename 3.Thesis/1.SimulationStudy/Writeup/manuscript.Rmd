@@ -9,8 +9,8 @@ address:
   org: Department of Methodology and Statistics, Utrecht University, Utrecht, The Netherlands
 corrauth: "Hanne Oberman, Sjoerd Groenman building, Utrecht Science Park, Utrecht, The Netherlands."
 email: h.i.oberman@uu.nl
-abstract: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean ut elit odio. Donec fermentum tellus neque, vitae fringilla orci pretium vitae. Fusce maximus finibus facilisis. Donec ut ullamcorper turpis. Donec ut porta ipsum. Nullam cursus mauris a sapien ornare pulvinar. Aenean malesuada molestie erat quis mattis. Praesent scelerisque posuere faucibus. Praesent nunc nulla, ullamcorper ut ullamcorper sed, molestie ut est. Donec consequat libero nisi, non semper velit vulputate et. Quisque eleifend tincidunt ligula, bibendum finibus massa cursus eget."
-keywords: MICE; convergence; 
+abstract: "Multple imputation by chained equations (mice) is a widely used tool to accommodate missing data. While empirical evidence supports the validity of inferences obtained using mice, there is no consensus on the convergence properties of the method. This paper provides insight into non-convergence of mice algorithms."
+keywords: MICE; convergence 
 classoption:
   - Royal
   - times
@@ -183,7 +183,7 @@ X_3\\
 \end{align*}
 
 and simulated with the function `mvtnorm::rmvnorm()`. Outcome variable $Y$ is subsequently calculated as 
-$$Y =  2X_1 + .5X_2 - X_3 + \epsilon .$$
+$$Y =  1 + 2X_1 + .5X_2 - X_3 + \epsilon .$$
 <!-- This note only considers a 'missing completely at random' (MCAR) mechanism, where the probability of being missing is equal for all $n \times p$ cells in $y$ [@rubin87].  -->
 
 The complete data is 'amputed' once for each simulation repetition. That is, the function `mice::ampute()` is used to impose a missingness mechanism upon the data. **(change this: The missingness is univariate, and the probability to be missing is the same for all four variables, namely 20\% (`prop = 0.8, mech = "MCAR"`). This leaves 20\% of the rows completely observed). **
