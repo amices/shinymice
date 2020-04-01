@@ -29,7 +29,7 @@ source("3.Thesis/1.SimulationStudy/Functions/Evaluate.R")
 # simulation parameters
 populationsize <- 1000 #n of simulated dataset
 n.iter <- 50 #nr of iterations (varying 1:n.iter)
-n.sim <- 10 #nr of simulations per iteration value
+n.sim <- 100 #nr of simulations per iteration value
 true_effect <- 2 #regression coefficient to be estimated
 true_mean <- true_sd <- NA
 
@@ -54,7 +54,7 @@ simulate <- function(data, n.iter, true_effect, patterns) {
   ampdata <-
     ampute(data,
            patterns = amp_patterns,
-           prop = 0.95,
+           prop = 0.05,
            mech = "MCAR")$amp
   
   # object for output
@@ -111,4 +111,4 @@ dat <-
 ###
 
 # save for future reference
-# save.Rdata(results_with_CI, name = "newresults", path = "3.Thesis/1.SimulationStudy/Results")
+save.Rdata(dat, name = "5percentmiss", path = "3.Thesis/1.SimulationStudy/Results")
