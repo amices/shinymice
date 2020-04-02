@@ -25,11 +25,11 @@ The Netherlands.}
 \email{\href{mailto:h.i.oberman@uu.nl}{\nolinkurl{h.i.oberman@uu.nl}}}
 
 \begin{abstract}
-Multple imputation by chained equations (mice) is a widely used tool to
-accommodate missing data. While empirical evidence supports the validity
-of inferences obtained using mice, there is no consensus on the
-convergence properties of the method. This paper provides insight into
-non-convergence of mice algorithms.
+(\textbf{Rewrite:}) Multple imputation by chained equations (mice) is a
+widely used tool to accommodate missing data. While empirical evidence
+supports the validity of inferences obtained using mice, there is no
+consensus on the convergence properties of the method. This paper
+provides insight into non-convergence of mice algorithms.
 \end{abstract}
 
 \keywords{MICE; convergence}
@@ -39,31 +39,30 @@ non-convergence of mice algorithms.
 \hypertarget{introduction}{%
 \section{Introduction}\label{introduction}}
 
-At some point, any scientist conducting statistical analyses will run
-into a missing data problem \citep{alli02}. Missingness is problematic
-because statistical inference cannot be performed on incomplete data
-without employing \emph{ad hoc} solutions (e.g., list-wise deletion),
-which may yield wildly invalid results \citep{buur18}. A popular answer
-to the ubiquitous problem of missing information is to use the framework
-of multiple imputation (MI), proposed by \citet{rubin87}. \textbf{(Call
-it mice already, then explain mi and ce sides of mice)} For the
+At some point, any social scientist will run into a missing data problem
+\citep{alli02}. Missingness is problematic because statistical inference
+cannot be performed on incomplete data without employing \emph{ad hoc}
+solutions (e.g., list-wise deletion), which may yield wildly invalid
+results \citep{buur18}. A popular method to obtain statistically valid
+results despite of missing data is `multiple imputation'
+\citep[MI;][]{rubin87}. This paper investigates a potential threat to
+the validity of this method: algorithmic non-convergence.
+
+With multiple imputation, missing data are `imputed' (i.e., filled in)
+several times by means of an iterative algorithmic procedure. The method
+ultimately results in an aggregated statistical inference. For the
 theoretical foundation of MI, see \citet{rubin87}. For an accessible and
 comprehensive introduction to MI from an applied perspective, see
-e.g.~\citet{buur18}. With MI, missing datapoints are `imputed' (i.e.,
-filled in) via an \emph{imputation model} (\textbf{term not required to
-understand this paper, so circumvent}) . (\textbf{Move this to mi vs.~ce
-part in intro:} The imputation model can be a joint model for all
-variables, or several univariate conditional distributions (fully
-conditional specification). FCS is more flexible and ``avoids the
-problem of specifying an appropriate joint imputation distribution and
-replaces this by the selection of appropriate univariate conditional
-distributions''.)**
+e.g.~\citet{buur18}.
 
-\textbf{(Rewrite: With FCS, an iterative algorithmic procedure is used
-to \ldots{} multiple imputation by chained equations \ldots{} ``The
-values for imputing the missing data are drawn from the posterior
-predictive distribution of the missing data conditional on the observed
-data.'')}
+based on a model of the observed databy means of an iterative algorithm
+is the use of MICE: multiple imputation by chained equations. MICE is a
+type of multiple imputation procedure--a framework proposed by
+\citet{rubin87}--in which missing datapoints are `imputed' (i.e., filled
+in) by means of an iterative algorithm (chained equations). Imputed
+values are obtained by modeling the (distribution of the) missing data
+conditional on the observed data. The technique is therefore also called
+`fully conditional specification' (FCS).
 
 There is no scientific consensus on the convergence properties of FCS
 algorithms \citep{taka17}. Some default techniques in \texttt{mice}
@@ -79,9 +78,11 @@ diagnostic at all'' \citep{cowl96}.
 
 Current practice is visually inspecting imputation chains for signs of
 non-convergence, but may be challenging to the untrained eye
-\citep[\(\S\) 6.5.2]{buur18}. Therefore diagnostic evaluation of
-convergence would be preferred. However, not known whether MCMC
-diagnostics are appropriate for MICE \ldots{} The application of
+\citep[\(\S\) 6.5.2]{buur18}. Visually inspecting imputation chains
+(\textbf{for signs of non-mixing or non-stationarity}) can only diagnose
+severely pathological cases of non-convergence. Therefore diagnostic
+evaluation of convergence would be preferred. However, not known whether
+MCMC diagnostics are appropriate for MICE \ldots{} The application of
 convergence diagnostics to MI methods has not been systematically
 studied \citep{buur18}. How can non-convergence be diagnosed? How many
 iterations are sufficient/required? What are the effects of
@@ -114,11 +115,11 @@ Let \(y\) denote an \(n \times p\) matrix containing the data values on
 \(i\) (\(i = 1, \dots, n\)) on variable \(j\) (\(j = 1, \dots, p\)) may
 be either observed or missing. The collection of observed data values in
 \(y\) is denoted by \(y_{obs}\); the missing part of \(y\) is referred
-to as \(y_{mis}\). \textbf{(This is not only notation, but theory too:
+to as \(y_{mis}\). (\textbf{This is not only notation, but theory too:}
 For each datapoint in \(y_{mis}\) \(M \times T\) times plausible values
 are sampled, where \(M\) is the number of imputations
 (\(m = 1, \dots, M\)) and \(T\) is the number of iterations
-(\(t = 1, \dots, T\)).)} The collection of samples between the initial
+(\(t = 1, \dots, T\)).) The collection of samples between the initial
 value (at \(t=1\)) and the imputed value (at \(t=T\)) will be referred
 to as an `imputation chain'.
 
@@ -230,6 +231,13 @@ diagnostic, the interest is therefore in positive \(AC\)-values.
 Moreover, the magnitude of \(AC\)-values may be evaluated statistically,
 but that is outside of this note's scope.
 
+Negative \(AC\)-values indicate divergence between subsequent samples.
+It may not be wise (\textbf{why? and how would we know? e.g., wider
+distrubutions? didn't seem like it\ldots{}}) to terminating the
+algorithm when AC is negative. High \(AC\)-values are implausible in MI
+procedures. That is, the randomness induced by the MI algorithm
+effectively mitigates the risk of dependency within chains.
+
 In short, convergence is reached when there is no dependency between
 subsequent iterations of imputation chains (\(AC = 0\)), and chains
 intermingle such that the only difference between the chains is caused
@@ -244,10 +252,7 @@ of the two convergence diagnostics against the recommended evaluation
 criteria for MI methods \citep[i.e., average bias, average confidence
 interval width, and empirical coverage rate across simulations;][\(\S\)
 2.5.2]{buur18}. That is, there is no baseline measure available to
-evaluate performance against. \textbf{(Move above: The current practice
-of visually inspecting imputation chains for signs of non-mixing or
-non-stationarity can only diagnose severely pathological cases of
-non-convergence.)}
+evaluate performance against.
 
 Based on an empirical finding \citep{lace07}, we hypothesize that
 \(\widehat{R}\) will over-estimate non-convergence of MI algorithms. The
@@ -309,18 +314,22 @@ variable \(Y\) is subsequently calculated as
 
 The complete data is `amputed' once for each simulation repetition. That
 is, the function \texttt{mice::ampute()} is used to impose a missingness
-mechanism upon the data. \textbf{(change this: The missingness is
+mechanism upon the data. (\textbf{change this:} The missingness is
 univariate, and the probability to be missing is the same for all four
 variables, namely 20\% (\texttt{prop\ =\ 0.8,\ mech\ =\ "MCAR"}). This
-leaves 20\% of the rows completely observed). }
+leaves 20\% of the rows completely observed). \textbf{(Add different
+percentages missingness??)} This study only considers only an MCAR
+missingness mechanism. Therefore, results may not be extrapolated to
+other missing data problems. Proper performance of the convergence
+diagnostics under MCAR is necessary but not sufficient to demonstrate
+appropriateness of \(\widehat{R}\) and \(AC\) as convergence
+diagnostics. This is just a proof of concept.
 
 Missing datapoints are imputed with the function \texttt{mice::mice()}.
 All MI procedures are performed with Bayesian linear regression
 imputation (\texttt{method\ =\ "norm"}), and five imputation chains
 (\texttt{m\ =\ 5}). The number of iterations varies between simulation
 conditions (\texttt{maxit\ =\ 1,\ 2,\ \textbackslash{}dots,\ 100}).
-
-\textbf{(tot hier doorgelezen)}
 
 What to evaluate?
 
@@ -355,48 +364,46 @@ lower and upper bound of the 95\% confidence interval (CI95\%) around
 
 where \(t_{(m-1)}\) is the quantile of a \(t\)-distribution with \(m-1\)
 degrees of freedom, and \(SE_{\bar{Q}}\) is the square root of the
-pooled variance estimate. From bias and CIW, we calculate empirical
-coverage rates. Coverage rate is the proportion of simulations in which
-\(Q\) is between the bounds of the CI95\% around \(\bar{Q}\).
+pooled variance estimate. \textbf{Why track CIW?} Under-estimating the
+variance of \(\bar{Q}\) may yield spurious inferences. From bias and
+CIW, we calculate empirical coverage rates. Coverage rate is the
+proportion of simulations in which \(Q\) is between the bounds of the
+CI95\% around \(\bar{Q}\).
 
 \hypertarget{results}{%
 \section{Results}\label{results}}
 
 \textbf{(Add more info about figure legends and axes.)}
 
-\begin{figure}
+\begin{flushleft}\includegraphics{manuscript_files/figure-latex/unnamed-chunk-3-1} \end{flushleft}
 
-{\centering \includegraphics{manuscript_files/figure-latex/unnamed-chunk-2-1} 
+\begin{flushleft}\includegraphics{manuscript_files/figure-latex/unnamed-chunk-4-1} \end{flushleft}
 
-}
+\begin{flushleft}\includegraphics{manuscript_files/figure-latex/unnamed-chunk-5-1} \end{flushleft}
 
-\caption{Convergence diagnostics (means)}\label{fig:unnamed-chunk-2}
-\end{figure}
+\begin{flushleft}\includegraphics{manuscript_files/figure-latex/unnamed-chunk-7-1} \end{flushleft}
 
-\begin{figure}
+\begin{flushleft}\includegraphics{manuscript_files/figure-latex/unnamed-chunk-8-1} \end{flushleft}
 
-{\centering \includegraphics{manuscript_files/figure-latex/unnamed-chunk-3-1} 
+\begin{flushleft}\includegraphics{manuscript_files/figure-latex/unnamed-chunk-9-1} \end{flushleft}
 
-}
+\begin{flushleft}\includegraphics{manuscript_files/figure-latex/unnamed-chunk-11-1} \end{flushleft}
 
-\caption{Convergence diagnostics (variances)}\label{fig:unnamed-chunk-3}
-\end{figure}
+\begin{flushleft}\includegraphics{manuscript_files/figure-latex/unnamed-chunk-12-1} \end{flushleft}
 
-\begin{figure}
+\begin{flushleft}\includegraphics{manuscript_files/figure-latex/unnamed-chunk-13-1} \end{flushleft}
 
-{\centering \includegraphics{manuscript_files/figure-latex/unnamed-chunk-4-1} 
+\begin{flushleft}\includegraphics{manuscript_files/figure-latex/unnamed-chunk-15-1} \end{flushleft}
 
-}
+\begin{flushleft}\includegraphics{manuscript_files/figure-latex/unnamed-chunk-16-1} \end{flushleft}
 
-\caption{Convergence diagnostics (regression coefficients)}\label{fig:unnamed-chunk-4}
-\end{figure}
+\begin{flushleft}\includegraphics{manuscript_files/figure-latex/unnamed-chunk-17-1} \end{flushleft}
 
-\hypertarget{convergence-diagnostics-pair-convergnce-diagnostics-with-respective-estimates-not-split-between-convergence-and-simulation-diagnostics}{%
-\subsection{Convergence Diagnostics (pair convergnce diagnostics with
-respective estimates, not split between convergence and simulation
-diagnostics)}\label{convergence-diagnostics-pair-convergnce-diagnostics-with-respective-estimates-not-split-between-convergence-and-simulation-diagnostics}}
+\hypertarget{convergence-diagnostics-1}{%
+\subsection{Convergence Diagnostics}\label{convergence-diagnostics-1}}
 
-\textbf{(Add different percentages missingness??)}
+\textbf{(Pair convergnce diagnostics with respective estimates, not
+split between convergence and simulation diagnostics)}
 
 It is apparent that there is a relation between the number of iterations
 per simulation condition (\(T\)) and the convergence diagnostics.
@@ -431,13 +438,7 @@ zero, indicating stationarity. We see an initial decrease between
 
 According to this diagnostic, none of the simulation conditions show
 signs of non-convergence, since we only observe negative or zero
-\(AC\)-values. The negative \(AC\)-values, however, indicate increasing
-divergence (\textbf{move above!}) between subsequent samples in
-conditions where \(T<4\). It may not be wise (\textbf{why? and how would
-we know? e.g., wider distrubutions? didn't seem like it\ldots{}}) to
-terminating the algorithm at that point, but after `recovering' from
-this dip in \(AC\)-values. This would imply \(T=6\) as the minimal
-number of iterations.
+\(AC\)-values.
 
 Taken together, we see that \(T>3\) is the minimal requirement to
 diagnose convergence (\(\widehat{R} < 1.2; AC \leq 0\)). This threshold
@@ -465,21 +466,19 @@ reaches stability at \(T=20\) (\textbf{Loess might not be relevant,
 check and remove accordingly!}).
 
 CIW is only clearly divergent in the simulation condition \(T=1\), see
-Figure 3B. However, under-estimating the variance of \(\bar{Q}\), which
-is the case for \(T=3\), may yield spurious inferences (\textbf{move
-above}). Only conditions where \(T>3\) are therefore considered
-sufficient. (\textbf{Possibly irrelevant Loess: These conditions have
+Figure 3B. Only conditions where \(T>3\) are therefore considered
+sufficient. (\textbf{Possibly irrelevant Loess:} These conditions have
 similar CIWs, but across iterations stability is not established (i.e.,
 the Loess line is never completely flat within the 100 simulation
-conditions).})
+conditions).)
 
 The empirical coverage rate across repetitions seems more or less stable
 for conditions where \(T>1\), see Figure 3C. We see some over-coverage
 at \(T=2\), but that is better than under-estimating the variance of
 \(\bar{Q}\). On average, the coverage rate is somewhat higher than the
 expected nominal coverage of 95\% \citep{neym34} (\textbf{not
-anymore??}). (\textbf{Loess: Similar to the CIWs, there is some trending
-across iterations (i.e., the Loess line is never flat)}).
+anymore??}). (\textbf{Loess:} Similar to the CIWs, there is some
+trending across iterations (i.e., the Loess line is never flat)).
 
 From the simulation diagnostics, we observe that unbiased estimates with
 nominal coverage rates were obtained in conditions where \(T>3\). This
@@ -546,18 +545,7 @@ appropriate.
 The observed dip in AC implies that default maxit value of five
 iterations is the worst possible number of iterations. Moreover, the
 results of this study imply that assessing the stationarity component of
-convergence with \(AC\) might be redundant, since high \(AC\)-values are
-implausible in MI procedures. That is, the randomness induced by the MI
-algorithm effectively mitigates the risk of dependency within chains
-(\textbf{add above!!}). \(AC\) would thus not be informative of the
-convergence of MI algorithms.
-
-(\textbf{Add above, not here because it was a known limitation: Since
-this study only considers only an MCAR missingness mechanism, results
-may not be extrapolated to other missing data problems. Proper
-performance of the convergence diagnostics under MCAR is necessary but
-not sufficient to demonstrate appropriateness of \(\widehat{R}\) and
-\(AC\) as convergence diagnostics. This is just a proof of concept.})
+convergence with \(AC\) might be redundant.
 
 Further research is needed to investigate their performance under clear
 violation of convergence, e.g.~dependency between predictors (predictors
