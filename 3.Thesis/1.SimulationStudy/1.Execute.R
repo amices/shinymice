@@ -111,4 +111,4 @@ dat <-
 ###
 
 # save for future reference
-# save.Rdata(dat, name = "99percentmiss", path = "3.Thesis/1.SimulationStudy/Results")
+# miceadds::save.Rdata(dat, name = "combined", path = "3.Thesis/1.SimulationStudy/Results")

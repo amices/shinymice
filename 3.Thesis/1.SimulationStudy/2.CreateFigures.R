@@ -43,14 +43,11 @@ dat %>% ggplot(aes(x = T, y = bias.R.s, color = miss)) +
   geom_line() #+ 
   # geom_errorbar(
   #       aes(x = T, ymin = bias.R.s.LL, ymax = bias.R.s.UL, color = miss))
-
 dat %>% ggplot() +
   geom_point(aes(x = T, y = bias.est.X1, color = miss)) +
   geom_line(aes(x = T, y = bias.est.X1, color = miss)) #+
   # geom_point(aes(x = T, y = bias.est.X2, shape = "X2", color = miss)) +
   # geom_line(aes(x = T, y = bias.est.X2, color = miss))
-  # geom_errorbar(
-  #     aes(x = T, ymin = bias.est.X1.LL, ymax = bias.est.X1.UL, color = miss))
 
 
 ######################################################

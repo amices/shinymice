@@ -33,7 +33,7 @@ At some point, any social scientist
 <!-- conducting statistical analyses  -->
 will run into a missing data problem [@alli02]. Missingness is problematic because statistical inference cannot be performed on incomplete data without employing \emph{ad hoc} solutions (e.g., list-wise deletion), which may yield wildly invalid results [@buur18]. A popular method to obtain statistically valid results despite of missing data is 'multiple imputation' [MI; @rubin87]. This paper investigates a potential threat to the validity of this method: algorithmic non-convergence. 
 
-The multiple imputation method can be roughly divided into 3 steps. First, each missing value in an incomplete dataset is 'imputed' (i.e., filled in) several times. Next, the analysis of scientific interest is performed on each of the completed datasets. And finally, the results of these analyses are pooled into a single aggregated statistic. The theoretical foundation of these streps was laid by Rubin [1972, -@rubin87]. For an accessible and comprehensive introduction to MI from an applied perspective, see e.g. @buur18. In this paper, we focus on the first of these steps: the algorithmic procedure with which the missing values are imputed. 
+The multiple imputation method can be roughly divided into 3 steps. First, each missing value in an incomplete dataset is 'imputed' (i.e., filled in) several times. Next, the analysis of scientific interest is performed on each of the completed datasets. And finally, the results of these analyses are pooled into a single aggregated statistic. The theoretical foundation of these streps was laid by Rubin [-@rubin76, -@rubin87]. For an accessible and comprehensive introduction to MI from an applied perspective, see e.g. @buur18. In this paper, we focus on the first of these steps: the algorithmic procedure with which the missing values are imputed. 
 
 <!-- based on a model of the observed databy means of an iterative algorithm  -->
 <!-- is the use of MICE: multiple imputation by chained equations. MICE is a type of multiple imputation procedure--a framework proposed by @rubin87--in which missing datapoints are 'imputed' (i.e., filled in) by means of an iterative algorithm (chained equations). Imputed values are obtained by modeling the (distribution of the) missing data conditional on the observed data. The technique is therefore also called 'fully conditional specification' (FCS). -->
@@ -256,48 +256,6 @@ In short, we see that the minimum number of iterations required to obtain unbias
 
 <!-- Figures 2 and 3 display results per simulation condition ($T = 1,2,\dots,100$).  -->
 
-```{r, include = FALSE}
-load("../Results/25percentmiss.Rdata")
-source("../2.CreateFigures.R")
-```
-
-
-```{r}
-bias_means_plot + R_means_plot + AC_means_plot + plot_layout(nrow = 3) + plot_annotation(title = "Convergence of means, 25% missingness")
-```
-
-
-```{r}
-bias_sds_plot + R_sds_plot + AC_sds_plot + plot_layout(nrow = 3) + plot_annotation(title = "Convergence of variances, 25% missingness")
-```
-
-
-```{r}
-bias_ests_plot + bias_R_sq_plot + cov_plot + plot_layout(nrow = 3) + plot_annotation(title = "Convergence of effects, 25% missingness")
-
-```
-
-```{r, include = FALSE}
-load("../Results/50percentmiss.Rdata")
-source("../2.CreateFigures.R")
-```
-
-
-```{r}
-bias_means_plot + R_means_plot + AC_means_plot + plot_layout(nrow = 3) + plot_annotation(title = "Convergence of means, 50% missingness")
-```
-
-
-```{r}
-bias_sds_plot + R_sds_plot + AC_sds_plot + plot_layout(nrow = 3) + plot_annotation(title = "Convergence of variances, 50% missingness")
-```
-
-
-```{r}
-bias_ests_plot + bias_R_sq_plot + cov_plot + plot_layout(nrow = 3) + plot_annotation(title = "Convergence of effects, 50% missingness")
-
-```
-
 
 ```{r, include = FALSE}
 load("../Results/75percentmiss.Rdata")
@@ -317,30 +275,20 @@ bias_sds_plot + R_sds_plot + AC_sds_plot + plot_layout(nrow = 3) + plot_annotati
 
 ```{r}
 bias_ests_plot + bias_R_sq_plot + cov_plot + plot_layout(nrow = 3) + plot_annotation(title = "Convergence of effects, 75% missingness")
+```
+
+```{r, echo = FALSE}
+load("../Results/combined.Rdata")
+
+dat %>% ggplot(aes(x = T, y = bias.R.s, color = miss)) + 
+  geom_point() +
+  geom_line() +
+  ylab(expression(paste("Bias in ", hat(R ^ 2)))) +
+  labs(colour = "Legend: missingness percentage") +
+  plot_annotation(title = "The effect of missingness percentage, an example")
 
 ```
 
-
-```{r, include = FALSE}
-load("../Results/95percentmiss.Rdata")
-source("../2.CreateFigures.R")
-```
-
-
-```{r}
-bias_means_plot + R_means_plot + AC_means_plot + plot_layout(nrow = 3) + plot_annotation(title = "Convergence of means, 95% missingness")
-```
-
-
-```{r}
-bias_sds_plot + R_sds_plot + AC_sds_plot + plot_layout(nrow = 3) + plot_annotation(title = "Convergence of variances, 95% missingness")
-```
-
-
-```{r}
-bias_ests_plot + bias_R_sq_plot + cov_plot + plot_layout(nrow = 3) + plot_annotation(title = "Convergence of effects, 95% missingness")
-
-```
 
 <!-- For 25% miss, no bias in estimated means, Rh flat from 30 it. (but <1.1 for it>11), AC never high but stable after 40 it. Bias in estimated variances only if it=1 or maybe 2?, while Rh of chain variances is flat around it 25 (smaller than 1.1 for it>9), and AC never positive, flat around it 30. Bias in estimated reg. coeff. only pronounced for the first iteration., while coverage rates are ok immediately on average, variance explained is marginally underestimated (bias of 0.5% on an effect of 19.25%). -->
 
