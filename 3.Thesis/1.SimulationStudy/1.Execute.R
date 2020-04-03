@@ -54,7 +54,7 @@ simulate <- function(data, n.iter, true_effect, patterns) {
   ampdata <-
     ampute(data,
            patterns = amp_patterns,
-           prop = 0.05,
+           prop = 0.95,
            mech = "MCAR")$amp
   
   # object for output

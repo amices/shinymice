@@ -2,6 +2,9 @@
 # requires the packages "dplyr", "ggplot2"
 # and the object 'results' created with '1.Excecute'
 
+# filter by missingness percentage
+miss_perc <- "75"
+
 # load package
 library("dplyr")
 library("ggplot2")
@@ -17,14 +20,44 @@ theme_update(plot.title = element_text(hjust = 0.5),
              legend.position = "bottom")
 
 
-# # if necessary, load results
-# load("C:/Users/User/Desktop/shinyMice/3.Thesis/1.SimulationStudy/Results/results.Rdata")
-# dat <- results_with_CI # <- dat
+# load results
+load("C:/Users/User/Desktop/shinyMice/3.Thesis/1.SimulationStudy/Results/5percentmiss.Rdata")
+five <- dat %>% mutate(miss = "5") 
+load("C:/Users/User/Desktop/shinyMice/3.Thesis/1.SimulationStudy/Results/25percentmiss.Rdata")
+twentyfive <- dat %>% mutate(miss = "25") 
+load("C:/Users/User/Desktop/shinyMice/3.Thesis/1.SimulationStudy/Results/50percentmiss.Rdata")
+fifty <- dat %>% mutate(miss = "50")
+load("C:/Users/User/Desktop/shinyMice/3.Thesis/1.SimulationStudy/Results/75percentmiss.Rdata")
+seventyfive <- dat %>% mutate(miss = "75") 
+load("C:/Users/User/Desktop/shinyMice/3.Thesis/1.SimulationStudy/Results/95percentmiss.Rdata")
+ninetyfive <- dat %>% mutate(miss = "95") 
+load("C:/Users/User/Desktop/shinyMice/3.Thesis/1.SimulationStudy/Results/99percentmiss.Rdata")
+ninetynine <- dat %>% mutate(miss = "99") 
+
+# combine
+dat <- rbind(five, twentyfive, fifty, seventyfive, ninetyfive, ninetynine)
+
+# test
+dat %>% ggplot(aes(x = T, y = bias.R.s, color = miss)) + 
+  geom_point() +
+  geom_line() #+ 
+  # geom_errorbar(
+  #       aes(x = T, ymin = bias.R.s.LL, ymax = bias.R.s.UL, color = miss))
+
+dat %>% ggplot() +
+  geom_point(aes(x = T, y = bias.est.X1, color = miss)) +
+  geom_line(aes(x = T, y = bias.est.X1, color = miss)) #+
+  # geom_point(aes(x = T, y = bias.est.X2, shape = "X2", color = miss)) +
+  # geom_line(aes(x = T, y = bias.est.X2, color = miss))
+  # geom_errorbar(
+  #     aes(x = T, ymin = bias.est.X1.LL, ymax = bias.est.X1.UL, color = miss))
+
 
 ######################################################
 ## Univariate estimates: variable means ##############
 ######################################################
-bias_means_plot <- dat %>% .[1:50,] %>% ggplot() +
+bias_means_plot <- dat %>% filter(miss == miss_perc) %>%
+  ggplot() +
   geom_hline(yintercept = 0,
              color = "grey",
              lwd = 2) +
@@ -41,7 +74,7 @@ bias_means_plot <- dat %>% .[1:50,] %>% ggplot() +
   labs(colour = "Legend") +
   theme(legend.position = "")
 
-R_means_plot <- dat %>% .[1:50, ] %>%
+R_means_plot <- dat %>% filter(miss == miss_perc) %>%
   ggplot() +
   geom_hline(yintercept = 1,
              color = "grey",
@@ -59,7 +92,7 @@ R_means_plot <- dat %>% .[1:50, ] %>%
   labs(colour = "Legend") +
   theme(legend.position = "")
 
-AC_means_plot <- dat %>% .[1:50,] %>%
+AC_means_plot <- dat %>% filter(miss == miss_perc) %>%
   ggplot(na.rm = TRUE) +
   geom_hline(yintercept = 0,
              color = "grey",
@@ -81,7 +114,8 @@ bias_means_plot + R_means_plot + AC_means_plot + plot_layout(nrow = 3) + plot_an
 ######################################################
 ## Univariate estimates: variable variances ##########
 ######################################################
-bias_sds_plot <- dat %>% .[1:50,] %>% ggplot() +
+bias_sds_plot <- dat %>% filter(miss == miss_perc) %>% 
+  ggplot() +
   geom_hline(yintercept = 0,
              color = "grey",
              lwd = 2) +
@@ -98,7 +132,7 @@ bias_sds_plot <- dat %>% .[1:50,] %>% ggplot() +
   labs(colour = "Legend") +
   theme(legend.position = "")
 
-AC_sds_plot <- dat %>% .[1:50,] %>%
+AC_sds_plot <- dat %>% filter(miss == miss_perc) %>%
   ggplot() +
   geom_hline(yintercept = 0,
              color = "grey",
@@ -115,7 +149,7 @@ AC_sds_plot <- dat %>% .[1:50,] %>%
   ylab("Auto-correlation") +
   labs(colour = "Legend")
 
-R_sds_plot <- dat %>% .[1:50,] %>%
+R_sds_plot <- dat %>% filter(miss == miss_perc) %>%
   ggplot() +
   geom_hline(yintercept = 1,
              color = "grey",
@@ -138,7 +172,7 @@ bias_sds_plot + R_sds_plot + AC_sds_plot + plot_layout(nrow = 3) + plot_annotati
 ######################################################
 ## Multivariate estimates: regression coeff. #########
 ######################################################
-bias_ests_plot <- dat %>% .[1:50,] %>%
+bias_ests_plot <- dat %>% filter(miss == miss_perc) %>%
   ggplot() +
   geom_hline(yintercept = 0,
              color = "grey",
@@ -154,7 +188,7 @@ bias_ests_plot <- dat %>% .[1:50,] %>%
   labs(colour = "Legend") +
   theme(legend.position = "")
 
-cov_plot <- dat %>% .[1:50,] %>%
+cov_plot <- dat %>% filter(miss == miss_perc) %>%
   ggplot() +
   geom_hline(yintercept = .95,
              color = "grey",
@@ -169,7 +203,7 @@ cov_plot <- dat %>% .[1:50,] %>%
   xlab("Number of iterations") +
   labs(colour = "Legend")
 
-ciw_plot <- dat %>% .[1:50,] %>%
+ciw_plot <- dat %>% filter(miss == miss_perc) %>%
   ggplot() +
   geom_point(aes(x = T, y = CIW.est.2, color = "X1"), size = .75) +
   geom_point(aes(x = T, y = CIW.est.3, color = "X2"), size = .75) +
@@ -187,7 +221,7 @@ bias_ests_plot + ciw_plot + cov_plot + plot_layout(nrow = 3) + plot_annotation(t
 ######################################################
 ## Multivariate estimates: predictive perf. ##########
 ######################################################
-bias_R_sq_plot <- dat %>% .[1:50,] %>%
+bias_R_sq_plot <- dat %>% filter(miss == miss_perc) %>%
   ggplot() +
   geom_hline(yintercept = 0,
              color = "grey",
@@ -198,7 +232,7 @@ bias_R_sq_plot <- dat %>% .[1:50,] %>%
   ylab(expression(paste("Bias in ", hat(R ^ 2)))) +
   theme(legend.position = "")
 
-bias_sigma_plot <- dat %>% .[1:50,] %>%
+bias_sigma_plot <- dat %>% filter(miss == miss_perc) %>%
   ggplot() +
   geom_hline(yintercept = 0,
              color = "grey",
@@ -215,7 +249,7 @@ bias_R_sq_plot + bias_sigma_plot + plot_layout(nrow = 2) + plot_annotation(title
 ######################################################
 ## Multivariate estimates: NOG IETS MEE DOEN #########
 ######################################################
-RMSE_plot <- dat %>% .[1:50,] %>%
+RMSE_plot <- dat %>% filter(miss == miss_perc) %>%
   ggplot() +
   geom_point(aes(x = T, y = RMSE.1, color = "m1"), size = .75) +
   geom_point(aes(x = T, y = RMSE.2, color = "m2"), size = .75) +
@@ -232,7 +266,7 @@ RMSE_plot <- dat %>% .[1:50,] %>%
   labs(colour = "Legend") +
   theme(legend.position = "")
 
-MAE_plot <- dat %>% .[1:50,] %>%
+MAE_plot <- dat %>% filter(miss == miss_perc) %>%
   ggplot() +
   geom_point(aes(x = T, y = MAE.1, color = "m1"), size = .75) +
   geom_point(aes(x = T, y = MAE.2, color = "m2"), size = .75) +
@@ -249,7 +283,7 @@ MAE_plot <- dat %>% .[1:50,] %>%
   labs(colour = "Legend") +
   theme(legend.position = "")
 
-PCA_plot <- dat %>% .[1:50,] %>%
+PCA_plot <- dat %>% filter(miss == miss_perc) %>%
   ggplot() +
   geom_point(aes(x = T, y = pca.1, color = "m1"), size = .75) +
   geom_point(aes(x = T, y = pca.2, color = "m2"), size = .75) +
