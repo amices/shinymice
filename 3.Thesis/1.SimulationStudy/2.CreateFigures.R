@@ -19,35 +19,44 @@ theme_update(plot.title = element_text(hjust = 0.5),
              legend.key = element_blank(),
              legend.position = "bottom")
 
+# load data
+# load("3.Thesis/1.SimulationStudy/Results/combined.Rdata")
 
-# load results
-load("C:/Users/User/Desktop/shinyMice/3.Thesis/1.SimulationStudy/Results/5percentmiss.Rdata")
-five <- dat %>% mutate(miss = "5") 
-load("C:/Users/User/Desktop/shinyMice/3.Thesis/1.SimulationStudy/Results/25percentmiss.Rdata")
-twentyfive <- dat %>% mutate(miss = "25") 
-load("C:/Users/User/Desktop/shinyMice/3.Thesis/1.SimulationStudy/Results/50percentmiss.Rdata")
-fifty <- dat %>% mutate(miss = "50")
-load("C:/Users/User/Desktop/shinyMice/3.Thesis/1.SimulationStudy/Results/75percentmiss.Rdata")
-seventyfive <- dat %>% mutate(miss = "75") 
-load("C:/Users/User/Desktop/shinyMice/3.Thesis/1.SimulationStudy/Results/95percentmiss.Rdata")
-ninetyfive <- dat %>% mutate(miss = "95") 
-load("C:/Users/User/Desktop/shinyMice/3.Thesis/1.SimulationStudy/Results/99percentmiss.Rdata")
-ninetynine <- dat %>% mutate(miss = "99") 
-
-# combine
-dat <- rbind(five, twentyfive, fifty, seventyfive, ninetyfive, ninetynine)
+# # load results
+# load("C:/Users/User/Desktop/shinyMice/3.Thesis/1.SimulationStudy/Results/5percentmiss.Rdata")
+# five <- dat %>% mutate(miss = "5") 
+# load("C:/Users/User/Desktop/shinyMice/3.Thesis/1.SimulationStudy/Results/25percentmiss.Rdata")
+# twentyfive <- dat %>% mutate(miss = "25") 
+# load("C:/Users/User/Desktop/shinyMice/3.Thesis/1.SimulationStudy/Results/50percentmiss.Rdata")
+# fifty <- dat %>% mutate(miss = "50")
+# load("C:/Users/User/Desktop/shinyMice/3.Thesis/1.SimulationStudy/Results/75percentmiss.Rdata")
+# seventyfive <- dat %>% mutate(miss = "75") 
+# load("C:/Users/User/Desktop/shinyMice/3.Thesis/1.SimulationStudy/Results/95percentmiss.Rdata")
+# ninetyfive <- dat %>% mutate(miss = "95") 
+# load("C:/Users/User/Desktop/shinyMice/3.Thesis/1.SimulationStudy/Results/99percentmiss.Rdata")
+# ninetynine <- dat %>% mutate(miss = "99") 
+# # combine
+# dat <- rbind(five, twentyfive, fifty, seventyfive, ninetyfive, ninetynine)
 
 # test
 dat %>% ggplot(aes(x = T, y = bias.R.s, color = miss)) + 
   geom_point() +
-  geom_line() #+ 
-  # geom_errorbar(
-  #       aes(x = T, ymin = bias.R.s.LL, ymax = bias.R.s.UL, color = miss))
-dat %>% ggplot() +
-  geom_point(aes(x = T, y = bias.est.X1, color = miss)) +
-  geom_line(aes(x = T, y = bias.est.X1, color = miss)) #+
-  # geom_point(aes(x = T, y = bias.est.X2, shape = "X2", color = miss)) +
-  # geom_line(aes(x = T, y = bias.est.X2, color = miss))
+  geom_line() +
+  ylab(expression(paste("Bias in ", hat(R ^ 2)))) +
+  labs(colour = "Legend: missingness percentage") +
+  plot_annotation(title = "The effect of missingness percentage, an example")
+
+# dat %>% ggplot(aes(x = T, y = bias.R.s, color = miss)) + 
+#   geom_point() +
+#   geom_line() #+ 
+#   # geom_errorbar(
+#   #       aes(x = T, ymin = bias.R.s.LL, ymax = bias.R.s.UL, color = miss))
+
+# dat %>% ggplot() +
+#   geom_point(aes(x = T, y = bias.est.X1, color = miss)) +
+#   geom_line(aes(x = T, y = bias.est.X1, color = miss)) #+
+#   # geom_point(aes(x = T, y = bias.est.X2, shape = "X2", color = miss)) +
+#   # geom_line(aes(x = T, y = bias.est.X2, color = miss))
 
 
 ######################################################

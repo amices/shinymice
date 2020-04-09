@@ -42,17 +42,17 @@ provides insight into non-convergence of mice algorithms.
 Missing data problems are ubiquitous and pervasive. \textbf{or}
 Everybody who works with person data is likely to run into a missing
 data problem.\\
---\textgreater{} Missingness is problematic because statistical
-inference cannot be performed on the whole data without employing
-\emph{ad hoc} solutions (e.g., list-wise deletion), which may yield
-wildly invalid results \citep{buur18}. A popular method to obtain
-statistically valid results despite of missing data is `multiple
-imputation' \citep[MI;][]{rubin76}. The multiple imputation method can
-be roughly divided into 3 steps: First, each missing value in an
-incomplete dataset is `imputed' (i.e., filled in) several times by some
-algorithmic procedure. Next, the analysis of scientific interest is
-performed on each of the completed datasets. And finally, the results of
-these analyses are pooled into a single aggregated statistic.
+Missingness is problematic because statistical inference cannot be
+performed on the whole data without employing \emph{ad hoc} solutions
+(e.g., list-wise deletion), which may yield wildly invalid results
+\citep{buur18}. A popular method to obtain statistically valid results
+despite of missing data is `multiple imputation' \citep[MI;][]{rubin76}.
+The multiple imputation method can be roughly divided into 3 steps:
+First, each missing value in an incomplete dataset is `imputed' (i.e.,
+filled in) several times by some algorithmic procedure. Next, the
+analysis of scientific interest is performed on each of the completed
+datasets. And finally, the results of these analyses are pooled into a
+single aggregated statistic.
 
 Algorithms are often used to draw imputations from the posterior
 predictive distribution of the missing values. This introduces a
@@ -312,31 +312,22 @@ Outcome variable \(Y\) is subsequently calculated as
 \textbf{Add the function \texttt{mvtnorm::rmvnorm()} back in}
 
 The complete data is `amputed' once for each simulation repetition with
-function
-\texttt{mice::ampute().\ (**change\ this:**\ The\ missingness\ is\ univariate,\ and\ the\ probability\ to\ be\ missing\ is\ the\ same\ for\ all\ four\ variables,\ namely\ 20\textbackslash{}\%\ (}prop
-= 0.8, mech = ``MCAR''`). This leaves 20\% of the rows completely
-observed). \textbf{(Add different percentages missingness??)} This study
-only considers only an MCAR missingness mechanism. Therefore, results
-may not be extrapolated to other missing data problems. Proper
-performance of the convergence diagnostics under MCAR is necessary but
-not sufficient to demonstrate appropriateness of \(\widehat{R}\) and
-\(AC\) as convergence diagnostics. This is just a proof of concept.
+function \texttt{mice::ampute()}. (\textbf{change this:} The missingness
+is univariate, and the probability to be missing is the same for all
+four variables, namely 20\% (\texttt{prop\ =\ 0.8,\ mech\ =\ "MCAR"}).
+This leaves 20\% of the rows completely observed). \textbf{(Add
+different percentages missingness??)} This study only considers only an
+MCAR missingness mechanism. Therefore, results may not be extrapolated
+to other missing data problems. Proper performance of the convergence
+diagnostics under MCAR is necessary but not sufficient to demonstrate
+appropriateness of \(\widehat{R}\) and \(AC\) as convergence
+diagnostics. This is just a proof of concept.
 
 Missing datapoints are imputed with the function \texttt{mice::mice()}.
 All MI procedures are performed with Bayesian linear regression
 imputation (\texttt{method\ =\ "norm"}), and five imputation chains
 (\texttt{m\ =\ 5}). The number of iterations varies between simulation
-conditions (\texttt{maxit\ =} \[1, 2, \dots, 100\]).
-
-What to evaluate?
-
-\begin{itemize}
-\item
-  bias in regression coefficients
-\item
-  bias in \(R^2\) (= coefficient of determination)
-\item
-\end{itemize}
+conditions (\texttt{maxit\ =} \(1, 2, \dots, 100\)).
 
 \(\widehat{R}\) (\textbf{of what?? i.e., chain means and chain variances
 of each variable}) is computed by implementing Vehtari et al.'s
