@@ -25,13 +25,15 @@ source("3.Thesis/1.SimulationStudy/Functions/Within.R")
 source("3.Thesis/1.SimulationStudy/Functions/Autocorrelation.R")
 source("3.Thesis/1.SimulationStudy/Functions/Impute.R")
 source("3.Thesis/1.SimulationStudy/Functions/Evaluate.R")
+source("3.Thesis/1.SimulationStudy/Functions/PCA_convergence.R")
 
 # simulation parameters
-populationsize <- 10000 #n of simulated dataset
-n.iter <- 100 #nr of iterations (varying 1:n.iter)
-n.sim <- 1000 #nr of simulations per iteration value
+populationsize <- 1000 #n of simulated dataset
+n.iter <- 50 #nr of iterations (varying 1:n.iter)
+n.sim <- 100 #nr of simulations per iteration value
 true_effect <- 2 #regression coefficient to be estimated
 true_mean <- true_sd <- NA
+miss_prop <- .05
 
 # start simulation study
 set.seed(1111)
@@ -47,14 +49,14 @@ amp_patterns <-
 names(amp_patterns) <- ampute(data)$patterns %>% names()
 
 # combine separate functions into wrapper
-simulate <- function(data, n.iter, true_effect, patterns) {
+simulate <- function(data, n.iter, true_effect, patterns, prop) {
   pb <- txtProgressBar(min = 0, max = n.iter, style = 3)
   
   # remove values at random with 20 percent probability to be missing
   ampdata <-
     ampute(data,
            patterns = amp_patterns,
-           prop = 0.75,
+           prop = miss_prop,
            mech = "MCAR")$amp
   
   # object for output
@@ -80,7 +82,8 @@ out <-
       data = data,
       n.iter = n.iter,
       true_effect = true_effect,
-      patterns = amp_patterns
+      patterns = amp_patterns,
+      prop = miss_prop
     ),
     simplify = FALSE
   )
@@ -88,7 +91,7 @@ out <-
 ###
 
 # evaluate
-results <- evaluate.sim(sims = out, n.iter = n.iter)
+results_without_CI <- evaluate.sim(sims = out, n.iter = n.iter)
 
 # # uncomment for MCMC SEs
 # MCMCSE <- evaluate.sim(sims = out, n.iter = n.iter, mean_or_SE = "se")
@@ -104,11 +107,22 @@ CI_upper <-
   evaluate.sim(sims = out,
                n.iter = n.iter,
                mean_or_SE = "upper")
-results_with_CI <-
-  results %>% left_join(CI_lower, by = "T", suffix = c("", ".LL")) %>% left_join(CI_upper, by = "T", suffix = c("", ".UL"))
+results <-
+  results_without_CI %>% left_join(CI_lower, by = "T", suffix = c("", ".LL")) %>% left_join(CI_upper, by = "T", suffix = c("", ".UL"))
 
+# add convergence diagnostics for PCA
+PCA_results <- PCA_convergence(out)
+results <- cbind(results, PCA_results) %>% mutate(miss = miss_prop*100)
 
 ###
 
-# save for future reference
-save.Rdata(results_with_CI, name = "results", path = "3.Thesis/1.SimulationStudy/Results")
+# save with other missingness proportions
+if (results$miss[1] == 5){ 
+  save(results, file = "3.Thesis/1.SimulationStudy/Results/complete.Rdata")
+} else {
+  load("3.Thesis/1.SimulationStudy/Results/complete.Rdata")
+  dat <- rbind(dat, results)  
+  save(dat, file = "3.Thesis/1.SimulationStudy/Results/complete.Rdata")
+}
+
+

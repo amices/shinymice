@@ -102,7 +102,7 @@ test.impute <- function(true_effect,
   # compute PCA loading instead
   pca <-
     map_dbl(imputed, ~ {
-      princomp(., cor = TRUE) %>% loadings() %>% .[1, 1]
+      princomp(., cor = TRUE) %>% .$sdev %>% .[1] %>% .^2 #first eigenvalue of the varcovar matrix
     })
   
   # collect output
