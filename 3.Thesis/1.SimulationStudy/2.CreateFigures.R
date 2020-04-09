@@ -22,7 +22,7 @@ theme_update(plot.title = element_text(hjust = 0.5),
 # load data
 load("3.Thesis/1.SimulationStudy/Results/complete.Rdata")
 
-# test
+# R squared
 dat %>% ggplot(aes(x = T, y = bias.R.s, color = as.factor(miss))) + 
   geom_point() +
   geom_line() +
@@ -30,17 +30,34 @@ dat %>% ggplot(aes(x = T, y = bias.R.s, color = as.factor(miss))) +
   labs(colour = "Missingness (%)") +
   plot_annotation(title = "The effect of missingness percentage, an example")
 
-# dat %>% ggplot(aes(x = T, y = bias.R.s, color = miss)) + 
-#   geom_point() +
-#   geom_line() #+ 
-#   # geom_errorbar(
-#   #       aes(x = T, ymin = bias.R.s.LL, ymax = bias.R.s.UL, color = miss))
+# R hat
+dat %>% ggplot(aes(x = T, y = R.PCA, color = as.factor(miss))) + 
+  geom_point() +
+  geom_line() +
+  geom_hline(yintercept = 1,
+             color = "grey",
+             lwd = 2) +
+  ylab(expression(paste(widehat(R)))) +
+  labs(colour = "Missingness (%)") +
+  plot_annotation(title = "The effect of missingness percentage, an example")
 
+# AC
+dat %>% ggplot(aes(x = T, y = AC.PCA, color = as.factor(miss))) + 
+  geom_point() +
+  geom_line() +
+  geom_hline(yintercept = 0,
+             color = "grey",
+             lwd = 2) +
+  ylab("Auto-correlation") +
+  labs(colour = "Missingness (%)") +
+  plot_annotation(title = "The effect of missingness percentage, an example")
+
+# Regression estimate(s)
 # dat %>% ggplot() +
-#   geom_point(aes(x = T, y = bias.est.X1, color = miss)) +
-#   geom_line(aes(x = T, y = bias.est.X1, color = miss)) #+
-#   # geom_point(aes(x = T, y = bias.est.X2, shape = "X2", color = miss)) +
-#   # geom_line(aes(x = T, y = bias.est.X2, color = miss))
+#   geom_point(aes(x = T, y = bias.est.X1, color = as.factor(miss))) +
+#   geom_line(aes(x = T, y = bias.est.X1, color = as.factor(miss))) #+
+#   # geom_point(aes(x = T, y = bias.est.X2, shape = "X2", color = as.factor(miss))) +
+#   # geom_line(aes(x = T, y = bias.est.X2, color = as.factor(miss)))
 
 
 ######################################################

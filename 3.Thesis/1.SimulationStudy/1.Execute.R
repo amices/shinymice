@@ -50,7 +50,6 @@ names(amp_patterns) <- ampute(data)$patterns %>% names()
 
 # combine separate functions into wrapper
 simulate <- function(data, n.iter, true_effect, patterns, prop) {
-  pb <- txtProgressBar(min = 0, max = n.iter, style = 3)
   
   # remove values at random with 20 percent probability to be missing
   ampdata <-
@@ -65,14 +64,20 @@ simulate <- function(data, n.iter, true_effect, patterns, prop) {
   #for (run in 1:runs) {
   for (i in 1:n.iter) {
     res[[i]] <- test.impute(true_effect, data = ampdata, maxit = i)
-    setTxtProgressBar(pb, i)
   }
   #}
-  close(pb)
-  # output
+
+    # output
   names(res) <- 1:n.iter
   res
 }
+
+#######################
+####### Start #########
+#######################
+
+for (miss_prop in c(.05, .25, .5, .75, .95)) {
+
 
 # simulate
 out <-
@@ -114,15 +119,14 @@ results <-
 PCA_results <- PCA_convergence(out)
 results <- cbind(results, PCA_results) %>% mutate(miss = miss_prop*100)
 
-###
+### 
 
 # save with other missingness proportions
-if (results$miss[1] == 5){ 
-  save(results, file = "3.Thesis/1.SimulationStudy/Results/complete.Rdata")
-} else {
+if (miss_prop == .05){
+  dat <- results
+  } else {
   load("3.Thesis/1.SimulationStudy/Results/complete.Rdata")
-  dat <- rbind(dat, results)  
-  save(dat, file = "3.Thesis/1.SimulationStudy/Results/complete.Rdata")
+  dat <- rbind(dat, results)}
+
+save(dat, file = "3.Thesis/1.SimulationStudy/Results/complete.Rdata")
 }
-
-
