@@ -20,30 +20,14 @@ theme_update(plot.title = element_text(hjust = 0.5),
              legend.position = "bottom")
 
 # load data
-# load("3.Thesis/1.SimulationStudy/Results/combined.Rdata")
-
-# # load results
-# load("C:/Users/User/Desktop/shinyMice/3.Thesis/1.SimulationStudy/Results/5percentmiss.Rdata")
-# five <- dat %>% mutate(miss = "5") 
-# load("C:/Users/User/Desktop/shinyMice/3.Thesis/1.SimulationStudy/Results/25percentmiss.Rdata")
-# twentyfive <- dat %>% mutate(miss = "25") 
-# load("C:/Users/User/Desktop/shinyMice/3.Thesis/1.SimulationStudy/Results/50percentmiss.Rdata")
-# fifty <- dat %>% mutate(miss = "50")
-# load("C:/Users/User/Desktop/shinyMice/3.Thesis/1.SimulationStudy/Results/75percentmiss.Rdata")
-# seventyfive <- dat %>% mutate(miss = "75") 
-# load("C:/Users/User/Desktop/shinyMice/3.Thesis/1.SimulationStudy/Results/95percentmiss.Rdata")
-# ninetyfive <- dat %>% mutate(miss = "95") 
-# load("C:/Users/User/Desktop/shinyMice/3.Thesis/1.SimulationStudy/Results/99percentmiss.Rdata")
-# ninetynine <- dat %>% mutate(miss = "99") 
-# # combine
-# dat <- rbind(five, twentyfive, fifty, seventyfive, ninetyfive, ninetynine)
+load("3.Thesis/1.SimulationStudy/Results/complete.Rdata")
 
 # test
-dat %>% ggplot(aes(x = T, y = bias.R.s, color = miss)) + 
+dat %>% ggplot(aes(x = T, y = bias.R.s, color = as.factor(miss))) + 
   geom_point() +
   geom_line() +
   ylab(expression(paste("Bias in ", hat(R ^ 2)))) +
-  labs(colour = "Legend: missingness percentage") +
+  labs(colour = "Missingness (%)") +
   plot_annotation(title = "The effect of missingness percentage, an example")
 
 # dat %>% ggplot(aes(x = T, y = bias.R.s, color = miss)) + 
@@ -77,7 +61,7 @@ bias_means_plot <- dat %>% filter(miss == miss_perc) %>%
   geom_line(aes(x = T, y = bias.mean.X3, color = "X3")) +
   xlab("") +
   ylab(expression(paste("Bias in ", hat(mu)))) +
-  labs(colour = "Legend") +
+  labs(colour = "Variable") +
   theme(legend.position = "")
 
 R_means_plot <- dat %>% filter(miss == miss_perc) %>%
@@ -95,7 +79,7 @@ R_means_plot <- dat %>% filter(miss == miss_perc) %>%
   geom_line(aes(x = T, y = R.mean.X3, color = "X3"), na.rm = TRUE) +
   xlab("") +
   ylab(expression(paste(widehat(R)))) +
-  labs(colour = "Legend") +
+  labs(colour = "Variable") +
   theme(legend.position = "")
 
 AC_means_plot <- dat %>% filter(miss == miss_perc) %>%
@@ -113,7 +97,7 @@ AC_means_plot <- dat %>% filter(miss == miss_perc) %>%
   geom_line(aes(x = T, y = AC.mean.X3, color = "X3"), na.rm = TRUE) +
   xlab("Number of iterations") +
   ylab("Auto-correlation") +
-  labs(colour = "Legend") 
+  labs(colour = "Variable") 
 
 bias_means_plot + R_means_plot + AC_means_plot + plot_layout(nrow = 3) + plot_annotation(title = "Convergence of means")
 
@@ -135,7 +119,7 @@ bias_sds_plot <- dat %>% filter(miss == miss_perc) %>%
   geom_line(aes(x = T, y = bias.sd.X3, color = "X3")) +
   xlab("") +
   ylab(expression(paste("Bias in ", hat(sigma)))) +
-  labs(colour = "Legend") +
+  labs(colour = "Variable") +
   theme(legend.position = "")
 
 AC_sds_plot <- dat %>% filter(miss == miss_perc) %>%
@@ -153,7 +137,7 @@ AC_sds_plot <- dat %>% filter(miss == miss_perc) %>%
   geom_line(aes(x = T, y = AC.var.X3, color = "X3"), na.rm = TRUE) +
   xlab("Number of iterations") +
   ylab("Auto-correlation") +
-  labs(colour = "Legend")
+  labs(colour = "Variable")
 
 R_sds_plot <- dat %>% filter(miss == miss_perc) %>%
   ggplot() +
@@ -170,7 +154,7 @@ R_sds_plot <- dat %>% filter(miss == miss_perc) %>%
   geom_line(aes(x = T, y = R.var.X3, color = "X3"), na.rm = TRUE) +
   xlab("") +
   ylab(expression(paste(widehat(R)))) +
-  labs(colour = "Legend") +
+  labs(colour = "Variable") +
   theme(legend.position = "")
 
 bias_sds_plot + R_sds_plot + AC_sds_plot + plot_layout(nrow = 3) + plot_annotation(title = "Convergence of variances")
@@ -191,7 +175,7 @@ bias_ests_plot <- dat %>% filter(miss == miss_perc) %>%
   geom_line(aes(x = T, y = bias.est.X3, color = "X3")) +
   xlab("") +
   ylab(expression(paste("Bias in ", hat(beta)))) +
-  labs(colour = "Legend") +
+  labs(colour = "Variable") +
   theme(legend.position = "")
 
 cov_plot <- dat %>% filter(miss == miss_perc) %>%
@@ -207,7 +191,7 @@ cov_plot <- dat %>% filter(miss == miss_perc) %>%
   geom_line(aes(x = T, y = cov.est.X3, color = "X3")) +
   ylab(expression(paste("Coverage of ", hat(beta)))) +
   xlab("Number of iterations") +
-  labs(colour = "Legend")
+  labs(colour = "Variable")
 
 ciw_plot <- dat %>% filter(miss == miss_perc) %>%
   ggplot() +
@@ -219,7 +203,7 @@ ciw_plot <- dat %>% filter(miss == miss_perc) %>%
   geom_line(aes(x = T, y = CIW.est.4, color = "X3")) +
   xlab("") +
   ylab(expression(paste("CI width of ", hat(beta)))) +
-  labs(colour = "Legend") +
+  labs(colour = "Variable") +
   theme(legend.position = "")
 
 bias_ests_plot + ciw_plot + cov_plot + plot_layout(nrow = 3) + plot_annotation(title = "Convergence of regression coefficients")
@@ -247,7 +231,7 @@ bias_sigma_plot <- dat %>% filter(miss == miss_perc) %>%
   geom_line(aes(x = T, y = bias.sigma), color = "black") +
   xlab("") +
   ylab(expression(paste("Bias in ", hat(sigma[epsilon]^2)))) +
-  labs(colour = "Legend") +
+  labs(colour = "Variable") +
   theme(legend.position = "")
 
 bias_R_sq_plot + bias_sigma_plot + plot_layout(nrow = 2) + plot_annotation(title = "Convergence of coefficient of determination")
@@ -269,7 +253,7 @@ RMSE_plot <- dat %>% filter(miss == miss_perc) %>%
   geom_line(aes(x = T, y = RMSE.5, color = "m5")) +
   xlab("") +
   ylab("RMSE") +
-  labs(colour = "Legend") +
+  labs(colour = "Imputation") +
   theme(legend.position = "")
 
 MAE_plot <- dat %>% filter(miss == miss_perc) %>%
@@ -286,7 +270,7 @@ MAE_plot <- dat %>% filter(miss == miss_perc) %>%
   geom_line(aes(x = T, y = MAE.5, color = "m5")) +
   xlab("") +
   ylab("Mean absolute error") +
-  labs(colour = "Legend") +
+  labs(colour = "Imputation") +
   theme(legend.position = "")
 
 PCA_plot <- dat %>% filter(miss == miss_perc) %>%
@@ -303,7 +287,7 @@ PCA_plot <- dat %>% filter(miss == miss_perc) %>%
   geom_line(aes(x = T, y = pca.5, color = "m5")) +
   xlab("Number of iterations") +
   ylab("First PCA component") +
-  labs(colour = "Legend") 
+  labs(colour = "Imputation") 
 
 RMSE_plot + MAE_plot + PCA_plot + plot_layout(nrow = 3) + plot_annotation(title = "Convergence of model errors")
 

@@ -33,7 +33,7 @@ n.iter <- 50 #nr of iterations (varying 1:n.iter)
 n.sim <- 100 #nr of simulations per iteration value
 true_effect <- 2 #regression coefficient to be estimated
 true_mean <- true_sd <- NA
-miss_perc <- .75
+miss_prop <- .05
 
 # start simulation study
 set.seed(1111)
@@ -56,7 +56,7 @@ simulate <- function(data, n.iter, true_effect, patterns, prop) {
   ampdata <-
     ampute(data,
            patterns = amp_patterns,
-           prop = miss_perc,
+           prop = miss_prop,
            mech = "MCAR")$amp
   
   # object for output
@@ -83,7 +83,7 @@ out <-
       n.iter = n.iter,
       true_effect = true_effect,
       patterns = amp_patterns,
-      prop = miss_perc
+      prop = miss_prop
     ),
     simplify = FALSE
   )
@@ -91,7 +91,7 @@ out <-
 ###
 
 # evaluate
-results <- evaluate.sim(sims = out, n.iter = n.iter)
+results_without_CI <- evaluate.sim(sims = out, n.iter = n.iter)
 
 # # uncomment for MCMC SEs
 # MCMCSE <- evaluate.sim(sims = out, n.iter = n.iter, mean_or_SE = "se")
@@ -107,15 +107,22 @@ CI_upper <-
   evaluate.sim(sims = out,
                n.iter = n.iter,
                mean_or_SE = "upper")
-dat <-
-  results %>% left_join(CI_lower, by = "T", suffix = c("", ".LL")) %>% left_join(CI_upper, by = "T", suffix = c("", ".UL"))
+results <-
+  results_without_CI %>% left_join(CI_lower, by = "T", suffix = c("", ".LL")) %>% left_join(CI_upper, by = "T", suffix = c("", ".UL"))
 
 # add convergence diagnostics for PCA
-add_PCA <- PCA_convergence(out)
-dat <- cbind(dat, add_PCA)
+PCA_results <- PCA_convergence(out)
+results <- cbind(results, PCA_results) %>% mutate(miss = miss_prop*100)
 
 ###
 
-# save for future reference
-# miceadds::save.Rdata(dat, name = "combined", path = "3.Thesis/1.SimulationStudy/Results")
-save(dat, file = "3.Thesis/1.SimulationStudy/Results/miss75.Rdata")
+# save with other missingness proportions
+if (results$miss[1] == 5){ 
+  save(results, file = "3.Thesis/1.SimulationStudy/Results/complete.Rdata")
+} else {
+  load("3.Thesis/1.SimulationStudy/Results/complete.Rdata")
+  dat <- rbind(dat, results)  
+  save(dat, file = "3.Thesis/1.SimulationStudy/Results/complete.Rdata")
+}
+
+

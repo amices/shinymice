@@ -79,6 +79,7 @@ For reasons of brevity, we only focus on the MI algorithm implemented in the wor
 
 Let $y$ denote an $n \times p$ matrix containing the data values on $p$ variables for all $n$ units in a sample. The data value of unit $i$ ($i = 1, \dots, n$) on variable $j$ ($j = 1, \dots, p$) may be either observed or missing. The collection of observed data values in $y$ is denoted by $y_{obs}$; the missing part of $y$ is referred to as $y_{mis}$. (**This is not only notation, but theory too:** For each datapoint in $y_{mis}$, we sample $M \times T$ times plausible values, where $M$ is the number of imputations ($m = 1, \dots, M$) and $T$ is the number of iterations ($t = 1, \dots, T$).) The collection of samples between the initial value (at $t=1$) and the final imputed value (at $t=T$) will be referred to as an 'imputation chain'.
 
+**Add: missingness percentage = proportion of cases with one or more missing values times 100 **
 <!-- The number of imputations is denoted by $m$ (i.e., the number of times each datapoint in $y_{mis}$ is filled in). The aim of MI is to impute each datapoint in $y_{mis}$ $m$ times. Because of the iterative nature of the MICE algorithm -->
 
 <!-- The result is $m$ completed datasets, consisting of $y_{obs}$ and   The MI algorithm in `mice` has an iterative nature. For each missing datapoint in $y_{mis}$, $m$ 'chains' of potential values are sampled. -->
