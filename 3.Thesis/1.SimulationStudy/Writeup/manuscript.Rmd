@@ -267,7 +267,7 @@ In short, we see that the minimum number of iterations required to obtain unbias
 
 
 ```{r, include = FALSE}
-load("../Results/combined.Rdata")
+load("../Results/complete.Rdata")
 source("../2.CreateFigures.R")
 ```
 

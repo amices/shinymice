@@ -20,11 +20,9 @@ autocorr_function <- function(imp, maxit, m = 5, n.var = 4, moment = "mean"){
     for (chain in 1:m) {
       # ac[chain, v] <-
       ac_per_chain[chain] <-
-        acf(sims[v, , chain],
-          lag.max = 1,
-          plot = F)$acf[2] * -2 
+        ac_lag1(sims[v, , chain])
     }
-    ac_per_var[v] <- mean(ac_per_chain)
+    ac_per_var[v] <- max(ac_per_chain)
 }
 # output
   return(ac_per_var)

@@ -119,6 +119,9 @@ plausible values, where \(M\) is the number of imputations
 value (at \(t=1\)) and the final imputed value (at \(t=T\)) will be
 referred to as an `imputation chain'.
 
+\textbf{Add: missingness percentage = proportion of cases with one or
+more missing values times 100 }
+
 \hypertarget{convergence-diagnostics}{%
 \section{Convergence diagnostics}\label{convergence-diagnostics}}
 
@@ -309,7 +312,8 @@ X_3\\
 Outcome variable \(Y\) is subsequently calculated as
 \[Y =  1 + 2X_1 + .5X_2 - X_3 + \epsilon .\]
 
-\textbf{Add the function \texttt{mvtnorm::rmvnorm()} back in}
+\textbf{Add the function \texttt{mvtnorm::rmvnorm()} back in} use
+citation(``mvtnorm'')
 
 The complete data is `amputed' once for each simulation repetition with
 function \texttt{mice::ampute()}. (\textbf{change this:} The missingness

@@ -20,7 +20,7 @@ theme_update(plot.title = element_text(hjust = 0.5),
              legend.position = "bottom")
 
 # load data
-load("3.Thesis/1.SimulationStudy/Results/complete.Rdata")
+# load("3.Thesis/1.SimulationStudy/Results/complete.Rdata")
 
 # R squared
 dat %>% ggplot(aes(x = T, y = bias.R.s, color = as.factor(miss))) + 
