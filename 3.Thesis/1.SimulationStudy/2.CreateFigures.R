@@ -24,36 +24,42 @@ theme_update(plot.title = element_text(hjust = 0.5),
 
 # R squared
 dat %>% ggplot(aes(x = T, y = bias.R.s, color = as.factor(miss))) + 
+  geom_hline(yintercept = 0,
+             color = "grey",
+             lwd = 2) +
   geom_point() +
   geom_line() +
   ylab(expression(paste("Bias in ", hat(R ^ 2)))) +
   labs(colour = "Missingness (%)") +
   plot_annotation(title = "The effect of missingness percentage, an example")
 
-# R hat
+# R hat for PCA
 dat %>% ggplot(aes(x = T, y = R.PCA, color = as.factor(miss))) + 
-  geom_point() +
-  geom_line() +
   geom_hline(yintercept = 1,
              color = "grey",
              lwd = 2) +
+  geom_point() +
+  geom_line() +
   ylab(expression(paste(widehat(R)))) +
   labs(colour = "Missingness (%)") +
   plot_annotation(title = "The effect of missingness percentage, an example")
 
-# AC
+# AC for PCA
 dat %>% ggplot(aes(x = T, y = AC.PCA, color = as.factor(miss))) + 
-  geom_point() +
-  geom_line() +
   geom_hline(yintercept = 0,
              color = "grey",
              lwd = 2) +
+  geom_point() +
+  geom_line() +
   ylab("Auto-correlation") +
   labs(colour = "Missingness (%)") +
   plot_annotation(title = "The effect of missingness percentage, an example")
 
 # Regression estimate(s)
 dat %>% ggplot() +
+  geom_hline(yintercept = 0,
+             color = "grey",
+             lwd = 2) +
   geom_point(aes(x = T, y = bias.est.X1, color = as.factor(miss))) +
   geom_line(aes(x = T, y = bias.est.X1, color = as.factor(miss))) #+
   # geom_point(aes(x = T, y = bias.est.X2, shape = "X2", color = as.factor(miss))) +
