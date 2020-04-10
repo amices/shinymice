@@ -272,24 +272,14 @@ source("../2.CreateFigures.R")
 ```
 
 
-```{r}
-bias_means_plot + R_means_plot + AC_means_plot + plot_layout(nrow = 3) + plot_annotation(title = "Convergence of means, 75% missingness")
-```
-
-
-```{r}
-bias_sds_plot + R_sds_plot + AC_sds_plot + plot_layout(nrow = 3) + plot_annotation(title = "Convergence of variances, 75% missingness")
-```
-
-
-```{r}
-bias_ests_plot + bias_R_sq_plot + cov_plot + plot_layout(nrow = 3) + plot_annotation(title = "Convergence of effects, 75% missingness")
-```
+<!-- ```{r} -->
+<!-- bias_means_plot + R_means_plot + AC_means_plot + plot_layout(nrow = 3) + plot_annotation(title = "Convergence of means, 75% missingness") -->
+<!-- ``` -->
 
 ```{r, echo = FALSE}
 #load("../Results/combined.Rdata")
 
-dat %>% ggplot(aes(x = T, y = bias.R.s, color = miss)) + 
+dat %>% ggplot(aes(x = T, y = bias.R.s, color = as.factor(miss))) + 
   geom_point() +
   geom_line() +
   ylab(expression(paste("Bias in ", hat(R ^ 2)))) +
