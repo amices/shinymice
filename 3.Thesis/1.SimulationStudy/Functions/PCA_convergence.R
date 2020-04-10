@@ -17,9 +17,11 @@ PCA_convergence <- function(sims, maxit = n.iter, reps = n.sim, m = 5) {
     
   # loop over nr of iterations
   for (it in 2:maxit){
+  
   # auto-correlation
   ac[it, k] <-
-   sim1[[k]][1:it,] %>% acf(lag.max = 1, plot = FALSE) %>% .$acf %>% .[2, , ] %>% diag() %>% mean()
+   sim1[[k]][1:it,] %>% ac_lag1()#acf(lag.max = 1, plot = FALSE) %>% .$acf %>% .[2, , ] %>% diag() %>% "*"(it/(it-3) ) %>% mean()
+  
   # r hat
   rhat_bulk <-
     sim1[[k]][1:it,] %>% as.matrix() %>% split_chains() %>% z_scale() %>% get.rhat(maxit = it)
@@ -34,4 +36,26 @@ PCA_convergence <- function(sims, maxit = n.iter, reps = n.sim, m = 5) {
     }
   return(data.frame(R.PCA = R.PCA, AC.PCA = AC.PCA))
 }
+
+#########
+
+# n = 9
+# factor  = 9/6 = 3/2
+# n = 8
+# factor = 8/5
+# n = 7
+# factor = 7/4
+# n = 6
+# factor = 6/3
+# n = 5
+# factor = 5/2
+# n = 4
+# factor = 4/1
+# n = 3
+# factor = 3/0#??
+# n = 2
+# factor = 2/-1
+
+# n = n
+# factor = n/n-3
 
