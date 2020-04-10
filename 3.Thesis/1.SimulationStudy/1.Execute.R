@@ -30,8 +30,8 @@ source("3.Thesis/1.SimulationStudy/Functions/PCA_convergence.R")
 
 # simulation parameters
 populationsize <- 1000 #n of simulated dataset
-n.iter <- 10 #nr of iterations (varying 1:n.iter)
-n.sim <- 2 #nr of simulations per iteration value
+n.iter <- 50 #nr of iterations (varying 1:n.iter)
+n.sim <- 100 #nr of simulations per iteration value
 true_effect <- 2 #regression coefficient to be estimated
 true_mean <- true_sd <- NA
 miss_prop <- .05
@@ -126,8 +126,8 @@ results <- cbind(results, PCA_results) %>% mutate(miss = miss_prop*100)
 if (miss_prop == .05){
   dat <- results
   } else {
-  load("3.Thesis/1.SimulationStudy/Results/complete.Rdata")
+  load("3.Thesis/1.SimulationStudy/Results/test.Rdata")
   dat <- rbind(dat, results)}
 
-save(dat, file = "3.Thesis/1.SimulationStudy/Results/complete.Rdata")
+save(dat, file = "3.Thesis/1.SimulationStudy/Results/test.Rdata")
 }

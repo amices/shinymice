@@ -53,11 +53,11 @@ dat %>% ggplot(aes(x = T, y = AC.PCA, color = as.factor(miss))) +
   plot_annotation(title = "The effect of missingness percentage, an example")
 
 # Regression estimate(s)
-# dat %>% ggplot() +
-#   geom_point(aes(x = T, y = bias.est.X1, color = as.factor(miss))) +
-#   geom_line(aes(x = T, y = bias.est.X1, color = as.factor(miss))) #+
-#   # geom_point(aes(x = T, y = bias.est.X2, shape = "X2", color = as.factor(miss))) +
-#   # geom_line(aes(x = T, y = bias.est.X2, color = as.factor(miss)))
+dat %>% ggplot() +
+  geom_point(aes(x = T, y = bias.est.X1, color = as.factor(miss))) +
+  geom_line(aes(x = T, y = bias.est.X1, color = as.factor(miss))) #+
+  # geom_point(aes(x = T, y = bias.est.X2, shape = "X2", color = as.factor(miss))) +
+  # geom_line(aes(x = T, y = bias.est.X2, color = as.factor(miss)))
 
 
 ######################################################
