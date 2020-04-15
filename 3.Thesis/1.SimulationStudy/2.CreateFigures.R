@@ -28,7 +28,7 @@ theme_update(
 ####################
 
 # Univariate: mean estimate
-dat %>% ggplot(aes(x = T, y = bias.mean.X1, color = as.factor(miss))) +
+mean_bias <- dat %>% ggplot(aes(x = T, y = bias.mean.X1, color = as.factor(miss))) +
   geom_hline(yintercept = 0,
              color = "grey",
              lwd = 2) +
@@ -39,7 +39,7 @@ dat %>% ggplot(aes(x = T, y = bias.mean.X1, color = as.factor(miss))) +
   labs(colour = "Missingness (%)")
 
 # Univariate: convergence chain mean
-dat %>% ggplot(aes(x = T, y = R.mean.X1, color = as.factor(miss))) +
+mean_Rh <- dat %>% ggplot(aes(x = T, y = R.mean.X1, color = as.factor(miss))) +
   geom_hline(yintercept = 1,
              color = "grey",
              lwd = 2) +
@@ -49,12 +49,24 @@ dat %>% ggplot(aes(x = T, y = R.mean.X1, color = as.factor(miss))) +
   ylab(expression(paste(widehat(R)))) +
   labs(colour = "Missingness (%)")
 
-dat %>% ggplot(aes(x = T, y = AC.mean.X1, color = as.factor(miss))) +
+mean_AC <- dat %>% ggplot(aes(x = T, y = AC.mean.X1, color = as.factor(miss))) +
   geom_hline(yintercept = 0,
              color = "grey",
              lwd = 2) +
   geom_point(size = .75, na.rm = TRUE) +
   geom_line(na.rm = TRUE) +
+  xlab("Number of iterations") +
+  ylab("Autocorrelation") +
+  labs(colour = "Missingness (%)")
+
+mean_ACF <- dat %>% ggplot(aes(x = T, y = ACF.mean.X1, color = as.factor(miss))) +
+  geom_hline(yintercept = 0,
+             color = "grey",
+             lwd = 2) +
+  geom_point(size = .75, na.rm = TRUE) +
+  geom_line(linetype = "dotted", na.rm = TRUE) +
+  geom_point(aes(x = T, y = AC.mean.X1, color = as.factor(miss)), size = .75, na.rm = TRUE) +
+  geom_line(aes(x = T, y = AC.mean.X1, color = as.factor(miss)), na.rm = TRUE) +
   xlab("Number of iterations") +
   ylab("Autocorrelation") +
   labs(colour = "Missingness (%)")
@@ -96,7 +108,7 @@ dat %>% ggplot(aes(x = T, y = AC.mean.X1, color = as.factor(miss))) +
 ####################
 
 # Bias in regression coefficient
-dat %>% ggplot(aes(x = T, y = bias.est.X1, color = as.factor(miss))) +
+est_bias <- dat %>% ggplot(aes(x = T, y = bias.est.X1, color = as.factor(miss))) +
   geom_hline(yintercept = 0,
              color = "grey",
              lwd = 2) +
@@ -107,7 +119,7 @@ dat %>% ggplot(aes(x = T, y = bias.est.X1, color = as.factor(miss))) +
   labs(colour = "Missingness (%)")
 
 # Coverage rate regression coefficient
-dat %>% ggplot(aes(x = T, y = cov.est.X1, color = as.factor(miss))) +
+est_cov <- dat %>% ggplot(aes(x = T, y = cov.est.X1, color = as.factor(miss))) +
   geom_hline(yintercept = .95,
              color = "grey",
              lwd = 2) +
@@ -118,7 +130,7 @@ dat %>% ggplot(aes(x = T, y = cov.est.X1, color = as.factor(miss))) +
   labs(colour = "Missingness (%)")
 
 # R squared
-dat %>% ggplot(aes(x = T, y = bias.R.s, color = as.factor(miss))) +
+Rsq_bias <- dat %>% ggplot(aes(x = T, y = bias.R.s, color = as.factor(miss))) +
   geom_hline(yintercept = 0,
              color = "grey",
              lwd = 2) +
