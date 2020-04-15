@@ -28,6 +28,8 @@ test.impute <- function(true_effect,
     R_var <-
       AC_mean <-
       AC_var <-
+      ACF_mean <-
+      ACF_var <-
       between_mean <-
       between_var <- within_mean <- within_var <- R_mean
   } else {
@@ -39,6 +41,10 @@ test.impute <- function(true_effect,
       autocorr_function(impsim, maxit) #auto-correlation at lag 1
     AC_var <-
       autocorr_function(impsim, maxit, moment = "variance") #auto-correlation at lag 1
+    ACF_mean <-
+      autocorr_function(impsim, maxit, ac_function = "acf") #auto-correlation at lag 1
+    ACF_var <-
+      autocorr_function(impsim, maxit, moment = "variance", ac_function = "acf") #auto-correlation at lag 1
     between_mean <-
       between_function(impsim, maxit) #between chain variance of the chain means
     between_var <-
@@ -111,11 +117,13 @@ test.impute <- function(true_effect,
       bias.mean = t(bias_mean),
       R.mean = t(R_mean),
       AC.mean = t(AC_mean),
+      ACF.mean = t(ACF_mean),
       between.mean = t(between_mean),
       within.mean = t(within_mean),
       bias.sd = t(bias_sd),
       R.var = t(R_var),
       AC.var = t(AC_var),
+      ACF.var = t(ACF_var),
       pca = t(pca),
       bias.est = t(bias_est),
       CIW.est = t(CIW),

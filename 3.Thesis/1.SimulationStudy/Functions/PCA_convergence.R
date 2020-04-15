@@ -9,8 +9,8 @@ PCA_convergence <- function(sims, maxit = n.iter, reps = n.sim, m = 5) {
     matrix(., nrow = m, ncol = maxit) %>% t() %>% as.data.frame()
     }) 
   
-  rh <- ac <- matrix(NA, maxit, reps)
-  R.PCA <- AC.PCA <- matrix(NA, maxit, 1)
+  rh <- ac <- acf <- matrix(NA, maxit, reps)
+  R.PCA <- AC.PCA <- ACF.PCA <- matrix(NA, maxit, 1)
   
   # loop over nr of simulations
   for (k in 1:reps) {
@@ -21,7 +21,10 @@ PCA_convergence <- function(sims, maxit = n.iter, reps = n.sim, m = 5) {
   # auto-correlation
   ac[it, k] <-
    sim1[[k]][1:it,] %>% ac_lag1()#acf(lag.max = 1, plot = FALSE) %>% .$acf %>% .[2, , ] %>% diag() %>% "*"(it/(it-3) ) %>% mean()
-  
+  # oud autocorr
+  acf[it, k] <-
+    sim1[[k]][1:it,] %>% acf(lag.max = 1, plot = FALSE) %>% .$acf %>% .[2, , ] %>% diag() %>% max()
+
   # r hat
   rhat_bulk <-
     sim1[[k]][1:it,] %>% as.matrix() %>% split_chains() %>% z_scale() %>% get.rhat(maxit = it)
@@ -32,9 +35,10 @@ PCA_convergence <- function(sims, maxit = n.iter, reps = n.sim, m = 5) {
   # average of reps
   R.PCA[it] <- mean(rh[it,])
   AC.PCA[it] <- mean(ac[it,])
+  ACF.PCA[it] <- mean(acf[it,])
   }
     }
-  return(data.frame(R.PCA = R.PCA, AC.PCA = AC.PCA))
+  return(data.frame(R.PCA = R.PCA, AC.PCA = AC.PCA, ACF.PCA = ACF.PCA))
 }
 
 #########

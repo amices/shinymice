@@ -39,9 +39,50 @@ provides insight into non-convergence of mice algorithms.
 \hypertarget{introduction}{%
 \section{Introduction}\label{introduction}}
 
-Missing data problems are ubiquitous and pervasive. \textbf{or}
-Everybody who works with person data is likely to run into a missing
-data problem.\\
+Missing data problems are ubiquitous and pervasive in the social and
+behavioral sciences. If a dataset contains just one missing value for a
+variable of interest, statistical inferences are undefined and will not
+yield results. Incomplete observations are therefore ignored by default
+in many statistical packages (i.e., list-wise deletion is employed).
+Unfortunaltely, this \emph{ad hoc} solution may yield wildly invalid
+results \citep{buur18}. An alternative is to `impute' (i.e., fill in)
+every missing value in the incomplete dataset. With imputation
+techniques, one or several completed datasets are created, on which
+statistical inferences can be performed. The case with several completed
+datasets is known as `multiple imputation' \citep[MI;][]{rubin76}, and
+requires and additional step to pool the results accross imputations.
+Because this pooled result will reflect the uncertainty in the data due
+to missingness, it is in many cases an unbiased and confidence valid
+estimate of the true (but missing) data inference \citep{buur18}. A
+popular method to obtain imputations is to use the `Multiple Imputation
+by Chained Equations' algorithm, shorthand `MICE'. MICE is an iterative
+algorithmic procedure to draw imputations from the posterior predictive
+distribution of the missing values. This introduces a potential threat
+to the validity of the imputations: what if the algorithm has not
+converged? Are the implications then to be trusted? And can we rely on
+the inference obtained on the completed data? These are open questions,
+because the convergence of iterative imputation algortihms has not been
+systematically studied \citep{buur18}. In this paper, we investigate the
+convergence properties of iterative imputation procedures by means of
+model based simulation in \texttt{R} list(title = ``R: A Language and
+Environment for Statistical Computing'', author = list(list(given = ``R
+Core Team'', family = NULL, role = NULL, email = NULL, comment = NULL)),
+organization = ``R Foundation for Statistical Computing'', address =
+``Vienna, Austria'', year = ``2020'', url =
+``\url{https://www.R-project.org/}'').
+
+Rubin's rules \citeyearpar{rubin76} may be used to reflect the
+uncertainty in the inferences due to missingness by pooling the results
+across `imputations'. A popular method to obtain imputations
+completions, the analysis of scientific interest can be performed. It
+has been , or to complete these observations by imputing the missing
+values. Imputation is the method of filling in
+
+by which That is, unless ad hoc solutions are employed (e.g., list-wise
+deletion), which can yield invalid results. contains missing values,
+statistical analyses cannot be performed without only be performed a
+dataset contains missing values, statistical analyses can statistical
+inferences cannot be performed\\
 Missingness is problematic because statistical inference cannot be
 performed on the whole data without employing \emph{ad hoc} solutions
 (e.g., list-wise deletion), which may yield wildly invalid results

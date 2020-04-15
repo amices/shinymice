@@ -126,8 +126,8 @@ results <- cbind(results, PCA_results) %>% mutate(miss = miss_prop*100)
 if (miss_prop == .05){
   dat <- results
   } else {
-  load("3.Thesis/1.SimulationStudy/Results/complete.Rdata")
+  load("3.Thesis/1.SimulationStudy/Results/test.Rdata")
   dat <- rbind(dat, results)}
 
-save(dat, file = "3.Thesis/1.SimulationStudy/Results/complete.Rdata")
+save(dat, file = "3.Thesis/1.SimulationStudy/Results/test.Rdata")
 }
