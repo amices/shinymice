@@ -223,9 +223,7 @@ statistically, but that is outside of this note's scope.
 
 Negative \(AC\)-values indicate divergence within imputation chains.
 \textbf{Subsequent sampled values within each imputation chain are less
-alike. High \(AC\)-values are implausible in MI procedures. That is, the
-randomness induced by the MI algorithm effectively mitigates the risk of
-dependency within chains.}
+alike.}
 
 In short, convergence is reached when there is no dependency between
 subsequent iterations of imputation chains (\(AC = 0\)), and chains
@@ -256,11 +254,14 @@ effect on the hypothesized performance of \(\widehat{R}\). \textbf{(Add
 actual hypothesis: we thought that mice would converge sooner than
 \(\widehat{R}\) would indicate that it did)} No hypothesis was
 formulated about the performance of \(AC\) as convergence diagnostic.
+\textbf{Added later: High \(AC\)-values are implausible in MI
+procedures. That is, the randomness induced by the MI algorithm
+effectively mitigates the risk of dependency within chains.}
 
 \hypertarget{simulation-study}{%
 \section{Simulation study}\label{simulation-study}}
 
-The convergence of \texttt{mice} is investigated through model-based
+Convergence of the MICE algorithm is investigated through model-based
 simulation in \texttt{R} \citep[version 3.6.3;][]{R}. The simulation
 set-up is summarized in the pseudo-code below. The complete \texttt{R}
 script of the simulation study is available from
@@ -268,36 +269,38 @@ script of the simulation study is available from
 
 \begin{verbatim}
 # pseudo-code of simulation 
-simulate data 
-for (number of simulation runs from 1 to 1000)
-  for (number of iterations from 1 to 100)
-    create missingness
-    impute the missingness
-    compute convergence diagnostics
-    perform analysis
-    pool results
-    compute simulation diagnostics
-aggregate convergence and simulation diagnostics
+1. simulate data 
+for (missingness proportions 5%, 25%, 50%, 75% and 95%)
+  for (number of simulation runs from 1 to 1000)
+    2. create missingness
+    for (number of iterations from 1 to 100)
+      3. impute missingness
+      4. compute convergence diagnostics
+      5. perform analysis of scientific interest
+      6. pool results across imputations
+      7. compute performance measures
+  8. aggregate outcomes 
+9. combine outcomes
 \end{verbatim}
 
-\textbf{(Add step for different missingness proportions.)}
+The aim of the simulation study is to evaluate the impact of: 1)
+terminating the MICE algorithm at different imputation chain lengths
+(\(t = 1, 2, ..., 100\)), and 2) varying the difficulty of the
+missingness problem (\textbf{different missingness proportions}
+\(prop = .05, .25, .50, .75, .95\)). For the purpose of this study,
+sampling variance is not of interest. Therefore, a single complete set
+may serve as comparative truth in all simulation runs \citep{vinknd}.
 
-A finite population of \(N=1000\) is simulated to solve a multiple
-linear regression problem, where dependent variable \(Y\) is regressed
-on independent variables \(X_1\), \(X_2\) and \(X_3\) (\textbf{check
-notation with betas here, and add what the quantity/-ies of scientific
-interest is/are!}):
-
-\[Y \sim \beta_1 X_1 + \beta_2 X_2 + \beta_3 X_3.\]
-
-The data generating model is a multivariate normal distribution
+The data-generating mechanism is a multivariate normal distribution. We
+simulate a finite population of \(N=1000\) to represent person data for
+an unspecified social scientific field of study.
 
 \begin{align*}
 \begin{pmatrix}X_1\\
 X_2\\
 X_3\\
 \epsilon
-\end{pmatrix} \sim  N
+\end{pmatrix} &\sim  N
 \begin{bmatrix}
 \begin{pmatrix}
 12\\
@@ -311,8 +314,19 @@ X_3\\
 1.8 & 4.8 & 9 & 0\\
 0 & 0 & 0 & 100
 \end{pmatrix}
-\end{bmatrix}\\[2\jot]
+\end{bmatrix}\!\!\text{, and}\\[2\jot]
+Y &=  1 + 2X_1 + .5X_2 - X_3 + \epsilon .
 \end{align*}
+
+A finite population of \(N=1000\) is simulated to solve a multiple
+linear regression problem, where dependent variable \(Y\) is regressed
+on independent variables \(X_1\), \(X_2\) and \(X_3\) (\textbf{check
+notation with betas here, and add what the quantity/-ies of scientific
+interest is/are!}):
+
+\[Y \sim \beta_1 X_1 + \beta_2 X_2 + \beta_3 X_3.\]
+
+The data generating model is a multivariate normal distribution
 
 Outcome variable \(Y\) is subsequently calculated as
 \[Y =  1 + 2X_1 + .5X_2 - X_3 + \epsilon .\]
@@ -374,11 +388,11 @@ CI95\% around \(\bar{Q}\).
 
 \textbf{(Add more info about figure legends and axes.)}
 
-\begin{flushleft}\includegraphics{manuscript_files/figure-latex/unnamed-chunk-3-1} \end{flushleft}
+\begin{flushleft}\includegraphics{manuscript_files/figure-latex/unnamed-chunk-2-1} \end{flushleft}
 
-\begin{flushleft}\includegraphics{manuscript_files/figure-latex/unnamed-chunk-3-2} \end{flushleft}
+\begin{flushleft}\includegraphics{manuscript_files/figure-latex/unnamed-chunk-2-2} \end{flushleft}
 
-\begin{flushleft}\includegraphics{manuscript_files/figure-latex/unnamed-chunk-3-3} \end{flushleft}
+\begin{flushleft}\includegraphics{manuscript_files/figure-latex/unnamed-chunk-2-3} \end{flushleft}
 
 \hypertarget{univariate-estimates-and-convergence-diagnostics}{%
 \subsection{Univariate estimates and convergence
@@ -434,11 +448,11 @@ estimated in conditions where the number of iterations is equal to two
 or less, and slightly overestimated in conditions where the number of
 iterations is equal to three or more.
 
-\begin{flushleft}\includegraphics{manuscript_files/figure-latex/unnamed-chunk-4-1} \end{flushleft}
+\begin{flushleft}\includegraphics{manuscript_files/figure-latex/unnamed-chunk-3-1} \end{flushleft}
 
-\begin{flushleft}\includegraphics{manuscript_files/figure-latex/unnamed-chunk-4-2} \end{flushleft}
+\begin{flushleft}\includegraphics{manuscript_files/figure-latex/unnamed-chunk-3-2} \end{flushleft}
 
-\begin{flushleft}\includegraphics{manuscript_files/figure-latex/unnamed-chunk-4-3} \end{flushleft}
+\begin{flushleft}\includegraphics{manuscript_files/figure-latex/unnamed-chunk-3-3} \end{flushleft}
 
 In short, we see that the minimum number of iterations required to
 obtain unbiased, confidence valid regression estimates is 5. This value,

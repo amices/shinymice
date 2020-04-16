@@ -156,7 +156,7 @@ We can interpret $AC$-values as a measure of stationarity. If $AC$-values are cl
 
 Positive $AC$-values indicate recurrence. If $\theta$-values of subsequent iterations are similar, trending may occur. Negative $AC$-values show no threat to the stationarity component of convergence. On the contrary even---negative $AC$-values indicate that $\theta$-values of subsequent iterations diverge from one-another, which may increase the variance of $\theta$ and speed up convergence. As convergence diagnostic, the interest is therefore in positive $AC$-values. Moreover, the magnitude of $AC$-values may be evaluated statistically, but that is outside of this note's scope.
 
-Negative $AC$-values indicate divergence within imputation chains. **Subsequent sampled values within each imputation chain are less alike. High $AC$-values are implausible in MI procedures. That is, the randomness induced by the MI algorithm effectively mitigates the risk of dependency within chains.**
+Negative $AC$-values indicate divergence within imputation chains. **Subsequent sampled values within each imputation chain are less alike.** 
 
 In short, convergence is reached when there is no dependency between subsequent iterations of imputation chains ($AC = 0$), and chains intermingle such that the only difference between the chains is caused by the randomness induced by the algorithm ($\widehat{R} = 1$).
 
@@ -165,40 +165,35 @@ In short, convergence is reached when there is no dependency between subsequent 
 This study evaluates whether $\widehat{R}$ and $AC$ could diagnose convergence of multiple imputation algorithms. We assess the performance of the two convergence diagnostics against the recommended evaluation criteria for MI methods [i.e., average bias, average confidence interval width, and empirical coverage rate across simulations; @buur18, $\S$ 2.5.2]. That is, there is no baseline measure available to evaluate performance against.
 <!-- We could also look at distributional characteristics, and plausibility of imputed values, see @vinknd. For now, this is outside of the scope of this study. -->
 
-Based on an empirical finding [@lace07], we hypothesize that $\widehat{R}$ will over-estimate non-convergence of MI algorithms. The threshold of $\widehat{R} < 1.01$ will then be too stringent for diagnosing convergence. This over-estimation may, however, be diminished because $\widehat{R}$ can falsely diagnose convergence if initial values of the algorithm are not appropriately over-dispersed [@broo98, p. 437]. In `mice`, initial values are chosen randomly from the observed data. Therefore, we cannot be certain that the initial values are over-dispersed. We expect this to have little effect on the hypothesized performance of $\widehat{R}$. **(Add actual hypothesis: we thought that mice would converge sooner than $\widehat{R}$ would indicate that it did)** No hypothesis was formulated about the performance of $AC$ as convergence diagnostic.
-
+Based on an empirical finding [@lace07], we hypothesize that $\widehat{R}$ will over-estimate non-convergence of MI algorithms. The threshold of $\widehat{R} < 1.01$ will then be too stringent for diagnosing convergence. This over-estimation may, however, be diminished because $\widehat{R}$ can falsely diagnose convergence if initial values of the algorithm are not appropriately over-dispersed [@broo98, p. 437]. In `mice`, initial values are chosen randomly from the observed data. Therefore, we cannot be certain that the initial values are over-dispersed. We expect this to have little effect on the hypothesized performance of $\widehat{R}$. **(Add actual hypothesis: we thought that mice would converge sooner than $\widehat{R}$ would indicate that it did)** No hypothesis was formulated about the performance of $AC$ as convergence diagnostic. **Added later: High $AC$-values are implausible in MI procedures. That is, the randomness induced by the MI algorithm effectively mitigates the risk of dependency within chains.**
 
 
 # Simulation study
 
-The convergence of `mice` is investigated through model-based simulation in `R` [version `r paste(version$major,version$minor, sep = ".")`; @R]. The simulation set-up is summarized in the pseudo-code below. The complete `R` script of the simulation study is available from [github.com/gerkovink/shinyMice](https://github.com/gerkovink/shinyMice/tree/master/3.Thesis/1.SimulationStudy).
-
+Convergence of the MICE algorithm is investigated through model-based simulation in `R` [version `r paste(version$major,version$minor, sep = ".")`; @R]. The simulation set-up is summarized in the pseudo-code below. The complete `R` script of the simulation study is available from [github.com/gerkovink/shinyMice](https://github.com/gerkovink/shinyMice/tree/master/3.Thesis/1.SimulationStudy). 
 <!-- Simulation conditions are the number of iterations ($T = 1, 2, \dots, 100$) and the percentage missingness in the  -->
 
 <!-- to perform multiple imputation under 100 simulation conditions. In each condition, the MI algorithm comprises of a different imputation chain length ($T = 1, 2, \dots, 100$). The number of simulation runs per condition is 1000. For each simulation condition (i.e., number of iterations) and each repetition (i.e., simulation run) we compute convergence diagnostics ($\widehat{R}$ and autocorrelation) and simulation diagnostics (bias, confidence interval width and coverage). These diagnostics are aggregated across repetitions to obtain their average value per simulation condition. -->
 
 
-```{r, eval=FALSE, echo=TRUE}
-# pseudo-code of simulation 
-simulate data 
-for (number of simulation runs from 1 to 1000)
-  for (number of iterations from 1 to 100)
-    create missingness
-    impute the missingness
-    compute convergence diagnostics
-    perform analysis
-    pool results
-    compute simulation diagnostics
-aggregate convergence and simulation diagnostics
 ```
+# pseudo-code of simulation 
+1. simulate data 
+for (missingness proportions 5%, 25%, 50%, 75% and 95%)
+  for (number of simulation runs from 1 to 1000)
+    2. create missingness
+    for (number of iterations from 1 to 100)
+      3. impute missingness
+      4. compute convergence diagnostics
+      5. perform analysis of scientific interest
+      6. pool results across imputations
+      7. compute performance measures
+  8. aggregate outcomes 
+9. combine outcomes
+```
+The aim of the simulation study is to evaluate the impact of: 1) terminating the MICE algorithm at different imputation chain lengths ($t = 1, 2, ..., 100$), and 2) varying the difficulty of the missingness problem (**different missingness proportions** $prop = .05, .25, .50, .75, .95$). For the purpose of this study, sampling variance is not of interest. Therefore, a single complete set may serve as comparative truth in all simulation runs [@vinknd]. 
 
-**(Add step for different missingness proportions.)**
-
-A finite population of $N=1000$ is simulated to solve a multiple linear regression problem, where dependent variable $Y$ is regressed on independent variables $X_1$, $X_2$ and $X_3$ (**check notation with betas here, and add what the quantity/-ies of scientific interest is/are!**): 
-
-$$Y \sim \beta_1 X_1 + \beta_2 X_2 + \beta_3 X_3.$$
-
-The data generating model is a multivariate normal distribution 
+The data-generating mechanism is a multivariate normal distribution, representing person data on three independent variables (from an unspecified social scientific field of study). A finite population of $N=1000$ is simulated using the function `mvtnorm::rmvnorm()`, where 
 
 \begin{align*}
 \begin{pmatrix}X_1\\
@@ -219,8 +214,17 @@ X_3\\
 1.8 & 4.8 & 9 & 0\\
 0 & 0 & 0 & 100
 \end{pmatrix}
-\end{bmatrix}\\[2\jot]
-\end{align*}
+\end{bmatrix}\!\!\text{, and}\\[2\jot]
+Y &=  1 + 2X_1 + .5X_2 - X_3 + \epsilon .
+\end{align*} 
+Subsequently, 
+We consider four quantities of scientific interest ['conceptual estimands'; @morr19], namely  The quantity of scientific interest is the estimated regression coeffiecent estimand is the A finite population of $N=1000$ is simulated to solve a multiple linear regression problem, where dependent variable $Y$ is regressed on independent variables $X_1$, $X_2$ and $X_3$ (**check notation with betas here, and add what the quantity/-ies of scientific interest is/are!**): 
+
+$$Y \sim \beta_1 X_1 + \beta_2 X_2 + \beta_3 X_3.$$
+
+The data generating model is a multivariate normal distribution 
+
+
 
 Outcome variable $Y$ is subsequently calculated as 
 $$Y =  1 + 2X_1 + .5X_2 - X_3 + \epsilon .$$
