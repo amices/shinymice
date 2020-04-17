@@ -94,12 +94,16 @@ for MICE.
 
 Main question: How can non-convergence be diagnosed? Sub-questions: Are
 common MCMC non-convergence diagnostics appropriate for MICE? And if so,
-which threshold should be used? How many iterations are
-sufficient/needed to reach convergence? Are the default number of
-iterations sufficient (i.e., 5 in mice, 10 in SPSS and Stata, 30 in mi)?
-What are the effects of continued iterations on estimates, predictions
-and inferences? And finally, do the answers differ with varying
-missingness proportions?
+which threshold should be used to diagnose non-convergence? How many
+iterations are sufficient/needed to be able to diagnose non-convergence?
+Are the default number of iterations sufficient (i.e., 5 in mice, 10 in
+SPSS and Stata, 30 in mi)? \textbf{(These are part of the methods, not
+RQ per se: What are the effects of continued iterations on estimates,
+predictions and inferences? And finally, do the answers differ with
+varying missingness proportions? That is, we vary the nr of iterarions
+and the missingness proportion because we assume that the algorithm has
+not reached convergence at \(t=1\), and performs worse with moderate to
+high missingness (not so much with little or a LOT of missingness).)}
 
 For reasons of brevity, we only focus on the MI algorithm implemented in
 the world-leading MI software: the \texttt{R} \citep{R} package
@@ -279,60 +283,68 @@ for (missingness proportions 5%, 25%, 50%, 75% and 95%)
       5. perform analysis of scientific interest
       6. pool results across imputations
       7. compute performance measures
-  8. aggregate outcomes 
-9. combine outcomes
+  8. aggregate outcomes across simulation runs 
+9. combine outcomes of all missingness proportions
 \end{verbatim}
 
-The aim of the simulation study is to evaluate the impact of: 1)
-terminating the MICE algorithm at different imputation chain lengths
-(\(t = 1, 2, ..., 100\)), and 2) varying the difficulty of the
-missingness problem (\textbf{different missingness proportions}
-\(prop = .05, .25, .50, .75, .95\)). For the purpose of this study,
-sampling variance is not of interest. Therefore, a single complete set
-may serve as comparative truth in all simulation runs \citep{vinknd}.
+The aim of the simulation study is to evaluate the impact of inducing
+non-convergence by: 1) terminating the MICE algorithm at different
+imputation chain lengths (\(t = 1, 2, ..., 100\)), and 2) varying the
+missingness proportions (\(p_{miss} = .05, .25, .50, .75, .95\)). The
+assumption underlying the different number of iterations is that the
+algorithm generally does reach convergence at \(t=1\), because the
+initial values are sampled randomly from the set of observed datapoints.
+\textbf{As the number of iterations goes up, the imputation chains will
+become independent of the inital values until the point at which an
+extra added iteration does not lead to a more converged state.} The
+second set of experimental conditions under consideration--the
+missingness proportions--are chosen to reflect the difficulty of the
+missingness problem. The inherent assumption is that low missingness
+proportions will lead to quick algorithmic convergence, since there is a
+lot of information in the observed data. Higher missingness proportions
+then cause slower convergence. However, if the fraction of missing
+information is very high, there is so little information in the data
+that the random component in the algorithm will take the overhand and a
+stable but very uncertain (high variance) point will be reached.
 
-The data-generating mechanism is a multivariate normal distribution. We
-simulate a finite population of \(N=1000\) to represent person data for
-an unspecified social scientific field of study.
+The data-generating mechanism is a multivariate normal distribution,
+representing person data on three independent variables (from an
+unspecified social scientific field of study). Let
 
 \begin{align*}
 \begin{pmatrix}X_1\\
 X_2\\
-X_3\\
-\epsilon
-\end{pmatrix} &\sim  N
+X_3
+\end{pmatrix} \sim  \mathcal{N}
 \begin{bmatrix}
 \begin{pmatrix}
 12\\
 3\\
-0.5\\
-0
+0.5
 \end{pmatrix}\!\!,
 \begin{pmatrix}
 4 & 4 & 1.8 & 0\\
 4 & 16 & 4.8 & 0\\
-1.8 & 4.8 & 9 & 0\\
-0 & 0 & 0 & 100
+1.8 & 4.8 & 9 & 0
 \end{pmatrix}
-\end{bmatrix}\!\!\text{, and}\\[2\jot]
-Y &=  1 + 2X_1 + .5X_2 - X_3 + \epsilon .
-\end{align*}
+\end{bmatrix}\!\!\text{.}\\[2\jot]
+\end{align*} For the purpose of this study, sampling variance is not of
+interest. Therefore, a single complete set may serve as comparative
+truth in all simulation runs \citep{vinknd}. A finite population of
+\(N=1000\) is simulated using the function \texttt{mvtnorm::rmvnorm()}.
+Subsequently, a fourth variable is constructed to serve as dependent
+variable in a multiple linear regression problem. Let \[
+Y_i =  1 + 2X_{1i} + .5X_{2i} - X_{3i} + \epsilon_i ,
+\] where \(i = 1, 2, ..., N\) and \(\epsilon \sim \mathcal{N}(0, 100)\).
 
-A finite population of \(N=1000\) is simulated to solve a multiple
-linear regression problem, where dependent variable \(Y\) is regressed
-on independent variables \(X_1\), \(X_2\) and \(X_3\) (\textbf{check
+We consider four quantities of scientific interest \citep[`conceptual
+estimands';][]{morr19}, namely \ldots{} solve a multiple linear
+regression problem, where dependent variable \(Y\) is regressed on
+independent variables \(X_1\), \(X_2\) and \(X_3\) (\textbf{check
 notation with betas here, and add what the quantity/-ies of scientific
 interest is/are!}):
 
 \[Y \sim \beta_1 X_1 + \beta_2 X_2 + \beta_3 X_3.\]
-
-The data generating model is a multivariate normal distribution
-
-Outcome variable \(Y\) is subsequently calculated as
-\[Y =  1 + 2X_1 + .5X_2 - X_3 + \epsilon .\]
-
-\textbf{(Add the function \texttt{mvtnorm::rmvnorm()} back in somewhere
-here? If yes, use citation(``mvtnorm'').)}
 
 The complete data is `amputed' once for each simulation repetition with
 function \texttt{mice::ampute()}. (\textbf{change this to reflect
