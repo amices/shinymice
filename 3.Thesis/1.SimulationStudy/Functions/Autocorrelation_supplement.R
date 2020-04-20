@@ -11,7 +11,7 @@ ac_lag1 <- function(x){
     # compute the correlation between the chain and itself, one iteration delayed
     ac[m] <- cor(x[-dim(x)[1], m], x[-1, m])
   }
-  return(max(ac))
+  return(ac)
 }
 
 # chain <- 1:4

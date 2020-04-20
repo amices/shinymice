@@ -1,8 +1,8 @@
 # Perform mi on mids object with varying maxit values
 # requires the package 'mice' and the function 'get.rhat'
 
-test.impute <- function(true_effect,
-                        data,
+test.impute <- function(data = data,
+                        true_effect,
                         m = 5,
                         method = "norm",
                         maxit,
@@ -114,6 +114,7 @@ test.impute <- function(true_effect,
   # collect output
   return(
     data.frame(
+      t = maxit,
       bias.mean = t(bias_mean),
       R.mean = t(R_mean),
       AC.mean = t(AC_mean),

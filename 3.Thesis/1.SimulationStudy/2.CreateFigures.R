@@ -130,14 +130,15 @@ est_cov <- dat %>% ggplot(aes(x = T, y = cov.est.X1, color = as.factor(miss))) +
   labs(colour = "Missingness (%)")
 
 # R squared
-Rsq_bias <- dat %>% ggplot(aes(x = T, y = bias.R.s, color = as.factor(miss))) +
+Rsq_bias <- dat %>% ggplot(aes(x = T, y = bias.R.s*100, color = as.factor(miss))) +
   geom_hline(yintercept = 0,
              color = "grey",
              lwd = 2) +
   geom_point(size = .75) +
   geom_line() +
   xlab("Number of iterations") +
-  ylab(expression(paste("Bias in ", hat(R ^ 2)))) +
+  # ylab(expression(paste("Bias in ", hat(R ^ 2)))) +
+  ylab("Bias in estimated explained variance") +
   labs(colour = "Missingness (%)")
 
 # R hat for PCA
@@ -161,6 +162,19 @@ dat %>% ggplot(aes(x = T, y = AC.PCA, color = as.factor(miss))) +
   xlab("Number of iterations") +
   ylab("Auto-correlation") +
   labs(colour = "Missingness (%)") 
+
+PCA_ACF <- dat %>% ggplot(aes(x = T, y = ACF.PCA, color = as.factor(miss))) +
+  geom_hline(yintercept = 0,
+             color = "grey",
+             lwd = 2) +
+  geom_point(size = .75, na.rm = TRUE) +
+  geom_line(linetype = "dotted", na.rm = TRUE) +
+  geom_point(aes(x = T, y = AC.PCA, color = as.factor(miss)), size = .75, na.rm = TRUE) +
+  geom_line(aes(x = T, y = AC.PCA, color = as.factor(miss)), na.rm = TRUE) +
+  xlab("Number of iterations") +
+  ylab("Autocorrelation") +
+  labs(colour = "Missingness (%)")
+
 
 ########################
 ## NOG IETS MEE DOEN? ##

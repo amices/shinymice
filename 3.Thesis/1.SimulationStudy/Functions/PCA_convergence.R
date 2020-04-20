@@ -20,7 +20,7 @@ PCA_convergence <- function(sims, maxit = n.iter, reps = n.sim, m = 5) {
   
   # auto-correlation
   ac[it, k] <-
-   sim1[[k]][1:it,] %>% ac_lag1()#acf(lag.max = 1, plot = FALSE) %>% .$acf %>% .[2, , ] %>% diag() %>% "*"(it/(it-3) ) %>% mean()
+   sim1[[k]][1:it,] %>% ac_lag1() %>% .[5]#acf(lag.max = 1, plot = FALSE) %>% .$acf %>% .[2, , ] %>% diag() %>% "*"(it/(it-3) ) %>% mean()
   # oud autocorr
   acf[it, k] <-
     sim1[[k]][1:it,] %>% acf(lag.max = 1, plot = FALSE) %>% .$acf %>% .[2, , ] %>% diag() %>% max()

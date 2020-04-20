@@ -30,11 +30,11 @@ source("3.Thesis/1.SimulationStudy/Functions/PCA_convergence.R")
 
 # simulation parameters
 populationsize <- 1000 #n of simulated dataset
-n.iter <- 50 #nr of iterations (varying 1:n.iter)
-n.sim <- 100 #nr of simulations per iteration value
+n.iter <- 4 #nr of iterations (varying 1:n.iter)
+n.sim <- 2 #nr of simulations per iteration value
+p.miss <- c(.05, .25, .5, .75, .95)
 true_effect <- 2 #regression coefficient to be estimated
 true_mean <- true_sd <- NA
-miss_prop <- .05
 
 # start simulation study
 set.seed(1111)
@@ -46,39 +46,38 @@ data <- data.simulation(n = populationsize, true_effect)
 
 # create patterns object with multivariate missingness
 amp_patterns <-
-  expand.grid(c(0, 1), c(0, 1), c(0, 1), c(0, 1)) %>% .[c(-1,-16), ]
+  expand.grid(c(0, 1), c(0, 1), c(0, 1), c(0, 1)) %>% .[c(-1, -16),]
 names(amp_patterns) <- ampute(data)$patterns %>% names()
 
 # combine separate functions into wrapper
-simulate <- function(data, n.iter, true_effect, patterns, prop) {
+simulate <- function(data,
+                     n.iter,
+                     true_effect,
+                     patterns,
+                     p.miss) {
   
-  # remove values at random with 20 percent probability to be missing
-  ampdata <-
+  # ampute the complete data with each missingness proportion
+  amps <- map(p.miss, function(x) {
     ampute(data,
            patterns = amp_patterns,
-           prop = miss_prop,
+           prop = x,
            mech = "MCAR")$amp
+  })
   
-  # object for output
-  res <- list()
-  # repeat mi procedure 'runs'  times for each nr of iterations
-  #for (run in 1:runs) {
-  for (i in 1:n.iter) {
-    res[[i]] <- test.impute(true_effect, data = ampdata, maxit = i)
-  }
-  #}
-
-    # output
-  names(res) <- 1:n.iter
-  res
+  # with amputed datasets (as many as there are missingess proportions), impute missingness and compute diagnostics for every nr. of iterations
+  imps <-
+    map_df(p.miss, function(p) {
+      map_df(1:n.iter, function(t) {
+        test.impute(true_effect, data = amps[[p]], maxit = t) %>% cbind(p)
+      })
+    })
+  
+  return(imps)
 }
 
 #######################
 ####### Start #########
 #######################
-
-for (miss_prop in c(.05, .25, .5, .75, .95)) {
-
 
 # simulate
 out <-
@@ -89,7 +88,7 @@ out <-
       n.iter = n.iter,
       true_effect = true_effect,
       patterns = amp_patterns,
-      prop = miss_prop
+      p.miss = p.miss
     ),
     simplify = FALSE
   )
@@ -114,20 +113,17 @@ CI_upper <-
                n.iter = n.iter,
                mean_or_SE = "upper")
 results <-
-  results_without_CI %>% left_join(CI_lower, by = "T", suffix = c("", ".LL")) %>% left_join(CI_upper, by = "T", suffix = c("", ".UL"))
+  results_without_CI %>% left_join(CI_lower, by = c("t", "p"), suffix = c("", ".LL")) %>% left_join(CI_upper, by = c("t", "p"), suffix = c("", ".UL"))
 
-# add convergence diagnostics for PCA
-PCA_results <- PCA_convergence(out)
-results <- cbind(results, PCA_results) %>% mutate(miss = miss_prop*100)
+#####################################
+############# make this work again!!
+#####################################
 
-### 
+# # add convergence diagnostics for PCA
+# PCA_results <- PCA_convergence(out)
+# dat <-
+#   cbind(results, PCA_results)
 
-# save with other missingness proportions
-if (miss_prop == .05){
-  dat <- results
-  } else {
-  load("3.Thesis/1.SimulationStudy/Results/test.Rdata")
-  dat <- rbind(dat, results)}
+###
 
 save(dat, file = "3.Thesis/1.SimulationStudy/Results/test.Rdata")
-}
