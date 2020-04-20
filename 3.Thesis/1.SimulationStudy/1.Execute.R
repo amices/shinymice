@@ -69,7 +69,7 @@ simulate <- function(data,
     map_df(p.miss, function(p) {
       map_df(1:n.iter, function(t) {
         test.impute(true_effect, data = amps[[p]], maxit = t, n.iter = n.iter) %>% cbind(p)
-      })
+      }) %>% cbind(chain_means, chain_vars)
     })
   
   return(imps)

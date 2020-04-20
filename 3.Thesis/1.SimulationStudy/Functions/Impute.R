@@ -23,37 +23,66 @@ test.impute <- function(data = data,
   }
   
   # compute convergence diagnostics
-  if (maxit < 2) {
-    R_mean <- c(rep(NA, 4))
-    names(R_mean) <- c("X1", "X2", "X3", "Y")
-    R_var <-
-      AC_mean <-
-      AC_var <-
-      ACF_mean <-
-      ACF_var <-
-      between_mean <-
-      between_var <- within_mean <- within_var <- R_mean
-  } else {
-    R_mean <-
-      rhat_function(impsim, maxit) #maximum Rhat across variables
-    R_var <-
-      rhat_function(impsim, maxit, moment = "variance") #maximum Rhat across variables
-    AC_mean <-
-      autocorr_function(impsim, maxit) #auto-correlation at lag 1
-    AC_var <-
-      autocorr_function(impsim, maxit, moment = "variance") #auto-correlation at lag 1
-    ACF_mean <-
-      autocorr_function(impsim, maxit, ac_function = "acf") #auto-correlation at lag 1
-    ACF_var <-
-      autocorr_function(impsim, maxit, moment = "variance", ac_function = "acf") #auto-correlation at lag 1
-    # between_mean <-
-    #   between_function(impsim, maxit) #between chain variance of the chain means
-    # between_var <-
-    #   between_function(impsim, maxit, moment = "variance") #between chain variance of the chain variances
-    # within_mean <-
-    #   within_function(impsim, maxit) #between chain variance of the chain means
-    # within_var <-
-    #   within_function(impsim, maxit, moment = "variance") #between chain variance of the chain variances
+  # if (maxit < 2) {
+  #   R_mean <- c(rep(NA, 4))
+  #   names(R_mean) <- c("X1", "X2", "X3", "Y")
+  #   R_var <-
+  #     AC_mean <-
+  #     AC_var <-
+  #     ACF_mean <-
+  #     ACF_var <-
+  #     between_mean <-
+  #     between_var <- within_mean <- within_var <- R_mean
+  # } else {
+  #   R_mean <-
+  #     rhat_function(impsim, maxit) #maximum Rhat across variables
+  #   R_var <-
+  #     rhat_function(impsim, maxit, moment = "variance") #maximum Rhat across variables
+  #   AC_mean <-
+  #     autocorr_function(impsim, maxit) #auto-correlation at lag 1
+  #   AC_var <-
+  #     autocorr_function(impsim, maxit, moment = "variance") #auto-correlation at lag 1
+  #   ACF_mean <-
+  #     autocorr_function(impsim, maxit, ac_function = "acf") #auto-correlation at lag 1
+  #   ACF_var <-
+  #     autocorr_function(impsim, maxit, moment = "variance", ac_function = "acf") #auto-correlation at lag 1
+  #   # between_mean <-
+  #   #   between_function(impsim, maxit) #between chain variance of the chain means
+  #   # between_var <-
+  #   #   between_function(impsim, maxit, moment = "variance") #between chain variance of the chain variances
+  #   # within_mean <-
+  #   #   within_function(impsim, maxit) #between chain variance of the chain means
+  #   # within_var <-
+  #   #   within_function(impsim, maxit, moment = "variance") #between chain variance of the chain variances
+  # }
+  
+  
+  # a <- impsim$chainMean
+  # dimnames(a)
+  # # a[var, it, m]
+  # b <- dimnames(chain_mean)
+  # names(b) <- c("var", "t", "m")
+  # dimnames(chain_mean) <- b
+  # c <- as.tbl_cube(chain_mean) %>% as_tibble()
+  
+  # save chain means and variances for convergence diagnostics
+  if (maxit == n.iter) {
+    chain_means <<-
+      data.frame(
+        t = 1:n.iter,
+        chain.mean.X1 = impsim$chainMean["X1", ,],
+        chain.mean.X2 = impsim$chainMean["X2", ,],
+        chain.mean.X3 = impsim$chainMean["X3", ,],
+        chain.mean.Y = impsim$chainMean["Y", ,]
+      )
+    chain_vars <<-
+      data.frame(
+        t = 1:n.iter,
+        chain.var.X1 = impsim$chainVar["X1", ,],
+        chain.var.X2 = impsim$chainVar["X2", ,],
+        chain.var.X3 = impsim$chainVar["X3", ,],
+        chain.var.Y = impsim$chainVar["Y", ,]
+      )
   }
   
   # combine y_obs and y_imp
@@ -73,7 +102,7 @@ test.impute <- function(data = data,
   
   # compute multivariate diagnostics
   mipo <-
-    map(imputed, lm, formula = Y ~ X1 + X2 + X3) %>% pool() %>% .$pooled 
+    map(imputed, lm, formula = Y ~ X1 + X2 + X3) %>% pool() %>% .$pooled
   est <- mipo %>% .$estimate #regression coefficients
   names(est) <- mipo$term
   var_est <- mipo %>% .$b #est finite pop variance
@@ -99,7 +128,7 @@ test.impute <- function(data = data,
     lm.mids(Y ~ X1 + X2 + X3, impsim) %>% .$analyses %>% map_dbl(., function(x) {
       x$residuals %>% var()
     }) %>% mean() #residual variance
- 
+  
   
   # # get Mahalanobis distance as multivariate convergence measure
   # covs <- map(imputed, ~{cov(.)})
@@ -108,7 +137,7 @@ test.impute <- function(data = data,
   # compute PCA loading instead
   pca <-
     map_dbl(imputed, ~ {
-      princomp(., cor = TRUE) %>% .$sdev %>% .[1] %>% .^2 #first eigenvalue of the varcovar matrix
+      princomp(., cor = TRUE) %>% .$sdev %>% .[1] %>% . ^ 2 #first eigenvalue of the varcovar matrix
     })
   
   # collect output
