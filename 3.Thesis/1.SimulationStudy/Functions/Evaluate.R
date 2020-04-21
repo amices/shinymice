@@ -64,18 +64,25 @@ evaluate.sim <-
     #   })
     # })
     
-    a <-
-      map(sims, function(rpt) {
-        map(thetas, function(vrb) {
-          rpt[, grep(vrb, names(rpt))] %>% cbind(rpt[, 1:2], .) %>% base::split(., as.factor(.$p))
-        })
-      }) 
     
-    map(c(.05, .25, .5, .75, .95), function(msp){
-      map(2:n.iter, function(itr) {
-        a[[1]][[1]][[msp]][1:itr, 3:7] %>% ac_lag1()
-      })
-    })
+    conv <-
+      map(sims, function(rpt) {
+        map_dfc(thetas, function(vrb) {
+          rpt[, grep(vrb, names(rpt))] %>% cbind(rpt[, 1:2], .) %>% base::split(., as.factor(.$p)) %>% 
+            map_dfr(., function(msp) {
+              map_dfr(1:n.iter, function(itr) {
+                msp[1:itr, 3:7] %>% ac_lag1() %>% c(t = itr, .)
+              }) %>% cbind(p = msp$p, .)
+            }) %>% .[, grep(vrb, names(.))] 
+          }) %>% cbind(rpt[, 1:2], .)
+        }) 
+    
+    # b <- map(a[[1]][[1]], function(msp) {
+    #   map(2:n.iter, function(itr) {
+    #     msp[1:itr, 3:7] %>% ac_lag1()
+    #   })
+    # })
+    
     ### decided to remove group_by, so this doesn't work anymore:
     # a[[1]][[1]] %>% summarise(sums = ac_lag1(chain.mean.X1.Chain.1))
     # a[[1]][[1]] %>%  summarise_all(~ac_lag1(.))

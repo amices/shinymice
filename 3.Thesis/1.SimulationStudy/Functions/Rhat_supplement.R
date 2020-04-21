@@ -1,0 +1,1 @@
+# Rhat function

@@ -1,18 +1,24 @@
 # autocorrelation supplement
 
-# function for lag 1 AC for one or more imputation chains (rows = observations, columns = imputations)
+# function for lag 1 AC for one or more imputation chains 
 ac_lag1 <- function(x){
-  # make input the same object type
-  x <- as.matrix(x)
-  # create output object with length equal to the number of imputation chains of the input
-  ac <- matrix(NA, 1, dim(x)[2])
-  # for each imputation
-  for (m in 1:dim(x)[2]) {
-    # compute the correlation between the chain and itself, one iteration delayed
-    ac[m] <- cor(x[-dim(x)[1], m], x[-1, m])
-  }
+  # # make input the same object type
+  # x <- as.matrix(x)
+  # # create output object with length equal to the number of imputation chains of the input
+  # ac <- matrix(NA, 1, dim(x)[2])
+  # # for each imputation
+  # for (m in 1:dim(x)[2]) {
+  #   # compute the correlation between the chain and itself, one iteration delayed
+  #   ac[m] <- cor(x[-dim(x)[1], m], x[-1, m])
+  # }
+  ac <- map_dfc(1:dim(x)[2], function(m){
+    cor(x[-dim(x)[1], m], x[-1, m]) 
+  })
+  names(ac) <- names(x)
   return(ac)
 }
+
+acf_lag1 <- function(x){acf(x, lag.max = 1, plot = FALSE) %>% .$acf %>% .[2, , ] %>% diag() %>% set_names(names(x))}
 
 # chain <- 1:4
 # Tt <- length(chain)
