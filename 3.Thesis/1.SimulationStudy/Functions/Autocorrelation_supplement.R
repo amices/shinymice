@@ -11,14 +11,18 @@ ac_lag1 <- function(x){
   #   # compute the correlation between the chain and itself, one iteration delayed
   #   ac[m] <- cor(x[-dim(x)[1], m], x[-1, m])
   # }
-  ac <- map_dfc(1:dim(x)[2], function(m){
+  ac <- map_dbl(1:dim(x)[2], function(m){
     cor(x[-dim(x)[1], m], x[-1, m]) 
   })
-  names(ac) <- names(x)
-  return(ac)
+  names(ac) <- paste0("ac.", names(x))
+  #names(ac) <- names(x)
+  if(!is.na(ac)[1]){
+    ac <- c(ac, mean.ac = mean(ac), max.ac = max(ac))
+    }
+  return(data.frame(t(ac)))
 }
 
-acf_lag1 <- function(x){acf(x, lag.max = 1, plot = FALSE) %>% .$acf %>% .[2, , ] %>% diag() %>% set_names(names(x))}
+acf_lag1 <- function(x){acf(x, lag.max = 1, plot = FALSE) %>% .$acf %>% .[2, , ] %>% diag() %>% set_names(paste0("acf.", names(x)))}
 
 # chain <- 1:4
 # Tt <- length(chain)

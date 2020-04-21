@@ -37,18 +37,6 @@ evaluate.sim <-
     #aggregate(.~t+p, pcas, function_to_apply, na.action = na.pass) %>% dplyr::na_if(., "NaN")
     ###
     
-    thetas <-
-      c(
-        "chain.mean.X1",
-        "chain.mean.X2",
-        "chain.mean.X3",
-        "chain.mean.Y",
-        "chain.var.X1",
-        "chain.var.X2",
-        "chain.var.X3",
-        "chain.var.Y",
-        "pca"
-      )
     
     #### THIS WORKS!
     # a <-
@@ -63,7 +51,20 @@ evaluate.sim <-
     #     a[[1]][[1]][[msp]][1:itr, 3:7] %>% ac_lag1()
     #   })
     # })
+    n.iter <- sims[[1]]$t %>% max
     
+    thetas <-
+      c(
+        "chain.mean.X1",
+        "chain.mean.X2",
+        "chain.mean.X3",
+        "chain.mean.Y",
+        "chain.var.X1",
+        "chain.var.X2",
+        "chain.var.X3",
+        "chain.var.Y",
+        "pca"
+      )
     
     conv <-
       map(sims, function(rpt) {
@@ -71,11 +72,12 @@ evaluate.sim <-
           rpt[, grep(vrb, names(rpt))] %>% cbind(rpt[, 1:2], .) %>% base::split(., as.factor(.$p)) %>% 
             map_dfr(., function(msp) {
               map_dfr(1:n.iter, function(itr) {
-                msp[1:itr, 3:7] %>% ac_lag1() %>% c(t = itr, .)
-              }) %>% cbind(p = msp$p, .)
-            }) %>% .[, grep(vrb, names(.))] 
+                msp[1:itr, 3:7] %>% ac_lag1() #%>% c(t = itr, .)
+              }) #%>% cbind(p = msp$p, .)
+            }) #%>% .[, grep(vrb, names(.))] 
           }) %>% cbind(rpt[, 1:2], .)
         }) 
+    
     
     # b <- map(a[[1]][[1]], function(msp) {
     #   map(2:n.iter, function(itr) {
