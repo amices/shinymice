@@ -25,7 +25,7 @@ The Netherlands.}
 \email{\href{mailto:h.i.oberman@uu.nl}{\nolinkurl{h.i.oberman@uu.nl}}}
 
 \begin{abstract}
-(\textbf{Rewrite:}) Multiple imputation by chained equations (mice) is a
+(\textbf{Rewrite:}) Multiple imputation by chained equations (MICE) is a
 widely used tool to accommodate missing data. While empirical evidence
 supports the validity of inferences obtained using mice, there is no
 consensus on the convergence properties of the method. This paper
@@ -56,24 +56,25 @@ fill in) every missing value in an incomplete dataset. With imputation
 techniques, one or several completed datasets are created, on which
 statistical inferences can be performed. The case with several completed
 datasets is known as `multiple imputation' \citep[MI;][]{rubin76}, and
-requires an additional step to pool the results across imputations. By
-applying Rubin's rules, the pooled result will reflect the uncertainty
-in the data due to missingness. Under many circumstances, this yields an
-unbiased and confidence valid estimate of the inference on the true--but
-missing--data \citep{buur18}. A popular method to obtain imputations is
-to use the `Multiple Imputation by Chained Equations' algorithm,
-shorthand `MICE'\citep{mice}. MICE is an iterative algorithmic procedure
-to draw imputations from the posterior predictive distribution of the
-missing values. This introduces a potential threat to the validity of
-the imputations: what if the algorithm has not converged? Are the
-implications then to be trusted? And can we rely on the inference
-obtained on the completed data? These are all open questions, because
-the convergence properties of iterative imputation algorithms have not
-been systematically studied \citep{buur18}. Moreover, there is no
-scientific consensus on the convergence properties of MI algorithms
-\citep{taka17}. Some default MICE techniques (e.g., `predictive mean
-modeling') might not yield converged states at all \citep{murr18}.
-Therefore, algorithmic convergence should be monitored carefully.
+requires an additional step to pool the results across imputations
+\textbf{see figure 1??}. By applying Rubin's rules, the pooled result
+will reflect the uncertainty in the data due to missingness. Under many
+circumstances, this yields an unbiased and confidence valid estimate of
+the inference on the true--but missing--data \citep{buur18}. A popular
+method to obtain imputations is to use the `Multiple Imputation by
+Chained Equations' algorithm, shorthand `MICE'\citep{mice}. MICE is an
+iterative algorithmic procedure to draw imputations from the posterior
+predictive distribution of the missing values. This introduces a
+potential threat to the validity of the imputations: what if the
+algorithm has not converged? Are the implications then to be trusted?
+And can we rely on the inference obtained on the completed data? These
+are all open questions, because the convergence properties of iterative
+imputation algorithms have not been systematically studied
+\citep{buur18}. Moreover, there is no scientific consensus on the
+convergence properties of MI algorithms \citep{taka17}. Some default
+MICE techniques (e.g., `predictive mean modeling') might not yield
+converged states at all \citep{murr18}. Therefore, algorithmic
+convergence should be monitored carefully.
 
 The recommended practice to monitor convergence is to visually inspect
 imputations for signs of non-convergence. This practice is insufficient
@@ -123,11 +124,14 @@ be either observed or missing. The collection of observed data values in
 \(y\) is denoted by \(y_{obs}\); the missing part of \(y\) is referred
 to as \(y_{mis}\). For each datapoint in \(y_{mis}\), we sample
 \(M \times T\) times plausible values, where \(M\) is the number of
-imputations (\(m = 1, \dots, M\)) and \(T\) is the number of iterations
-(\(t = 1, \dots, T\)). The collection of samples between the initial
-value (at \(t=1\)) and the final imputed value (at \(t=T\)) will be
-referred to as an `imputation chain'. \textbf{Add: missingness
-percentage = proportion of cases with one or more missing values }
+imputations (\(m = 1, 2, \dots, M\)) and \(T\) is the number of
+iterations (\(t = 1, 2, \dots, T\)). The collection of samples between
+the initial value (at \(t=1\)) and the final imputed value (at \(t=T\))
+will be referred to as an `imputation chain'. \textbf{Add: missingness
+percentage = proportion of cases with one or more missing values, Q is
+quantity of scientific interest: ``A scientific estimand \(Q\) is a
+quantity of scientific interest that we can calculate if we would
+observe the entire population'' \citep[par 2.3.1]{buur18}. }
 
 \hypertarget{convergence-diagnostics}{%
 \section{Convergence diagnostics}\label{convergence-diagnostics}}
@@ -175,9 +179,9 @@ B&=\frac{T}{M-1} \sum_{m=1}^{M}\left(\bar{\theta}^{(\cdot m)}-\bar{\theta}^{(\cd
 
 From the between- and within-chain variances we compute a weighted
 average, \(\widehat{\operatorname{var}}^{+}\), which over-estimates the
-total variance of \(\theta\). \(\widehat{R}\) is then obtained as a
-ratio between the over-estimated total variance and the within-chain
-variance:
+total variance of \(\theta\) \textbf{remove or explain why}.
+\(\widehat{R}\) is then obtained as a ratio between the over-estimated
+total variance and the within-chain variance:
 
 \begin{equation*}
 \widehat{R}=\sqrt{\frac{\widehat{\operatorname{var}}^{+}(\theta | y)}{W}},
@@ -246,25 +250,116 @@ interval width, and empirical coverage rate across simulations;][\(\S\)
 evaluate performance against.
 
 Based on an empirical finding \citep{lace07}, we hypothesize that
-\(\widehat{R}\) will over-estimate non-convergence of MI algorithms. The
-threshold of \(\widehat{R} < 1.01\) will then be too stringent for
-diagnosing convergence. This over-estimation may, however, be diminished
-because \(\widehat{R}\) can falsely diagnose convergence if initial
-values of the algorithm are not appropriately over-dispersed
-\citep[p.~437]{broo98}. In \texttt{mice}, initial values are chosen
-randomly from the observed data. Therefore, we cannot be certain that
-the initial values are over-dispersed. We expect this to have little
-effect on the hypothesized performance of \(\widehat{R}\). \textbf{(Add
-actual hypothesis: we thought that mice would converge sooner than
-\(\widehat{R}\) would indicate that it did)} No hypothesis was
-formulated about the performance of \(AC\) as convergence diagnostic.
-\textbf{Added later: High \(AC\)-values are implausible in MI
-procedures. That is, the randomness induced by the MI algorithm
-effectively mitigates the risk of dependency within chains.}
+\(\widehat{R}\) will over-estimate non-convergence of MI algorithms
+\textbf{explain why?}. The threshold of \(\widehat{R} < 1.01\) will then
+be too stringent for diagnosing convergence. This over-estimation may,
+however, be diminished because \(\widehat{R}\) can falsely diagnose
+convergence if initial values of the algorithm are not appropriately
+over-dispersed \citep[p.~437]{broo98}. In \texttt{mice}, initial values
+are chosen randomly from the observed data. Therefore, we cannot be
+certain that the initial values are over-dispersed. We expect this to
+have little effect on the hypothesized performance of \(\widehat{R}\)
+\textbf{explain that the randomness induced by the MICE algorithm would
+take care of this??}. \textbf{(Add actual hypothesis: we thought that
+mice would converge sooner than \(\widehat{R}\) would indicate that it
+did)} No hypothesis was formulated about the performance of \(AC\) as
+convergence diagnostic. \textbf{Added later: High \(AC\)-values are
+implausible in MI procedures. That is, the randomness induced by the MI
+algorithm effectively mitigates the risk of dependency within chains.}
 
 \hypertarget{simulation-study}{%
 \section{Simulation study}\label{simulation-study}}
 
+Research question when and how to diagnose non convergence?
+
+QUESTION: How?
+
+The two challenges of convergence are stationarity and mixing point.
+Mixing and stationarity can be evaluated visually. Common practice is to
+evaluate stationarity and mixing in trace plots for scalar summaries of
+interest. In mice these scalar summaries of interest are chain means and
+chain variances. As Van Buren describes users can also specify a model
+specific scalar summary (e.g., a regression coefficient). search a user
+specified scalar summary however is not universal to all complete data
+problems. Therefore as inspired by someone 2002 we will use introduce a
+scalar summary that summarizes the multivariate state space of the
+algorithm. In this study we use the first eigenvalue of the variance
+covariance matrix of the completed data set per imputation. The methods
+under evaluation are Rhat and AC. These will be computed for the three
+scalar summaries of interest: chain means, chain variances, and the
+first eigenvalue of the variance-covariance matrix across imputations.
+
+The two methods will be evaluated with an estimand per scalar summary of
+interest. It is assumed that when the estimates are unbiased (and
+confidence valid), the algorithm is sufficiently converged. The R hat
+and AC values with chain means as theta are evaluated against the bias
+in univariate mean estimates (\textbf{just for Y??}). Similarly, the
+performance measure for Rhat and AC applied to chain variances is the
+bias in estimated standard deviations. To evaluate the performance of
+Rhat and AC on the eigenvalues, we will use bias in R squared and in the
+estimated regression coefficient, the coverage rate of the CI95\% of the
+regression estimate, and the CI length. \textbf{remove the term
+performance measure above and add that performance measures are bias in
+all estimands, and cov and CIL of regression coeff.}
+
+ANSWER
+
+In general there is more bias in the estimate in conditions with a
+higher proportion of missingness and or a lower number of iterations. As
+required the values of or hat R lower for conditions with a higher
+number off iterations. End somewhat higher 4 conditions with a higher
+percentage of missing data. However autocorrelation did not show a
+decrease with increase number of iterations. After replacing the ACF
+function with a manual calculation for autocorrelation the
+autocorrelation values were indeed decreasing with a higher number of
+iterations. Evaluation with the performance measures shows that are had
+an autocorrelation are conservative: signs of non-convergence in
+conditions where estimands are unbiased and or confidence valid. As
+expected complete convergence (as indicated by autocorrelation equals 0;
+R hat equals 1) is not observed.
+
+QUESTION: When?
+
+Usually, convergence is diagnosed when Rhat \textless{} 1.2 or 1.1 or
+1.01. And a t-test is performed for AC values == 0. Performance measures
+are the same as above: unbiased, confidence valid estimates.
+
+ANSWER
+
+Our head is equal to 1.2 is not stringent enough because the performance
+measures R not unbiased and confidence fellas fell it 4 every condition
+in which our hat is smaller than one point 2. At least, not when our hat
+is smaller than one point two fur first occurs. The threshold R hat is
+equal to one point one is somewhat conservative with respect to the
+performance measures. It seems OK. Our hat is equal to 1.01 is too
+stringent compared to the performance measures (\textbf{but may be
+necessary in more complex complete data models???}).
+
+RECOMMENDATIONS
+
+For empirical researchers: 1) Check trace plots for pathological non
+convergence and adjust imputation model if necessary. 2) use our hat
+wait 1.1 ash threshold and autocorrelation with \textbf{?} as threshold
+. Keep iterating until these thresholds are reached. 3) Do not use the R
+function ACF. Instead compute autocorrelations manually , see for
+example GitHub link. 4) Track your own scalar summary of interest. This
+is advanced but explained in Van Buren 2018. Compute R hat and
+autocorrelation values for this scalar summary.
+
+LIMITATIONS/FUTURE RESEARCH
+
+Pmm, M(N)AR, Empirical data, Vignette, ShinyMICE, AC across imputations,
+not iterations (unique for imp data??)
+
+If I don't include it in my study, also: Significance of AC values;
+Estimate (PCA or reg. coeff.) versus Rhat and AC on the estimate
+
+\hypertarget{start-methods-section}{%
+\subsection{Start methods section}\label{start-methods-section}}
+
+\textbf{Add to this section: 1) explicit mention of simulation
+conditions; 2) emphasize that the plots are averages across repetitions,
+not within MICE; 3) sample effects due to single complete dataset}
 Convergence of the MICE algorithm is investigated through model-based
 simulation in \texttt{R} \citep[version 3.6.3;][]{R}. The simulation
 set-up is summarized in the pseudo-code below. The complete \texttt{R}
@@ -400,12 +495,6 @@ CI95\% around \(\bar{Q}\).
 
 \textbf{(Add more info about figure legends and axes.)}
 
-\begin{flushleft}\includegraphics{manuscript_files/figure-latex/unnamed-chunk-2-1} \end{flushleft}
-
-\begin{flushleft}\includegraphics{manuscript_files/figure-latex/unnamed-chunk-2-2} \end{flushleft}
-
-\begin{flushleft}\includegraphics{manuscript_files/figure-latex/unnamed-chunk-2-3} \end{flushleft}
-
 \hypertarget{univariate-estimates-and-convergence-diagnostics}{%
 \subsection{Univariate estimates and convergence
 diagnostics}\label{univariate-estimates-and-convergence-diagnostics}}
@@ -459,12 +548,6 @@ variable Y we see that the coefficient of determination is underestimate
 estimated in conditions where the number of iterations is equal to two
 or less, and slightly overestimated in conditions where the number of
 iterations is equal to three or more.
-
-\begin{flushleft}\includegraphics{manuscript_files/figure-latex/unnamed-chunk-3-1} \end{flushleft}
-
-\begin{flushleft}\includegraphics{manuscript_files/figure-latex/unnamed-chunk-3-2} \end{flushleft}
-
-\begin{flushleft}\includegraphics{manuscript_files/figure-latex/unnamed-chunk-3-3} \end{flushleft}
 
 In short, we see that the minimum number of iterations required to
 obtain unbiased, confidence valid regression estimates is 5. This value,

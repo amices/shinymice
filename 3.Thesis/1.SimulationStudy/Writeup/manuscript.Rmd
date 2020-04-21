@@ -170,6 +170,45 @@ Based on an empirical finding [@lace07], we hypothesize that $\widehat{R}$ will 
 
 # Simulation study
 
+Research question when and how to diagnose non convergence? 
+
+QUESTION: How? 
+
+The two challenges of convergence are stationarity and mixing point. Mixing and stationarity can be evaluated visually. Common practice is to evaluate stationarity and mixing in trace plots for scalar summaries of interest. In mice these scalar summaries of interest are chain means and chain variances. As Van Buren describes users can also specify a model specific scalar summary (e.g., a regression coefficient). search a user specified scalar summary however is not universal to all complete data problems. Therefore as inspired by someone 2002 we will use introduce a scalar summary that summarizes the multivariate state space of the algorithm. In this study we use the first eigenvalue of the variance covariance matrix of the completed data set per imputation. The methods under evaluation are Rhat and AC. These will be computed for the three scalar summaries of interest: chain means, chain variances, and the first eigenvalue of the variance-covariance matrix across imputations.
+
+The two methods will be evaluated with an estimand per scalar summary of interest. It is assumed that when the estimates are unbiased (and confidence valid), the algorithm is sufficiently converged. The R hat and AC values with chain means as theta are evaluated against the bias in univariate mean estimates (**just for Y??**). Similarly, the performance measure for Rhat and AC applied to chain variances is the bias in estimated standard deviations. To evaluate the performance of Rhat and AC on the eigenvalues, we will use bias in R squared and in the estimated regression coefficient, the coverage rate of the CI95% of the regression estimate, and the CI length. **remove the term performance measure above and add that performance measures are bias in all estimands, and cov and CIL of regression coeff.**
+
+ANSWER
+
+In general there is more bias in the estimate in conditions with a higher proportion of missingness and or a lower number of iterations. As required the values of or hat R lower for conditions with a higher number off iterations. End somewhat higher 4 conditions with a higher percentage of missing data. However autocorrelation did not show a decrease with increase number of iterations. After replacing the ACF function with a manual calculation for autocorrelation the autocorrelation values were indeed decreasing with a higher number of iterations. Evaluation with the performance measures shows that are had an autocorrelation are conservative: signs of non-convergence in conditions where estimands are unbiased and or confidence valid. As expected complete convergence (as indicated by autocorrelation equals 0; R hat equals 1)  is not observed.
+
+QUESTION: When?
+
+Usually, convergence is diagnosed when Rhat < 1.2 or 1.1 or 1.01. And a t-test is performed for AC values == 0. Performance measures are the same as above: unbiased, confidence valid estimates. 
+
+ANSWER
+
+Our head is equal to 1.2 is not stringent enough because the performance measures R not unbiased and confidence fellas fell it 4 every condition in which our hat is smaller than one point 2. At least, not when our hat is smaller than one point two fur first occurs. The threshold R hat is equal to one point one is somewhat conservative with respect to the performance measures. It seems OK. Our hat is equal to 1.01 is too stringent compared to the performance measures (**but may be necessary in more complex complete data models???**). 
+
+RECOMMENDATIONS
+
+For empirical researchers: 1) Check trace plots for pathological non convergence and adjust imputation model if necessary. 2) use our hat wait 1.1 ash threshold and autocorrelation with **?** as threshold . Keep iterating until these thresholds are reached. 3) Do not use the R function ACF. Instead compute autocorrelations manually , see for example GitHub link. 4) Track your own scalar summary of interest. This is advanced but explained in Van Buren 2018. Compute R hat and autocorrelation values for this scalar summary. 
+
+LIMITATIONS/FUTURE RESEARCH
+
+Pmm,
+M(N)AR,
+Empirical data,
+Vignette,
+ShinyMICE,
+AC across imputations, not iterations (unique for imp data??)
+
+
+If I don't include it in my study, also: Significance of AC values; Estimate (PCA or reg. coeff.) versus Rhat and AC on the estimate
+
+
+## Start methods section
+
 **Add to this section: 1) explicit mention of simulation conditions; 2) emphasize that the plots are averages across repetitions, not within MICE; 3) sample effects due to single complete dataset** Convergence of the MICE algorithm is investigated through model-based simulation in `R` [version `r paste(version$major,version$minor, sep = ".")`; @R]. The simulation set-up is summarized in the pseudo-code below. The complete `R` script of the simulation study is available from [github.com/gerkovink/shinyMice](https://github.com/gerkovink/shinyMice/tree/master/3.Thesis/1.SimulationStudy). 
 <!-- Simulation conditions are the number of iterations ($T = 1, 2, \dots, 100$) and the percentage missingness in the  -->
 
@@ -257,15 +296,15 @@ From bias and CIW, we calculate empirical coverage rates. Coverage rate is the p
 **(Add more info about figure legends and axes.)**
 
 ```{r, include = FALSE}
-load("../Results/test.Rdata")
-source("../2.CreateFigures.R")
+# load("../Results/test.Rdata")
+# source("../2.CreateFigures.R")
 ```
 
 
 ```{r}
-mean_bias + plot_annotation(title = "Bias in mean estimate, convergence of chain means")
-mean_Rh 
-mean_ACF + plot_annotation(title = "Dotted lines are old AC computation, solid are new.")
+# mean_bias + plot_annotation(title = "Bias in mean estimate, convergence of chain means")
+# mean_Rh 
+# mean_ACF + plot_annotation(title = "Dotted lines are old AC computation, solid are new.")
 ```
 
 ## Univariate estimates and convergence diagnostics 
@@ -288,9 +327,9 @@ There is a clear bias in the regression estimates in simulation conditions where
 If we look at the estimated proportion of explained variance in outcome variable Y we see that the coefficient of determination is underestimate estimated in conditions where the number of iterations is equal to two or less, and slightly overestimated in conditions where the number of iterations is equal to three or more. 
 
 ```{r}
-est_bias + plot_annotation(title = "Bias in regression estimate, coverage rate, \n bias in variance explained")
-est_cov
-Rsq_bias 
+# est_bias + plot_annotation(title = "Bias in regression estimate, coverage rate, \n bias in variance explained")
+# est_cov
+# Rsq_bias 
 ```
 
 In short, we see that the minimum number of iterations required to obtain unbiased, confidence valid regression estimates is 5. This value, however, is dependent on the percentage of missing values. E.g., with 95% of cases having missing data we need at least seven iterations to obtain unbiased results. 
@@ -304,11 +343,11 @@ In short, we see that the minimum number of iterations required to obtain unbias
 
 
 ```{r include=FALSE}
-# chain means
-dat[-1, 6:9] %>% mutate(max_Rh = apply(., 1, max)) %>% .$max_Rh<1.2
-
-# chain variances
-dat[-1, 26:29] %>% mutate(max_Rh = apply(., 1, max)) %>% .$max_Rh<1.2
+# # chain means
+# dat[-1, 6:9] %>% mutate(max_Rh = apply(., 1, max)) %>% .$max_Rh<1.2
+# 
+# # chain variances
+# dat[-1, 26:29] %>% mutate(max_Rh = apply(., 1, max)) %>% .$max_Rh<1.2
 
 ```
 

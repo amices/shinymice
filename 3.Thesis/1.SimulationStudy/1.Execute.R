@@ -31,7 +31,7 @@ source("3.Thesis/1.SimulationStudy/Functions/PCA_convergence.R")
 # simulation parameters
 populationsize <- 1000 #n of simulated dataset
 n.iter <- 100 #nr of iterations (varying 1:n.iter)
-n.sim <- 20 #nr of simulations per iteration value
+n.sim <- 100 #nr of simulations per iteration value
 p.miss <- c(.05, .25, .5, .75, .95)
 true_effect <- 2 #regression coefficient to be estimated
 true_mean <- true_sd <- NA
