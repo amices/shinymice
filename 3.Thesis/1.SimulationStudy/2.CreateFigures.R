@@ -28,10 +28,10 @@ theme_update(
 ####################
 
 # Univariate: mean estimate
-mean_bias <- dat %>% ggplot(aes(x = T, y = bias.mean.X1, color = as.factor(miss))) +
-  geom_hline(yintercept = 0,
-             color = "grey",
-             lwd = 2) +
+mean_bias <- dat %>% ggplot(aes(x = t, y = mean.X1, color = as.factor(p*100))) +
+  # geom_hline(yintercept = 0,
+  #            color = "grey",
+  #            lwd = 2) +
   geom_point(size = .75) +
   geom_line() +
   xlab("Number of iterations") +
@@ -39,7 +39,7 @@ mean_bias <- dat %>% ggplot(aes(x = T, y = bias.mean.X1, color = as.factor(miss)
   labs(colour = "Missingness (%)")
 
 # Univariate: convergence chain mean
-mean_Rh <- dat %>% ggplot(aes(x = T, y = R.mean.X1, color = as.factor(miss))) +
+mean_Rh <- dat %>% ggplot(aes(x = t, y = R.mean.X1, color = as.factor(p*100))) +
   geom_hline(yintercept = 1,
              color = "grey",
              lwd = 2) +
@@ -49,7 +49,7 @@ mean_Rh <- dat %>% ggplot(aes(x = T, y = R.mean.X1, color = as.factor(miss))) +
   ylab(expression(paste(widehat(R)))) +
   labs(colour = "Missingness (%)")
 
-mean_AC <- dat %>% ggplot(aes(x = T, y = AC.mean.X1, color = as.factor(miss))) +
+mean_AC <- dat %>% ggplot(aes(x = t, y = AC.mean.X1, color = as.factor(p*100))) +
   geom_hline(yintercept = 0,
              color = "grey",
              lwd = 2) +
@@ -59,20 +59,20 @@ mean_AC <- dat %>% ggplot(aes(x = T, y = AC.mean.X1, color = as.factor(miss))) +
   ylab("Autocorrelation") +
   labs(colour = "Missingness (%)")
 
-mean_ACF <- dat %>% ggplot(aes(x = T, y = ACF.mean.X1, color = as.factor(miss))) +
+mean_ACF <- dat %>% ggplot(aes(x = t, y = ACF.mean.X1, color = as.factor(p*100))) +
   geom_hline(yintercept = 0,
              color = "grey",
              lwd = 2) +
   geom_point(size = .75, na.rm = TRUE) +
   geom_line(linetype = "dotted", na.rm = TRUE) +
-  geom_point(aes(x = T, y = AC.mean.X1, color = as.factor(miss)), size = .75, na.rm = TRUE) +
-  geom_line(aes(x = T, y = AC.mean.X1, color = as.factor(miss)), na.rm = TRUE) +
+  geom_point(aes(x = t, y = AC.mean.X1, color = as.factor(p*100)), size = .75, na.rm = TRUE) +
+  geom_line(aes(x = t, y = AC.mean.X1, color = as.factor(p*100)), na.rm = TRUE) +
   xlab("Number of iterations") +
   ylab("Autocorrelation") +
   labs(colour = "Missingness (%)")
 
 # # Univariate: variance estimate
-# dat %>% ggplot(aes(x = T, y = bias.sd.X1, color = as.factor(miss))) +
+# dat %>% ggplot(aes(x = t, y = bias.sd.X1, color = as.factor(p*100))) +
 #   geom_hline(yintercept = 0,
 #              color = "grey",
 #              lwd = 2) +
@@ -83,7 +83,7 @@ mean_ACF <- dat %>% ggplot(aes(x = T, y = ACF.mean.X1, color = as.factor(miss)))
 #   labs(colour = "Missingness (%)")
 # 
 # # Univariate: convergence chain variance
-# dat %>% ggplot(aes(x = T, y = R.var.X1, color = as.factor(miss))) +
+# dat %>% ggplot(aes(x = t, y = R.var.X1, color = as.factor(p*100))) +
 #   geom_hline(yintercept = 1,
 #              color = "grey",
 #              lwd = 2) +
@@ -93,7 +93,7 @@ mean_ACF <- dat %>% ggplot(aes(x = T, y = ACF.mean.X1, color = as.factor(miss)))
 #   ylab(expression(paste(widehat(R)))) +
 #   labs(colour = "Missingness (%)")
 # 
-# dat %>% ggplot(aes(x = T, y = AC.var.X1, color = as.factor(miss))) +
+# dat %>% ggplot(aes(x = t, y = AC.var.X1, color = as.factor(p*100))) +
 #   geom_hline(yintercept = 0,
 #              color = "grey",
 #              lwd = 2) +
@@ -108,7 +108,7 @@ mean_ACF <- dat %>% ggplot(aes(x = T, y = ACF.mean.X1, color = as.factor(miss)))
 ####################
 
 # Bias in regression coefficient
-est_bias <- dat %>% ggplot(aes(x = T, y = bias.est.X1, color = as.factor(miss))) +
+est_bias <- dat %>% ggplot(aes(x = t, y = bias.est.X1, color = as.factor(p*100))) +
   geom_hline(yintercept = 0,
              color = "grey",
              lwd = 2) +
@@ -119,7 +119,7 @@ est_bias <- dat %>% ggplot(aes(x = T, y = bias.est.X1, color = as.factor(miss)))
   labs(colour = "Missingness (%)")
 
 # Coverage rate regression coefficient
-est_cov <- dat %>% ggplot(aes(x = T, y = cov.est.X1, color = as.factor(miss))) +
+est_cov <- dat %>% ggplot(aes(x = t, y = cov.est.X1, color = as.factor(p*100))) +
   geom_hline(yintercept = .95,
              color = "grey",
              lwd = 2) +
@@ -130,7 +130,7 @@ est_cov <- dat %>% ggplot(aes(x = T, y = cov.est.X1, color = as.factor(miss))) +
   labs(colour = "Missingness (%)")
 
 # R squared
-Rsq_bias <- dat %>% ggplot(aes(x = T, y = bias.R.s*100, color = as.factor(miss))) +
+Rsq_bias <- dat %>% ggplot(aes(x = t, y = bias.R.s*100, color = as.factor(p*100))) +
   geom_hline(yintercept = 0,
              color = "grey",
              lwd = 2) +
@@ -142,7 +142,7 @@ Rsq_bias <- dat %>% ggplot(aes(x = T, y = bias.R.s*100, color = as.factor(miss))
   labs(colour = "Missingness (%)")
 
 # R hat for PCA
-dat %>% ggplot(aes(x = T, y = R.PCA, color = as.factor(miss))) +
+dat %>% ggplot(aes(x = t, y = R.PCA, color = as.factor(p*100))) +
   geom_hline(yintercept = 1,
              color = "grey",
              lwd = 2) +
@@ -153,7 +153,7 @@ dat %>% ggplot(aes(x = T, y = R.PCA, color = as.factor(miss))) +
   labs(colour = "Missingness (%)")
 
 # AC for PCA
-dat %>% ggplot(aes(x = T, y = AC.PCA, color = as.factor(miss))) +
+dat %>% ggplot(aes(x = t, y = AC.PCA, color = as.factor(p*100))) +
   geom_hline(yintercept = 0,
              color = "grey",
              lwd = 2) +
@@ -163,14 +163,14 @@ dat %>% ggplot(aes(x = T, y = AC.PCA, color = as.factor(miss))) +
   ylab("Auto-correlation") +
   labs(colour = "Missingness (%)") 
 
-PCA_ACF <- dat %>% ggplot(aes(x = T, y = ACF.PCA, color = as.factor(miss))) +
+PCA_ACF <- dat %>% ggplot(aes(x = t, y = ACF.PCA, color = as.factor(p*100))) +
   geom_hline(yintercept = 0,
              color = "grey",
              lwd = 2) +
   geom_point(size = .75, na.rm = TRUE) +
   geom_line(linetype = "dotted", na.rm = TRUE) +
-  geom_point(aes(x = T, y = AC.PCA, color = as.factor(miss)), size = .75, na.rm = TRUE) +
-  geom_line(aes(x = T, y = AC.PCA, color = as.factor(miss)), na.rm = TRUE) +
+  geom_point(aes(x = t, y = AC.PCA, color = as.factor(p*100)), size = .75, na.rm = TRUE) +
+  geom_line(aes(x = t, y = AC.PCA, color = as.factor(p*100)), na.rm = TRUE) +
   xlab("Number of iterations") +
   ylab("Autocorrelation") +
   labs(colour = "Missingness (%)")
@@ -182,16 +182,16 @@ PCA_ACF <- dat %>% ggplot(aes(x = T, y = ACF.PCA, color = as.factor(miss))) +
 # 
 # RMSE_plot <- dat %>% filter(miss == .25) %>%
 #   ggplot() +
-#   geom_point(aes(x = T, y = RMSE.1, color = "m1"), size = .75) +
-#   geom_point(aes(x = T, y = RMSE.2, color = "m2"), size = .75) +
-#   geom_point(aes(x = T, y = RMSE.3, color = "m3"), size = .75) +
-#   geom_point(aes(x = T, y = RMSE.4, color = "m4"), size = .75) +
-#   geom_point(aes(x = T, y = RMSE.5, color = "m5"), size = .75) +
-#   geom_line(aes(x = T, y = RMSE.1, color = "m1")) +
-#   geom_line(aes(x = T, y = RMSE.2, color = "m2")) +
-#   geom_line(aes(x = T, y = RMSE.3, color = "m3")) +
-#   geom_line(aes(x = T, y = RMSE.4, color = "m4")) +
-#   geom_line(aes(x = T, y = RMSE.5, color = "m5")) +
+#   geom_point(aes(x = t, y = RMSE.1, color = "m1"), size = .75) +
+#   geom_point(aes(x = t, y = RMSE.2, color = "m2"), size = .75) +
+#   geom_point(aes(x = t, y = RMSE.3, color = "m3"), size = .75) +
+#   geom_point(aes(x = t, y = RMSE.4, color = "m4"), size = .75) +
+#   geom_point(aes(x = t, y = RMSE.5, color = "m5"), size = .75) +
+#   geom_line(aes(x = t, y = RMSE.1, color = "m1")) +
+#   geom_line(aes(x = t, y = RMSE.2, color = "m2")) +
+#   geom_line(aes(x = t, y = RMSE.3, color = "m3")) +
+#   geom_line(aes(x = t, y = RMSE.4, color = "m4")) +
+#   geom_line(aes(x = t, y = RMSE.5, color = "m5")) +
 #   xlab("") +
 #   ylab("RMSE") +
 #   labs(colour = "Imputation") +
@@ -199,16 +199,16 @@ PCA_ACF <- dat %>% ggplot(aes(x = T, y = ACF.PCA, color = as.factor(miss))) +
 # 
 # MAE_plot <- dat %>% filter(miss == .25) %>%
 #   ggplot() +
-#   geom_point(aes(x = T, y = MAE.1, color = "m1"), size = .75) +
-#   geom_point(aes(x = T, y = MAE.2, color = "m2"), size = .75) +
-#   geom_point(aes(x = T, y = MAE.3, color = "m3"), size = .75) +
-#   geom_point(aes(x = T, y = MAE.4, color = "m4"), size = .75) +
-#   geom_point(aes(x = T, y = MAE.5, color = "m5"), size = .75) +
-#   geom_line(aes(x = T, y = MAE.1, color = "m1")) +
-#   geom_line(aes(x = T, y = MAE.2, color = "m2")) +
-#   geom_line(aes(x = T, y = MAE.3, color = "m3")) +
-#   geom_line(aes(x = T, y = MAE.4, color = "m4")) +
-#   geom_line(aes(x = T, y = MAE.5, color = "m5")) +
+#   geom_point(aes(x = t, y = MAE.1, color = "m1"), size = .75) +
+#   geom_point(aes(x = t, y = MAE.2, color = "m2"), size = .75) +
+#   geom_point(aes(x = t, y = MAE.3, color = "m3"), size = .75) +
+#   geom_point(aes(x = t, y = MAE.4, color = "m4"), size = .75) +
+#   geom_point(aes(x = t, y = MAE.5, color = "m5"), size = .75) +
+#   geom_line(aes(x = t, y = MAE.1, color = "m1")) +
+#   geom_line(aes(x = t, y = MAE.2, color = "m2")) +
+#   geom_line(aes(x = t, y = MAE.3, color = "m3")) +
+#   geom_line(aes(x = t, y = MAE.4, color = "m4")) +
+#   geom_line(aes(x = t, y = MAE.5, color = "m5")) +
 #   xlab("") +
 #   ylab("Mean absolute error") +
 #   labs(colour = "Imputation") +
@@ -216,16 +216,16 @@ PCA_ACF <- dat %>% ggplot(aes(x = T, y = ACF.PCA, color = as.factor(miss))) +
 # 
 # PCA_plot <- dat %>% filter(miss == .25) %>%
 #   ggplot() +
-#   geom_point(aes(x = T, y = pca.1, color = "m1"), size = .75) +
-#   geom_point(aes(x = T, y = pca.2, color = "m2"), size = .75) +
-#   geom_point(aes(x = T, y = pca.3, color = "m3"), size = .75) +
-#   geom_point(aes(x = T, y = pca.4, color = "m4"), size = .75) +
-#   geom_point(aes(x = T, y = pca.5, color = "m5"), size = .75) +
-#   geom_line(aes(x = T, y = pca.1, color = "m1")) +
-#   geom_line(aes(x = T, y = pca.2, color = "m2")) +
-#   geom_line(aes(x = T, y = pca.3, color = "m3")) +
-#   geom_line(aes(x = T, y = pca.4, color = "m4")) +
-#   geom_line(aes(x = T, y = pca.5, color = "m5")) +
+#   geom_point(aes(x = t, y = pca.1, color = "m1"), size = .75) +
+#   geom_point(aes(x = t, y = pca.2, color = "m2"), size = .75) +
+#   geom_point(aes(x = t, y = pca.3, color = "m3"), size = .75) +
+#   geom_point(aes(x = t, y = pca.4, color = "m4"), size = .75) +
+#   geom_point(aes(x = t, y = pca.5, color = "m5"), size = .75) +
+#   geom_line(aes(x = t, y = pca.1, color = "m1")) +
+#   geom_line(aes(x = t, y = pca.2, color = "m2")) +
+#   geom_line(aes(x = t, y = pca.3, color = "m3")) +
+#   geom_line(aes(x = t, y = pca.4, color = "m4")) +
+#   geom_line(aes(x = t, y = pca.5, color = "m5")) +
 #   xlab("Number of iterations") +
 #   ylab("First PCA component") +
 #   labs(colour = "Imputation")
@@ -237,12 +237,12 @@ PCA_ACF <- dat %>% ggplot(aes(x = T, y = ACF.PCA, color = as.factor(miss))) +
 
 # # if wanted, add CI based on MCMC SEs
 # geom_errorbar(
-#       aes(x = T, ymin = bias.mean.Y.LL, ymax = bias.mean.Y.UL),
+#       aes(x = t, ymin = bias.mean.Y.LL, ymax = bias.mean.Y.UL),
 #       width = .2,
 #       color = "grey"
 #     ) +
 
 # # if wanted, add loess line or average or stepwise line
-# geom_smooth(aes(x = T, y = R.mean.X1, color = "X1"), se = FALSE) +
-# geom_smooth(aes(x = T, y = CIW.est.4, color = "X3"), method = "lm", formula = "y ~1", se = F) +
-# geom_step(aes(x = T, y = 100 * R.sq, color = "R^2"), direction = "mid") +
+# geom_smooth(aes(x = t, y = R.mean.X1, color = "X1"), se = FALSE) +
+# geom_smooth(aes(x = t, y = CIW.est.4, color = "X3"), method = "lm", formula = "y ~1", se = F) +
+# geom_step(aes(x = t, y = 100 * R.sq, color = "R^2"), direction = "mid") +
