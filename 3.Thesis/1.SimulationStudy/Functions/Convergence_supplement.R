@@ -10,36 +10,55 @@ fold_sims <- function(sims) {
 # split chains with maxit > 4 to detect trending
 split_chains <- function(sims) {
   # split Markov chains, adapted from rstan
-  niter <- dim(sims)[1]
+
+  # number of iterations
+  t <- dim(sims)[1]
+  
   # do not split if result will be chains of length 1
-  if (niter < 4)
-    return(sims)
+  if (t < 4)
+    return(sims) else {
   # split each chain to get 2m chains
-  half <- niter / 2
-  cbind(sims[1:floor(half), ], sims[ceiling(half + 1):niter, ])
+  lower <- 1:floor(t/2)
+  upper <- ceiling((t/2) + 1):t
+  splits <- base::cbind(sims[lower, ], sims[upper, ])
+  return(splits)}
 }
 
 # rank-normalize chains because Gelman says so
 z_scale <- function(x) {
+  
   # rank-normalize Markov chain, copied from rstan
-  S <- length(x)
+  t <- length(x)
   r <- rank(x, ties.method = 'average')
-  z <- qnorm((r - 1 / 2) / S)
+  z <- qnorm((r - 1 / 2) / t)
+  
+  # output
   if (!is.null(dim(x))) {
-    # output should have the input dimension
+    # output should have the input dimensions
     z <- array(z, dim = dim(x), dimnames = dimnames(x))
   }
-  z
+  return(z)
 }
 
 # compute rhat
-get.rhat <- function(sims, maxit = maxit) {
+get.rhat <- function(sims) {
   # compute potential scale reduction factor (rhat) for each variable in mids object
   # equations adapted from Vehtari et al. (2019)
+  
+  # number of iterations
+  t <- length(sims)
+  
+  # between chain variance
   var_between <-
-    maxit * var(apply(sims, 2, mean))
+    t * var(apply(sims, 2, mean))
+ 
+  # within chain variance
   var_within <- mean(apply(sims, 2, var))
+  
+  # rhat
   rhat <-
-    sqrt((var_between / var_within + maxit - 1) / maxit)
+    sqrt((var_between / var_within + t - 1) / t)
+  
+  # output
   return(rhat)
 }
