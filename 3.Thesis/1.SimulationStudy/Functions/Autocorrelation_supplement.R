@@ -49,7 +49,6 @@ acf_lag1 <- function(x) {
 }
 
 ################
-
 # chain <- 1:4
 # Tt <- length(chain)
 # theta <- chain - mean(chain)
