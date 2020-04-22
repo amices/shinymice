@@ -112,6 +112,11 @@ test.impute <- function(data = data,
   CIW <- CI.up - CI.low #confidence interval width
   cov_est <- CI.low < true_effect & true_effect < CI.up #coverage
   
+  # track effect X1 -> Y for convergence diag
+  # track effect X1 -> Y for convergence diag
+  beta <-
+    map_dbl(imputed, ~{lm(formula = Y ~ X1 + X2 + X3, data = .) %>% .$coefficients %>% .[2]}) 
+  
   # compute predictive performance
   R_sq <-
     lm.mids(Y ~ X1 + X2 + X3, impsim) %>% pool.r.squared() %>% .[1] #coeff of determination
@@ -162,7 +167,8 @@ test.impute <- function(data = data,
       RMSE = t(RMSE),
       MAE = t(MAE),
       error.var = t(error_var),
-      pca = t(pca)#,
+      pca = t(pca),
+      beta = t(beta)#,
       #bias.sigma = t(bias_error_var)
       
     )
