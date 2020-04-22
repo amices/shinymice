@@ -57,24 +57,49 @@ techniques, one or several completed datasets are created, on which
 statistical inferences can be performed. The case with several completed
 datasets is known as `multiple imputation' \citep[MI;][]{rubin76}, and
 requires an additional step to pool the results across imputations
-\textbf{see figure 1??}. By applying Rubin's rules, the pooled result
-will reflect the uncertainty in the data due to missingness. Under many
-circumstances, this yields an unbiased and confidence valid estimate of
-the inference on the true--but missing--data \citep{buur18}. A popular
-method to obtain imputations is to use the `Multiple Imputation by
-Chained Equations' algorithm, shorthand `MICE'\citep{mice}. MICE is an
-iterative algorithmic procedure to draw imputations from the posterior
-predictive distribution of the missing values. This introduces a
-potential threat to the validity of the imputations: what if the
-algorithm has not converged? Are the implications then to be trusted?
-And can we rely on the inference obtained on the completed data? These
-are all open questions, because the convergence properties of iterative
-imputation algorithms have not been systematically studied
-\citep{buur18}. Moreover, there is no scientific consensus on the
-convergence properties of MI algorithms \citep{taka17}. Some default
-MICE techniques (e.g., `predictive mean modeling') might not yield
-converged states at all \citep{murr18}. Therefore, algorithmic
-convergence should be monitored carefully.
+\textbf{see figure 1??}.
+
+\textbf{Move this after notation??} Figure 1 provides an overview of the
+steps involved with MI---from incomplete data, to \(M\) completed
+datasets, to \(M\) estimated quantities of interest (\(\hat{Q}\)s), to a
+single pooled estimate \(\bar{Q}\). Missing data in \(y\) is `imputed'
+(i.e., filled in) \(M\) times. The imputed data (\(y_{imp}\)) is
+combined with the observed data (\(y_{obs}\)) to create \(M\) completed
+datasets. On each completed dataset, the analysis of scientific interest
+(the `substantive model', or `complete data model') is performed. The
+quantity of scientific interest (e.g., a regression coefficient) is
+denoted with \(Q\). Since \(Q\) is estimated on each completed dataset,
+\(M\) separate \(\hat{Q}\)-values are obtained. These \(M\) values are
+combined into a single pooled estimate \(\bar{Q}\). \textbf{ALSO: make
+clear that iteration happens within the first step.}
+
+\begin{figure}
+
+{\centering \includegraphics[width=\linewidth]{./images/diagram} 
+
+}
+
+\caption{Scheme of the main steps in multiple imputation.}\label{fig:unnamed-chunk-1}
+\end{figure}
+
+By applying Rubin's rules, the pooled result will reflect the
+uncertainty in the data due to missingness. Under many circumstances,
+this yields an unbiased and confidence valid estimate of the inference
+on the true--but missing--data \citep{buur18}. A popular method to
+obtain imputations is to use the `Multiple Imputation by Chained
+Equations' algorithm, shorthand `MICE'\citep{mice}. MICE is an iterative
+algorithmic procedure to draw imputations from the posterior predictive
+distribution of the missing values. This introduces a potential threat
+to the validity of the imputations: what if the algorithm has not
+converged? Are the implications then to be trusted? And can we rely on
+the inference obtained on the completed data? These are all open
+questions, because the convergence properties of iterative imputation
+algorithms have not been systematically studied \citep{buur18}.
+Moreover, there is no scientific consensus on the convergence properties
+of MI algorithms \citep{taka17}. Some default MICE techniques (e.g.,
+`predictive mean modeling') might not yield converged states at all
+\citep{murr18}. Therefore, algorithmic convergence should be monitored
+carefully.
 
 The recommended practice to monitor convergence is to visually inspect
 imputations for signs of non-convergence. This practice is insufficient
@@ -101,7 +126,7 @@ Are the default number of iterations sufficient (i.e., 5 in mice, 10 in
 SPSS and Stata, 30 in mi)? \textbf{(These are part of the methods, not
 RQ per se: What are the effects of continued iterations on estimates,
 predictions and inferences? And finally, do the answers differ with
-varying missingness proportions? That is, we vary the nr of iterarions
+varying missingness proportions? That is, we vary the nr of iterations
 and the missingness proportion because we assume that the algorithm has
 not reached convergence at \(t=1\), and performs worse with moderate to
 high missingness (not so much with little or a LOT of missingness).)}
@@ -137,7 +162,7 @@ observe the entire population'' \citep[par 2.3.1]{buur18}. }
 \section{Convergence diagnostics}\label{convergence-diagnostics}}
 
 The two challenges for convergence of iterative algorithms are mixing
-and stationarity \citep{gelm13}, see Figure 1. Without mixing,
+and stationarity \citep{gelm13}, see Figure XYZ. Without mixing,
 imputation chains do not intermingle nicely. Without stationarity, there
 is trending within imputation chains. While the current practice is to
 inspect traceplots for signs of non-mixing and non-stationarity,
@@ -154,6 +179,15 @@ non-stationarity, but this has not yet been thoroughly investigated
 \citep{veht19}. Therefore, mixing and stationarity will be evaluated
 separately in this study. As recommended \citep[e.g.,][p.~898]{cowl96},
 \(AC\) and \(\widehat{R}\) will be used.
+
+\begin{figure}
+
+{\centering \includegraphics[width=.49\linewidth]{manuscript_files/figure-latex/unnamed-chunk-2-1} \includegraphics[width=.49\linewidth]{manuscript_files/figure-latex/unnamed-chunk-2-2} 
+
+}
+
+\caption{Pathological non-convergence versus typical convergence.}\label{fig:unnamed-chunk-2}
+\end{figure}
 
 \hypertarget{potential-scale-reduction-factor}{%
 \subsection{Potential scale reduction
@@ -285,74 +319,78 @@ problems. Therefore as inspired by someone 2002 we will use introduce a
 scalar summary that summarizes the multivariate state space of the
 algorithm. In this study we use the first eigenvalue of the variance
 covariance matrix of the completed data set per imputation. The methods
-under evaluation are Rhat and AC. These will be computed for the three
-scalar summaries of interest: chain means, chain variances, and the
-first eigenvalue of the variance-covariance matrix across imputations.
+under evaluation are \(\widehat{R}\) and \(AC\). These will be computed
+for the three scalar summaries of interest: chain means, chain
+variances, and the first eigenvalue of the variance-covariance matrix
+across imputations.
 
 The two methods will be evaluated with an estimand per scalar summary of
 interest. It is assumed that when the estimates are unbiased (and
-confidence valid), the algorithm is sufficiently converged. The R hat
-and AC values with chain means as theta are evaluated against the bias
-in univariate mean estimates (\textbf{just for Y??}). Similarly, the
-performance measure for Rhat and AC applied to chain variances is the
-bias in estimated standard deviations. To evaluate the performance of
-Rhat and AC on the eigenvalues, we will use bias in R squared and in the
-estimated regression coefficient, the coverage rate of the CI95\% of the
-regression estimate, and the CI length. \textbf{remove the term
-performance measure above and add that performance measures are bias in
-all estimands, and cov and CIL of regression coeff.}
+confidence valid), the algorithm is sufficiently converged. The
+\(\widehat{R}\) and \(AC\) values with chain means as theta are
+evaluated against the bias in univariate mean estimates (\textbf{just
+for Y??}). Similarly, the performance measure for Rhat and \(AC\)
+applied to chain variances is the bias in estimated standard deviations.
+To evaluate the performance of Rhat and \(AC\) on the eigenvalues, we
+will use bias in R squared and in the estimated regression coefficient,
+the coverage rate of the CI95\% of the regression estimate, and the CI
+length. \textbf{remove the term performance measure above and add that
+performance measures are bias in all estimands, and cov and CIL of
+regression coeff.}
 
 ANSWER
 
 In general there is more bias in the estimate in conditions with a
 higher proportion of missingness and or a lower number of iterations. As
-required the values of or hat R lower for conditions with a higher
-number off iterations. End somewhat higher 4 conditions with a higher
-percentage of missing data. However autocorrelation did not show a
-decrease with increase number of iterations. After replacing the ACF
+required the values of o\(\widehat{R}\) R lower for conditions with a
+higher number off iterations. End somewhat higher 4 conditions with a
+higher percentage of missing data. However autocorrelation did not show
+a decrease with increase number of iterations. After replacing the ACF
 function with a manual calculation for autocorrelation the
 autocorrelation values were indeed decreasing with a higher number of
 iterations. Evaluation with the performance measures shows that are had
 an autocorrelation are conservative: signs of non-convergence in
 conditions where estimands are unbiased and or confidence valid. As
 expected complete convergence (as indicated by autocorrelation equals 0;
-R hat equals 1) is not observed.
+\(\widehat{R}\) equals 1) is not observed.
 
 QUESTION: When?
 
 Usually, convergence is diagnosed when Rhat \textless{} 1.2 or 1.1 or
-1.01. And a t-test is performed for AC values == 0. Performance measures
-are the same as above: unbiased, confidence valid estimates.
+1.01. And a t-test is performed for \(AC\) values == 0. Performance
+measures are the same as above: unbiased, confidence valid estimates.
 
 ANSWER
 
 Our head is equal to 1.2 is not stringent enough because the performance
 measures R not unbiased and confidence fellas fell it 4 every condition
-in which our hat is smaller than one point 2. At least, not when our hat
-is smaller than one point two fur first occurs. The threshold R hat is
-equal to one point one is somewhat conservative with respect to the
-performance measures. It seems OK. Our hat is equal to 1.01 is too
-stringent compared to the performance measures (\textbf{but may be
-necessary in more complex complete data models???}).
+in which \(\widehat{R}\) is smaller than one point 2. At least, not when
+\(\widehat{R}\) is smaller than one point two fur first occurs. The
+threshold \(\widehat{R}\) is equal to one point one is somewhat
+conservative with respect to the performance measures. It seems OK.
+\(\widehat{R}\) is equal to 1.01 is too stringent compared to the
+performance measures (\textbf{but may be necessary in more complex
+complete data models???}).
 
 RECOMMENDATIONS
 
 For empirical researchers: 1) Check trace plots for pathological non
-convergence and adjust imputation model if necessary. 2) use our hat
-wait 1.1 ash threshold and autocorrelation with \textbf{?} as threshold
-. Keep iterating until these thresholds are reached. 3) Do not use the R
-function ACF. Instead compute autocorrelations manually , see for
-example GitHub link. 4) Track your own scalar summary of interest. This
-is advanced but explained in Van Buren 2018. Compute R hat and
-autocorrelation values for this scalar summary.
+convergence and adjust imputation model if necessary. 2) use
+\(\widehat{R}\) wait 1.1 ash threshold and autocorrelation with
+\textbf{?} as threshold . Keep iterating until these thresholds are
+reached. 3) Do not use the R function ACF. Instead compute
+autocorrelations manually , see for example GitHub link. 4) Track your
+own scalar summary of interest. This is advanced but explained in Van
+Buren 2018. Compute \(\widehat{R}\) and autocorrelation values for this
+scalar summary.
 
 LIMITATIONS/FUTURE RESEARCH
 
 Pmm, M(N)AR, Empirical data, Vignette, ShinyMICE, AC across imputations,
 not iterations (unique for imp data??)
 
-If I don't include it in my study, also: Significance of AC values;
-Estimate (PCA or reg. coeff.) versus Rhat and AC on the estimate
+If I don't include it in my study, also: Significance of \(AC\) values;
+Estimate (PCA or reg. coeff.) versus Rhat and \(AC\) on the estimate
 
 \hypertarget{start-methods-section}{%
 \subsection{Start methods section}\label{start-methods-section}}
@@ -390,7 +428,7 @@ assumption underlying the different number of iterations is that the
 algorithm generally does reach convergence at \(t=1\), because the
 initial values are sampled randomly from the set of observed datapoints.
 \textbf{As the number of iterations goes up, the imputation chains will
-become independent of the inital values until the point at which an
+become independent of the initial values until the point at which an
 extra added iteration does not lead to a more converged state.} The
 second set of experimental conditions under consideration--the
 missingness proportions--are chosen to reflect the difficulty of the
@@ -463,17 +501,16 @@ conditions (\texttt{maxit\ =} \(1, 2, \dots, 100\)).
 \(\widehat{R}\) (\textbf{of what?? i.e., chain means and chain variances
 of each variable}) is computed by implementing Vehtari et al.'s
 \citeyearpar{veht19} recommendations. \(AC\) (\textbf{of what? and how
-is AC aggregated across imputations? i.e., mean in latest sim}) is
+is \(AC\) aggregated across imputations? i.e., mean in latest sim}) is
 computed with function \texttt{stats::acf()}.
 
 To estimate the quantity of scientific interest, \(Q\), we perform
 multiple linear regression on each completed dataset with the function
 \texttt{stats::lm()}. We obtain an estimated regression coefficient per
 imputation, which are pooled into a single estimate, \(\bar{Q}\). We use
-the function \texttt{mice::pool()} to estimate u bar (\textbf{check wat
-dat nou precies is!!}) according to Rubin's \citeyearpar{rubin87} rules,
-and subsequently implement finite population pooling conform
-\citet{vink14}.
+the function \texttt{mice::pool()} to estimate u bar (\textbf{check
+definition!}) according to Rubin's \citeyearpar{rubin87} rules, and
+subsequently implement finite population pooling conform \citet{vink14}.
 
 We compute bias as the difference between \(Q\) and \(\bar{Q}\).
 Confidence interval width (CIW) is defined as the difference between the
@@ -517,10 +554,10 @@ be spotted, so it is no problem.) The point at which an extra iteration
 does not seem to improve the Rhat value is around \(T=30\).
 
 Auto-correlations indicate no sign of trending within imputation chains.
-In most simulation conditions AC is smaller than or about equal to zero.
-Across simulation conditions, however, the autocorrelation curve does
-not trend towards 0. Autocorrelation values plateau off at a value of
-around .1 . This is a small positive autocorrelation, which would
+In most simulation conditions \(AC\) is smaller than or about equal to
+zero. Across simulation conditions, however, the autocorrelation curve
+does not trend towards 0. Autocorrelation values plateau off at a value
+of around .1 . This is a small positive autocorrelation, which would
 indicate some trending within chains.
 
 The \(\widehat{R}\) and \(AC\) values for the imputation chain variances
@@ -602,11 +639,11 @@ non-stationarity. However, initial dip in \(AC\)-values may have
 implications for the default number of iterations in \texttt{mice}
 (\texttt{maxit\ =\ 5}). Terminating the algorithm at \(T=5\) may not be
 the most appropriate, since this lead to the worst convergence
-(\textbf{nope, only for Rh, not AC}), as indicated by \(\widehat{R}\)
-and \(AC\). Under the current specifications, \(T>20\) would be more
-appropriate.
+(\textbf{nope, only for Rh, not \(AC\)}), as indicated by
+\(\widehat{R}\) and \(AC\). Under the current specifications, \(T>20\)
+would be more appropriate.
 
-The observed dip in AC implies that default maxit value of five
+The observed dip in \(AC\) implies that default maxit value of five
 iterations is the worst possible number of iterations. Moreover, the
 results of this study imply that assessing the stationarity component of
 convergence with \(AC\) might be redundant.

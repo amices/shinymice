@@ -321,15 +321,15 @@ centering]{geometry}
     \vskip 1.5em%
     \vskip 12.5mm%
     \end{minipage}\hspace{15mm}\begin{minipage}[t]{42.625mm}
-\hbox{}\scriptsize\journalname\\
-\hbox{}\volumenumber(\issuenumber):\startpage--\endpage\\ 
-\hbox{}\copyright The Author(s) \volumeyear\\
-\hbox{}Article reuse guidelines:\\
-\hbox{}sagepub.com/journals-permissions\\
-\hbox{}DOI: 10.1177/ToBeAssigned\\
-\hbox{}journals.sagepub.com/home/smr\\[2.3pt]
-%\hbox{}\includegraphics[height=4mm]{SAGE_Logo}
-\hbox{}{\fboxsep 1.5pt\framebox[14mm]{{\normalsize SAGE}}}
+\hbox{}{\raggedleft\scriptsize\journalname\\
+\volumenumber(\issuenumber):\startpage--\endpage\\ 
+\copyright The Author(s) \volumeyear\\
+Article reuse guidelines:\\
+sagepub.com/journals-permissions\\
+DOI: 10.1177/ToBeAssigned\\
+journals.sagepub.com/home/smr\\[2.3pt]}
+\raggedleft\includegraphics[height=4mm]{SAGE_Logo}
+%\hbox{}{\fboxsep 1.5pt\framebox[14mm]{{\normalsize SAGE}}}
 \end{minipage}
 {\par\large%
 \if@Royal
