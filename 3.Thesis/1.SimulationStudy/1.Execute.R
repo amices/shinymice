@@ -28,8 +28,8 @@ source("3.Thesis/1.SimulationStudy/Functions/AC_supplement.R")
 
 # simulation parameters
 populationsize <- 1000 #n of simulated dataset
-n.iter <- 10 #nr of iterations (varying 1:n.iter)
-n.sim <- 2 #nr of simulations per iteration value
+n.iter <- 100 #nr of iterations (varying 1:n.iter)
+n.sim <- 50 #nr of simulations per iteration value
 p.miss <- c(.05, .25, .5, .75, .95)
 true.effect <- 2 #regression coefficient to be estimated
 
