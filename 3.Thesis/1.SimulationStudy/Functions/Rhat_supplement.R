@@ -1,10 +1,10 @@
-# Rhat function supplement
-# requires library(purrr) and dplyr/magrittr
+# Extract convergence diagnostic Rhat from iteration object (e.g., chain means)
+# Requires package 'magrittr'/'dplyr', and the functions in Convergence_supplement.R
 
 # function for Rhat for two or more imputation chains
 rhat_adapted <- function(x) {
   # input: object with theta values (rows are iterations, columns are imputations)
-  # output: Rhat across imputations
+  # output: convergence diagnostic Rhat across imputations
   
   # make input ready for mapping
   if (is.data.frame(x)) {

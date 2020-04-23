@@ -22,8 +22,8 @@ save(nonc, file = "3.Thesis/1.SimulationStudy/Writeup/images/nonc.Rdata")
 # diagnostics
 # adjust this to compute per iteration 
 chainmean1 <- imp.bmi1$chainMean[3,,] #chain mean of wgt (rows are iterations, columns are imputations)
-acs1 <- ac_lag1(chainmean1)
-acfs1 <- acf_lag1(chainmean1)
+ac1 <- ac_adapted(chainmean1)
+acf1 <- ac_adapted(chainmean1, "acf")
 rhat1 <- rhat_adapted(chainmean1)
 
 # Regular convergence
@@ -42,6 +42,6 @@ save(conv, file = "3.Thesis/1.SimulationStudy/Writeup/images/conv.Rdata")
 # diagnostics
 # adjust this to compute per iteration 
 chainmean2 <- imp.bmi2$chainMean[3,,] #chain mean of wgt (rows are iterations, columns are imputations)
-acs2 <- ac_lag1(chainmean2)
-acfs2 <- acf_lag1(chainmean2)
+ac2 <- ac_adapted(chainmean2)
+acf2 <- ac_adapted(chainmean2, "acf")
 rhat2 <- rhat_adapted(chainmean2)
