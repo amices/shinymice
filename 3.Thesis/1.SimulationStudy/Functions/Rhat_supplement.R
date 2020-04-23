@@ -10,23 +10,24 @@ fold_sims <- function(sims) {
 # split chains with maxit > 4 to detect trending
 split_chains <- function(sims) {
   # split Markov chains, adapted from rstan
-
+  
   # number of iterations
   t <- dim(sims)[1]
   
   # do not split if result will be chains of length 1
   if (t < 4)
-    return(sims) else {
-  # split each chain to get 2m chains
-  lower <- 1:floor(t/2)
-  upper <- ceiling((t/2) + 1):t
-  splits <- base::cbind(sims[lower, ], sims[upper, ])
-  return(splits)}
+    return(sims)
+  else {
+    # split each chain to get 2m chains
+    lower <- 1:floor(t / 2)
+    upper <- ceiling((t / 2) + 1):t
+    splits <- base::cbind(sims[lower, ], sims[upper, ])
+    return(splits)
+  }
 }
 
 # rank-normalize chains because Gelman says so
 z_scale <- function(x) {
-  
   # rank-normalize Markov chain, copied from rstan
   t <- length(x)
   r <- rank(x, ties.method = 'average')
@@ -51,7 +52,7 @@ get.rhat <- function(sims) {
   # between chain variance
   var_between <-
     t * var(apply(sims, 2, mean))
- 
+  
   # within chain variance
   var_within <- mean(apply(sims, 2, var))
   

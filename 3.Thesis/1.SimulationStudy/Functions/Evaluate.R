@@ -1,11 +1,14 @@
 # Extract aggregated simulation results by averaging over runs
-# requires the packages "purrr" and "data.table"
+# Requires the packages 'purrr', 'data.table' and 'magrittr'/'dplyr',
+# and the functions in the files 'AC.R' and 'Rhat.R'
 
 evaluate.sim <-
+  # input: the 'out' object obtained by running '1.Execute.R'
+  # output: convergence diagnostics and performance measures across repetitions
+  
   function(sims,
-           n.iter,
            mean_or_SE = "mean") {
-    # determine whether we want averages per simulation condition or MCMC SEs
+    # determine whether we want averages per simulation condition, or MCMC SEs, or MCMC CIs
     if (mean_or_SE == "se") {
       function_to_apply <-
         function(x)
@@ -21,38 +24,13 @@ evaluate.sim <-
         mean(x, na.rm = TRUE)
     }
     
+    # for all variables, average over repetitions with the same missingness proportion and number of iterations
+    without_conv <-
+      map_df(sims, ~ {
+        as.data.frame(.)
+      }) %>% aggregate(. ~ t + p, data = ., function_to_apply)
     
-    # organize output for evaluation
-    dt <-
-      map(sims, as.data.table) %>% rbindlist(fill = TRUE) #%>% group_by(t,p)
-    # averages
-    res <-
-      aggregate(. ~ t + p, dt, function_to_apply, na.action = na.pass) %>% dplyr::na_if(., "NaN")
-    
-    # convergence
-    #pcas <- dt[, grep("pca", names(dt)), with = FALSE] %>% cbind(dt[,1:2])
-    
-    ### this doesn't work!
-    #function_to_apply <- ac_lag1
-    #aggregate(.~t+p, pcas, function_to_apply, na.action = na.pass) %>% dplyr::na_if(., "NaN")
-    ###
-    
-    
-    #### THIS WORKS!
-    # a <-
-    #   map(sims, function(rpt) {
-    #     map(thetas, function(vrb) {
-    #       rpt[, grep(vrb, names(rpt))] %>% cbind(rpt[, 1:2], .) %>% base::split(., as.factor(.$p))
-    #     })
-    #   }) 
-    # 
-    # map(c(.05, .25, .5, .75, .95), function(msp){
-    #   map(2:n.iter, function(itr) {
-    #     a[[1]][[1]][[msp]][1:itr, 3:7] %>% ac_lag1()
-    #   })
-    # })
-    n.iter <- sims[[1]]$t %>% max
-    
+    # define which variables do need convergence diagnostics
     thetas <-
       c(
         "chain.mean.X1",
@@ -63,49 +41,30 @@ evaluate.sim <-
         "chain.var.X2",
         "chain.var.X3",
         "chain.var.Y",
-        "pca"
+        "pca",
+        "beta"
       )
     
+    # for the defined thetas, compute Rhat and AC at each iteration,
+    # then average over repetitions with the same missingness proportion and number of iterations
     conv <-
-      map(sims, function(rpt) {
-        map_dfc(thetas, function(vrb) {
-          rpt[, grep(vrb, names(rpt))] %>% cbind(rpt[, 1:2], .) %>% base::split(., as.factor(.$p)) %>% 
-            map_dfr(., function(msp) {
-              map_dfr(1:n.iter, function(itr) {
-                msp[1:itr, 3:7] %>% ac_lag1() #%>% c(t = itr, .)
-              }) #%>% cbind(p = msp$p, .)
-            }) #%>% .[, grep(vrb, names(.))] 
-          }) %>% cbind(rpt[, 1:2], .)
-        }) 
+      map_df(sims, function(rep) {
+        # per repetition
+        # # to test use this: map(1:2, function(rep){sims[[rep]] %>% ...})
+        rep %>% base::split(as.factor(.$p)) %>%
+          map_dfr(., function(mis) {
+            # per missingness proportion
+            map_dfc(thetas, function(vrb) {
+              # per variable
+              mis %>% .[, grep(vrb, names(.))] %>% convergence() %>% .[,-1] %>% set_names(paste0(names(.), ".", vrb))
+            })
+          }) %>% cbind(rep[, 1:2], .)
+      }) %>% aggregate(. ~ t + p,
+                       data = .,
+                       function_to_apply,
+                       na.action = na.pass) %>% dplyr::na_if(., "NaN")
     
-    
-    # b <- map(a[[1]][[1]], function(msp) {
-    #   map(2:n.iter, function(itr) {
-    #     msp[1:itr, 3:7] %>% ac_lag1()
-    #   })
-    # })
-    
-    ### decided to remove group_by, so this doesn't work anymore:
-    # a[[1]][[1]] %>% summarise(sums = ac_lag1(chain.mean.X1.Chain.1))
-    # a[[1]][[1]] %>%  summarise_all(~ac_lag1(.))
-    # map(2:n.iter, function(z) {a[[1]][[1]][1:z,] %>% summarise(acs = ac_lag1(chain.mean.X1.Chain.1))})
-    # map(2:n.iter, function(z) {a[[1]][[1]][1:z,] %>% summarise_all(~ac_lag1(.))})
-    
-    
-    # # apply function to aggregate simulation runs per simulation condition
-    # d <- dt[, lapply(.SD, function_to_apply)] %>% as.data.frame
-    
-    # # create object for output
-    # output <- 1:n.iter %>% as.data.frame()
-    
-    # # add names
-    # vars <- names(sims[[1]][[1]])
-    # for (var in vars) {
-    #   output <- cbind(output, d[, grep(var, names(d))] %>% t)
-    # }
-    # rownames(output) <- NULL
-    # colnames(output) <- c("T", vars)
     
     #output
-    return(res)
+    return(left_join(without_conv, conv, by = c("t", "p")))
   }

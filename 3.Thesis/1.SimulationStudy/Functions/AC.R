@@ -4,7 +4,7 @@
 # NB. This function can be adjusted to show the nr. of chains with significant auto-correlations,
 # output will then be the fraction of imputation chains with significant autocorrelation at lag 1.
 # To get this, add:
-# # critical value significance 
+# # critical value significance
 # AC_lim <- qnorm((1 + .95) / 2) / sqrt(maxit)
 
 # function for lag 1 AC for one or more imputation chains
@@ -35,15 +35,10 @@ ac_adapted <- function(x, ac_function = "ac") {
   } else {
     ac <- map_dfr(3:t, function(it) {
       # compute ac
-      x[1:it, ] %>% function_to_apply() %>% t() %>% data.frame(mean(.), max(.), .) %>% set_names(c(
-        paste0(ac_function, ".mean"),
-        paste0(ac_function, ".max"),
-        names(.)[-(1:2)]
-      ))
+      x[1:it, ] %>% function_to_apply() %>% t() %>% data.frame(mean(.), max(.), .) %>% set_names(paste0(ac_function, ".", c("mean", "max", 1:M)))
     }) %>% rbind(NA, NA, .) %>% cbind(iteration = 1:t, .)
   }
   
   # output
-return(ac)
+  return(ac)
 }
-

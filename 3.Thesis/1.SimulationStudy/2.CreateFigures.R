@@ -28,10 +28,10 @@ theme_update(
 ####################
 
 # Univariate: mean estimate
-mean_bias <- dat %>% ggplot(aes(x = t, y = mean.X1, color = as.factor(p*100))) +
-  # geom_hline(yintercept = 0,
-  #            color = "grey",
-  #            lwd = 2) +
+mean_bias <- results %>% ggplot(aes(x = t, y = bias.mean.X1, color = as.factor(p*100))) +
+  geom_hline(yintercept = 0,
+             color = "grey",
+             lwd = 2) +
   geom_point(size = .75) +
   geom_line() +
   xlab("Number of iterations") +

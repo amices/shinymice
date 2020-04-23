@@ -34,7 +34,7 @@ acf_lag1 <- function(x) {
   
   # compute ac
   out <-
-    acf(x, lag.max = 1, plot = FALSE) %>% .$acf %>% .[2, , ] %>% as.matrix() %>% diag() %>% set_names(paste0("acf.", names(x))) 
+    acf(x, lag.max = 1, plot = FALSE) %>% .$acf %>% .[2, , ] %>% as.matrix() %>% diag() %>% set_names(paste0("acf.", names(x)))
   
   
   # output
