@@ -36,7 +36,7 @@ save(nonc, file = "3.Thesis/1.SimulationStudy/Writeup/images/nonc_plot.Rdata")
 
 # diagnostics on chain means of wgt (rows are iterations, columns are imputations)
 diagnostics1 <-
-  imp.bmi1$chainMean[3, ,] %>% cbind(patho = "Typical", convergence(., include_acf = TRUE), .)
+  imp.bmi1$chainMean[3, ,] %>% cbind(patho = "Pathological", convergence(., include_acf = TRUE), .)
 
 #####################
 # Regular convergence
@@ -63,7 +63,7 @@ save(conv, file = "3.Thesis/1.SimulationStudy/Writeup/images/conv_plot.Rdata")
 
 # diagnostics on chain means of wgt (rows are iterations, columns are imputations)
 diagnostics2 <-
-  imp.bmi2$chainMean[3, ,] %>% cbind(patho = "Pathological", convergence(., include_acf = TRUE), .)
+  imp.bmi2$chainMean[3, ,] %>% cbind(patho = "Typical", convergence(., include_acf = TRUE), .)
 
 #####################
 # Combine diagnostics

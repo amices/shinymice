@@ -1,5 +1,5 @@
 ---
-title: Missing the Point$\colon$ Non-Convergence in Iterative Imputation Procedures
+title: "Missing the Point: Non-Convergence in Iterative Imputation Algorithms"
 runninghead: Oberman
 author:
 - name: H. I. Oberman
@@ -59,15 +59,15 @@ theme_update(
 # Introduction
 
 <!-- (**or** Everybody who works with person data is likely to run into a missing data problem.) -->
-Missing data problems are ubiquitous and pervasive in the social and behavioral sciences. If a dataset contains just one missing value for a variable of interest, statistical inferences are undefined and will not produce any result. To circumvent this, incomplete observations are ignored by default in many statistical packages (i.e., list-wise deletion is employed). Unfortunately, this *ad hoc* solution may yield wildly invalid results [@buur18]. An alternative is to 'impute' (i.e., fill in) every missing value in an incomplete dataset. With imputation techniques, one or several completed datasets are created, on which statistical inferences can be performed. The case with several completed datasets is known as 'multiple imputation' [MI; @rubin76], and requires an additional step to pool the results across imputations **see figure 1??**. 
+Anyone who analyzes person-data may run into a missing data problem. Missing data is not only ubiquitous, but also tedious. If a dataset contains just one incomplete observation, statistical inferences are undefined and will not produce any results. To circumvent this, many statistical packages employ list-wise deletion by default (i.e., ignoring incomplete observations). Unfortunately, this *ad hoc* solution may yield wildly invalid results [@buur18]. An alternative is to 'impute' (i.e., fill in) the missing values in the incomplete observations. Subsequently, statistical inferences can be performed on the completed dataset. By repeating this process several times, a distribution of plausible results may be obtained, which reflects the uncertainty in the data due to missingness. This technique is known as 'multiple imputation' [MI; @rubin76]. MI yields unbiased and confidence valid estimates of the true---but missing---data inference under many circumstances [@buur18]. 
 
-**Move this after notation??** Figure \ref{fig:diagram} provides an overview of the steps involved with MI---from incomplete data, to $M$ completed datasets, to $M$ estimated quantities of interest ($\hat{Q}$s), to a single pooled estimate $\bar{Q}$. Missing data in $y$ is 'imputed' (i.e., filled in) $M$ times. The imputed data ($y_{imp}$) is combined with the observed data ($y_{obs}$) to create $M$ completed datasets. On each completed dataset, the analysis of scientific interest (the 'substantive model', or 'complete data model') is performed. The quantity of scientific interest (e.g., a regression coefficient) is denoted with $Q$. Since $Q$ is estimated on each completed dataset, $M$ separate $\hat{Q}$-values are obtained. These $M$ values are combined into a single pooled estimate $\bar{Q}$. **ALSO: make clear that iteration happens within the first step, between incomplete and completed data.**
+**Move this after terminology??** Figure \ref{fig:diagram} provides an overview of the steps involved with MI---from incomplete data, to $M$ completed datasets, to $M$ estimated quantities of interest ($\hat{Q}$s), to a single pooled estimate $\bar{Q}$. Missing data in $y$ is 'imputed' (i.e., filled in) $M$ times. The imputed data ($y_{imp}$) is combined with the observed data ($y_{obs}$) to create $M$ completed datasets. On each completed dataset, the analysis of scientific interest (the 'substantive model', or 'complete data model') is performed. The quantity of scientific interest (e.g., a regression coefficient) is denoted with $Q$. Since $Q$ is estimated on each completed dataset, $M$ separate $\hat{Q}$-values are obtained. These $M$ values are combined into a single pooled estimate $\bar{Q}$. **ALSO: make clear that iteration happens within the first step, between incomplete and completed data.**
 
 ```{r diagram, out.width="\\linewidth", include=TRUE, fig.cap="Scheme of the main steps in multiple imputation."}
 knitr::include_graphics("./images/diagram.pdf") #adapted from [@buur18] par. 1.4.1.
 ```
 
-By applying Rubin's rules, the pooled result will reflect the uncertainty in the data due to missingness. Under many circumstances, this yields an unbiased and confidence valid estimate of the inference on the true--but missing--data [@buur18]. A popular method to obtain imputations is to use the 'Multiple Imputation by Chained Equations' algorithm, shorthand 'MICE'[@mice]. MICE is an iterative algorithmic procedure to draw imputations from the posterior predictive distribution of the missing values. This introduces a potential threat to the validity of the imputations: what if the algorithm has not converged? Are the implications then to be trusted? And can we rely on the inference obtained on the completed data? These are all open questions, because the convergence properties of iterative imputation algorithms have not been systematically studied [@buur18]. Moreover, there is no scientific consensus on the convergence properties of MI algorithms [@taka17]. Some default MICE techniques (e.g., 'predictive mean modeling') might not yield converged states at all [@murr18]. Therefore, algorithmic convergence should be monitored carefully.
+A popular method to obtain imputations is to use the 'Multiple Imputation by Chained Equations' algorithm, shorthand 'MICE'[@mice]. MICE is an iterative algorithmic procedure to draw imputations from the posterior predictive distribution of the missing values. This introduces a potential threat to the validity of the imputations: What if the algorithm has not converged? Are the implications then to be trusted? And can we rely on the inference obtained on the completed data? These are all open questions, because the convergence properties of iterative imputation algorithms have not been systematically studied [@buur18]. Moreover, there is no scientific consensus on the convergence properties of MI algorithms [@taka17]. Some default MICE techniques (e.g., 'predictive mean modeling') might not yield converged states at all [@murr18]. Therefore, algorithmic convergence should be monitored carefully.
 
 <!-- In this paper, we investigate the convergence properties of iterative imputation procedures by means of model based simulation in `R` [@R].  -->
 
@@ -96,22 +96,19 @@ By applying Rubin's rules, the pooled result will reflect the uncertainty in the
 <!-- (**Rewrite:** With FCS, an iterative algorithmic procedure is used to ... multiple imputation by chained equations ... "The values for imputing the missing data are drawn from the posterior predictive distribution of the missing data conditional on the observed data.") -->
 
 
+Currently, the recommended practice for evaluating convergence is to visually inspect imputations for signs of non-convergence. This method is insufficient on two counts: 1) it may be challenging to the untrained eye, and 2) only severely pathological cases of non-convergence may be diagnosed [@buur18, $\S$ 6.5.2]. Therefore, a quantitative, diagnostic evaluation of convergence would be preferred. 
 
-
-
-The recommended practice to monitor convergence is to visually inspect imputations for signs of non-convergence. This practice is insufficient on two counts: 1) it may be challenging to the untrained eye, and 2) only severely pathological cases of non-convergence may be diagnosed [@buur18, $\S$ 6.5.2]. Therefore, a quantitative, diagnostic evaluation of convergence would be preferred. 
-
-Iterative imputation algorithms such as MICE are Markov chain Monte Carlo (MCMC) methods, which means that convergence is not from a scalar to a point but from one distribution to another. The values generated by the algorithm (e.g., imputed values) will vary even after convergence. Therefore, the aim of convergence diagnostics for MCMC methods should not be to establish the point at which convergence is reached, but to monitor signs of  non-convergence. Several convergence diagnostics for MCMC methods exist, but it is not known whether these are appropriate for MICE. 
-
+Monitoring convergence of iterative imputation algorithms diagnostically is challenging. Iterative imputation algorithms such as MICE are Markov chain Monte Carlo (MCMC) methods. In MCMC methods, convergence is not from a scalar to a point but from one distribution to another. The values generated by the algorithm (e.g., imputed values) will vary even after convergence. Therefore, the aim of convergence diagnostics for MCMC methods is not to establish the point at which convergence is reached, but to monitor signs of non-convergence. Several of such diagnostics exist for MCMC methods, but it is not known whether these are appropriate for MICE. 
 <!-- Therefore we can only diagnose non-convergence, not convergence [@hoff09]. "a weak diagnostics is better than no diagnostic at all" [@cowl96]. -->
 
-### Research question: how and when to diagnose non convergence? 
+In this paper we investigate how non-convergence in iterative imputation algorithms may be diagnosed, how well these methods perform, and at which point convergence may safely be assumed. For reasons of brevity, we only focus on the MI algorithm implemented in the world-leading MI software: the `R` [@R] package `mice` [@mice]. The convergence properties of this MI algorithm are investigated through model-based simulation. The results of this simulation study are guidelines for assessing convergence of MI algorithms, which will aid applied researchers in drawing valid inference from incomplete datasets.
 
-Sub-questions: How can non-convergence be diagnosed? Are common MCMC non-convergence diagnostics appropriate for MICE? And if so, which threshold should be used to diagnose non-convergence? How many iterations are sufficient/needed to be able to diagnose non-convergence? Are the default number of iterations sufficient (i.e., 5 in mice, 10 in SPSS and Stata, 30 in mi)? **(These are part of the methods, not RQ per se: What are the effects of continued iterations on estimates, predictions and inferences? And finally, do the answers differ with varying missingness proportions? That is, we vary the nr of iterations and the missingness proportion because we assume that the algorithm has not reached convergence at $t=1$, and performs worse with moderate to high missingness (not so much with little or a LOT of missingness).)**
+
+**Include sub-questions?:** How can non-convergence be diagnosed? Are common MCMC non-convergence diagnostics appropriate for MICE? And if so, which threshold should be used to diagnose non-convergence? How many iterations are sufficient/needed to be able to diagnose non-convergence? Are the default number of iterations sufficient (i.e., 5 in mice, 10 in SPSS and Stata, 30 in mi)? 
+
+<!-- **(These are part of the methods, not RQ per se: What are the effects of continued iterations on estimates, predictions and inferences? And finally, do the answers differ with varying missingness proportions? That is, we vary the nr of iterations and the missingness proportion because we assume that the algorithm has not reached convergence at $t=1$, and performs worse with moderate to high missingness (not so much with little or a LOT of missingness).)** -->
 
 <!-- The defaults of common MI software: SPSS = 10 [(link)](https://www.ibm.com/support/knowledgecenter/SSLVMB_24.0.0/spss/mva/syn_multiple_imputation_impute.html), Mplus = 100?? [(link)](https://pdfs.semanticscholar.org/e20e/29e008592cbfbaa567931f74cdfdb5451405.pdf?_ga=2.55354671.54033656.1584698748-527613517.1584698748), Stata = 10 [(link)](https://www.stata.com/manuals13/mi.pdf, p. 139), Amelia = NA, because re-sampling, not convergence [(link)](https://cran.r-project.org/web/packages/Amelia/Amelia.pdf), en MI = 30 [(link)](https://cran.r-project.org/web/packages/mi/mi.pdf). -->
-
-For reasons of brevity, we only focus on the MI algorithm implemented in the world-leading MI software: the `R` [@R] package `mice` [@mice]. The convergence properties of this MI algorithm are investigated through model-based simulation. The results of this simulation study are guidelines for assessing convergence of MI algorithms, which will aid applied researchers in drawing valid inference from incomplete datasets.
 
 <!-- MI is an iterative algorithmic procedure in which missing datapoints are `imputed' (i.e. filled in) several times. The variability between imputations is used to reflect how much uncertainty in the inference is introduced by the missingness. Therefore, MI can provide valid inferences despite missing information (**maybe add that this refers to CIs/p-values**).  -->
 
@@ -125,7 +122,7 @@ For reasons of brevity, we only focus on the MI algorithm implemented in the wor
 
 
 
-## Notation
+## Terminology
 
 <!-- The intended audience of this note consists of anyone who uses multiple imputation to solve missing data problem.  -->
 <!-- This note follows notation and conventions of `mice` [@mice]. -->
@@ -146,9 +143,11 @@ Let $y$ denote an $n \times p$ matrix containing the data values on $p$ variable
 <!-- This is repeated $m$ times. Imputed values are the ultimate samples of a `chain' of For each imputed value ($t = T$), a s for each missing datapoint in $y_{mis}$, . Each of the $m$ chains starts with an initial value, drawn randomly from $y_{obs}$. The chains are terminated after a predefined number of iterations. , and subsequently used in the analysis and pooling steps.  -->
 <!-- The collection of samples between the initial value (at $t=1$) and the imputed value (at $t=T$) will be referred to as an 'imputation chain'.  -->
 
-# Convergence diagnostics
+# How may non-convergence be diagnosed?
 
-The two challenges for convergence of iterative algorithms are mixing and stationarity [@gelm13], see Figure \ref{fig:non-conv}. Without mixing, imputation chains do not intermingle nicely. Without stationarity, there is trending within imputation chains. While the current practice is to inspect traceplots for signs of non-mixing and non-stationarity, diagnostic evaluation of these two challenges would be preferred. Non-stationarity within chains may be diagnosed with e.g., autocorrelation [$AC$; @scha97; @gelm13], numeric standard error ['MC error'; @gewe92], or Raftery and Lewis's [-@raft91] procedure to determine the effect of trending on the precision of estimates. A widely used diagnostic to monitor mixing between chains is the potential scale reduction factor $\widehat{R}$ ['Gelman-Rubin statistic'; @gelm92]. With a recently proposed adaptation, $\widehat{R}$ might also serve to diagnose non-stationarity, but this has not yet been thoroughly investigated [@veht19]. Therefore, mixing and stationarity will be evaluated separately in this study. As recommended [e.g., @cowl96, p. 898], $AC$ and $\widehat{R}$ will be used.  
+The two challenges for convergence of iterative algorithms are mixing and stationarity [@gelm13]. Without mixing, imputation chains do not intermingle nicely. Without stationarity, there is trending within imputation chains, see Figure \ref{fig:non-conv}. **Explain what we see, namely example by @buur18 reproduced, showing the traceplots of chain means for some variable. The first plot is typical convergence of MICE, the second is pathological non-convergence because of a mis-specified imputation model. Each line is an imputation. In the first plot, the lines intermingle nicely and there is little trending. In the second, there is a lot of trending and the lines do not cross much. Importantly, the chain means at the last iteration (the imputed value per $m$) are very different between the two plots. The algorithm with the mis-specified model yields imputed values that are on average a magnitude two larger than those of the typically converged algorithm. This shows the importance of reaching convergend states in iterative imputation algorithms.** 
+
+Non-stationarity within chains may be diagnosed with e.g., autocorrelation [$AC$; @scha97; @gelm13], numeric standard error ['MC error'; @gewe92], or Raftery and Lewis's [-@raft91] procedure to determine the effect of trending on the precision of estimates. A widely used diagnostic to monitor mixing between chains is the potential scale reduction factor $\widehat{R}$ ['Gelman-Rubin statistic'; @gelm92]. With a recently proposed adaptation, $\widehat{R}$ might also serve to diagnose non-stationarity, but this has not yet been thoroughly investigated [@veht19]. Therefore, mixing and stationarity will be evaluated separately in this study. As recommended [e.g., @cowl96, p. 898], $AC$ and $\widehat{R}$ will be used.  
 
 ```{r non-conv, out.width='.49\\linewidth', fig.width=3.5, fig.height=3,fig.show='hold',fig.cap="Typical convergence versus pathological non-convergence."}
 load("./images/nonc_plot.Rdata")
@@ -157,11 +156,6 @@ par(mar = c(2, 2, 0.1, 0.1))
 plot(conv)
 plot(nonc)
 
-```
-
-```{r diagnostics, fig.cap="Convergence diagnostics pathological non-convergence versus typical convergence."}
-load("./images/diagnostics_plot.Rdata")
-diagnostics_plot
 ```
 
 <!-- The current practice in diagnosing non-convergence is to inspect traceplots for signs of non-mixing and non-stationarity.   -->
@@ -205,27 +199,35 @@ Following the same notation, we define autocorrelation as the correlation betwee
 AC = \left( \frac{T}{T-1} \right) \frac{\sum_{t=1}^{T-1}(\theta_t - \bar{\theta}^{(\cdot m)})(\theta_{t+1} - \bar{\theta}^{(\cdot m)})}{\sum_{t=1}^{T}(\theta_t - \bar{\theta}^{(\cdot m)})^2}.
 \end{equation*}
 
-We can interpret $AC$-values as a measure of stationarity. If $AC$-values are close to zero, there is no dependence between subsequent samples within imputation chains. 
+We can interpret $AC$-values as a measure of stationarity. If $AC$-values are close to zero, there is no dependence between subsequent samples within imputation chains. Negative $AC$-values indicate divergence within imputation chains. **Subsequent sampled values within each imputation chain are less alike.** Positive $AC$-values indicate recurrence. If $\theta$-values of subsequent iterations are similar, trending may occur. Negative $AC$-values show no threat to the stationarity component of convergence. On the contrary even---negative $AC$-values indicate that $\theta$-values of subsequent iterations diverge from one-another, which may increase the variance of $\theta$ and speed up convergence. As convergence diagnostic, the interest is therefore in positive $AC$-values. **Maybe remove:** Moreover, the magnitude of $AC$-values may be evaluated statistically, but that is outside of this note's scope.
 
-Positive $AC$-values indicate recurrence. If $\theta$-values of subsequent iterations are similar, trending may occur. Negative $AC$-values show no threat to the stationarity component of convergence. On the contrary even---negative $AC$-values indicate that $\theta$-values of subsequent iterations diverge from one-another, which may increase the variance of $\theta$ and speed up convergence. As convergence diagnostic, the interest is therefore in positive $AC$-values. Moreover, the magnitude of $AC$-values may be evaluated statistically, but that is outside of this note's scope.
 
-Negative $AC$-values indicate divergence within imputation chains. **Subsequent sampled values within each imputation chain are less alike.** 
+## In practice/Answer
+**To assess whether $\widehat{R}$ and $AC$ may be appropriate non-convergence diagnostics for MICE algorithms, the following condtion must hold when applied on the two algorithms plotted above: the methods indicate worse performance for the mis-specified model with pathological non-convergence (i.e., higher $\widehat{R}$- and $AC$-values than the typical performance). And additionally the methods should reflect the increasing convergence in the typical convergence situation as the number of iterations goes up.** 
 
-In short, convergence is reached when there is no dependency between subsequent iterations of imputation chains ($AC = 0$), and chains intermingle such that the only difference between the chains is caused by the randomness induced by the algorithm ($\widehat{R} = 1$).
+**In figure \ref{fig:diagnostics}A (**add panel labels**), the chain means are plotted again, now together. So are the non-convergence diagnostics. Panel B shows $\widehat{R}$ as computed by implementing @veht19 's recommendations. As required, $\widehat{R}$ indicates less signs of non-convergence as the number of iterations goes up in the typical convergence situation. The superior performance of the typical convergence over the pathological non-convergnce is less prominent, even flipped for $t<4$. Panel C displays the $AC$  as computed with the R function stats::acf(). When we look at this panel, we must conclude that something weird is going on. The $AC$-values indicate equal performance (upto $t=5$) for the typical convergence and the pathological non-convergnce, while there is obvious trending in the latter. Moreover, the best convergence (as indicated by the lowest $AC$-value) is observed at $t=2$, but looking at the chain means in panel A, there should be some signs of trending upto iteration number seven. After consulting the documentation on stats::acf(), we conclude that this implementation of $AC$ is not suitable for iterative imputation algorithms. There is a correction factor for a mathematical shortcut that works in the limit. According to ... the function works when the number of iterations > 50. The default number of iterations in mice, however,  is 5. Therefore, we compute $AC$ manually, see panel D. The AC values in this plot do meet the requirements (...) and will therefore be used in the simulation study.**
+
+
+```{r diagnostics, fig.cap="Convergence diagnostics pathological non-convergence versus typical convergence."}
+load("./images/diagnostics_plot.Rdata")
+diagnostics_plot
+```
 
 ## Simulation Hypothesis
+
+Convergence is reached when there is no dependency between subsequent iterations of imputation chains ($AC = 0$), and chains intermingle such that the only difference between the chains is caused by the randomness induced by the algorithm ($\widehat{R} = 1$). We expect that a completely convergenced state will not be reached. 
 
 This study evaluates whether $\widehat{R}$ and $AC$ could diagnose convergence of multiple imputation algorithms. We assess the performance of the two convergence diagnostics against the recommended evaluation criteria for MI methods [i.e., average bias, average confidence interval width, and empirical coverage rate across simulations; @buur18, $\S$ 2.5.2]. That is, there is no baseline measure available to evaluate performance against.
 <!-- We could also look at distributional characteristics, and plausibility of imputed values, see @vinknd. For now, this is outside of the scope of this study. -->
 
-Based on an empirical finding [@lace07], we hypothesize that $\widehat{R}$ will over-estimate non-convergence of MI algorithms **explain why?**. The threshold of $\widehat{R} < 1.01$ will then be too stringent for diagnosing convergence. This over-estimation may, however, be diminished because $\widehat{R}$ can falsely diagnose convergence if initial values of the algorithm are not appropriately over-dispersed [@broo98, p. 437]. In `mice`, initial values are chosen randomly from the observed data. Therefore, we cannot be certain that the initial values are over-dispersed. We expect this to have little effect on the hypothesized performance of $\widehat{R}$ **explain that the randomness induced by the MICE algorithm would take care of this??**. **(Add actual hypothesis: we thought that mice would converge sooner than $\widehat{R}$ would indicate that it did)** No hypothesis was formulated about the performance of $AC$ as convergence diagnostic. **Added later: High $AC$-values are implausible in MI procedures. That is, the randomness induced by the MI algorithm effectively mitigates the risk of dependency within chains.**
+Based on an empirical finding [@lace07], we hypothesize that $\widehat{R}$ will over-estimate non-convergence of MI algorithms **explain why?**. The threshold of $\widehat{R} < 1.01$ will then be too stringent for diagnosing convergence. This over-estimation may, however, be diminished because $\widehat{R}$ can falsely diagnose convergence if initial values of the algorithm are not appropriately over-dispersed [@broo98, p. 437]. In `mice`, initial values are chosen randomly from the observed data. Therefore, we cannot be certain that the initial values are over-dispersed. We expect this to have little effect on the hypothesized performance of $\widehat{R}$ **explain that the randomness induced by the MICE algorithm would take care of this??**. **(Add actual hypothesis: we thought that mice would converge sooner than $\widehat{R}$ would indicate that it did)** No hypothesis was formulated about the performance of $AC$ as convergence diagnostic. **Added later: High $AC$-values are implausible in MI procedures. That is, the randomness induced by the MI algorithm effectively mitigates the risk of dependency within chains. But this doesn't seem the case in practice??**
 
 
 # Simulation study
 
 ## How to diagnose non-convergence?
 
-The two challenges of convergence are stationarity and mixing. Mixing and stationarity can be inspected visually, by evaluating traceplots of scalar summaries of interest ($\theta$s; e.g., chain means and chain variances). As @buur18 describes, users can also specify a model-specific scalar summary (e.g., a regression coefficient). A user-specified scalar summary, however, is not universal to all complete data problems. Therefore, as inspired by **someone** (2002), we will use introduce a $\theta$ that summarizes the multivariate state space of the algorithm. Namely, the first eigenvalue of the variance-covariance matrix of the $M$ completed datasets. 
+The two challenges of convergence are stationarity and mixing. Mixing and stationarity can be inspected visually, by evaluating traceplots of scalar summaries of interest ($\theta$s; e.g., chain means and chain variances). As @buur18 describes, users can also specify a model-specific scalar summary (e.g., a regression coefficient). A user-specified scalar summary, however, is not universal to all complete data problems. Therefore, as inspired by [@mack03], we will use introduce a $\theta$ that summarizes the multivariate state space of the algorithm. Namely, the first eigenvalue of the variance-covariance matrix of the $M$ completed datasets. 
 
 The methods under evaluation are $\widehat{R}$ and $AC$. These will be computed for the three scalar summaries of interest: chain means (i.e., per imputation, per variable: on $y_{imp, m, j}$), chain variances (i.e., per imputation, per variable: on $y_{imp, m, j}$), and the first eigenvalue of the variance-covariance matrix across imputations (i.e., per imputation: on {$y_{obs}, y_{imp, m}$}) **add user-specified $\theta$: estimated regression coefficient per imputation**.
 
@@ -442,19 +444,14 @@ Further research is needed to investigate their performance under clear violatio
 
 ## Recommendations for empirical researchers
 
-For empirical researchers: 1) Check trace plots for pathological non convergence and adjust imputation model if necessary. 2) use $\widehat{R}$ wait 1.1 ash threshold and autocorrelation with **?** as threshold . Keep iterating until these thresholds are reached. 3) Do not use the R function ACF. Instead compute autocorrelations manually , see for example GitHub link. 4) Track your own scalar summary of interest. This is advanced but explained in Van Buren 2018. Compute $\widehat{R}$ and autocorrelation values for this scalar summary. 
+**For empirical researchers: 1) Check trace plots for pathological non convergence and adjust imputation model if necessary. 2) use $\widehat{R}$ wait 1.1 ash threshold and autocorrelation with **?** as threshold . Keep iterating until these thresholds are reached. 3) Do not use the R function ACF. Instead compute autocorrelations manually , see for example GitHub link. 4) Track your own scalar summary of interest. This is advanced but explained in Van Buren 2018. Compute $\widehat{R}$ and autocorrelation values for this scalar summary. **
 
 ## Recommendations for future research
 
-Pmm,
-M(N)AR,
-Empirical data,
-Vignette,
-ShinyMICE,
-AC across imputations, not iterations (unique for imp data??)
+**Pmm, M(N)AR, Empirical data, Vignette, ShinyMICE, AC across imputations, not iterations (unique for imp data??)**
 
 
-If I don't include it in my study, also: Significance of $AC$ values; Estimate (PCA or reg. coeff.) versus $\widehat{R}$ and $AC$ on the estimate
+**If I don't include it in my study, also: Significance of $AC$ values**
 
 
 
