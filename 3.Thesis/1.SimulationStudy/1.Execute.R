@@ -28,8 +28,8 @@ source("3.Thesis/1.SimulationStudy/Functions/AC_supplement.R")
 
 # simulation parameters
 populationsize <- 1000 #n of simulated dataset
-n.iter <- 100 #nr of iterations (varying 1:n.iter)
-n.sim <- 50 #nr of simulations per iteration value
+n.iter <- 20 #nr of iterations (varying 1:n.iter)
+n.sim <- 2 #nr of simulations per iteration value
 p.miss <- c(.05, .25, .5, .75, .95)
 true.effect <- 2 #regression coefficient to be estimated
 
@@ -53,20 +53,20 @@ simulate <- function(complete_data = data,
                      final_it = n.iter,
                      ...) {
   # ampute the complete data with each missingness proportion
-  amps <<- map(mis_prop, function(mis) {
+  amps <- map(mis_prop, function(mis) {
     ampute(
       data = complete_data,
       prop = mis,
       patterns = amp_patterns,
       mech = "MCAR"
     )$amp
-  })
+  }) %>% set_names(as.character(mis_prop))
   
   # with amputed datasets (as many as there are missingess proportions), impute missingness and compute diagnostics for every nr. of iterations
   imps <-
     map_df(mis_prop, function(mis) {
       map_df(1:n.iter, function(it) {
-        test.impute(amp_data = amps[[mis]],
+        test.impute(amp_data = amps[[as.character(mis)]],
                     it_nr = it,
                     final_it = n.iter) %>% cbind(p = mis, .)
       }) %>% cbind(chain_means, chain_vars)
@@ -107,6 +107,6 @@ results <-
                                                                         by = c("t", "p"),
                                                                         suffix = c("", ".UL"))
 
-# save results
-save(out, file = "3.Thesis/1.SimulationStudy/Results/raw.Rdata")
-save(results, file = "3.Thesis/1.SimulationStudy/Results/complete.Rdata")
+# # save results
+# save(out, file = "3.Thesis/1.SimulationStudy/Results/raw.Rdata")
+# save(results, file = "3.Thesis/1.SimulationStudy/Results/complete.Rdata")

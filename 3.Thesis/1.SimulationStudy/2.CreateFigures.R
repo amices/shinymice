@@ -3,12 +3,12 @@
 # and the object 'results' created with '1.Excecute'
 
 # load packages
-library("dplyr")
-library("ggplot2")
-library("patchwork")
+library(dplyr)
+library(ggplot2)
+library(patchwork)
 
-# # if necessary, load data
-# load("3.Thesis/1.SimulationStudy/Results/complete.Rdata")
+# if necessary, load data
+load("3.Thesis/1.SimulationStudy/Results/results.Rdata")
 
 # set default for plot layout
 theme_update(
@@ -179,59 +179,17 @@ PCA_ACF <- dat %>% ggplot(aes(x = t, y = ACF.PCA, color = as.factor(p*100))) +
 ########################
 ## NOG IETS MEE DOEN? ##
 ########################
-# 
-# RMSE_plot <- dat %>% filter(miss == .25) %>%
-#   ggplot() +
-#   geom_point(aes(x = t, y = RMSE.1, color = "m1"), size = .75) +
-#   geom_point(aes(x = t, y = RMSE.2, color = "m2"), size = .75) +
-#   geom_point(aes(x = t, y = RMSE.3, color = "m3"), size = .75) +
-#   geom_point(aes(x = t, y = RMSE.4, color = "m4"), size = .75) +
-#   geom_point(aes(x = t, y = RMSE.5, color = "m5"), size = .75) +
-#   geom_line(aes(x = t, y = RMSE.1, color = "m1")) +
-#   geom_line(aes(x = t, y = RMSE.2, color = "m2")) +
-#   geom_line(aes(x = t, y = RMSE.3, color = "m3")) +
-#   geom_line(aes(x = t, y = RMSE.4, color = "m4")) +
-#   geom_line(aes(x = t, y = RMSE.5, color = "m5")) +
-#   xlab("") +
-#   ylab("RMSE") +
-#   labs(colour = "Imputation") +
-#   theme(legend.position = "")
-# 
-# MAE_plot <- dat %>% filter(miss == .25) %>%
-#   ggplot() +
-#   geom_point(aes(x = t, y = MAE.1, color = "m1"), size = .75) +
-#   geom_point(aes(x = t, y = MAE.2, color = "m2"), size = .75) +
-#   geom_point(aes(x = t, y = MAE.3, color = "m3"), size = .75) +
-#   geom_point(aes(x = t, y = MAE.4, color = "m4"), size = .75) +
-#   geom_point(aes(x = t, y = MAE.5, color = "m5"), size = .75) +
-#   geom_line(aes(x = t, y = MAE.1, color = "m1")) +
-#   geom_line(aes(x = t, y = MAE.2, color = "m2")) +
-#   geom_line(aes(x = t, y = MAE.3, color = "m3")) +
-#   geom_line(aes(x = t, y = MAE.4, color = "m4")) +
-#   geom_line(aes(x = t, y = MAE.5, color = "m5")) +
-#   xlab("") +
-#   ylab("Mean absolute error") +
-#   labs(colour = "Imputation") +
-#   theme(legend.position = "")
-# 
-# PCA_plot <- dat %>% filter(miss == .25) %>%
-#   ggplot() +
-#   geom_point(aes(x = t, y = pca.1, color = "m1"), size = .75) +
-#   geom_point(aes(x = t, y = pca.2, color = "m2"), size = .75) +
-#   geom_point(aes(x = t, y = pca.3, color = "m3"), size = .75) +
-#   geom_point(aes(x = t, y = pca.4, color = "m4"), size = .75) +
-#   geom_point(aes(x = t, y = pca.5, color = "m5"), size = .75) +
-#   geom_line(aes(x = t, y = pca.1, color = "m1")) +
-#   geom_line(aes(x = t, y = pca.2, color = "m2")) +
-#   geom_line(aes(x = t, y = pca.3, color = "m3")) +
-#   geom_line(aes(x = t, y = pca.4, color = "m4")) +
-#   geom_line(aes(x = t, y = pca.5, color = "m5")) +
-#   xlab("Number of iterations") +
-#   ylab("First PCA component") +
-#   labs(colour = "Imputation")
-# 
-# RMSE_plot + MAE_plot + PCA_plot + plot_layout(nrow = 3) + plot_annotation(title = "Convergence of model errors")
 
+## shows that higher max(ac) means more bias in estimate
+results %>% ggplot(aes(x = ac.max.beta, y = bias.est.X1, color = as.factor(p*100))) +
+  geom_point() + 
+  geom_smooth(method = lm, se=F) +
+  labs(colour = "Missingness (%)")
+
+results %>% ggplot(aes(x = max.r.hat.beta, y = bias.est.X1, color = as.factor(p*100))) +
+  geom_point() + 
+  geom_smooth(method = lm, se=F) +
+  labs(colour = "Missingness (%)")
 
 ######################################################
 

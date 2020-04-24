@@ -17,8 +17,10 @@ ac_adapted <- function(x, ac_function = "ac") {
   # set function to apply
   if (ac_function == "acf") {
     function_to_apply <- acf_lag1
+    min_it <- 2
   } else {
     function_to_apply <- ac_lag1
+    min_it <- 3
   }
   
   # make input ready for mapping
@@ -29,14 +31,14 @@ ac_adapted <- function(x, ac_function = "ac") {
   M <- dim(x)[2] #nr of imputations
   
   # compute ac for each iteration (by definition only possible for t > 2)
-  if (t < 3) {
+  if (t < min_it) {
     ac <-
       matrix(NA, t, M + 2) %>% as.data.frame %>% set_names(paste0(ac_function, ".", c("mean", "max", names(x))))
   } else {
-    ac <- map_dfr(3:t, function(it) {
+    ac <- map_dfr(min_it:t, function(it) {
       # compute ac
       x[1:it, ] %>% function_to_apply() %>% t() %>% data.frame(mean(.), max(.), .) %>% set_names(paste0(ac_function, ".", c("mean", "max", 1:M)))
-    }) %>% rbind(NA, NA, .) %>% cbind(iteration = 1:t, .)
+    }) %>% rbind(matrix(NA, min_it-1, M+2, dimnames = list(NULL, names(.))), .) %>% cbind(iteration = 1:t, .)
   }
   
   # output
