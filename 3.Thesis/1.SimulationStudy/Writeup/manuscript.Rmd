@@ -121,13 +121,39 @@ Let $y$ denote an $n \times p$ matrix containing the data values on $p$ variable
 
 The two challenges for convergence of iterative algorithms are mixing and stationarity [@gelm13], see Figure \ref{fig:non-conv}. Without mixing, imputation chains do not intermingle nicely. Without stationarity, there is trending within imputation chains. While the current practice is to inspect traceplots for signs of non-mixing and non-stationarity, diagnostic evaluation of these two challenges would be preferred. Non-stationarity within chains may be diagnosed with e.g., autocorrelation [$AC$; @scha97; @gelm13], numeric standard error ['MC error'; @gewe92], or Raftery and Lewis's [-@raft91] procedure to determine the effect of trending on the precision of estimates. A widely used diagnostic to monitor mixing between chains is the potential scale reduction factor $\widehat{R}$ ['Gelman-Rubin statistic'; @gelm92]. With a recently proposed adaptation, $\widehat{R}$ might also serve to diagnose non-stationarity, but this has not yet been thoroughly investigated [@veht19]. Therefore, mixing and stationarity will be evaluated separately in this study. As recommended [e.g., @cowl96, p. 898], $AC$ and $\widehat{R}$ will be used.  
 
-```{r non-conv, out.width='.49\\linewidth', fig.width=3.5, fig.height=3,fig.show='hold',fig.cap="Pathological non-convergence versus typical convergence."}
-load("./images/nonc.Rdata")
-load("./images/conv.Rdata")
+```{r non-conv, out.width='.49\\linewidth', fig.width=3.5, fig.height=3,fig.show='hold',fig.cap="Typical convergence versus pathological non-convergence."}
+load("./images/nonc_plot.Rdata")
+load("./images/conv_plot.Rdata")
 par(mar = c(2, 2, 0.1, 0.1))
-plot(nonc)
 plot(conv)
+plot(nonc)
 
+```
+
+```{r diagnostics, fig.cap="Convergence diagnostics pathological non-convergence versus typical convergence."}
+library(ggplot2)
+library(patchwork)
+theme_update(
+  plot.title = element_text(hjust = 0.5),
+  panel.border = element_blank(),
+  panel.grid.major = element_blank(),
+  panel.grid.minor = element_blank(),
+  panel.background = element_blank(),
+  axis.line = element_line(colour = "black"),
+  legend.key = element_blank(),
+  legend.position = "bottom",
+  legend.margin = margin(0,0,0,0),
+  # adjust text size
+  text = element_text(size = 8),
+  title = element_text(size = 8)
+  # axis.title = element_text(size = 8),
+  # axis.text = element_text(size = 7),
+  # legend.text = element_text(size = 7)
+)
+
+
+load("./images/diagnostics_plot.Rdata")
+diagnostics_plot
 ```
 
 <!-- The current practice in diagnosing non-convergence is to inspect traceplots for signs of non-mixing and non-stationarity.   -->

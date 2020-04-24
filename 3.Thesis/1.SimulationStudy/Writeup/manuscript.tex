@@ -36,32 +36,22 @@ provides insight into non-convergence of mice algorithms.
 
 \maketitle
 
-\textbf{Dear Daniela, I have just implemented some major changes in my
-Methods and Results sections. Therefore, these are kind of a mess.
-Please do not waste any time on spelling/wording there, I will continue
-improving it. On the other hand, if you have general advice, please tell
-me because I'm happy to move thngs around still! Figures in the Results
-are currently missing, but will help in understanding the paper. Sorry
-that you won't have that now! Also, things written in bold are reminders
-for myself or things that I am unsure off still. Thanks already! -
-Hanne}
-
 \hypertarget{introduction}{%
 \section{Introduction}\label{introduction}}
 
 Missing data problems are ubiquitous and pervasive in the social and
 behavioral sciences. If a dataset contains just one missing value for a
 variable of interest, statistical inferences are undefined and will not
-produce any result. Incomplete observations are therefore ignored by
-default in many statistical packages (i.e., list-wise deletion is
-employed). Unfortunately, this \emph{ad hoc} solution may yield wildly
-invalid results \citep{buur18}. An alternative is to `impute' (i.e.,
-fill in) every missing value in an incomplete dataset. With imputation
-techniques, one or several completed datasets are created, on which
-statistical inferences can be performed. The case with several completed
-datasets is known as `multiple imputation' \citep[MI;][]{rubin76}, and
-requires an additional step to pool the results across imputations
-\textbf{see figure 1??}.
+produce any result. To circumvent this, incomplete observations are
+ignored by default in many statistical packages (i.e., list-wise
+deletion is employed). Unfortunately, this \emph{ad hoc} solution may
+yield wildly invalid results \citep{buur18}. An alternative is to
+`impute' (i.e., fill in) every missing value in an incomplete dataset.
+With imputation techniques, one or several completed datasets are
+created, on which statistical inferences can be performed. The case with
+several completed datasets is known as `multiple imputation'
+\citep[MI;][]{rubin76}, and requires an additional step to pool the
+results across imputations \textbf{see figure 1??}.
 
 \textbf{Move this after notation??} Figure \ref{fig:diagram} provides an
 overview of the steps involved with MI---from incomplete data, to \(M\)
@@ -75,7 +65,8 @@ is performed. The quantity of scientific interest (e.g., a regression
 coefficient) is denoted with \(Q\). Since \(Q\) is estimated on each
 completed dataset, \(M\) separate \(\hat{Q}\)-values are obtained. These
 \(M\) values are combined into a single pooled estimate \(\bar{Q}\).
-\textbf{ALSO: make clear that iteration happens within the first step.}
+\textbf{ALSO: make clear that iteration happens within the first step,
+between incomplete and completed data.}
 
 \begin{figure}
 
@@ -198,7 +189,16 @@ separately in this study. As recommended \citep[e.g.,][p.~898]{cowl96},
 
 }
 
-\caption{Pathological non-convergence versus typical convergence.}\label{fig:non-conv}
+\caption{Typical convergence versus pathological non-convergence.}\label{fig:non-conv}
+\end{figure}
+
+\begin{figure}
+
+{\centering \includegraphics{manuscript_files/figure-latex/diagnostics-1} 
+
+}
+
+\caption{Convergence diagnostics pathological non-convergence versus typical convergence.}\label{fig:diagnostics}
 \end{figure}
 
 \hypertarget{potential-scale-reduction-factor}{%
