@@ -22,7 +22,36 @@ output:
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(fig.width = 4.8, fig.height = 3.6, echo = FALSE, fig.align = "center") 
+knitr::opts_chunk$set(fig.width = 4.8, echo = FALSE, fig.align = "center") 
+# knitr::opts_chunk$set(fig.width = 4.8, fig.height = 3.6, echo = FALSE, fig.align = "center") 
+
+# packages
+library(ggplot2)
+library(patchwork)
+
+# results and functions
+load("../Results/complete.Rdata")
+source("../2.CreateFigures.R")
+
+# default graphing behavior
+theme_update(
+  plot.title = element_text(hjust = 0.5),
+  plot.subtitle = element_text(hjust = 0.5),
+  panel.border = element_blank(),
+  panel.grid.major = element_blank(),
+  panel.grid.minor = element_blank(),
+  panel.background = element_blank(),
+  axis.line = element_line(colour = "black"),
+  legend.key = element_blank(),
+  legend.position = "bottom",
+  legend.margin = margin(0,0,0,0),
+  # adjust text size
+  text = element_text(size = 8),
+  title = element_text(size = 8)
+  # axis.title = element_text(size = 8),
+  # axis.text = element_text(size = 7),
+  # legend.text = element_text(size = 7)
+)
 ```
 
 
@@ -34,7 +63,7 @@ Missing data problems are ubiquitous and pervasive in the social and behavioral 
 
 **Move this after notation??** Figure \ref{fig:diagram} provides an overview of the steps involved with MI---from incomplete data, to $M$ completed datasets, to $M$ estimated quantities of interest ($\hat{Q}$s), to a single pooled estimate $\bar{Q}$. Missing data in $y$ is 'imputed' (i.e., filled in) $M$ times. The imputed data ($y_{imp}$) is combined with the observed data ($y_{obs}$) to create $M$ completed datasets. On each completed dataset, the analysis of scientific interest (the 'substantive model', or 'complete data model') is performed. The quantity of scientific interest (e.g., a regression coefficient) is denoted with $Q$. Since $Q$ is estimated on each completed dataset, $M$ separate $\hat{Q}$-values are obtained. These $M$ values are combined into a single pooled estimate $\bar{Q}$. **ALSO: make clear that iteration happens within the first step, between incomplete and completed data.**
 
-```{r diagram, out.width="\\linewidth", include=TRUE, fig.align="center", fig.cap="Scheme of the main steps in multiple imputation."}
+```{r diagram, out.width="\\linewidth", include=TRUE, fig.cap="Scheme of the main steps in multiple imputation."}
 knitr::include_graphics("./images/diagram.pdf") #adapted from [@buur18] par. 1.4.1.
 ```
 
@@ -131,27 +160,6 @@ plot(nonc)
 ```
 
 ```{r diagnostics, fig.cap="Convergence diagnostics pathological non-convergence versus typical convergence."}
-library(ggplot2)
-library(patchwork)
-theme_update(
-  plot.title = element_text(hjust = 0.5),
-  panel.border = element_blank(),
-  panel.grid.major = element_blank(),
-  panel.grid.minor = element_blank(),
-  panel.background = element_blank(),
-  axis.line = element_line(colour = "black"),
-  legend.key = element_blank(),
-  legend.position = "bottom",
-  legend.margin = margin(0,0,0,0),
-  # adjust text size
-  text = element_text(size = 8),
-  title = element_text(size = 8)
-  # axis.title = element_text(size = 8),
-  # axis.text = element_text(size = 7),
-  # legend.text = element_text(size = 7)
-)
-
-
 load("./images/diagnostics_plot.Rdata")
 diagnostics_plot
 ```
@@ -325,16 +333,20 @@ From bias and CIW, we calculate empirical coverage rates. Coverage rate is the p
 
 **(Add more info about figure legends and axes.)**
 
-```{r load-res, include = FALSE}
-# load("../Results/test.Rdata")
-# source("../2.CreateFigures.R")
+```{r mean, fig.height = 6.8, fig.cap="Convergence diagnostics chain mean."}
+mean_Rh + mean_AC + mean_bias + plot_layout(guides = "collect", ncol = 1) + plot_annotation(title = "Performance of convergence diagnostics", subtitle = bquote(theta ~ "= chain mean of Y in" ~ y[imp][",m"] ~ "; Q = " ~ mu[Y] ~ "= 25.81"))
 ```
 
+```{r sd, fig.height = 6.8, fig.cap="Convergence diagnostics chain variance."}
+var_Rh + var_AC + sd_bias + plot_layout(guides = "collect", ncol = 1) + plot_annotation(title = "Performance of convergence diagnostics", subtitle = bquote(theta ~ "= chain variance of Y in" ~ y[imp][",m"] ~ "; Q = " ~ sigma[Y] ~ "= 11.32"))
+```
+```{r est, fig.height = 6.8, fig.cap="Convergence diagnostics regression coefficient."}
+est_Rh + est_AC + est_bias + plot_layout(guides = "collect", ncol = 1) + plot_annotation(title = "Performance of convergence diagnostics", subtitle = bquote(theta ~ "= " ~ hat(beta)[2] ~ "in {" ~ y[obs] ~ "," ~ y[imp][",m"] ~ "}" ~ "; Q = " ~ beta[2] ~ "= 2.06"))
+```
 
-```{r res-univ}
-# mean_bias + plot_annotation(title = "Bias in mean estimate, convergence of chain means")
-# mean_Rh 
-# mean_ACF + plot_annotation(title = "Dotted lines are old $AC$ computation, solid are new.")
+```{r pred, fig.height = 6.8, fig.cap="Convergence diagnostics regression coefficient."}
+PCA_Rh + PCA_AC + Rsq_bias + plot_layout(guides = "collect", ncol = 1) + plot_annotation(title = "Performance of convergence diagnostics", subtitle = bquote(theta ~ "= first eigenvalue of" ~ Sigma ~ "in {" ~ y[obs] ~ "," ~ y[imp][",m"] ~ "}" ~ "; Q = explained variance = 19.25"))
+
 ```
 
 ## Univariate estimates and convergence diagnostics 

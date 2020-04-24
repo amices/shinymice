@@ -33,28 +33,23 @@ mean_bias <- results %>% ggplot(aes(x = t, y = bias.mean.Y, color = as.factor(p*
              color = "grey",
              lwd = 2) +
   geom_point(size = .75) +
-  # geom_errorbar(
-  #       aes(x = t, ymin = bias.mean.Y.LL, ymax = bias.mean.Y.UL),
-  #       width = .2,
-  #       color = "grey"
-  #     ) +
   geom_line() +
   xlab("Number of iterations") +
-  # ylab(expression(paste("Bias in ", hat(mu)))) +
-  ylab(expression(paste(bar(Q) - Q))) +
-  ggtitle("Bias in \bar{Q}; Q = \mu_Y = 25.81") +
+  ylab(bquote("Bias ("~bar(Q)-Q~")")) +
+  #ggtitle(bquote("A) Bias in " ~ bar(mu[Y]) ~ "; " ~ mu[Y] ~ "= 25.81")) +
   labs(colour = "Missingness (%)") 
 
 
 # Univariate: convergence chain mean
-mean_Rh <- results %>% ggplot(aes(x = t, y = max.r.hat.chain.mean.Y, color = as.factor(p*100))) +
+mean_Rh <- results %>% ggplot(aes(x = t, y = r.hat.max.chain.mean.Y, color = as.factor(p*100))) +
   geom_hline(yintercept = 1,
              color = "grey",
              lwd = 2) +
   geom_point(size = .75, na.rm = TRUE) +
   geom_line(na.rm = TRUE) +
-  xlab("Number of iterations") +
-  ylab(expression(paste(widehat(R)))) +
+  xlab("") +
+  ylab(bquote(widehat(R)~" ("~theta~")")) +
+  #ggtitle(bquote("B) " ~ widehat(R) ~ "of chain means" ~ y[imp][",Y"])) +
   labs(colour = "Missingness (%)")
 
 mean_AC <- results %>% ggplot(aes(x = t, y = ac.max.chain.mean.Y, color = as.factor(p*100))) +
@@ -63,9 +58,13 @@ mean_AC <- results %>% ggplot(aes(x = t, y = ac.max.chain.mean.Y, color = as.fac
              lwd = 2) +
   geom_point(size = .75, na.rm = TRUE) +
   geom_line(na.rm = TRUE) +
-  xlab("Number of iterations") +
-  ylab("Autocorrelation") +
+  xlab("") +
+  ylab(bquote("AC ("~theta~")")) +
+  # ggtitle(bquote("Autocorrelation of chain means")) + #~ theta[mean])) +
+  #ggtitle(bquote("C) Autocorrelation of chain means" ~ y[imp][",Y"])) +
   labs(colour = "Missingness (%)")
+
+mean_Rh + mean_AC + mean_bias + plot_layout(guides = "collect", ncol = 1)
 
 # mean_ACF <- results %>% ggplot(aes(x = t, y = ACF.mean.X1, color = as.factor(p*100))) +
 #   geom_hline(yintercept = 0,
@@ -84,7 +83,7 @@ mean_AC <- results %>% ggplot(aes(x = t, y = ac.max.chain.mean.Y, color = as.fac
 ####################
 
 # Univariate: variance estimate
-results %>% ggplot(aes(x = t, y = bias.sd.Y, color = as.factor(p*100))) +
+sd_bias <- results %>% ggplot(aes(x = t, y = bias.sd.Y, color = as.factor(p*100))) +
   geom_hline(yintercept = 0,
              color = "grey",
              lwd = 2) +
@@ -96,29 +95,36 @@ results %>% ggplot(aes(x = t, y = bias.sd.Y, color = as.factor(p*100))) +
   geom_point(size = .75) +
   geom_line() +
   xlab("Number of iterations") +
-  ylab(expression(paste("Bias in ", hat(sigma ^ 2)))) +
+  # ylab(expression(paste("Bias in ", hat(sigma ^ 2)))) +
+  ylab("Bias") +
+  #ggtitle(bquote("A) Bias in " ~ bar(sigma[Y]) ~ "; " ~ sigma[Y] ~ "= 11.32")) +
   labs(colour = "Missingness (%)")
 
 # Univariate: convergence chain variance
-results %>% ggplot(aes(x = t, y = max.r.hat.chain.var.Y, color = as.factor(p*100))) +
+var_Rh <- results %>% ggplot(aes(x = t, y = r.hat.max.chain.var.Y, color = as.factor(p*100))) +
   geom_hline(yintercept = 1,
              color = "grey",
              lwd = 2) +
   geom_point(size = .75, na.rm = TRUE) +
   geom_line(na.rm = TRUE) +
-  xlab("Number of iterations") +
-  ylab(expression(paste(widehat(R)))) +
+  xlab("") +
+  ylab(bquote(widehat(R)~" ("~theta~")")) +
+  # ggtitle(bquote(widehat(R) ~ "of chain variance Y")) + # ~ "variance in" ~ y[imp][Y])) + #sigma[y[imp]]^2
+  #ggtitle(bquote("B) " ~ widehat(R) ~ "of chain variances" ~ y[imp][",Y"])) +
   labs(colour = "Missingness (%)")
 
-results %>% ggplot(aes(x = t, y = ac.max.chain.var.Y, color = as.factor(p*100))) +
+var_AC <- results %>% ggplot(aes(x = t, y = ac.max.chain.var.Y, color = as.factor(p*100))) +
   geom_hline(yintercept = 0,
              color = "grey",
              lwd = 2) +
   geom_point(size = .75, na.rm = TRUE) +
   geom_line(na.rm = TRUE) +
-  xlab("Number of iterations") +
-  ylab("Autocorrelation") +
+  xlab("") +
+  ylab(bquote("AC ("~theta~")")) +
+  #ggtitle(bquote("C) Autocorrelation of chain variances" ~ y[imp][",Y"])) +
   labs(colour = "Missingness (%)")
+
+var_Rh + var_AC + sd_bias + plot_layout(guides = "collect", ncol = 1)
 
 ####################
 ### MULTIVARIATE ###
@@ -132,52 +138,33 @@ est_bias <- results %>% ggplot(aes(x = t, y = bias.est.X1, color = as.factor(p*1
   geom_point(size = .75) +
   geom_line() +
   xlab("Number of iterations") +
-  ylab(expression(paste("Bias in ", hat(beta)))) +
+  ylab("Bias") +
+  #ggtitle(bquote("A) Bias in " ~ bar(beta[2]) ~ "; " ~ beta[2] ~ "= 2.06")) +
   labs(colour = "Missingness (%)")
 
-# Coverage rate regression coefficient
-est_cov <- results %>% ggplot(aes(x = t, y = cov.est.X1, color = as.factor(p*100))) +
-  geom_hline(yintercept = .95,
-             color = "grey",
-             lwd = 2) +
-  geom_point(size = .75) +
-  geom_line() +
-  xlab("Number of iterations") +
-  ylab(expression(paste("Coverage of ", hat(beta)))) +
-  labs(colour = "Missingness (%)")
-
-# CI length
-est_CIL <- results %>% ggplot(aes(x = t, y = CIW.est.X1, color = as.factor(p*100))) +
-  # geom_hline(yintercept = .95,
-  #            color = "grey",
-  #            lwd = 2) +
-  geom_point(size = .75) +
-  geom_line() +
-  xlab("Number of iterations") +
-  ylab(expression(paste("Length 95% CI ", hat(beta)))) +
-  labs(colour = "Missingness (%)")
-
-# R hat for est
-results %>% ggplot(aes(x = t, y = max.r.hat.beta, color = as.factor(p*100))) +
+est_Rh <- results %>% ggplot(aes(x = t, y = r.hat.max.beta, color = as.factor(p*100))) +
   geom_hline(yintercept = 1,
              color = "grey",
              lwd = 2) +
   geom_point(size = .75, na.rm = TRUE) +
   geom_line(na.rm = TRUE) +
-  xlab("Number of iterations") +
-  ylab(expression(paste(widehat(R)))) +
+  xlab("") +
+  ylab(bquote(widehat(R)~" ("~theta~")")) +
+  #ggtitle(bquote("B) " ~ widehat(R) ~ "of " ~ hat(beta[2]))) +
   labs(colour = "Missingness (%)")
 
-# AC for est
-results %>% ggplot(aes(x = t, y = ac.max.beta, color = as.factor(p*100))) +
+est_AC <- results %>% ggplot(aes(x = t, y = ac.max.beta, color = as.factor(p*100))) +
   geom_hline(yintercept = 0,
              color = "grey",
              lwd = 2) +
   geom_point(size = .75, na.rm = TRUE) +
   geom_line(na.rm = TRUE) +
-  xlab("Number of iterations") +
-  ylab("Auto-correlation") +
-  labs(colour = "Missingness (%)") 
+  xlab("") +
+  ylab(bquote("AC ("~theta~")")) +
+  #ggtitle(bquote("C) Autocorrelation of " ~ hat(beta[2]))) +
+  labs(colour = "Missingness (%)")
+
+est_Rh + est_AC + est_bias + plot_layout(guides = "collect", ncol = 1)
 
 
 ####################
@@ -192,59 +179,77 @@ Rsq_bias <- results %>% ggplot(aes(x = t, y = bias.R.sq*100, color = as.factor(p
   geom_point(size = .75) +
   geom_line() +
   xlab("Number of iterations") +
-  # ylab(expression(paste("Bias in ", hat(R ^ 2)))) +
-  ylab("Bias in estimated explained variance") + # change to bias in bar(Q), Q = 19.25?
+  ylab("Bias") + # change to bias in bar(Q), Q = 19.25?
+  #ggtitle(bquote("A) Bias in " ~ bar(R^2) ~ "; " ~ R^2 ~ "= 19.25")) +
   labs(colour = "Missingness (%)")
 
 # R hat for PCA
-results %>% ggplot(aes(x = t, y = max.r.hat.pca, color = as.factor(p*100))) +
+PCA_Rh <- results %>% ggplot(aes(x = t, y = r.hat.max.pca, color = as.factor(p*100))) +
   geom_hline(yintercept = 1,
              color = "grey",
              lwd = 2) +
   geom_point(size = .75, na.rm = TRUE) +
   geom_line(na.rm = TRUE) +
-  xlab("Number of iterations") +
-  ylab(expression(paste(widehat(R)))) +
+  xlab("") +
+  ylab(bquote(widehat(R)~" ("~theta~")")) +
+  #ggtitle(bquote("B) " ~ widehat(R) ~ "of first eigenvalue" ~ Sigma ~ "{" ~ y[obs] ~ "," ~ y[imp] ~ "}")) +
   labs(colour = "Missingness (%)")
 
 # AC for PCA
-results %>% ggplot(aes(x = t, y = ac.max.pca, color = as.factor(p*100))) +
+PCA_AC <- results %>% ggplot(aes(x = t, y = ac.max.pca, color = as.factor(p*100))) +
   geom_hline(yintercept = 0,
              color = "grey",
              lwd = 2) +
   geom_point(size = .75, na.rm = TRUE) +
   geom_line(na.rm = TRUE) +
-  xlab("Number of iterations") +
-  ylab("Auto-correlation") +
+  xlab("") +
+  ylab(bquote("AC ("~theta~")")) +
+  #ggtitle(bquote("C) Autocorrelation of first eigenvalue" ~ Sigma ~ "{" ~ y[obs] ~ "," ~ y[imp] ~ "}")) +
   labs(colour = "Missingness (%)") 
 
-# PCA_ACF <- results %>% ggplot(aes(x = t, y = ACF.PCA, color = as.factor(p*100))) +
-#   geom_hline(yintercept = 0,
+PCA_Rh + PCA_AC + Rsq_bias + plot_layout(guides = "collect", ncol = 1)
+
+
+####################
+### MULTIVARIATE ###
+####################
+
+# # Coverage rate regression coefficient
+# results %>% ggplot(aes(x = t, y = cov.est.X1, color = as.factor(p*100))) +
+#   geom_hline(yintercept = .95,
 #              color = "grey",
 #              lwd = 2) +
-#   geom_point(size = .75, na.rm = TRUE) +
-#   geom_line(linetype = "dotted", na.rm = TRUE) +
-#   geom_point(aes(x = t, y = AC.PCA, color = as.factor(p*100)), size = .75, na.rm = TRUE) +
-#   geom_line(aes(x = t, y = AC.PCA, color = as.factor(p*100)), na.rm = TRUE) +
+#   geom_point(size = .75) +
+#   geom_line() +
 #   xlab("Number of iterations") +
-#   ylab("Autocorrelation") +
+#   ylab(expression(paste("Coverage of ", hat(beta)))) +
 #   labs(colour = "Missingness (%)")
-
+# 
+# # CI length
+# results %>% ggplot(aes(x = t, y = CIW.est.X1, color = as.factor(p*100))) +
+#   # geom_hline(yintercept = .95,
+#   #            color = "grey",
+#   #            lwd = 2) +
+#   geom_point(size = .75) +
+#   geom_line() +
+#   xlab("Number of iterations") +
+#   ylab(expression(paste("Length 95% CI ", hat(beta)))) +
+#   labs(colour = "Missingness (%)")
 
 ########################
 ## NOG IETS MEE DOEN? ##
 ########################
 
-## shows that higher max(ac) means more bias in estimate
-results[-c(1, 51, 101, 151, 201),] %>% ggplot(aes(x = ac.max.beta, y = bias.est.X1, color = as.factor(p*100))) +
-  geom_point(na.rm = TRUE) + 
-  geom_smooth(na.rm = TRUE, method = lm, se=F) +
-  labs(colour = "Missingness (%)")
-
-results[-c(1, 51, 101, 151, 201),] %>% ggplot(aes(x = max.r.hat.beta, y = bias.est.X1, color = as.factor(p*100))) +
-  geom_point(na.rm = TRUE) + 
-  geom_smooth(na.rm = TRUE, method = lm, se=F) +
-  labs(colour = "Missingness (%)")
+# ## shows that higher max(ac) means more bias in estimate
+# results[-c(1, 51, 101, 151, 201),] %>% ggplot(aes(x = ac.max.beta, y = bias.est.X1, color = as.factor(p*100))) +
+#   geom_point(na.rm = TRUE) + 
+#   geom_smooth(na.rm = TRUE, method = lm, se=F) +
+#   labs(colour = "Missingness (%)")
+# 
+# results[-c(1, 51, 101, 151, 201),] %>% ggplot(aes(x = r.hat.max.beta, y = bias.est.X1, color = as.factor(p*100))) +
+#   geom_point(na.rm = TRUE) + 
+#   geom_smooth(na.rm = TRUE, method = lm, se=F) +
+#   labs(colour = "Missingness (%)")
 
 ######################################################
 
