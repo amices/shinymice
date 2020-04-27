@@ -14,10 +14,10 @@
 \node[main, fill = white!100] (data) [label=below:Incomplete data] {$\{y_{obs}, y_{mis}\}$};
 \node[main] (mids) [right=of data] { $\{y_{obs}, y_{imp}\}$};
 \node[main] (mids2) [above=10mm of mids] {$\{y_{obs}, y_{imp}\}$ };
-\node[main] (mids3) [below=10mm of mids,label=below: Completed data (per $m$)] { $\{y_{obs}, y_{imp}\}$};
+\node[main] (mids3) [below=10mm of mids,label=below: $M$ completed datasets] { $\{y_{obs}, y_{imp}\}$};
 \node[main] (mira) [right=of mids] {\large $\hat{Q}$};
 \node[main] (mira2) [above=10mm of mira] {\large $\hat{Q}$ };
-\node[main] (mira3) [below=10mm of mira,label=below: Results (per $m$)] {\large $\hat{Q}$ };
+\node[main] (mira3) [below=10mm of mira,label=below: $M$ results] {\large $\hat{Q}$ };
 \node[main, fill = white!100] (mipo) [right=of mira,label=below:Pooled results] {\large $\bar{Q}$ };
 \path (data) edge [connect] (mids)
       (data) edge [connect] (mids2)

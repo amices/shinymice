@@ -5,6 +5,7 @@
 library(mice)
 library(purrr)
 library(dplyr)
+library(ggplot2)
 library(patchwork)
 source('./3.Thesis/1.SimulationStudy/Functions/Convergence.R')
 source('./3.Thesis/1.SimulationStudy/Functions/AC.R')
@@ -30,7 +31,7 @@ nonc <- plot(imp.bmi1, "wgt")[1]
 nonc$layout <- c(1, 1)
 nonc[["condlevels"]][[".ms"]] <- c("", "sd")
 nonc$ylab <- "Chain mean"
-nonc$main <- list(label = "Pathological non-convergence", fontsize=12, fontface = 1)
+nonc$main <- list(label = "Non-convergence", fontsize=12, fontface = 1)
 nonc$x.scales$tick.number <-10
 save(nonc, file = "3.Thesis/1.SimulationStudy/Writeup/images/nonc_plot.Rdata")
 
@@ -149,7 +150,7 @@ ac <-
   geom_line(na.rm = TRUE) +
   scale_x_continuous(breaks = 1:10) +
   xlab("Iteration") +
-  ylab("AC (manual)") +
+  ylab("AC") +
   ggtitle(expression(paste("AC of ", theta, " (manual calculation)"))) + 
   theme(legend.position = "")
 
