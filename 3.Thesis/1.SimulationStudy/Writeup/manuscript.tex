@@ -39,7 +39,7 @@ provides insight into non-convergence of mice algorithms.
 \section{Introduction}\label{introduction}}
 
 Anyone who analyzes person-data may run into a missing data problem.
-Missing data is not only ubiquitous, but also tedious. If a dataset
+Missing data is not only ubiquitous but also tedious. If a dataset
 contains just one incomplete observation, statistical inferences are
 undefined and will not produce any results. To circumvent this, many
 statistical packages employ list-wise deletion by default (i.e.,
@@ -111,15 +111,16 @@ reached, but to monitor signs of non-convergence. Several of such
 diagnostics exist for MCMC methods, but it is not known whether these
 are appropriate for MICE.
 
-In this paper we investigate how non-convergence in iterative imputation
-algorithms may be diagnosed, how well these methods perform, and at
-which point convergence may safely be assumed. For reasons of brevity,
-we only focus on the MI algorithm implemented in the world-leading MI
-software: the \texttt{R} \citep{R} package \texttt{mice} \citep{mice}.
-The convergence properties of this MI algorithm are investigated through
-model-based simulation. The results of this simulation study are
-guidelines for assessing convergence of MI algorithms, which will aid
-applied researchers in drawing valid inference from incomplete datasets.
+In this paper, we investigate how non-convergence in iterative
+imputation algorithms may be diagnosed, how well these methods perform,
+and at which point convergence may safely be assumed. For reasons of
+brevity, we only focus on the MI algorithm implemented in the
+world-leading MI software: the \texttt{R} \citep{R} package
+\texttt{mice} \citep{mice}. The convergence properties of this MI
+algorithm are investigated through model-based simulation. The results
+of this simulation study are guidelines for assessing convergence of MI
+algorithms, which will aid applied researchers in drawing valid
+inference from incomplete datasets.
 
 \textbf{Include sub-questions?:} How can non-convergence be diagnosed?
 Are common MCMC non-convergence diagnostics appropriate for MICE? And if
@@ -169,7 +170,7 @@ much. Importantly, the chain means at the last iteration (the imputed
 value per \(m\)) are very different between the two plots. The algorithm
 with the mis-specified model yields imputed values that are on average a
 magnitude two larger than those of the typically converged algorithm.
-This shows the importance of reaching convergend states in iterative
+This shows the importance of reaching converged states in iterative
 imputation algorithms.}
 
 Non-stationarity within chains may be diagnosed with e.g.,
@@ -206,7 +207,7 @@ estimate the variance of \(\theta\), and average these to obtain
 within-chain variance \(W\).
 
 \begin{align*}
-W&=\frac{1}{M} \sum_{m=1}^{M} s_{j}^{2},  \text { where } s_{m}^{2}=\frac{1}{T-1} \sum_{t=1}^{T}\left(\theta^{(t m)}-\bar{\theta}^{(\cdot m)}\right)^{2}. 
+W&=\frac{1}{M} \sum_{m=1}^{M} s_{j}^{2}, \text { where } s_{m}^{2}=\frac{1}{T-1} \sum_{t=1}^{T}\left(\theta^{(t m)}-\bar{\theta}^{(\cdot m)}\right)^{2}. 
 \end{align*}
 
 We then estimate between-chain variance \(B\) as the variance of the
@@ -246,7 +247,7 @@ proposed a more stringent threshold of \(\widehat{R} < 1.01\).
 
 Following the same notation, we define autocorrelation as the
 correlation between two subsequent \(\theta\)-values within the same
-chain \citep[p.~147]{lync07}. In this study we only consider \(AC\) at
+chain \citep[p.~147]{lync07}. In this study, we only consider \(AC\) at
 lag 1, i.e., the correlation between the \(t^{th}\) and \(t+1^{th}\)
 iteration of the same chain.
 
@@ -263,7 +264,7 @@ values within each imputation chain are less alike.} Positive
 iterations are similar, trending may occur. Negative \(AC\)-values show
 no threat to the stationarity component of convergence. On the contrary
 even---negative \(AC\)-values indicate that \(\theta\)-values of
-subsequent iterations diverge from one-another, which may increase the
+subsequent iterations diverge from one another, which may increase the
 variance of \(\theta\) and speed up convergence. As convergence
 diagnostic, the interest is therefore in positive \(AC\)-values.
 \textbf{Maybe remove:} Moreover, the magnitude of \(AC\)-values may be
@@ -273,7 +274,7 @@ evaluated statistically, but that is outside of this note's scope.
 \subsection{In practice/Answer}\label{in-practiceanswer}}
 
 \textbf{To assess whether \(\widehat{R}\) and \(AC\) may be appropriate
-non-convergence diagnostics for MICE algorithms, the following condtion
+non-convergence diagnostics for MICE algorithms, the following condition
 must hold when applied on the two algorithms plotted above: the methods
 indicate worse performance for the mis-specified model with pathological
 non-convergence (i.e., higher \(\widehat{R}\)- and \(AC\)-values than
@@ -288,23 +289,23 @@ by implementing \citet{veht19} 's recommendations. As required,
 \(\widehat{R}\) indicates less signs of non-convergence as the number of
 iterations goes up in the typical convergence situation. The superior
 performance of the typical convergence over the pathological
-non-convergnce is less prominent, even flipped for \(t<4\). Panel C
+non-convergence is less prominent, even flipped for \(t<4\). Panel C
 displays the \(AC\) as computed with the R function stats::acf(). When
 we look at this panel, we must conclude that something weird is going
-on. The \(AC\)-values indicate equal performance (upto \(t=5\)) for the
-typical convergence and the pathological non-convergnce, while there is
+on. The \(AC\)-values indicate equal performance (up-to \(t=5\)) for the
+typical convergence and the pathological non-convergence, while there is
 obvious trending in the latter. Moreover, the best convergence (as
 indicated by the lowest \(AC\)-value) is observed at \(t=2\), but
 looking at the chain means in panel A, there should be some signs of
-trending upto iteration number seven. After consulting the documentation
-on stats::acf(), we conclude that this implementation of \(AC\) is not
-suitable for iterative imputation algorithms. There is a correction
-factor for a mathematical shortcut that works in the limit. According to
-\ldots{} the function works when the number of iterations \textgreater{}
-50. The default number of iterations in mice, however, is 5. Therefore,
-we compute \(AC\) manually, see panel D. The AC values in this plot do
-meet the requirements (\ldots) and will therefore be used in the
-simulation study.}
+trending up-to iteration number seven. After consulting the
+documentation on stats::acf(), we conclude that this implementation of
+\(AC\) is not suitable for iterative imputation algorithms. There is a
+correction factor for a mathematical shortcut that works in the limit.
+According to\ldots{} the function works when the number of iterations
+\textgreater{} 50. The default number of iterations in mice, however, is
+5. Therefore, we compute \(AC\) manually, see panel D. The AC values in
+this plot do meet the requirements (\ldots) and will therefore be used
+in the simulation study.}
 
 \begin{figure}
 
@@ -322,7 +323,7 @@ Convergence is reached when there is no dependency between subsequent
 iterations of imputation chains (\(AC = 0\)), and chains intermingle
 such that the only difference between the chains is caused by the
 randomness induced by the algorithm (\(\widehat{R} = 1\)). We expect
-that a completely convergenced state will not be reached.
+that a completely converged state will not be reached.
 
 This study evaluates whether \(\widehat{R}\) and \(AC\) could diagnose
 convergence of multiple imputation algorithms. We assess the performance
@@ -364,9 +365,9 @@ scalar summaries of interest (\(\theta\)s; e.g., chain means and chain
 variances). As \citet{buur18} describes, users can also specify a
 model-specific scalar summary (e.g., a regression coefficient). A
 user-specified scalar summary, however, is not universal to all complete
-data problems. Therefore, as inspired by \citep{mack03}, we will use
-introduce a \(\theta\) that summarizes the multivariate state space of
-the algorithm. Namely, the first eigenvalue of the variance-covariance
+data problems. Therefore, as inspired by \citep{mack03}, we will propose
+a \(\theta\) that summarizes the multivariate state space of the
+algorithm. Namely, the first eigenvalue of the variance-covariance
 matrix of the \(M\) completed datasets.
 
 The methods under evaluation are \(\widehat{R}\) and \(AC\). These will
@@ -395,7 +396,7 @@ coefficient of determination, \(R^2\). Additionally, we will evaluate
 the estimated regression coefficients, the coverage rate of the CI95\%
 of the regression estimates, and the CI length (\textbf{see definitions
 in old Methods}). \textbf{remove the term performance measure here and
-add an extra alinea to define performance measures as bias in all
+add an extra paragraph to define performance measures as bias in all
 estimands, and coverage rate and CI length of regression coefficients.}
 
 \textbf{Move this to Results:} As expected, conditions with a higher
@@ -403,8 +404,8 @@ proportion of missingness and/or a lower number of iterations show more
 signs of non-convergence, as indicated by more extreme bias in the
 estimated \(Q\)s. Roughly speaking this means that MICE is indeed not
 converged as \(t=1\), and converges gradually as \(t\) increases. The
-point at wich an additional iteration does not lead to an improvement of
-the estimates depends on the difficulty of the missingness
+point at which an additional iteration does not lead to an improvement
+of the estimates depends on the difficulty of the missingness
 problem---between XYZ and XYZ. This means that the algorithm has
 converged sufficiently (\textbf{under the current specifications}).
 
@@ -419,7 +420,7 @@ function with a manual calculation for autocorrelation, the
 autocorrelation values were indeed decreasing with a higher number of
 iterations.
 
-Evaluation with the performance measures shows that are had an
+Evaluation with the performance measures shows that \(\widehat{R}\) and
 autocorrelation are conservative: they indicate signs of non-convergence
 in conditions where \(\bar{Q}\)s are unbiased and or confidence valid
 estimates of \(Q\).
@@ -430,7 +431,7 @@ non-convergence?}\label{when-to-diagnose-non-convergence}}
 
 Upon convergence, \(\widehat{R}=1\) and \(AC=0\), but in MCMC algorithms
 these are very unlikely (because it's a distribution, not a point to
-converge to). In practice thresholds are used to diagnose
+converge to). In practice, thresholds are used to diagnose
 non-convergence. Usually, non-convergence is diagnosed when
 \(\widehat{R}\) \textgreater{} 1.2 or 1.1 or even 1.01. And a t-test is
 performed to assess whether \(AC\) is significantly different from zero.
@@ -446,11 +447,12 @@ dip in the \(\widehat{R}\) values, after which \(\widehat{R}\)
 \textgreater{} 1.2 again. If the algorithms would be terminated at the
 iteration where \(\widehat{R}\) \textless{} 1.2 occurs for the first
 time, the increase in \(\widehat{R}\) values might be missed. The
-threshold \(\widehat{R}\) \textless{} 1.1 is somewhat conservative with
-respect to the performance measures. But it seems OK. \(\widehat{R}\)
-\textless{} 1.01 is too stringent compared to the performance measures.
-And it is not obtained for any number of iterations (\textbf{but may be
-necessary in more complex complete data models???}).
+threshold \(\widehat{R}\) \textless{} 1.1 is somewhat conservative in
+comparison with the performance measures. But it seems OK.
+\(\widehat{R}\) \textless{} 1.01 is too stringent compared to the
+performance measures. And it is not obtained for any number of
+iterations (\textbf{but may be necessary in more complex complete data
+models???}).
 
 \hypertarget{start-old-methods-section}{%
 \subsection{Start old methods section}\label{start-old-methods-section}}
@@ -468,22 +470,22 @@ script of the simulation study is available from
 # pseudo-code of simulation 
 1. simulate data 
 for (missingness proportions 5%, 25%, 50%, 75% and 95%)
-  for (number of simulation runs from 1 to 1000)
-    2. create missingness
-    for (number of iterations from 1 to 100)
-      3. impute missingness
-      4. compute convergence diagnostics
-      5. perform analysis of scientific interest
-      6. pool results across imputations
-      7. compute performance measures
-  8. aggregate outcomes across simulation runs 
+ for (number of simulation runs from 1 to 1000)
+  2. create missingness
+  for (number of iterations from 1 to 100)
+   3. impute missingness
+   4. compute convergence diagnostics
+   5. perform analysis of scientific interest
+   6. pool results across imputations
+   7. compute performance measures
+ 8. aggregate outcomes across simulation runs 
 9. combine outcomes of all missingness proportions
 \end{verbatim}
 
 The aim of the simulation study is to evaluate the impact of inducing
 non-convergence by: 1) terminating the MICE algorithm at different
-imputation chain lengths (\(t = 1, 2, ..., 100\)), and 2) varying the
-missingness proportions (\(p_{miss} = .05, .25, .50, .75, .95\)). The
+imputation chain lengths (\(t = 1, 2,..., 100\)), and 2) varying the
+missingness proportions (\(p_{miss} =.05,.25,.50,.75,.95\)). The
 assumption underlying the different number of iterations is that the
 algorithm generally does reach convergence at \(t=1\), because the
 initial values are sampled randomly from the set of observed datapoints.
@@ -508,7 +510,7 @@ unspecified social scientific field of study). Let
 \begin{pmatrix}X_1\\
 X_2\\
 X_3
-\end{pmatrix} \sim  \mathcal{N}
+\end{pmatrix} \sim \mathcal{N}
 \begin{bmatrix}
 \begin{pmatrix}
 12\\
@@ -521,21 +523,23 @@ X_3
 1.8 & 4.8 & 9 & 0
 \end{pmatrix}
 \end{bmatrix}\!\!\text{.}\\[2\jot]
-\end{align*} For the purpose of this study, sampling variance is not of
-interest. Therefore, a single complete set may serve as comparative
-truth in all simulation runs \citep{vinknd}. A finite population of
-\(N=1000\) is simulated using the function \texttt{mvtnorm::rmvnorm()}.
-Subsequently, a fourth variable is constructed to serve as dependent
-variable in a multiple linear regression problem. Let \[
-Y_i =  1 + 2X_{1i} + .5X_{2i} - X_{3i} + \epsilon_i ,
-\] where \(i = 1, 2, ..., N\) and \(\epsilon \sim \mathcal{N}(0, 100)\).
+\end{align*} In this study, sampling variance is not of interest.
+Therefore, a single complete set may serve as comparative truth in all
+simulation runs \citep{vinknd}. A finite population of \(N=1000\) is
+simulated using the function \texttt{mvtnorm::rmvnorm()}. Subsequently,
+a fourth variable is constructed to serve as dependent variable in a
+multiple linear regression problem. Let \[
+Y_i = 1 + 2X_{1i} +.5X_{2i} - X_{3i} + \epsilon_i ,
+\] where \(i = 1, 2,..., N\) and \(\epsilon \sim \mathcal{N}(0, 100)\).
 
 We consider four quantities of scientific interest \citep[`conceptual
-estimands';][]{morr19}, namely \ldots{} solve a multiple linear
+estimands';][]{morr19}, namely\ldots{} solve a multiple linear
 regression problem, where dependent variable \(Y\) is regressed on
 independent variables \(X_1\), \(X_2\) and \(X_3\) (\textbf{check
 notation with betas here, and add what the quantity/-ies of scientific
-interest is/are!}):
+interest is/are! Namely, the descriptive statistics of all variables
+(mean and standard deviation), \(\beta_2\), and the percentage of
+variance in \(Y\) explained (coefficient of determination; \(R^2\))}):
 
 \[Y \sim \beta_1 X_1 + \beta_2 X_2 + \beta_3 X_3.\]
 
@@ -548,47 +552,69 @@ missing is the same for all four variables, namely 20\%
 completely observed). This study only considers only an MCAR missingness
 mechanism. Therefore, results may not be extrapolated to other missing
 data problems. Proper performance of the convergence diagnostics under
-MCAR is necessary but not sufficient to demonstrate appropriateness of
-\(\widehat{R}\) and \(AC\) as convergence diagnostics. This is just a
-proof of concept.
+MCAR is necessary but not sufficient to demonstrate the appropriateness
+of \(\widehat{R}\) and \(AC\) as convergence diagnostics. Convergence
+diagnostics should therefore at least apply to the MCAR situation,
+before more complex missingness should be explored.
 
-Missing datapoints are imputed with the function \texttt{mice::mice()}.
-All MI procedures are performed with Bayesian linear regression
-imputation (\texttt{method\ =\ "norm"}), and five imputation chains
-(\texttt{m\ =\ 5}). The number of iterations varies between simulation
-conditions (\texttt{maxit\ =} \(1, 2, \dots, 100\)).
+Missing datapoints in \(y\) are imputed with the function
+\texttt{mice::mice()}. All MI procedures are performed with Bayesian
+linear regression imputation (\texttt{method\ =\ "norm"}), and five
+imputation chains (\texttt{m\ =\ 5}). The number of iterations varies
+between simulation conditions (\texttt{maxit\ =} \(1, 2, \dots, 100\)).
+Each repetition of the simulation thus starts from 1 complete dataset,
+then splits into 5 missingness conditions (\(p =.05,.25,.5,.75,.95\)),
+each of the amputed datasets is imputed 5 times (\(m = 1, 2,..., 5\))
+for each iteration condition (\(t = 1, 2,..., 100\)). From these
+\(5\times5\times100\) imputations, we extract the \(\theta\)s to apply
+\(\widehat{R}\) and \(AC\) on (\textbf{i.e., chain means, chain
+variances, \(\beta\)s per imputation, and the first eigenvalue of the
+variance-covariance matrix per imputation}). We calculate
+\(\widehat{R}\) by implementing Vehtari et al.'s \citeyearpar{veht19}
+recommendations, and \(AC\) as the correlation between the \(t^{th}\)
+and the \((t+1)^{th}\) iteration. For each \(\theta\) we estimate the
+corresponding scientific estimand \(Q\).
 
-\(\widehat{R}\) (\textbf{of what?? i.e., chain means and chain variances
-of each variable}) is computed by implementing Vehtari et al.'s
-\citeyearpar{veht19} recommendations. \(AC\) (\textbf{of what? and how
-is \(AC\) aggregated across imputations? i.e., mean in latest sim}) is
-computed with function \texttt{stats::acf()}.
+The estimator for each \(Q\) is \(\bar{Q}\)---the pooled aggregate of
+the (\(\hat{Q}\))s across imputations. To calculate the \(\bar{Q}\)s, we
+combine the observed data (\(y_{obs}\)) and the imputed data for each
+imputation (\(y_{imp,m}\)) with the function \texttt{mice::complete()}.
+Descriptive statistics are computed as the average across imputations
+for each variable (\(\mu_j\) and \(\sigma_j\), where
+\(j = Y, X_1, X_2, X_3\)). Estimated regression coefficients are
+obtained with the function \texttt{stats::lm()} for each imputation, and
+then pooled conform \citet{vink14}. The coefficient of determination is
+estimated for each imputation, and pooled using
+\texttt{mice::pool.r.squared()}.
 
-To estimate the quantity of scientific interest, \(Q\), we perform
-multiple linear regression on each completed dataset with the function
-\texttt{stats::lm()}. We obtain an estimated regression coefficient per
-imputation, which are pooled into a single estimate, \(\bar{Q}\). We use
-the function \texttt{mice::pool()} to estimate u bar (\textbf{check
-definition!}) according to Rubin's \citeyearpar{rubin87} rules, and
-subsequently implement finite population pooling conform \citet{vink14}.
+The performance of \(\widehat{R}\) and \(AC\) is assessed by comparing
+\(\bar{Q}\)s with \(Q\)s. For each \(Q\), we compute bias as
+\(\bar{Q} - Q\). For \(Q=\beta_j\), we also compute the empirical
+coverage rate (CR). CR is defined as the percentage of simulation
+repetitions in which the 95\% confidence interval (CI) around
+\(\bar{Q}\) covers the true estimand \(Q\). Let
 
-We compute bias as the difference between \(Q\) and \(\bar{Q}\).
-Confidence interval width (CIW) is defined as the difference between the
-lower and upper bound of the 95\% confidence interval (CI95\%) around
-\(\bar{Q}\). We compute the CI95\% bounds as
+\[\text{CI} = \bar{Q} \pm t_{(M-1)} \times SE_{\bar{Q}},\]
 
-\[\bar{Q} \pm t_{(m-1)} \times SE_{\bar{Q}},\]
-
-where \(t_{(m-1)}\) is the quantile of a \(t\)-distribution with \(m-1\)
+where \(t_{(M-1)}\) is the quantile of a \(t\)-distribution with \(M-1\)
 degrees of freedom, and \(SE_{\bar{Q}}\) is the square root of the
-pooled variance estimate. \textbf{Why track CIW?} Under-estimating the
-variance of \(\bar{Q}\) may yield spurious inferences. From bias and
-CIW, we calculate empirical coverage rates. Coverage rate is the
-proportion of simulations in which \(Q\) is between the bounds of the
-CI95\% around \(\bar{Q}\).
+pooled variance estimate. \textbf{Remove this? } Under-estimating the
+variance of \(\bar{Q}\) may yield spurious inferences. Confidence
+interval width (CIW) is defined as the difference between the lower and
+upper bound of the 95\% confidence interval (CI) around \(\bar{Q}\) From
+bias and CIW, we calculate empirical coverage rates. Coverage rate is
+the proportion of simulations in which \(Q\) is between the bounds of
+the CI95\% around \(\bar{Q}\).
 
 \hypertarget{old-results-section}{%
 \section{Old Results section}\label{old-results-section}}
+
+For reasons of brevity, we only discuss the convergence diagnostics for
+the \(Q\) with the worst performance in terms of bias. For the
+descriptve statistics, the magnitude of the bias was the largest in
+\(Y\) (i.e, \(j = Y\) in \(\mu_j\) and \(\sigma_j\)). For the
+\(Q=\beta_j\), \(j=2\) showed the worst perfomance (i.e, the effect of
+\(X_1\) on \(Y\).
 
 \textbf{(Add more info about figure legends and axes.)}
 
@@ -631,7 +657,7 @@ CI95\% around \(\bar{Q}\).
 \subsection{Univariate estimates and convergence
 diagnostics}\label{univariate-estimates-and-convergence-diagnostics}}
 
-The bias in the estimates of the variable means show little to no
+The bias in the estimates of the variable means shows little to no
 difference between simulation conditions. It doesn't seem to matter how
 many iterations you use in the mice algorithm, the estimates are
 unbiased. Similarly, the bias in the estimated variances is more or less
@@ -642,53 +668,55 @@ When applied to the imputation chain means, \(\widehat{R}\) indicates
 that the mice algorithm does not reach a converged state
 (\(\widehat{R}\) = 1) in any of the simulation conditions. Neither is
 the most recent recommended threshold reached (\(\widehat{R}\)
-\textless{} 1.01). The conventional \(\widehat{R}\) threshold of 1.2 is
-reached in simulation conditions \(T = 3\) and \(T > 6\). (With the
-default number of iterations (maxit = 5), this dip in \(\widehat{R}\)
-values would be spotted, so it is no problem.) The point at which an
-extra iteration does not seem to improve the \(\widehat{R}\) value is
-around \(T=30\).
+\textless{} 1.01). \textbf{This is only for 75\% missingness:} The
+conventional \(\widehat{R}\) threshold of 1.2 is reached in simulation
+conditions \(T = 3\) and \(T > 6\). (With the default number of
+iterations (maxit = 5), this dip in \(\widehat{R}\) values would be
+spotted, so it is no problem.) The point at which an extra iteration
+does not seem to improve the \(\widehat{R}\) value is around \(T=30\).
 
-Auto-correlations indicate no sign of trending within imputation chains.
-In most simulation conditions \(AC\) is smaller than or about equal to
-zero. Across simulation conditions, however, the autocorrelation curve
-does not trend towards 0. Autocorrelation values plateau off at a value
-of around .1 . This is a small positive autocorrelation, which would
-indicate some trending within chains.
+Autocorrelations indicate no sign of trending \textbf{(NOT correct
+anymore, fluke of the stats::acf() function!!)} within imputation
+chains. In most simulation conditions \(AC\) is smaller than or about
+equal to zero. Across simulation conditions, however, the
+autocorrelation curve does not trend towards 0. Autocorrelation values
+plateau off at a value of around.1. This is a small positive
+autocorrelation, which would indicate some trending within chains.
 
 The \(\widehat{R}\) and \(AC\) values for the imputation chain variances
-show equal trends and are therefore not discussed separately. Taken
-together, univariate estimates seem robust across simulation conditions.
-There is no clear effect of the number of iterations on the bias in
-these estimates, while the convergence diagnostics indicate that the
-algorithm did not reach a completely converged state (yet).
+show equal trends to the chain means and are therefore not discussed
+separately. Taken together, univariate estimates seem robust across
+simulation conditions. There is no clear effect of the number of
+iterations on the bias in these estimates, while the convergence
+diagnostics indicate that the algorithm did not reach a completely
+converged state (yet).
 
 \hypertarget{multivariate-estimates}{%
 \subsection{Multivariate estimates}\label{multivariate-estimates}}
 
-There is a clear bias in the regression estimates in simulation
-conditions where the number of iterations is smaller than four. In
-simulation conditions where \(T > 5\) there is little to no bias in the
-estimated regression coefficients. In most simulation conditions nominal
-coverage is obtained (i.e., coverage rates of .95) for the confidence
-intervals around the regression coefficients. Conditions with only one
-or two iterations show some under-coverage. Since confidence interval
-width is stable across conditions, the under-coverage may be attributed
-to the bias in the estimated regression coefficients.
+\textbf{This is only true for 75\% missingness:} There is a clear bias
+in the regression estimates in simulation conditions where the number of
+iterations is smaller than four. In simulation conditions where
+\(T > 5\) there is little to no bias in the estimated regression
+coefficients. In most simulation conditions nominal coverage is obtained
+(i.e., coverage rates of.95) for the confidence intervals around the
+regression coefficients. Conditions with only one or two iterations show
+some under-coverage. Since confidence interval width is stable across
+conditions, the under-coverage may be attributed to the bias in the
+estimated regression coefficients.
 
-If we look at the estimated proportion of explained variance in outcome
-variable Y we see that the coefficient of determination is underestimate
-estimated in conditions where the number of iterations is equal to two
-or less, and slightly overestimated in conditions where the number of
-iterations is equal to three or more.
+\textbf{This is only true for 75\% missingness:} If we look at the
+estimated proportion of explained variance in outcome variable Y we see
+that the coefficient of determination is underestimate estimated in
+conditions where the number of iterations is equal to two or less, and
+slightly overestimated in conditions where the number of iterations is
+equal to three or more.
 
 In short, we see that the minimum number of iterations required to
 obtain unbiased, confidence valid regression estimates is 5. This value,
 however, is dependent on the percentage of missing values. E.g., with
 95\% of cases having missing data we need at least seven iterations to
 obtain unbiased results.
-
---\textgreater{}
 
 \hypertarget{discussion}{%
 \section{Discussion}\label{discussion}}
@@ -700,22 +728,23 @@ algorithmic procedures. (\textbf{nope! it shows that MICE can lead to
 correct outcomes when they have not converged according to two common
 conv diags. This may be due to the measures (e.g., assumption of
 overdisp) or due to the Qs (lm reg coeff, not higher dimensional/more
-complex RQs). Add what \%miss has to do with it.})\\
+complex RQs). Add what \%miss has to do with it.})
+
 \(\widehat{R}\) and autocorrelation indicate that algorithmic
 convergence may only be reached after twenty or even forty iterations,
-while unbiased, confidence valid estimates estimates may be obtained
-with as little as four iterations. These results are in agreement with
-the simulation hypothesis: \(\widehat{R}\) over-estimates the severity
-of non-convergence when applied to MI procedures. \%This may be due to
-the quantity of scientific interest chosen. More `complicated' \(Q\)s
-(e.g., higher order effects or variance components) might show bias,
-under- or over-coverage at higher \(T\).
+while unbiased, confidence valid estimates may be obtained with as
+little as four iterations. These results are in agreement with the
+simulation hypothesis: \(\widehat{R}\) over-estimates the severity of
+non-convergence when applied to MI procedures. \%This may be due to the
+quantity of scientific interest chosen. More `complicated' \(Q\)s (e.g.,
+higher-order effects or variance components) might show bias, under- or
+over-coverage at higher \(T\).
 
 According to this simulation study, the recently proposed threshold of
 \(\widehat{R}<1.01\) may be too stringent for MI algorithms.
 (\textbf{This is only one of the goals: to give applied researchers a
 diagnostic to indicate that they should keep iterating. The other is the
-default in mice and other software packages, and yet another is \ldots{}
+default in mice and other software packages, and yet another is\ldots{}
 i forgot}) Under the relatively easy missing data problem of the current
 study, the threshold was not reached. The other extreme of the
 \(\widehat{R}\)-thresholds, the conventionally acceptable
@@ -731,18 +760,13 @@ stabilize (around \(T = 20\)) (\textbf{Not necessary for this Q, but
 maybe for more complicated Qs}).
 
 The negative \(AC\)-values obtained in this study show no threat of
-non-stationarity. However, initial dip in \(AC\)-values may have
-implications for the default number of iterations in \texttt{mice}
-(\texttt{maxit\ =\ 5}). Terminating the algorithm at \(T=5\) may not be
-the most appropriate, since this lead to the worst convergence
-(\textbf{nope, only for Rh, not \(AC\)}), as indicated by
-\(\widehat{R}\) and \(AC\). Under the current specifications, \(T>20\)
-would be more appropriate.
-
-The observed dip in \(AC\) implies that default maxit value of five
-iterations is the worst possible number of iterations. Moreover, the
-results of this study imply that assessing the stationarity component of
-convergence with \(AC\) might be redundant.
+non-stationarity. However, the initial dip in \(AC\)-values
+\textbf{(which disappeared!)} may have implications for the default
+number of iterations in \texttt{mice} (\texttt{maxit\ =\ 5}).
+Terminating the algorithm at \(T=5\) may not be the most appropriate,
+since this lead to the worst convergence (\textbf{nope, only for Rh, not
+\(AC\)}), as indicated by \(\widehat{R}\) and \(AC\). Under the current
+specifications, \(T>20\) would be more appropriate.
 
 Further research is needed to investigate their performance under clear
 violation of convergence, e.g.~dependency between predictors (predictors
@@ -756,24 +780,27 @@ implement a Wald test for \(AC = 0\).
 \subsection{Recommendations for empirical
 researchers}\label{recommendations-for-empirical-researchers}}
 
-\textbf{For empirical researchers: 1) Check trace plots for pathological
-non convergence and adjust imputation model if necessary. 2) use
-\(\widehat{R}\) wait 1.1 ash threshold and autocorrelation with }?** as
-threshold . Keep iterating until these thresholds are reached. 3) Do not
-use the R function ACF. Instead compute autocorrelations manually , see
-for example GitHub link. 4) Track your own scalar summary of interest.
-This is advanced but explained in Van Buren 2018. Compute
-\(\widehat{R}\) and autocorrelation values for this scalar summary. **
+For empirical researchers: 1) Check trace plots for pathological non
+convergence and adjust imputation model if necessary. 2) use
+\(\widehat{R}\) wait 1.1 ash threshold and autocorrelation with
+\textbf{?} as threshold. Keep iterating until these thresholds are
+reached. 3) Do not use the R function ACF. Instead, compute
+autocorrelations manually \textbf{(see e.g., {[}GitHub link{]})}. 4)
+Track your own scalar summary of interest. This is somewhat advanced but
+explained in Van Buren 2018. Compute \(\widehat{R}\) and autocorrelation
+values for this scalar summary. 5) \textbf{Something} about the novel
+\(\theta\) that is `substantive model-independent'.
 
 \hypertarget{recommendations-for-future-research}{%
 \subsection{Recommendations for future
 research}\label{recommendations-for-future-research}}
 
 \textbf{Pmm, M(N)AR, Empirical data, Vignette, ShinyMICE, AC across
-imputations, not iterations (unique for imp data??)}
+imputations, not iterations (new convergence diagnostic unique for
+iterative imputation??).}
 
 \textbf{If I don't include it in my study, also: Significance of \(AC\)
-values}
+values.}
 
 \bibliographystyle{sageh}
 \bibliography{thesis.bib}
