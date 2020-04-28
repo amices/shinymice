@@ -10,7 +10,7 @@ address:
 corrauth: "Hanne Oberman, Sjoerd Groenman building, Utrecht Science Park, Utrecht, The Netherlands."
 email: h.i.oberman@uu.nl
 abstract: "Iterative imputation is a popular tool to accommodate missing data. While it is widely accepted that valid inferences can be obtained with this technique, these inferences all rely on algorithmic convergence. There is no consensus on how to evaluate the convergence properties of the method. This paper provides insight into identifying non-convergence of iterative impuation algorithms."
-keywords: iterative imputation; non-convergence; mice
+keywords: Iterative imputation; non-convergence; mice
 classoption:
  - Royal
  - times
@@ -407,6 +407,23 @@ For empirical researchers: 1) Check trace plots for pathological non convergence
 
 **If I don't include it in my study, also: Significance of $AC$ values.**
 
+# Grading
 
+Scientific contribution
+(clear research question, convincing argumentation that the study adds to the scientific literature)
+
+Theory
+(use of theory, clear hypotheses, relevant literature)
+
+Method
+(correct data collection/handling, measures, choice and description of method of analysis)
+
+Results
+(correct interpretation of findings, clear presentation)
+Discussion and conclusions
+(summary, broader implications, limitations, future research)
+
+Written presentation
+(writing, structure, tables and figures, references)
 
 <!-- # References -->

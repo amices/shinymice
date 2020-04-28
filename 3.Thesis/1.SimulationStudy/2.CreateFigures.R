@@ -35,7 +35,7 @@ mean_bias <- results %>% ggplot(aes(x = t, y = bias.mean.Y, color = as.factor(p*
   geom_point(size = .75) +
   geom_line() +
   xlab("Number of iterations") +
-  ylab(bquote("Bias ("~bar(Q)-Q~")")) +
+  ylab(bquote("Bias in "~bar(Q))) +
   #ggtitle(bquote("A) Bias in " ~ bar(mu[Y]) ~ "; " ~ mu[Y] ~ "= 25.81")) +
   labs(colour = "Missingness (%)") 
 
@@ -48,7 +48,7 @@ mean_Rh <- results %>% ggplot(aes(x = t, y = r.hat.max.chain.mean.Y, color = as.
   geom_point(size = .75, na.rm = TRUE) +
   geom_line(na.rm = TRUE) +
   xlab("") +
-  ylab(bquote(widehat(R)~" ("~theta~")")) +
+  ylab(bquote(widehat(R)~" of "~theta)) +
   #ggtitle(bquote("B) " ~ widehat(R) ~ "of chain means" ~ y[imp][",Y"])) +
   labs(colour = "Missingness (%)")
 
@@ -59,7 +59,7 @@ mean_AC <- results %>% ggplot(aes(x = t, y = ac.max.chain.mean.Y, color = as.fac
   geom_point(size = .75, na.rm = TRUE) +
   geom_line(na.rm = TRUE) +
   xlab("") +
-  ylab(bquote("AC ("~theta~")")) +
+  ylab(bquote("AC of "~theta)) +
   # ggtitle(bquote("Autocorrelation of chain means")) + #~ theta[mean])) +
   #ggtitle(bquote("C) Autocorrelation of chain means" ~ y[imp][",Y"])) +
   labs(colour = "Missingness (%)")
@@ -96,7 +96,7 @@ sd_bias <- results %>% ggplot(aes(x = t, y = bias.sd.Y, color = as.factor(p*100)
   geom_line() +
   xlab("Number of iterations") +
   # ylab(expression(paste("Bias in ", hat(sigma ^ 2)))) +
-  ylab("Bias") +
+  ylab(bquote("Bias in "~bar(Q))) +
   #ggtitle(bquote("A) Bias in " ~ bar(sigma[Y]) ~ "; " ~ sigma[Y] ~ "= 11.32")) +
   labs(colour = "Missingness (%)")
 
@@ -108,7 +108,7 @@ var_Rh <- results %>% ggplot(aes(x = t, y = r.hat.max.chain.var.Y, color = as.fa
   geom_point(size = .75, na.rm = TRUE) +
   geom_line(na.rm = TRUE) +
   xlab("") +
-  ylab(bquote(widehat(R)~" ("~theta~")")) +
+  ylab(bquote(widehat(R)~" of "~theta)) +
   # ggtitle(bquote(widehat(R) ~ "of chain variance Y")) + # ~ "variance in" ~ y[imp][Y])) + #sigma[y[imp]]^2
   #ggtitle(bquote("B) " ~ widehat(R) ~ "of chain variances" ~ y[imp][",Y"])) +
   labs(colour = "Missingness (%)")
@@ -120,7 +120,7 @@ var_AC <- results %>% ggplot(aes(x = t, y = ac.max.chain.var.Y, color = as.facto
   geom_point(size = .75, na.rm = TRUE) +
   geom_line(na.rm = TRUE) +
   xlab("") +
-  ylab(bquote("AC ("~theta~")")) +
+  ylab(bquote("AC of "~theta)) +
   #ggtitle(bquote("C) Autocorrelation of chain variances" ~ y[imp][",Y"])) +
   labs(colour = "Missingness (%)")
 
@@ -138,7 +138,7 @@ est_bias <- results %>% ggplot(aes(x = t, y = bias.est.X1, color = as.factor(p*1
   geom_point(size = .75) +
   geom_line() +
   xlab("Number of iterations") +
-  ylab("Bias") +
+  ylab(bquote("Bias in "~bar(Q))) +
   #ggtitle(bquote("A) Bias in " ~ bar(beta[2]) ~ "; " ~ beta[2] ~ "= 2.06")) +
   labs(colour = "Missingness (%)")
 
@@ -149,7 +149,7 @@ est_Rh <- results %>% ggplot(aes(x = t, y = r.hat.max.beta, color = as.factor(p*
   geom_point(size = .75, na.rm = TRUE) +
   geom_line(na.rm = TRUE) +
   xlab("") +
-  ylab(bquote(widehat(R)~" ("~theta~")")) +
+  ylab(bquote(widehat(R)~" of "~theta)) +
   #ggtitle(bquote("B) " ~ widehat(R) ~ "of " ~ hat(beta[2]))) +
   labs(colour = "Missingness (%)")
 
@@ -160,7 +160,7 @@ est_AC <- results %>% ggplot(aes(x = t, y = ac.max.beta, color = as.factor(p*100
   geom_point(size = .75, na.rm = TRUE) +
   geom_line(na.rm = TRUE) +
   xlab("") +
-  ylab(bquote("AC ("~theta~")")) +
+  ylab(bquote("AC of "~theta)) +
   #ggtitle(bquote("C) Autocorrelation of " ~ hat(beta[2]))) +
   labs(colour = "Missingness (%)")
 
@@ -179,7 +179,7 @@ Rsq_bias <- results %>% ggplot(aes(x = t, y = bias.R.sq*100, color = as.factor(p
   geom_point(size = .75) +
   geom_line() +
   xlab("Number of iterations") +
-  ylab("Bias") + # change to bias in bar(Q), Q = 19.25?
+  ylab(bquote("Bias in "~bar(Q))) +
   #ggtitle(bquote("A) Bias in " ~ bar(R^2) ~ "; " ~ R^2 ~ "= 19.25")) +
   labs(colour = "Missingness (%)")
 
@@ -191,7 +191,7 @@ PCA_Rh <- results %>% ggplot(aes(x = t, y = r.hat.max.pca, color = as.factor(p*1
   geom_point(size = .75, na.rm = TRUE) +
   geom_line(na.rm = TRUE) +
   xlab("") +
-  ylab(bquote(widehat(R)~" ("~theta~")")) +
+  ylab(bquote(widehat(R)~" of "~theta)) +
   #ggtitle(bquote("B) " ~ widehat(R) ~ "of first eigenvalue" ~ Sigma ~ "{" ~ y[obs] ~ "," ~ y[imp] ~ "}")) +
   labs(colour = "Missingness (%)")
 
@@ -203,7 +203,7 @@ PCA_AC <- results %>% ggplot(aes(x = t, y = ac.max.pca, color = as.factor(p*100)
   geom_point(size = .75, na.rm = TRUE) +
   geom_line(na.rm = TRUE) +
   xlab("") +
-  ylab(bquote("AC ("~theta~")")) +
+  ylab(bquote("AC of "~theta)) +
   #ggtitle(bquote("C) Autocorrelation of first eigenvalue" ~ Sigma ~ "{" ~ y[obs] ~ "," ~ y[imp] ~ "}")) +
   labs(colour = "Missingness (%)") 
 

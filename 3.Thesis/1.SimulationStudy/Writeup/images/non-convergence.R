@@ -106,10 +106,10 @@ theta <- ggplot(diagnostics) +
   geom_line(aes(x = iteration, y = `Chain 4`, color = patho), na.rm = TRUE) +
   geom_line(aes(x = iteration, y = `Chain 5`, color = patho), na.rm = TRUE) +
   scale_x_continuous(breaks = 1:10) +
-  xlab("Iteration") +
-  ylab("Chain mean") +
+  xlab("") +
+  ylab(bquote(theta)) +
   # ggtitle(expression(paste("Chain means (", theta, ")"))) +
-  ggtitle(expression(paste("Scalar summary (", theta, ")"))) +
+  #ggtitle(expression(paste("Scalar summary (", theta, ")"))) +
   theme(legend.position = "")
 
 # plot rhat
@@ -121,9 +121,9 @@ rhat <-
   geom_point(size = .75, na.rm = TRUE) +
   geom_line(na.rm = TRUE) +
   scale_x_continuous(breaks = 1:10) +
-  xlab("Iteration") +
-  ylab(expression(paste(widehat(R)))) +
-  ggtitle(expression(paste(widehat(R), " of ", theta))) + 
+  xlab("") +
+  ylab(bquote(widehat(R)~" of "~theta)) +
+  #ggtitle(expression(paste(widehat(R), " of ", theta))) + 
   labs(color = "Convergence")
 
 # plot default ac (with acf())
@@ -136,8 +136,8 @@ acf <-
   geom_line(na.rm = TRUE) +
   scale_x_continuous(breaks = 1:10) +
   xlab("Iteration") +
-  ylab("AC") +
-  ggtitle(expression(paste("AC of ", theta, " (default calculation)"))) + 
+  ylab(bquote("AC of "~theta~"(default)")) +
+  #ggtitle(expression(paste("AC of ", theta, " (default calculation)"))) + 
   theme(legend.position = "")
 
 # plot manual ac
@@ -150,12 +150,12 @@ ac <-
   geom_line(na.rm = TRUE) +
   scale_x_continuous(breaks = 1:10) +
   xlab("Iteration") +
-  ylab("AC") +
-  ggtitle(expression(paste("AC of ", theta, " (manual calculation)"))) + 
+  ylab(bquote("AC of "~theta~"(manual)")) +
+  #ggtitle(expression(paste("AC of ", theta, " (manual calculation)"))) + 
   theme(legend.position = "")
 
 # combine
-diagnostics_plot <- theta + acf + rhat + ac + plot_layout(guides = "collect", ncol = 2) # add 'ncol=1' for plots under each other
+diagnostics_plot <- theta + rhat + acf  + ac + plot_layout(guides = "collect", ncol = 2) + plot_annotation(tag_levels = "A", tag_suffix = ".") # add 'ncol=1' for plots under each other
 
 # save
 save(diagnostics_plot, file = "3.Thesis/1.SimulationStudy/Writeup/images/diagnostics_plot.Rdata")
