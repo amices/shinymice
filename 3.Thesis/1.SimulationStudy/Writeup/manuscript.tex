@@ -123,15 +123,16 @@ simulation study are guidelines for assessing convergence of MI
 algorithms, which will aid applied researchers in drawing valid
 inference from incomplete datasets.
 
-\textbf{Include sub-questions?:} How can non-convergence be diagnosed?
-Are common MCMC non-convergence diagnostics appropriate for MICE? And if
-so, which threshold should be used to diagnose non-convergence? How many
-iterations are sufficient/needed to be able to diagnose non-convergence?
-Are the default number of iterations sufficient (i.e., 5 in mice, 10 in
-SPSS and Stata, 30 in mi)? \textbf{How severe is it when the algorithm
-has not converged? And what are guidelines for practice? Can the
-parameter of interest, estimand \(Q\), be correct when the algorithm is
-not (yet) converged, and vice versa?}
+\textbf{Include sub-questions?:} How can non-convergence be identified
+diagnostically? Are common MCMC non-convergence diagnostics appropriate
+for MICE? And if so, which threshold should be used to diagnose
+non-convergence? How many iterations are sufficient/needed to be able to
+diagnose non-convergence? Are the default number of iterations
+sufficient (i.e., 5 in mice, 10 in SPSS and Stata, 30 in mi)?
+\textbf{How severe is it when the algorithm has not converged? And what
+are guidelines for practice? Can the parameter of interest, estimand
+\(Q\), be correct when the algorithm is not (yet) converged, and vice
+versa?}
 
 \hypertarget{some-notation}{%
 \subsection{Some notation}\label{some-notation}}
@@ -185,9 +186,9 @@ between chains is the potential scale reduction factor \(\widehat{R}\)
 \citep[`Gelman-Rubin statistic';][]{gelm92}. With a recently proposed
 adaptation, \(\widehat{R}\) might also serve to diagnose
 non-stationarity, but this has not yet been thoroughly investigated
-\citep{veht19}. Therefore, use we \(AC\) and \(\widehat{R}\) to evaluate
-stationarity and mixing separately, as recommended by e.g.,
-\citet{cowl96}, p.~898.
+\citep{veht19}. Therefore, use we \(\widehat{R}\) and \(AC\) to evaluate
+mixing and stationarity separately, as recommended by e.g.,
+\citet{cowl96}.
 
 \begin{figure}
 
@@ -324,9 +325,9 @@ in acf, alleen hier niet van toepassing}
 \caption{Convergence diagnostics pathological non-convergence versus typical convergence. **ADD PANEL LABELS**}\label{fig:diagnostics}
 \end{figure}
 
-\hypertarget{simulation-hypothesis-als-bullets}{%
-\subsection{Simulation Hypothesis (als
-bullets!!)}\label{simulation-hypothesis-als-bullets}}
+\hypertarget{simulation-hypothesis-in-bullets-maybe-move-to-simulation-section}{%
+\subsection{Simulation Hypothesis (in bullets!! maybe move to simulation
+section?)}\label{simulation-hypothesis-in-bullets-maybe-move-to-simulation-section}}
 
 For multiple imputation algorithms, it holds that convergence is reached
 when there is no dependency between subsequent iterations of imputation
@@ -513,7 +514,7 @@ that the random component in the algorithm will take the overhand and a
 stable but very uncertain (high variance) point will be reached.
 
 The data-generating mechanism is a multivariate normal distribution,
-representing person data on three predictor variables (from an
+representing person-data on three predictor variables (from an
 unspecified social scientific field of study). Let our predictor space
 be defined by the following a multivariate normal distribution
 
@@ -562,13 +563,13 @@ univariate, and the probability to be missing is the same for all four
 variables, namely 20\% (\texttt{prop\ =\ 0.8,\ mech\ =\ "MCAR"}). This
 leaves 20\% of the rows completely observed). }
 
-Proper performance of the convergence diagnostics under at least missing
-completely at random (MCAR) missingness mechanism is necessary to
-demonstrate the appropriateness of \(\widehat{R}\) and \(AC\) as
-convergence diagnostics. However, results may not be extrapolated to
-other missingness mechanisms. \textbf{Convergence diagnostics should
-therefore at least apply to the MCAR situation, before more complex
-missingness should be explored.}
+\textbf{Maybe move to discussion:}Proper performance of the convergence
+diagnostics under at least missing completely at random (MCAR)
+missingness mechanism is necessary to demonstrate the appropriateness of
+\(\widehat{R}\) and \(AC\) as convergence diagnostics. However, results
+may not be extrapolated to other missingness mechanisms.
+\textbf{Convergence diagnostics should therefore at least apply to the
+MCAR situation, before more complex missingness should be explored.}
 
 Missing datapoints in \(y\) are imputed with the \texttt{mice} package
 \citep{mice}. All MI procedures are performed with Bayesian linear
