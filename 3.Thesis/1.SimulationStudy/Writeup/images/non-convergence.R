@@ -70,17 +70,37 @@ diagnostics2 <-
 # Combine diagnostics
 #####################
 diagnostics <- rbind(diagnostics1, diagnostics2)
+save(diagnostics, file = "3.Thesis/1.SimulationStudy/Writeup/images/diagnostics.Rdata")
 
 # set default for plot layout
+# theme_update(
+#   plot.title = element_text(hjust = 0.5),
+#   plot.subtitle = element_text(hjust = 0.5),
+#   panel.border = element_blank(),
+#   panel.grid.major = element_blank(),
+#   panel.grid.minor = element_blank(),
+#   panel.background = element_blank(),
+#   axis.line = element_line(colour = "black"),
+#   legend.key = element_blank(),
+#   legend.position = "bottom"
+# )
 theme_update(
   plot.title = element_text(hjust = 0.5),
+  plot.subtitle = element_text(hjust = 0.5),
   panel.border = element_blank(),
   panel.grid.major = element_blank(),
   panel.grid.minor = element_blank(),
   panel.background = element_blank(),
   axis.line = element_line(colour = "black"),
   legend.key = element_blank(),
-  legend.position = "bottom"
+  legend.position = "bottom",
+  legend.margin = margin(0,0,0,0),
+  # adjust text size
+  text = element_text(size = 8),
+  title = element_text(size = 8)
+  # axis.title = element_text(size = 8),
+  # axis.text = element_text(size = 7),
+  # legend.text = element_text(size = 7)
 )
 
 # plot chain means
@@ -135,6 +155,7 @@ acf <-
   geom_point(size = .75, na.rm = TRUE) +
   geom_line(na.rm = TRUE) +
   scale_x_continuous(breaks = 1:10) +
+  scale_y_continuous(limits = c(-0.5,1)) +
   xlab("Iteration") +
   ylab(bquote("AC of "~theta~"(default)")) +
   #ggtitle(expression(paste("AC of ", theta, " (default calculation)"))) + 
@@ -149,47 +170,45 @@ ac <-
   geom_point(size = .75, na.rm = TRUE) +
   geom_line(na.rm = TRUE) +
   scale_x_continuous(breaks = 1:10) +
+  scale_y_continuous(limits = c(-0.5,1)) +
   xlab("Iteration") +
   ylab(bquote("AC of "~theta~"(manual)")) +
   #ggtitle(expression(paste("AC of ", theta, " (manual calculation)"))) + 
   theme(legend.position = "")
 
 # combine
-diagnostics_plot <- theta + rhat + acf  + ac + plot_layout(guides = "collect", ncol = 2) + plot_annotation(tag_levels = "A", tag_suffix = ".") # add 'ncol=1' for plots under each other
+diagnostics_plot <- theta + rhat + acf  + ac + plot_layout(guides = "collect", ncol = 2) + plot_annotation(tag_levels = "A", tag_suffix = ".", title = "Performance of convergence diagnostics", subtitle = bquote(theta ~ "= chain mean in "~ y[imp][",m"])) # add 'ncol=1' for plots under each other
 
 # save
 save(diagnostics_plot, file = "3.Thesis/1.SimulationStudy/Writeup/images/diagnostics_plot.Rdata")
 
 
-# ############## With lm instead of lines
-# rhat <-
-#   ggplot(diagnostics, aes(x = iteration, y = max.r.hat, color = patho)) +
+# # plot rhat
+# old_rhat <-
+#   ggplot(diagnostics, aes(x = iteration, y = r.hat, color = patho)) +
 #   geom_hline(yintercept = 1,
 #              color = "grey",
 #              lwd = 2) +
 #   geom_point(size = .75, na.rm = TRUE) +
-#   geom_smooth(na.rm = TRUE, se=F, method = "lm") +
+#   geom_line(na.rm = TRUE) +
 #   scale_x_continuous(breaks = 1:10) +
-#   xlab("Iteration") +
-#   ylab(expression(paste(widehat(R)))) +
-#   labs(colour = "Convergence")
-#
-# acf <-
-#   ggplot(diagnostics, aes(x = iteration, y = ac.max, color = patho)) +
-#   geom_hline(yintercept = 0,
+#   scale_y_continuous(limits = c(0.98,1.86)) +
+#   xlab("") +
+#   ylab(bquote(widehat(R)~" of "~theta)) +
+#   #ggtitle(expression(paste(widehat(R), " of ", theta))) + 
+#   labs(color = "Convergence")
+# 
+# # plot rhat
+# new_rhat <-
+#   ggplot(diagnostics, aes(x = iteration, y = r.hat.max, color = patho)) +
+#   geom_hline(yintercept = 1,
 #              color = "grey",
 #              lwd = 2) +
 #   geom_point(size = .75, na.rm = TRUE) +
-#   geom_smooth(aes(x = iteration, y = acf.max, color = patho),
-#               na.rm = TRUE,
-#               linetype = "dotted", se=F, method = "lm") +
-#   geom_point(aes(x = iteration, y = acf.max, color = patho),
-#              size = .75,
-#              na.rm = TRUE) +
-#   geom_smooth(na.rm = TRUE, se=F, method = "lm") +
+#   geom_line(na.rm = TRUE) +
 #   scale_x_continuous(breaks = 1:10) +
-#   xlab("Iteration") +
-#   ylab("AC") +
-#   theme(legend.position = "")
-#
-# rhat + acf + plot_layout(guides = "collect") # add 'ncol=1' for plots under each other
+#   scale_y_continuous(limits = c(0.98,1.86)) +
+#   xlab("") +
+#   ylab(bquote(widehat(R)~" of "~theta)) +
+#   #ggtitle(expression(paste(widehat(R), " of ", theta))) + 
+#   labs(color = "Convergence")

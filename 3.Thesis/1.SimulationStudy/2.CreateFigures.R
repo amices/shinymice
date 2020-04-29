@@ -11,16 +11,16 @@ library(patchwork)
 # load("3.Thesis/1.SimulationStudy/Results/complete.Rdata")
 
 # set default for plot layout
-theme_update(
-  plot.title = element_text(hjust = 0.5),
-  panel.border = element_blank(),
-  panel.grid.major = element_blank(),
-  panel.grid.minor = element_blank(),
-  panel.background = element_blank(),
-  axis.line = element_line(colour = "black"),
-  legend.key = element_blank(),
-  legend.position = "bottom"
-)
+# theme_update(
+#   plot.title = element_text(hjust = 0.5),
+#   panel.border = element_blank(),
+#   panel.grid.major = element_blank(),
+#   panel.grid.minor = element_blank(),
+#   panel.background = element_blank(),
+#   axis.line = element_line(colour = "black"),
+#   legend.key = element_blank(),
+#   legend.position = "bottom"
+# )
 
 
 ####################
