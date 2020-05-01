@@ -169,9 +169,9 @@ We can interpret $AC$-values as a measure of stationarity. If $AC$-values are cl
 
 We assume that complete convergence, defined as $\widehat{R} = 1$ and $AC = 0$, will not be observed. Because even in the most converged state, the algorithm will show some signs of non-mixing and non-stationarity. Upon *sufficient* convergence, the imputation chains will intermingle such that the only difference between the chains is caused by the randomness induced by the algorithm ($\widehat{R} > 1$), and there may be some dependency between subsequent iterations of imputation chains ($AC > 0$). 
 
-```{r diagnostics, fig.cap="Convergence diagnostics applied on the imputation algorithms of Figure 2."}
+```{r diagnostics, fig.cap="Convergence diagnostics applied on the imputation algorithms of Figure 2. $\\theta$ = chain mean in $y_{imp, m}$."}
 load("./images/diagnostics_plot.Rdata") #bquote(theta ~ "= chain mean in "~ y[imp][",m"])
-diagnostics_plot
+diagnostics_plot 
 ```
 
 
@@ -294,6 +294,8 @@ The performance of two methods is evaluated against the bias and confidence vali
 
 # Results
 
+We want to know what the effect is of inducing non-conv of the bias in all Qs and the confidence validity of the betas. So we plot the bias for each Q against the number of iterations in the condition and the missingness proportion in the condition. We look at averages across simulation repetitions. Then, we want to know if conditions in which the Qs are affected by non-convergence (on average) are also identified by the conv diag. We do this by looking at the bias in Q against the 
+
 **Add to this section: 1) emphasize that the plots are averages across repetitions, not within MICE; 2) sample effects due to single complete dataset.**
 
 
@@ -313,19 +315,19 @@ Evaluation with the performance measures shows that $\widehat{R}$ and autocorrel
 **(Add more info about figure legends and axes.)**
 
 ```{r mean, fig.height = 6.8, fig.cap="Convergence diagnostics chain mean."}
-mean_Rh + mean_AC + mean_bias + plot_layout(guides = "collect", ncol = 1) + plot_annotation(tag_levels = "A", tag_suffix = ".", title = "Performance of convergence diagnostics", subtitle = bquote(theta ~ "= chain mean of Y in" ~ y[imp][",m"] ~ "; Q = " ~ mu[Y] ~ "= 25.81"))
+mean_bias + mean_Rh + mean_AC + plot_layout(guides = "collect", ncol = 1) + plot_annotation(tag_levels = "A", tag_suffix = ".", title = bquote("Q = " ~ mu[Y] ~ "= 25.81; " ~ theta ~ "= chain mean of Y in" ~ y[imp][",m"])) #& theme(legend.position = "bottom")
 ```
 
 ```{r sd, fig.height = 6.8, fig.cap="Convergence diagnostics chain variance."}
-var_Rh + var_AC + sd_bias + plot_layout(guides = "collect", ncol = 1) + plot_annotation(tag_levels = "A", tag_suffix = ".", title = "Performance of convergence diagnostics", subtitle = bquote(theta ~ "= chain variance of Y in" ~ y[imp][",m"] ~ "; Q = " ~ sigma[Y] ~ "= 11.32"))
+sd_bias + var_Rh + var_AC + plot_layout(guides = "collect", ncol = 1) + plot_annotation(tag_levels = "A", tag_suffix = ".", title = bquote("Q = " ~ sigma[Y] ~ "= 11.32; " ~ theta ~ "= chain variance of Y in" ~ y[imp][",m"]))
 ```
+
 ```{r est, fig.height = 6.8, fig.cap="Convergence diagnostics regression coefficient."}
-est_Rh + est_AC + est_bias + plot_layout(guides = "collect", ncol = 1) + plot_annotation(tag_levels = "A", tag_suffix = ".", title = "Performance of convergence diagnostics", subtitle = bquote(theta ~ "= " ~ hat(beta)[2] ~ "in {" ~ y[obs] ~ "," ~ y[imp][",m"] ~ "}" ~ "; Q = " ~ beta[2] ~ "= 2.06"))
+est_bias + est_Rh + est_AC + plot_layout(guides = "collect", ncol = 1) + plot_annotation(tag_levels = "A", tag_suffix = ".", title = bquote("Q = " ~ beta[2] ~ "= 2.06; " ~ theta ~ "= " ~ hat(beta)[2] ~ "in {" ~ y[obs] ~ "," ~ y[imp][",m"] ~ "}"))
 ```
 
 ```{r pred, fig.height = 6.8, fig.cap="Convergence diagnostics regression coefficient."}
-PCA_Rh + PCA_AC + Rsq_bias + plot_layout(guides = "collect", ncol = 1) + plot_annotation(tag_levels = "A", tag_suffix = ".", title = "Performance of convergence diagnostics", subtitle = bquote(theta ~ "= first eigenvalue of" ~ Sigma ~ "in {" ~ y[obs] ~ "," ~ y[imp][",m"] ~ "}" ~ "; Q = explained variance = 19.25"))
-
+Rsq_bias + PCA_Rh + PCA_AC + plot_layout(guides = "collect", ncol = 1) + plot_annotation(tag_levels = "A", tag_suffix = ".", title = bquote("Q = " ~ r^2 ~ "\u00D7 100 = 19.25; " ~ theta ~ "= " ~ lambda[1] ~ "in {" ~ y[obs] ~ "," ~ y[imp][",m"] ~ "}")) #first eigenvalue of" ~ Sigma ~ 
 ```
 
 ## Univariate estimates and convergence diagnostics 

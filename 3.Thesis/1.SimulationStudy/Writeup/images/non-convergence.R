@@ -37,7 +37,8 @@ save(nonc, file = "3.Thesis/1.SimulationStudy/Writeup/images/nonc_plot.Rdata")
 
 # diagnostics on chain means of wgt (rows are iterations, columns are imputations)
 diagnostics1 <-
-  imp.bmi1$chainMean[3, ,] %>% cbind(patho = "Non-", convergence(., include_acf = TRUE), .)
+  imp.bmi1$chainMean[3, ,] %>% cbind(patho = "Non-convergence", convergence(., include_acf = TRUE), .) %>% mutate(signif = c(NA, NA, 1, qnorm((1 + .95) / 2) / sqrt(iteration[-(1:3)])))
+
 
 #####################
 # Regular convergence
@@ -64,12 +65,12 @@ save(conv, file = "3.Thesis/1.SimulationStudy/Writeup/images/conv_plot.Rdata")
 
 # diagnostics on chain means of wgt (rows are iterations, columns are imputations)
 diagnostics2 <-
-  imp.bmi2$chainMean[3, ,] %>% cbind(patho = "Typical", convergence(., include_acf = TRUE), .)
+  imp.bmi2$chainMean[3, ,] %>% cbind(patho = "Typical convergence", convergence(., include_acf = TRUE), .) %>% mutate(signif = c(NA, NA, 1, qnorm((1 + .95) / 2) / sqrt(iteration[-(1:3)])))
 
 #####################
 # Combine diagnostics
 #####################
-diagnostics <- rbind(diagnostics1, diagnostics2)
+diagnostics <- rbind(diagnostics1, diagnostics2) 
 save(diagnostics, file = "3.Thesis/1.SimulationStudy/Writeup/images/diagnostics.Rdata")
 
 # set default for plot layout
@@ -106,46 +107,44 @@ theme_update(
 # plot chain means
 theta <- ggplot(diagnostics) +
   geom_point(aes(x = iteration, y = `Chain 1`, color = patho),
-             size = .5,
+             size = .25,
              na.rm = TRUE) +
   geom_point(aes(x = iteration, y = `Chain 2`, color = patho),
-             size = .5,
+             size = .25,
              na.rm = TRUE) +
   geom_point(aes(x = iteration, y = `Chain 3`, color = patho),
-             size = .5,
+             size = .25,
              na.rm = TRUE) +
   geom_point(aes(x = iteration, y = `Chain 4`, color = patho),
-             size = .5,
+             size = .25,
              na.rm = TRUE) +
   geom_point(aes(x = iteration, y = `Chain 5`, color = patho),
-             size = .5,
+             size = .25,
              na.rm = TRUE) +
-  geom_line(aes(x = iteration, y = `Chain 1`, color = patho), lwd = .5, na.rm = TRUE) +
-  geom_line(aes(x = iteration, y = `Chain 2`, color = patho), lwd = .5, na.rm = TRUE) +
-  geom_line(aes(x = iteration, y = `Chain 3`, color = patho), lwd = .5, na.rm = TRUE) +
-  geom_line(aes(x = iteration, y = `Chain 4`, color = patho), lwd = .5, na.rm = TRUE) +
-  geom_line(aes(x = iteration, y = `Chain 5`, color = patho), lwd = .5, na.rm = TRUE) +
+  geom_line(aes(x = iteration, y = `Chain 1`, color = patho), size = .25, na.rm = TRUE) +
+  geom_line(aes(x = iteration, y = `Chain 2`, color = patho), size = .25, na.rm = TRUE) +
+  geom_line(aes(x = iteration, y = `Chain 3`, color = patho), size = .25, na.rm = TRUE) +
+  geom_line(aes(x = iteration, y = `Chain 4`, color = patho), size = .25, na.rm = TRUE) +
+  geom_line(aes(x = iteration, y = `Chain 5`, color = patho), size = .25, na.rm = TRUE) +
   scale_x_continuous(breaks = 1:10) +
-  xlab("") +
+  xlab("Iteration") +
   ylab(bquote(theta)) +
-  labs(color = "Convergence") + 
+  labs(color = "") + 
   theme(legend.position = "top")
 
 
 # plot manual ac
 ac_both <-
   ggplot(diagnostics) +
-  # geom_hline(yintercept = 0,
-  #            color = "grey",
-  #            lwd = 2) +
-  geom_point(aes(x = iteration, y = acf.max, color = patho), size = .5, na.rm = TRUE) +
-  geom_line(aes(x = iteration, y = acf.max, color = patho, linetype = "Default"), lwd = .5, na.rm = TRUE) +
-  geom_point(aes(x = iteration, y = ac.max, color = patho), size = .5, na.rm = TRUE) +
-  geom_line(aes(x = iteration, y = ac.max, color = patho, linetype = "Manual"), lwd = .5, na.rm = TRUE) +
+  # geom_line(aes(x = iteration, y = signif), color = "gray") + 
+  geom_point(aes(x = iteration, y = acf.max, color = patho), size = .25, na.rm = TRUE) +
+  geom_line(aes(x = iteration, y = acf.max, color = patho, linetype = "Default"), size = .25, na.rm = TRUE) +
+  geom_point(aes(x = iteration, y = ac.max, color = patho), size = .25, na.rm = TRUE) +
+  geom_line(aes(x = iteration, y = ac.max, color = patho, linetype = "Manual"), size = .25, na.rm = TRUE) +
   scale_linetype_manual("",values=c("Default"=2,"Manual"=1))+
   scale_x_continuous(breaks = 1:10) +
   scale_y_continuous(limits = c(-0.5,1)) +
-  xlab("") +
+  xlab("Iteration") +
   ylab(bquote("AC of "~theta)) +
   # theme(legend.position = c(0.9, 0.1)) + 
   theme(legend.position = c(0.75, 0.25))+
@@ -159,8 +158,8 @@ old_rhat <-
   # geom_hline(yintercept = 1,
   #            color = "grey",
   #            lwd = 2) +
-  geom_point(size = .5, na.rm = TRUE) +
-  geom_line(lwd = .5, na.rm = TRUE) +
+  geom_point(size = .25, na.rm = TRUE) +
+  geom_line(size = .25, na.rm = TRUE) +
   scale_x_continuous(breaks = 1:10) +
   scale_y_continuous(limits = c(0.98,1.86)) +
   xlab("Iteration") +
@@ -174,8 +173,8 @@ new_rhat <-
   # geom_hline(yintercept = 1,
   #            color = "grey",
   #            lwd = 2) +
-  geom_point(size = .5, na.rm = TRUE) +
-  geom_line(lwd = .5, na.rm = TRUE) +
+  geom_point(size = .25, na.rm = TRUE) +
+  geom_line(size = .25, na.rm = TRUE) +
   scale_x_continuous(breaks = 1:10) +
   scale_y_continuous(limits = c(0.98,1.86)) +
   xlab("Iteration") +
@@ -184,7 +183,7 @@ new_rhat <-
 
 
 # combine
-diagnostics_plot <- theta + (ac_both + plot_layout(guides = "keep")) + old_rhat + new_rhat + plot_layout(guides = "collect", ncol = 2) + plot_annotation(tag_levels = "A", tag_suffix = ".") # add 'ncol=1' for plots under each other
+diagnostics_plot <- (theta + plot_layout(guides = "collect", ncol = 2)) + (ac_both + plot_layout(guides = "keep")) + old_rhat + new_rhat +  plot_annotation(tag_levels = "A", tag_suffix = ".") # add 'ncol=1' for plots under each other
 
 # save
 save(diagnostics_plot, file = "3.Thesis/1.SimulationStudy/Writeup/images/diagnostics_plot.Rdata")

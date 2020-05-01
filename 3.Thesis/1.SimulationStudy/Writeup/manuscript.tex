@@ -415,7 +415,7 @@ subsequent iterations of imputation chains (\(AC > 0\)).
 
 }
 
-\caption{Convergence diagnostics applied on the imputation algorithms of Figure 2.}\label{fig:diagnostics}
+\caption{Convergence diagnostics applied on the imputation algorithms of Figure 2. $\theta$ = chain mean in $y_{imp, m}$.}\label{fig:diagnostics}
 \end{figure}
 
 \hypertarget{simulation-study}{%
@@ -681,6 +681,14 @@ confidence validity of the estimated \(Q\)s.
 \hypertarget{results}{%
 \section{Results}\label{results}}
 
+We want to know what the effect is of inducing non-conv of the bias in
+all Qs and the confidence validity of the betas. So we plot the bias for
+each Q against the number of iterations in the condition and the
+missingness proportion in the condition. We look at averages across
+simulation repetitions. Then, we want to know if conditions in which the
+Qs are affected by non-convergence (on average) are also identified by
+the conv diag. We do this by looking at the bias in Q against the
+
 \textbf{Add to this section: 1) emphasize that the plots are averages
 across repetitions, not within MICE; 2) sample effects due to single
 complete dataset.}
@@ -736,6 +744,7 @@ estimates of \(Q\).
 
 \caption{Convergence diagnostics chain variance.}\label{fig:sd}
 \end{figure}
+
 \begin{figure}
 
 {\centering \includegraphics{manuscript_files/figure-latex/est-1} 
