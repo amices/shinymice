@@ -26,11 +26,13 @@ knitr::opts_chunk$set(fig.width = 4.9, echo = FALSE, fig.align = "center")
 # knitr::opts_chunk$set(fig.width = 4.8, fig.height = 3.6, echo = FALSE, fig.align = "center") 
 
 # packages
+library(dplyr)
 library(ggplot2)
 library(patchwork)
 
 # results and functions
-load("../Results/complete.Rdata")
+load("../Results/complete.Rdata") 
+results <- results %>% filter(t<50)
 source("../2.CreateFigures.R")
 
 # default graphing behavior
@@ -161,13 +163,17 @@ We can interpret $AC$-values as a measure of stationarity. If $AC$-values are cl
 
 ## In practice
 
+Upon convergence, $\widehat{R}=1$ and $AC=0$, which are unlikely thresholds for MCMC algorithms, because of its convergence to a distribution. In practice, non-convergence is usually diagnosed when $\widehat{R}$ > 1.2 or 1.1 or even 1.01. And a t-test is performed to assess whether $AC$ is significantly different from zero. 
+
+We assume that complete convergence, defined as $\widehat{R} = 1$ and $AC = 0$, will not be observed. Because even in the most converged state, the algorithm will show some signs of non-mixing and non-stationarity. Upon *sufficient* convergence, the imputation chains will intermingle such that the only difference between the chains is caused by the randomness induced by the algorithm ($\widehat{R} > 1$), and there may be some dependency between subsequent iterations of imputation chains ($AC > 0$). 
+
+
 **Before using them in the simulation, the two methods show at least be able to distinguish between the two algorithms plotted in Figure 2. From visual inspection we know that the typical convergence has some signs of non-mixing around iteration 2, and little trending. In the non-convergence situation, there is a lot of trending upto iteration 6, after which the chains reach a somewhat more stationary state. Mixing in this situation gets worse from the first iteration onward, and gradually gets better around iteration 7. To assess whether $\widehat{R}$ and $AC$ may be appropriate non-convergence identifiers for iterative imputation algorithms, the following condition must hold: the methods indicate worse performance for the mis-specified model with pathological non-convergence (i.e., higher $\widehat{R}$- and $AC$-values than the typical performance). And additionally the methods should reflect the increasing convergence in the typical convergence situation as the number of iterations goes up.** 
 
 **In Figure \ref{fig:diagnostics}A, the chain means from Figure \ref{fig:non-conv} are plotted again, now together---as are the non-convergence diagnostics. Panel B shows $\widehat{R}$ as computed by implementing @veht19 's recommendations. As required, $\widehat{R}$ indicates less signs of non-convergence as the number of iterations goes up **in the typical convergence situation**. The superior performance of the typical convergence over the pathological non-convergence is less prominent, even flipped for $t<4$. Panel C displays the $AC$ as computed with the R function `stats::acf()`. When we look at this panel, we conclude something weird. The $AC$-values indicate equal performance (up-to $t=5$) for the typical convergence and the pathological non-convergence, while there is obvious trending in the latter. Moreover, the best convergence (as indicated by the lowest $AC$-value) is observed at $t=2$, but looking at the chain means in panel A, there should be some signs of trending up-to iteration number seven. After consulting the documentation on stats::acf() [@R], we conclude that this implementation of $AC$ is not suitable for iterative imputation algorithms. There is a correction factor for a mathematical shortcut that works in the limit. According to @box15, the function works when the number of iterations > 50. The default number of iterations in iterative imputation, however, is often much lower. Therefore, we compute $AC$ manually, see panel D. The AC values in this plot do meet the requirements (...) and will therefore be used in the simulation study.**
 
 **acf is niet bedoeld om weinig iteraties te... niet een fout in acf, alleen hier niet van toepassing**
 
-We assume that complete convergence, defined as $\widehat{R} = 1$ and $AC = 0$, will not be observed. Because even in the most converged state, the algorithm will show some signs of non-mixing and non-stationarity. Upon *sufficient* convergence, the imputation chains will intermingle such that the only difference between the chains is caused by the randomness induced by the algorithm ($\widehat{R} > 1$), and there may be some dependency between subsequent iterations of imputation chains ($AC > 0$). 
 
 ```{r diagnostics, fig.cap="Convergence diagnostics applied on the imputation algorithms of Figure 2. $\\theta$ = chain mean in $y_{imp, m}$."}
 load("./images/diagnostics_plot.Rdata") #bquote(theta ~ "= chain mean in "~ y[imp][",m"])
@@ -190,9 +196,9 @@ The assumption inherent to the second set of simulation conditions---the number 
 
 2. We hypothesize that $\widehat{R}$ and $AC$ will correctly identify signs of non-convergence in those simulation conditions where the $\bar{Q}$s are *not* unbiased and confidence valid estimates of the $Q$s.
 
-3. We hypothesize that the recommended thresholds to diagnose non-convergence with $\widehat{R}$ ($\widehat{R} > 1.2$, $\widehat{R} > 1.1$, and $\widehat{R} > 1.01$) may be too stringent for iterative imputation applications. In an empirical study, where $\widehat{R}$ was used to inform the required imputation chain length, it took as many as 50 iterations to overcome the conventional non-convergence threshold $\widehat{R}>1.2$. Yet, scientific estimates were insensitive to continued iteration after $t>5$ [@lace07]. We therefore suspect that $\widehat{R}$ may over-estimate signs of non-convergence in iterative imputation algorithms. In contrast to this, it may occur that the signs of non-convergence are under-estimated by $\widehat{R}$, in exceptional cases where the initial values of the algorithm are not appropriately over-dispersed [@broo98, p. 437]. In e.g. `mice`, initial values are chosen randomly from the observed data, hence we cannot be certain of over-dispersion in the initial values. In practice, we do not expect this to cause problems for identifying non-convergence with $\widehat{R}$.
+3. We hypothesize that the recommended thresholds to diagnose non-convergence with $\widehat{R}$ ($\widehat{R} > 1.2$, $\widehat{R} > 1.1$, and $\widehat{R} > 1.01$) may be too stringent for iterative imputation applications. In an empirical study, where $\widehat{R}$ was used to inform the required imputation chain length, it took as many as 50 iterations to overcome the conventional non-convergence threshold $\widehat{R}>1.2$. Yet, scientific estimates were insensitive to continued iteration after $t>5$ [@lace07]. We therefore suspect that $\widehat{R}$ may over-estimate signs of non-convergence in iterative imputation algorithms, compared to the bias the estimates. In contrast to this, it may occur that signs of non-convergence are under-estimated by $\widehat{R}$, in exceptional cases where the initial values of the algorithm are not appropriately over-dispersed [@broo98, p. 437]. In e.g. `mice`, initial values are chosen randomly from the observed data, hence we cannot be certain of over-dispersion in the initial values. In practice, we do not expect this to cause problems for identifying non-convergence with $\widehat{R}$.
 
-4. We expect that high $AC$ values are implausible in iterative imputation algorithms with typical convergence. That is, after only a few iterations, the randomness induced by the algorithm will effectively mitigate the risk of dependency within chains.
+4. We expect that high $AC$ values are implausible in iterative imputation algorithms with typical convergence. That is, after only a few iterations, the randomness induced by the algorithm should effectively mitigate the risk of dependency within chains.
 
 <!-- **(bruggetje hier)** For multiple imputation algorithms, it holds that convergence is reached when there is no dependency between subsequent iterations of imputation chains ($AC = 0$), and chains intermingle such that the only difference between the chains is caused by the randomness induced by the algorithm ($\widehat{R} = 1$). **We expect that a completely converged state will not be reached.**  -->
 
@@ -294,60 +300,97 @@ The performance of two methods is evaluated against the bias and confidence vali
 
 # Results
 
-We want to know what the effect is of inducing non-conv of the bias in all Qs and the confidence validity of the betas. So we plot the bias for each Q against the number of iterations in the condition and the missingness proportion in the condition. We look at averages across simulation repetitions. Then, we want to know if conditions in which the Qs are affected by non-convergence (on average) are also identified by the conv diag. We do this by looking at the bias in Q against the 
+We want to know what the effect is of inducing non-conv of the bias in all Qs and the confidence validity of the betas. So we plot the bias for each Q against the number of iterations and the missingness proportion in the condition. We look at averages across simulation repetitions. Is there more bias in conditions where non-conv was induced? (NOPE for univariates, YES for multivar.). 
 
-**Add to this section: 1) emphasize that the plots are averages across repetitions, not within MICE; 2) sample effects due to single complete dataset.**
+Then, we want to know if conditions in which the Qs are affected by non-convergence (on average) are also identified by the conv diag. We do this by looking at the bias in Q against the conv diag applied to related thetas. Is the point at which there is no more bias the same point at which the conv diag indicate minimal signs of non-conv? (NOPE, they are too conservative). 
+
+Is one of the thetas better? (NAH, doesn't really matter).
+
+What should the thresholds be? (LOWER than recommended) And the default nr of iterarions? (MAYBE increase to 10?)
 
 
-For reasons of brevity, we only discuss the convergence diagnostics for the $Q$ with the worst performance in terms of bias. For the descriptve statistics, the magnitude of the bias was the largest in $Y$ (i.e, $j = Y$ in $\mu_j$ and $\sigma_j$). For the $Q=\beta_j$, $j=2$ showed the worst perfomance (i.e, the effect of $X_1$ on $Y$.
+**Add to this section: 1) emphasize that the plots are averages across repetitions, not within MICE; 2) sample effects due to single complete dataset. 3) Add more info about figure legends and axes.)**
+
+For reasons of brevity, we only discuss the convergence diagnostics for the $Q$ with the worst performance in terms of bias. For the descriptve statistics, the magnitude of the bias was the largest in $Y$ (i.e, $j = Y$ in $\mu_j$ and $\sigma_j$). For the $Q=\beta_{1,2,3}$, $\beta_1$ showed the worst perfomance (i.e, the effect of $X_1$ on $Y$. Moreover, we only show conditions where $T\leq50$ in the figures. Full results are available from **[link github repo]**.
+
+## In general
 
 As expected, conditions with a higher proportion of missingness and/or a lower number of iterations show more signs of non-convergence, as indicated by more extreme bias in the estimated $Q$s. Roughly speaking this means that MICE is indeed not converged as $t=1$, and converges gradually as $t$ increases. The point at which an additional iteration does not lead to an improvement of the estimates depends on the difficulty of the missingness problem---between XYZ and XYZ. This means that the algorithm has converged sufficiently (**under the current specifications**).
 
 As required for a method to diagnose non-convergence, the values of $\widehat{R}$ follow a trend similar to the performance measures. $\widehat{R}$ values are generally lower in conditions with a higher number of iterations, and somewhat higher in conditions with a higher percentage of missing data. Autocorrelation values were indeed decreasing with a higher number of iterations. 
 
-Evaluation with the performance measures shows that $\widehat{R}$ and autocorrelation are conservative: they indicate signs of non-convergence in conditions where $\bar{Q}$s are unbiased and or confidence valid estimates of $Q$. 
+Evaluation with the performance measures shows that $\widehat{R}$ is conservative: it identifies signs of non-convergence in conditions where the $\bar{Q}$s are unbiased and/or confidence valid estimates of the $Q$s. 
 
 
-## Old Results section
+## Means
 
+**Message: after one iteration (T=2), the algorithm is as well converged as the missingness proportion allows. Sooner even with lower missingness proportions (T=1 might be ok for p_mis=5 and 25).** Number of it has little influence on bias in hat{Q}, only in first iteration some bias in missingness conditions of 25 and up. There is a clear different between the missingness conditions. The higher the missingness prop, the larger the magnitude of the bias. For this Q, t=2 would be sufficient. And only for p_mis = 5 the bar{Q}s are unbiased. All other p_mis conditions have bias irrespective of the number of iterations.
 
+Rhat differs a lot across iteration conditions. But not structurally for missingness proportions. Highest Rhats for the condition t=2, while the most bias is for (t=1), but there is no Rhat for that by definition. But for missingness, 25% seems the most signs of non-conv, while it has one of the least bias. Threshold of 1.2 reached in condition it = 3, p_mis = 5 and 75, and then for it>6, p_mis= 5 and 50, and it>10 for all p_mis. Threshold 1.1 reached in in it=12, p_mis = all but 75, 1.01 only reached in it = 93, p_mis = 75. While for this Q, t=2 would be sufficient.
 
-**(Add more info about figure legends and axes.)**
+AC mainly shows effects of the set of iteration conditions. AC indicates less signs of non-conv in conditions with higher number of iterations. For iteration conditions where t<10, there are also some effects of the missingness proportions. The p_mis condtions 25 and 95 % indicate the most signs of non-convergence. For p_mis = 95% this corresponds to the bias in Qbar. For 25% miss it doesn't. The thresholds defined by the critical value is only met in the conditions it=3, p_mis = 5,75, and 95%.
 
 ```{r mean, fig.height = 6.8, fig.cap="Convergence diagnostics chain mean."}
 mean_bias + mean_Rh + mean_AC + plot_layout(guides = "collect", ncol = 1) + plot_annotation(tag_levels = "A", tag_suffix = ".", title = bquote("Q = " ~ mu[Y] ~ "= 25.81; " ~ theta ~ "= chain mean of Y in" ~ y[imp][",m"])) #& theme(legend.position = "bottom")
 ```
 
+## Standard deviations
+
+**Message: even with possible effect of initial values (T=1), the algorithm is as well converged as the missingness proportion allows.** For $Q=\sigma_Y$ there is no effect visible of the iteration conditions, but clearly for the p_mis conditions. Most bias for p_mis = 95, followed by p_mis=50 and 75. For the least possible bias we may use any number of iterations $T\geq1$, but none of the p_mis results in unbiased bar{Q}s.
+
+There is a clear effect of the number of iterations on Rhat. Conditions with lower Ts have more signs of non-conv, as identified by Rhat. There is little difference between missingness conditions. Only for conditions where $T<5$ the missingness proportions seem to affect whether Rhat indicates non-conv. The bias in bar{Q} seems unrelated to the magnitude of Rhat. Conditions with more bias (p_mis = 50,75,95) are not identified to have more signs of non-convergence. The thresholds are therefore useless (because depend mostly on t, not so much p_mis).
+
+AC is affected by both t and p_mis conditions. But conditions with worst bias (p_mis = 50, 75, 95) are not identified as worst converging according to AC. Moreover, only for T=3 the AC is significantly different from zero.
+
+
 ```{r sd, fig.height = 6.8, fig.cap="Convergence diagnostics chain variance."}
 sd_bias + var_Rh + var_AC + plot_layout(guides = "collect", ncol = 1) + plot_annotation(tag_levels = "A", tag_suffix = ".", title = bquote("Q = " ~ sigma[Y] ~ "= 11.32; " ~ theta ~ "= chain variance of Y in" ~ y[imp][",m"]))
 ```
 
+## Regression coefficients
+
+**Message: after four iterations (T=5), the algorithm is as well converged as the missingness proportion allows. Sooner even with lower missingness proportions (T=1 might be ok for p_mis=5 and 25).** The figure for $Q=\beta_1$ shows that the $\bar{Q}$s are affected by both the number of iterations and the missingness proportion. For T=1, the magnitude of the bias (almost) follows the order of the missingness proportions. More missingness causes more bias in the $\bar{Q}$. In general, a lower nr of iterations results in more bias, but this depends on the missingness proportion. For p_mis=95, there is more bias in conditions where T<6. When p_mis = 50, it's T<3. For p_mis = 75 and 25, it's only for T<2. And conditions where p_mis = 5 are unaffected on average. However, none of the conditions result in completely unbiased estimates of $Q$.
+
+We should see this in the conv diag: higher Rhat and AC for p_mis=75 and 95, and for condtions where $T<2-6$, depending on p_mis.
+
+Rhat depends somewhat on the missingness proportion. For conditions where T<10, the Rhat values follow the p_mis more or less. But what we actually want to know is whether they are indicators of bias. Conditions with the worst bias (high p_mis, low T) have the largest Rhat values. The thresholds are not appropriate to diagnose sufficient convergence. All thresholds over-estimate the signs of non-convergence compared to the bias in Qbar. However, a higher threshold than 1.2 may result in terminating the algorithm after 3 iterations, which is insufficient for the p_mis = 95 condition. Threshold of 1.25 or 1.3 could work for the other p_mis conditions.  
+
+AC is very affected by the p_mis. The two conditions with the most bias (p_mis = 75 and 95) are the only ones identified as non-converging, as they should. However, the p_mis = 75 condition is only identified in the T=3 condtion, while the bias is the least pronounced there. And the AC only identifies non-convergence in the p_mis = 95 conditions where T>10. In the default situation, T=5, this would be overlooked. Also, the AC shows the opposite of what you would expect from a theta that is based on the observed data: shouldn't there be higher autocorrelations in conditions with comparatively more observed data in the completed datasets? I don't understand this.
+
+**Add how interesting it is because we literally track Q and are still not ok.**
+
 ```{r est, fig.height = 6.8, fig.cap="Convergence diagnostics regression coefficient."}
-est_bias + est_Rh + est_AC + plot_layout(guides = "collect", ncol = 1) + plot_annotation(tag_levels = "A", tag_suffix = ".", title = bquote("Q = " ~ beta[2] ~ "= 2.06; " ~ theta ~ "= " ~ hat(beta)[2] ~ "in {" ~ y[obs] ~ "," ~ y[imp][",m"] ~ "}"))
+est_bias + est_Rh + est_AC + plot_layout(guides = "collect", ncol = 1) + plot_annotation(tag_levels = "A", tag_suffix = ".", title = bquote("Q = " ~ beta[1] ~ "= 2.06; " ~ theta ~ "= " ~ hat(Q) ~ "in {" ~ y[obs] ~ "," ~ y[imp][",m"] ~ "}"))
 ```
+
+## Variance explained
+
+**Message: after two iterations (T=3), the algorithm is as well converged as the missingness proportion allows. Sooner even with lower missingness proportions (T=1 might be ok for p_mis=5 and 25).** Bias is the worst for conditions where p_mis = 95, T<3. Followed by p_mis = 75, T=1; and p_mis = 50, T=1. Conditions where p_mis = 25 or 5 seem unaffected by the number of iterations. Minimal bias is obtained in all iteration conditions. We should see this in Rhat and AC: worst convergence in p_mis = 95 and 50; some non-conv in conditions where p_mis = 75 and T=1, and no non-conv in conditions where p_mis = 25 or 5. The sign of the bias is logical: when there is less info in the data, the relations between the predictors and the outcome is under-estimated.
+
+Rhat behaves oppositely to what we wanted. The lowest Rhat values for conditions where T<10 are observed for the two missingness conditions with the worst bias. However, the highest Rhat observed is indeed for the missingness condition with the worst bias, p_mis =95. But only at T=5 (while bias is no worse than anywhere else in this p_mis condition, conditional on iterations condition T>2). So neither of the thresholds works perfectly.
+
+AC shows a similar trend to the biases: more signs of non-conv for higher p_mis and lower T. The threshold, however, performs less well. It identifies signs of non-convergence for all conditions where $T=3$, irrespective of p_mis. Then nothing, and then for p_mis =95, T>7, and p_mis=50, T >14, and p_mis = 75, T>20. This does not corresond to the bias in $\bar{Q}$. Maybe use AC>.5 at T=5 as threshold?
 
 ```{r pred, fig.height = 6.8, fig.cap="Convergence diagnostics regression coefficient."}
 Rsq_bias + PCA_Rh + PCA_AC + plot_layout(guides = "collect", ncol = 1) + plot_annotation(tag_levels = "A", tag_suffix = ".", title = bquote("Q = " ~ r^2 ~ "\u00D7 100 = 19.25; " ~ theta ~ "= " ~ lambda[1] ~ "in {" ~ y[obs] ~ "," ~ y[imp][",m"] ~ "}")) #first eigenvalue of" ~ Sigma ~ 
 ```
 
-## Univariate estimates and convergence diagnostics 
+<!-- ## Univariate estimates and convergence diagnostics  -->
 
-The bias in the estimates of the variable means shows little to no difference between simulation conditions. It doesn't seem to matter how many iterations you use in the mice algorithm, the estimates are unbiased. Similarly, the bias in the estimated variances is more or less stable across simulation conditions. These univariate quantities appear to be unaffected by the number of iterations.
+<!-- The bias in the estimates of the variable means shows little to no difference between simulation conditions. It doesn't seem to matter how many iterations you use in the mice algorithm, the estimates are unbiased. Similarly, the bias in the estimated variances is more or less stable across simulation conditions. These univariate quantities appear to be unaffected by the number of iterations. -->
 
-When applied to the imputation chain means, $\widehat{R}$ indicates that the mice algorithm does not reach a converged state ($\widehat{R}$ = 1) in any of the simulation conditions. Neither is the most recent recommended threshold reached ($\widehat{R}$ < 1.01). **This is only for 75% missingness:** The conventional $\widehat{R}$ threshold of 1.2 is reached in simulation conditions $T = 3$ and $T > 6$. (With the default number of iterations (maxit = 5), this dip in $\widehat{R}$ values would be spotted, so it is no problem.) The point at which an extra iteration does not seem to improve the $\widehat{R}$ value is around $T=30$.
+<!-- When applied to the imputation chain means, $\widehat{R}$ indicates that the mice algorithm does not reach a converged state ($\widehat{R}$ = 1) in any of the simulation conditions. Neither is the most recent recommended threshold reached ($\widehat{R}$ < 1.01). **This is only for 75% missingness:** The conventional $\widehat{R}$ threshold of 1.2 is reached in simulation conditions $T = 3$ and $T > 6$. (With the default number of iterations (maxit = 5), this dip in $\widehat{R}$ values would be spotted, so it is no problem.) The point at which an extra iteration does not seem to improve the $\widehat{R}$ value is around $T=30$. -->
 
-Autocorrelations indicate no sign of trending **(NOT correct anymore, fluke of the stats::acf() function!!)** within imputation chains. In most simulation conditions $AC$ is smaller than or about equal to zero. Across simulation conditions, however, the autocorrelation curve does not trend towards 0. Autocorrelation values plateau off at a value of around.1. This is a small positive autocorrelation, which would indicate some trending within chains.
+<!-- Autocorrelations indicate no sign of trending **(NOT correct anymore, fluke of the stats::acf() function!!)** within imputation chains. In most simulation conditions $AC$ is smaller than or about equal to zero. Across simulation conditions, however, the autocorrelation curve does not trend towards 0. Autocorrelation values plateau off at a value of around.1. This is a small positive autocorrelation, which would indicate some trending within chains. -->
 
-The $\widehat{R}$ and $AC$ values for the imputation chain variances show equal trends to the chain means and are therefore not discussed separately. Taken together, univariate estimates seem robust across simulation conditions. There is no clear effect of the number of iterations on the bias in these estimates, while the convergence diagnostics indicate that the algorithm did not reach a completely converged state (yet).
+<!-- The $\widehat{R}$ and $AC$ values for the imputation chain variances show equal trends to the chain means and are therefore not discussed separately. Taken together, univariate estimates seem robust across simulation conditions. There is no clear effect of the number of iterations on the bias in these estimates, while the convergence diagnostics indicate that the algorithm did not reach a completely converged state (yet). -->
 
 
-## Multivariate estimates 
+<!-- ## Multivariate estimates  -->
 
-**This is only true for 75% missingness:** There is a clear bias in the regression estimates in simulation conditions where the number of iterations is smaller than four. In simulation conditions where $T > 5$ there is little to no bias in the estimated regression coefficients. In most simulation conditions nominal coverage is obtained (i.e., coverage rates of.95) for the confidence intervals around the regression coefficients. Conditions with only one or two iterations show some under-coverage. Since confidence interval width is stable across conditions, the under-coverage may be attributed to the bias in the estimated regression coefficients.
+<!-- **This is only true for 75% missingness:** There is a clear bias in the regression estimates in simulation conditions where the number of iterations is smaller than four. In simulation conditions where $T > 5$ there is little to no bias in the estimated regression coefficients. In most simulation conditions nominal coverage is obtained (i.e., coverage rates of.95) for the confidence intervals around the regression coefficients. Conditions with only one or two iterations show some under-coverage. Since confidence interval width is stable across conditions, the under-coverage may be attributed to the bias in the estimated regression coefficients. -->
 
-**This is only true for 75% missingness:** If we look at the estimated proportion of explained variance in outcome variable Y we see that the coefficient of determination is underestimate estimated in conditions where the number of iterations is equal to two or less, and slightly overestimated in conditions where the number of iterations is equal to three or more. 
-
-In short, we see that the minimum number of iterations required to obtain unbiased, confidence valid regression estimates is 5. This value, however, is dependent on the percentage of missing values. E.g., with 95% of cases having missing data we need at least seven iterations to obtain unbiased results. 
+<!-- **This is only true for 75% missingness:** If we look at the estimated proportion of explained variance in outcome variable Y we see that the coefficient of determination is underestimate estimated in conditions where the number of iterations is equal to two or less, and slightly overestimated in conditions where the number of iterations is equal to three or more.  -->
 
 
 ```{r thresh-Rh, include=FALSE}
@@ -366,51 +409,70 @@ In short, we see that the minimum number of iterations required to obtain unbias
 
 # Discussion
 
-*Proper performance under a 'missing completely at random' missingness mechanism is necessary to demonstrate the appropriateness of $\widehat{R}$ and $AC$ as non-convergence diagnostics. However, results may not be extrapolated to other missingness mechanisms.* 
+In short, univariate estimates seem robust against terminating the algorithm early: There is no clear effect of the number of iterations on the bias in these estimates. The bias in the Qs only depends on the p_mis. Yet, the convergence diagnostics indicate that the algorithm did not reach a completely converged state (yet).
 
-Upon convergence, $\widehat{R}=1$ and $AC=0$, which are unlikely thresholds for MCMC algorithms, because of its convergence to a distribution. In practice, non-convergence is usually diagnosed when $\widehat{R}$ > 1.2 or 1.1 or even 1.01. And a t-test is performed to assess whether $AC$ is significantly different from zero.  
+$\widehat{R}$ and autocorrelation indicate that algorithmic convergence may only be reached after twenty or even forty iterations, while unbiased, confidence valid estimates may be obtained with as little as one iteration. These results are in agreement with the simulation hypothesis: $\widehat{R}$ over-estimates the severity of non-convergence when applied to MI procedures. 
 
-As expected, complete convergence ($\widehat{R}=1$ and $AC=0$) is never observed. But what about the thresholds for practice? $\widehat{R}$ <1.2 is not stringent enough, because conditions in which $\widehat{R}$ is smaller than 1.2 do not all yield unbiased estimates of the $Q$s. Moreover, there is a dip in the $\widehat{R}$ values, after which $\widehat{R}$ > 1.2 again. If the algorithms would be terminated at the iteration where $\widehat{R}$ < 1.2 occurs for the first time, the increase in $\widehat{R}$ values might be missed. The threshold $\widehat{R}$ < 1.1 is somewhat conservative in comparison with the performance measures. Overall it seems OK. $\widehat{R}$ < 1.01 is too stringent compared to the performance measures. And it is not obtained for any number of iterations (**but may be necessary in more complex complete data models???**). 
+With that, we show that MICE can lead to correct outcomes when they have not converged according to two common conv diags. This may be due to the methods (and their thresholds) or due to the Qs (descriptives and multivariate linear regression, not higher dimensional/more complex Qs). More `complicated' $Q$s (e.g., higher-order effects or variance components) might show bias, under- or over-coverage at higher $T$, as indiated by Rhat and AC. Add what %miss has to do with it.
 
+<!-- As expected, complete convergence ($\widehat{R}=1$ and $AC=0$) is never observed. But what about the thresholds for practice? $\widehat{R}$ <1.2 is not stringent enough, because conditions in which $\widehat{R}$ is smaller than 1.2 do not all yield unbiased estimates of the $Q$s. Moreover, there is a dip in the $\widehat{R}$ values, after which $\widehat{R}$ > 1.2 again. If the algorithms would be terminated at the iteration where $\widehat{R}$ < 1.2 occurs for the first time, the increase in $\widehat{R}$ values might be missed. The threshold $\widehat{R}$ < 1.1 is somewhat conservative in comparison with the performance measures. Overall it seems OK. $\widehat{R}$ < 1.01 is too stringent compared to the performance measures. And it is not obtained for any number of iterations (**but may be necessary in more complex complete data models???**).  -->
 
-This note shows that convergence diagnostics $\widehat{R}$ and $AC$ may diagnose convergence of multiple imputation algorithms, but their performance differs from conventional applications to iterative algorithmic procedures. (**nope! it shows that MICE can lead to correct outcomes when they have not converged according to two common conv diags. This may be due to the measures (e.g., assumption of overdisp) or due to the Qs (lm reg coeff, not higher dimensional/more complex RQs). Add what %miss has to do with it.**) 
+<!-- According to this simulation study, the recently proposed threshold of $\widehat{R}<1.01$ may be too stringent for MI algorithms. Under the relatively easy missing data problem of the current study, the threshold was not reached. The other extreme of the $\widehat{R}$-thresholds, the conventionally acceptable $\widehat{R} <1.2$, may be too lenient for MI procedures. Applying this threshold to the current data, lead to falsely diagnosing convergence at $T = 3$ (**because it goes up after, not because it is not converged enough**). It appears that the widely used threshold of $\widehat{R} < 1.1$ suits MI algorithms the best. We might, however, also formulate a new threshold, specifically for the evaluation of MI algorithms. The current study suggests that $\widehat{R} < 1.05$ may be implemented, since that is the level at which the $\widehat{R}$ stabilize (around $T = 20$) (**Not necessary for this Q, but maybe for more complicated Qs**).  -->
 
-$\widehat{R}$ and autocorrelation indicate that algorithmic convergence may only be reached after twenty or even forty iterations, while unbiased, confidence valid estimates may be obtained with as little as four iterations. These results are in agreement with the simulation hypothesis: $\widehat{R}$ over-estimates the severity of non-convergence when applied to MI procedures. %This may be due to the quantity of scientific interest chosen. More `complicated' $Q$s (e.g., higher-order effects or variance components) might show bias, under- or over-coverage at higher $T$.
+<!-- The negative $AC$-values obtained in this study show no threat of non-stationarity. However, the initial dip in $AC$-values **(which disappeared!)** may have implications for the default number of iterations in `mice` (`maxit = 5`). Terminating the algorithm at $T=5$ may not be the most appropriate, since this lead to the worst convergence (**nope, only for Rh, not $AC$**), as indicated by $\widehat{R}$ and $AC$. Under the current specifications, $T>20$ would be more appropriate. -->
 
-According to this simulation study, the recently proposed threshold of $\widehat{R}<1.01$ may be too stringent for MI algorithms. (**This is only one of the goals: to give applied researchers a diagnostic to indicate that they should keep iterating. The other is the default in mice and other software packages, and yet another is... i forgot**) Under the relatively easy missing data problem of the current study, the threshold was not reached. The other extreme of the $\widehat{R}$-thresholds, the conventionally acceptable $\widehat{R} <1.2$, may be too lenient for MI procedures. Applying this threshold to the current data, lead to falsely diagnosing convergence at $T = 3$ (**because it goes up after, not because it is not converged enough**). It appears that the widely used threshold of $\widehat{R} < 1.1$ suits MI algorithms the best. We might, however, also formulate a new threshold, specifically for the evaluation of MI algorithms. The current study suggests that $\widehat{R} < 1.05$ may be implemented, since that is the level at which the $\widehat{R}$ stabilize (around $T = 20$) (**Not necessary for this Q, but maybe for more complicated Qs**). 
-
-The negative $AC$-values obtained in this study show no threat of non-stationarity. However, the initial dip in $AC$-values **(which disappeared!)** may have implications for the default number of iterations in `mice` (`maxit = 5`). Terminating the algorithm at $T=5$ may not be the most appropriate, since this lead to the worst convergence (**nope, only for Rh, not $AC$**), as indicated by $\widehat{R}$ and $AC$. Under the current specifications, $T>20$ would be more appropriate.
-
-Further research is needed to investigate their performance under clear violation of convergence, e.g. dependency between predictors (predictors with very high correlations). Until then, we have only shown that the convergence diagnostics can diagnose non-convergence of MI algorithms that trend towards a converged state. Also for future research, look at developing a convergence diagnostic for substantive models, and implement a Wald test for $AC = 0$. 
 
 ## Recommendations for empirical researchers
 
-For empirical researchers: 1) Check trace plots for pathological non convergence and adjust imputation model if necessary. 2) use $\widehat{R}$ wait 1.1 ash threshold and autocorrelation with **?** as threshold. Keep iterating until these thresholds are reached. 3) Do not use the R function ACF. Instead, compute autocorrelations manually **(see e.g., [GitHub link])**. 4) Track your own scalar summary of interest. This is somewhat advanced but explained in Van Buren 2018. Compute $\widehat{R}$ and autocorrelation values for this scalar summary. 5) **Something** about the novel $\theta$ that is 'substantive model-independent'. 
+For empirical researchers: 
+
+1. Check trace plots for pathological non convergence and adjust imputation model if necessary. 
+
+2. use $\widehat{R}$ wait 1.1 ash threshold and autocorrelation with **?** as threshold. Keep iterating until these thresholds are reached. 
+
+3. Do not use the R function ACF. Instead, compute autocorrelations manually **(see e.g., [GitHub link])**. 
+
+4. Track your own scalar summary of interest. This is somewhat advanced but explained in Van Buren 2018. Compute $\widehat{R}$ and autocorrelation values for this scalar summary. 
+
+5. **Something** about the novel $\theta$ that is 'substantive model-independent'. 
+
 
 ## Recommendations for future research
 
-**Pmm, M(N)AR, Empirical data, Vignette, ShinyMICE, AC across imputations, not iterations (new convergence diagnostic unique for iterative imputation??).**
+Further research is needed to investigate their performance under clear violation of convergence, e.g. dependency between predictors (predictors with very high correlations). Also:
+
+- Induce non-convergence with mis-specified imputation model. 
+
+- More difficult missingness problems, i.e., M(N)AR instead of MCAR. Proper performance under a 'missing completely at random' missingness mechanism is necessary to demonstrate the appropriateness of $\widehat{R}$ and $AC$ as non-convergence diagnostics. However, results may not be extrapolated to other missingness mechanisms. 
+
+- Imputation technique with questionable convergence properties, e.g., PMM.
+
+- Apply recommendations to empirical data and write a vignette for applied researchers.
+
+- Implement recommendations in ShinyMICE.
+
+- Develop an additional convergence diagnostic unique for iterative imputation: AC across imputations, instead of iterations.
 
 
-**If I don't include it in my study, also: Significance of $AC$ values.**
 
 # Grading
 
-Scientific contribution
+- Scientific contribution 
 (clear research question, convincing argumentation that the study adds to the scientific literature)
 
-Theory
+- Theory
 (use of theory, clear hypotheses, relevant literature)
 
-Method
+- Method
 (correct data collection/handling, measures, choice and description of method of analysis)
 
-Results
+- Results
 (correct interpretation of findings, clear presentation)
-Discussion and conclusions
+
+- Discussion and conclusions
 (summary, broader implications, limitations, future research)
 
-Written presentation
+- Written presentation
 (writing, structure, tables and figures, references)
 
 <!-- # References -->
