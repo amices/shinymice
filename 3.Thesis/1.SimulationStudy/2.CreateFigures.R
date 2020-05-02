@@ -235,6 +235,13 @@ PCA_AC <- results %>% ggplot(aes(x = t, y = ac.max.pca, color = as.factor(p*100)
 Rsq_bias + PCA_Rh + PCA_AC + plot_layout(guides = "collect", ncol = 1)
 
 
+results %>% filter(t<20, p==.5) %>% ggplot() +
+  geom_line(aes(x=t, y=pca.1), color = 1) + 
+  geom_line(aes(x=t, y=pca.2), color = 2) + 
+  geom_line(aes(x=t, y=pca.3), color = 3) + 
+  geom_line(aes(x=t, y=pca.4), color = 4) + 
+  geom_line(aes(x=t, y=pca.5), color = 5) 
+
 ####################
 ### MULTIVARIATE ###
 ####################
