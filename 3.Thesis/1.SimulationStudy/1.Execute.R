@@ -28,7 +28,7 @@ source("3.Thesis/1.SimulationStudy/Functions/AC_supplement.R")
 # simulation parameters
 populationsize <- 1000 #n of simulated dataset
 n.iter <- 100 #nr of iterations (varying 1:n.iter)
-n.sim <- 5 #nr of simulations per iteration value
+n.sim <- 1000 #nr of simulations per iteration value
 p.miss <- c(.05, .25, .5, .75, .95)
 true.effect <- 2 #regression coefficient to be estimated
 
@@ -70,6 +70,8 @@ simulate <- function(complete_data = data,
                     final_it = n.iter) %>% cbind(p = mis, .)
       }) %>% cbind(chain_means, chain_vars)
     })
+  # save seed
+  seed<<-.Random.seed
   
   return(imps)
 }
@@ -83,6 +85,7 @@ out <-
   replicate(n.sim,
             simulate(complete_data = data),
             simplify = FALSE)
+
 
 ###
 
