@@ -246,27 +246,27 @@ results %>% filter(t<20, p==.5) %>% ggplot() +
 ### MULTIVARIATE ###
 ####################
 
-# # Coverage rate regression coefficient
-# results %>% ggplot(aes(x = t, y = cov.est.X1, color = as.factor(p*100))) +
-#   geom_hline(yintercept = .95,
-#              color = "grey",
-#              lwd = 1) +
-#   geom_point(size = .25) +
-#   geom_line() +
-#   xlab("Number of iterations") +
-#   ylab(expression(paste("Coverage of ", hat(beta)))) +
-#   labs(colour = "Missingness (%)")
-# 
-# # CI length
-# results %>% ggplot(aes(x = t, y = CIW.est.X1, color = as.factor(p*100))) +
-#   # geom_hline(yintercept = .95,
-#   #            color = "grey",
-#   #            lwd = 1) +
-#   geom_point(size = .25) +
-#   geom_line() +
-#   xlab("Number of iterations") +
-#   ylab(expression(paste("Length 95% CI ", hat(beta)))) +
-#   labs(colour = "Missingness (%)")
+# Coverage rate regression coefficient
+results %>% filter(t<10) %>% ggplot(aes(x = t, y = cov.est.X1, color = as.factor(p*100))) +
+  geom_hline(yintercept = .95,
+             color = "grey",
+             lwd = 1) +
+  geom_point(size = .25) +
+  geom_line() +
+  xlab("Number of iterations") +
+  ylab(expression(paste("Coverage of ", hat(beta)))) +
+  labs(colour = "Missingness (%)")
+
+# CI length
+results %>% filter(t<10) %>% ggplot(aes(x = t, y = CIW.est.X1, color = as.factor(p*100))) +
+  # geom_hline(yintercept = .95,
+  #            color = "grey",
+  #            lwd = 1) +
+  geom_point(size = .25) +
+  geom_line() +
+  xlab("Number of iterations") +
+  ylab(expression(paste("Length 95% CI ", hat(beta)))) +
+  labs(colour = "Missingness (%)")
 
 ########################
 ## NOG IETS MEE DOEN? ##
