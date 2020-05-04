@@ -17,8 +17,11 @@ classoption:
 bibliography: thesis.bib
 bibliographystyle: sageh
 output:
- rticles::sage_article:
-  keep_tex: yes
+  bookdown::pdf_book:
+    # includes:
+    #   in_header: preamble.tex
+    keep_tex: yes
+    base_format: rticles::sage_article
 ---
 
 ```{r setup, include=FALSE}
@@ -57,7 +60,6 @@ theme_update(
  # legend.text = element_text(size = 7)
 )
 ```
-
 
 # Introduction
 
@@ -316,7 +318,7 @@ With these performance measures, we also evaluate how well the non-convergence d
 
 # Results
 
-**[Add to this section: 1) emphasize that the iterations in the plots are averages across repetitions, not within one run of MICE; 2) sample effects due to single complete dataset?? 3) Add more info about figure legends and axes.]**
+**[Add to this section: 1) emphasize that the iterations in the plots are averages across repetitions, not within one run of MICE; 2) sample effects due to single complete dataset?? 3) Add more info about figure legends and axes 4) the ac and rhat are independent of missingness, not the thetas.]**
 Primarily, we want to know what the effect is of inducing non-convergence on the estimated $Q$s. Specifically, we are interested in the bias of $\bar{Q}$ for all $Q$s and the confidence validity of $\bar{Q}$ for $Q=\beta$. Therefore, we plot these performance measures against the simulation conditions (the number of iterations $T$ and the missingness proportion $p_{mis}$). We look at averages across simulation repetitions. 
 
 Secondly, we want to know if conditions in which the $Q$s are affected by non-convergence are also identified by the non-convergance diagnostics $\widehat{R}$ and $AC$. We do this, again, by looking at the performance measures for the $Q$s, but now we evaluate these against what $\widehat{R}$ and $AC$ indicate about signs of non-convergence in the $\theta$s. 
