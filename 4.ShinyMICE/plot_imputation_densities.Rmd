@@ -5,6 +5,8 @@ output:
     df_print: paged
 ---
 
+Just as reminder: look at systematic differences between imputations for data with more versus less than 50% missingness. Is there something going on with information from the data 'leaking' into the prior? What happens if we change the order of the values? Would the bias in the estimates then flip?
+
 ```{r echo=TRUE, message=FALSE, warning=FALSE}
 # set-up environment
 library(mice) # Data imputation
