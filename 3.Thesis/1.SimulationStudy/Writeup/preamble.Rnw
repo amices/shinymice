@@ -9,7 +9,6 @@ papersize={156mm,234mm},%
 columnsep=12pt,%
 headsep=21pt,%
 centering]{geometry}
-\usepackage{Sweave}
 \begin{document}
 \thispagestyle{empty}
 % \begin{large}

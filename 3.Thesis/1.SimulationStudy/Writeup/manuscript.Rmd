@@ -18,10 +18,8 @@ bibliography: thesis.bib
 bibliographystyle: sageh
 output:
   bookdown::pdf_book:
-    # includes:
-    #   in_header: preamble.tex
-    keep_tex: yes
     base_format: rticles::sage_article
+    keep_tex: yes
 ---
 
 ```{r setup, include=FALSE}
@@ -60,6 +58,7 @@ theme_update(
  # legend.text = element_text(size = 7)
 )
 ```
+
 
 # Introduction
 
@@ -499,7 +498,6 @@ Further research is needed to investigate the performance of iterative imputatio
 - Develop an additional convergence diagnostic unique for iterative imputation: $AC$ across imputations, instead of iterations.
 
 In short, we have shown that an iterative imputation algorithm can yield correct outcomes, even when a converged state is not reached according to two common non-convergence diagnostics. Continued iteration just burns a lot of computing time, without improving the statistical inferences. To conclude, in the case of drawing inference from incomplete data, convergence of the iterative imputation algorithm is often a convenience but not a necessity.
-
 
 <!-- # Grading -->
 
