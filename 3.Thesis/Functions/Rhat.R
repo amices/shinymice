@@ -26,7 +26,7 @@ rhat_adapted <- function(x) {
         x[1:it,] %>% split_chains() %>% z_scale() %>% get.rhat()
       rhat_tail <-
         x[1:it,] %>% fold_sims() %>% split_chains() %>% z_scale() %>% get.rhat()
-      max(rhat_bulk, rhat_tail) %>% data.frame(max.r.hat = ., r.hat = rhat_original) #%>% set_names("r.hat")
+      max(rhat_bulk, rhat_tail) %>% data.frame(r.hat.max = ., r.hat = rhat_original) #%>% set_names("r.hat")
     }) %>% rbind(NA, .) %>% cbind(iteration = 1:t, .)
   }
   # output

@@ -14,22 +14,21 @@ library(tidyverse)
 # library(ggplot2)
 # library(purrr)
 # library(magrittr)
-# library(tibble)
 
 # load simulation/evaluation functions
-source("3.Thesis/1.SimulationStudy/Functions/CreateData.R")
-source("3.Thesis/1.SimulationStudy/Functions/Impute.R")
-source("3.Thesis/1.SimulationStudy/Functions/Evaluate.R")
-source("3.Thesis/1.SimulationStudy/Functions/Convergence.R")
-source("3.Thesis/1.SimulationStudy/Functions/Rhat.R")
-source("3.Thesis/1.SimulationStudy/Functions/Rhat_supplement.R")
-source("3.Thesis/1.SimulationStudy/Functions/AC.R")
-source("3.Thesis/1.SimulationStudy/Functions/AC_supplement.R")
+source("3.Thesis/Functions/CreateData.R")
+source("3.Thesis/Functions/Impute.R")
+source("3.Thesis/Functions/Evaluate.R")
+source("3.Thesis/Functions/Convergence.R")
+source("3.Thesis/Functions/Rhat.R")
+source("3.Thesis/Functions/Rhat_supplement.R")
+source("3.Thesis/Functions/AC.R")
+source("3.Thesis/Functions/AC_supplement.R")
 
 # simulation parameters
 populationsize <- 1000 #n of simulated dataset
-n.iter <- 10 #nr of iterations (varying 1:n.iter)
-n.sim <- 2 #nr of simulations per iteration value
+n.iter <- 100 #nr of iterations (varying 1:n.iter)
+n.sim <- 1000 #nr of simulations per iteration value
 p.miss <- c(.05, .25, .5, .75, .95)
 true.effect <- 2 #regression coefficient to be estimated
 
@@ -53,24 +52,26 @@ simulate <- function(complete_data = data,
                      final_it = n.iter,
                      ...) {
   # ampute the complete data with each missingness proportion
-  amps <<- map(mis_prop, function(mis) {
+  amps <- map(mis_prop, function(mis) {
     ampute(
       data = complete_data,
       prop = mis,
       patterns = amp_patterns,
       mech = "MCAR"
     )$amp
-  })
+  }) %>% set_names(as.character(mis_prop))
   
   # with amputed datasets (as many as there are missingess proportions), impute missingness and compute diagnostics for every nr. of iterations
   imps <-
     map_df(mis_prop, function(mis) {
       map_df(1:n.iter, function(it) {
-        test.impute(amp_data = amps[[mis]],
+        test.impute(amp_data = amps[[as.character(mis)]],
                     it_nr = it,
                     final_it = n.iter) %>% cbind(p = mis, .)
       }) %>% cbind(chain_means, chain_vars)
     })
+  # save seed
+  seed<<-.Random.seed
   
   return(imps)
 }
@@ -84,6 +85,7 @@ out <-
   replicate(n.sim,
             simulate(complete_data = data),
             simplify = FALSE)
+
 
 ###
 
@@ -108,5 +110,5 @@ results <-
                                                                         suffix = c("", ".UL"))
 
 # save results
-save(out, file = "3.Thesis/1.SimulationStudy/Results/raw.Rdata")
-save(results, file = "3.Thesis/1.SimulationStudy/Results/complete.Rdata")
+save(out, file = "3.Thesis/Results/raw.Rdata")
+save(results, file = "3.Thesis/Results/complete.Rdata")
