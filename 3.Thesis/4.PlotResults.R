@@ -8,19 +8,7 @@ library(ggplot2)
 library(patchwork)
 
 # # if necessary, load data
-# load("3.Thesis/1.SimulationStudy/Results/complete.Rdata")
-
-# set default for plot layout
-# theme_update(
-#   plot.title = element_text(hjust = 0.5),
-#   panel.border = element_blank(),
-#   panel.grid.major = element_blank(),
-#   panel.grid.minor = element_blank(),
-#   panel.background = element_blank(),
-#   axis.line = element_line(colour = "black"),
-#   legend.key = element_blank(),
-#   legend.position = "bottom"
-# )
+# load("3.Thesis/Results/complete.Rdata")
 
 
 ####################
@@ -30,10 +18,6 @@ library(patchwork)
 results <- results %>% mutate(crit = qnorm((1 + .95) / 2) / sqrt(t), thresh1.01 = 1.01, thresh1.1 = 1.1, thresh1.2 = 1.2)
 results$crit[results$crit>1.2] <- NA
 results$crit[results$crit>1] <- 1
-
-
-# thresh1.1 <- data.frame(x1 = 2, x2 = 100, y1 = 1.1, y2 = 1.1)
-# + geom_segment(aes(x=x1, y=y1, xend=x2, yend=y2), data = thresh1.1)
 
 
 # Univariate: mean estimate
@@ -80,18 +64,7 @@ mean_AC <- results %>% ggplot(aes(x = t, y = ac.max.chain.mean.Y, color = as.fac
   #ggtitle(bquote("C) Autocorrelation of chain means" ~ y[imp][",Y"])) +
   labs(colour = "Missingness (%)")
 
-
-# mean_ACF <- results %>% ggplot(aes(x = t, y = ACF.mean.X1, color = as.factor(p*100))) +
-#   geom_hline(yintercept = 0,
-#              color = "grey",
-#              lwd = 1) +
-#   geom_point(size = .25, na.rm = TRUE) +
-#   geom_line(linetype = "dotted", na.rm = TRUE) +
-#   geom_point(aes(x = t, y = AC.mean.X1, color = as.factor(p*100)), size = .25, na.rm = TRUE) +
-#   geom_line(aes(x = t, y = AC.mean.X1, color = as.factor(p*100)), na.rm = TRUE) +
-#   xlab("Number of iterations") +
-#   ylab("Autocorrelation") +
-#   labs(colour = "Missingness (%)")
+mean_bias + mean_Rh + mean_AC + plot_layout(guides = "collect", ncol = 1)
 
 ####################
 #### UNIVARIATE ####

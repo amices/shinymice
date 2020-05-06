@@ -16,14 +16,14 @@ library(tidyverse)
 # library(magrittr)
 
 # load simulation/evaluation functions
-source("3.Thesis/1.SimulationStudy/Functions/CreateData.R")
-source("3.Thesis/1.SimulationStudy/Functions/Impute.R")
-source("3.Thesis/1.SimulationStudy/Functions/Evaluate.R")
-source("3.Thesis/1.SimulationStudy/Functions/Convergence.R")
-source("3.Thesis/1.SimulationStudy/Functions/Rhat.R")
-source("3.Thesis/1.SimulationStudy/Functions/Rhat_supplement.R")
-source("3.Thesis/1.SimulationStudy/Functions/AC.R")
-source("3.Thesis/1.SimulationStudy/Functions/AC_supplement.R")
+source("3.Thesis/Functions/CreateData.R")
+source("3.Thesis/Functions/Impute.R")
+source("3.Thesis/Functions/Evaluate.R")
+source("3.Thesis/Functions/Convergence.R")
+source("3.Thesis/Functions/Rhat.R")
+source("3.Thesis/Functions/Rhat_supplement.R")
+source("3.Thesis/Functions/AC.R")
+source("3.Thesis/Functions/AC_supplement.R")
 
 # simulation parameters
 populationsize <- 1000 #n of simulated dataset
@@ -110,5 +110,5 @@ results <-
                                                                         suffix = c("", ".UL"))
 
 # save results
-save(out, file = "3.Thesis/1.SimulationStudy/Results/raw.Rdata")
-save(results, file = "3.Thesis/1.SimulationStudy/Results/complete.Rdata")
+save(out, file = "3.Thesis/Results/raw.Rdata")
+save(results, file = "3.Thesis/Results/complete.Rdata")

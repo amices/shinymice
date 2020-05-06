@@ -27,14 +27,21 @@ knitr::opts_chunk$set(fig.width = 4.9, echo = FALSE, fig.align = "center")
 # knitr::opts_chunk$set(fig.width = 4.8, fig.height = 3.6, echo = FALSE, fig.align = "center") 
 
 # packages
+library(mice)
 library(dplyr)
 library(ggplot2)
 library(patchwork)
 
-# results and functions
+# load example non-convergence and figures
+load("../Results/example_nonconv.Rdata")
+load("../Results/example_conv.Rdata")
+load("../Results/example_diagnostics.Rdata")
+source("../3.PlotExampleNon-convergence.R")
+
+# load results and figures
 load("../Results/complete.Rdata") 
-results <- results %>% filter(t<50)
-source("../2.CreateFigures.R")
+results <- results %>% filter(t<51)
+source("../4.PlotResults.R")
 
 # default graphing behavior
 theme_update(
@@ -52,10 +59,6 @@ theme_update(
  text = element_text(size = 8),
  title = element_text(size = 8),
  legend.title = element_text(size = 7)
-
- # axis.title = element_text(size = 8),
- # axis.text = element_text(size = 7),
- # legend.text = element_text(size = 7)
 )
 ```
 
@@ -69,7 +72,7 @@ Figure \ref{fig:diagram} provides an overview of the steps involved with MI. Mis
 <!-- $Q$ is quantity of scientific interest: "A scientific estimand $Q$ is a quantity of scientific interest that we can calculate if we would observe the entire population" [@buur18, par 2.3.1] -->
 
 ```{r diagram, out.width="\\linewidth", include=TRUE, fig.cap="Scheme of the main steps in multiple imputation (where $M=3$)---from an incomplete dataset, to $M$ multiply imputed datasets, to $M$ estimated quantities of scientific interest $\\hat{Q}$s, to a single pooled estimate $\\bar{Q}$."}
-knitr::include_graphics("./images/diagram.pdf") #adapted from [@buur18] par. 1.4.1.
+knitr::include_graphics("../Figures/diagram.pdf") #adapted from [@buur18] par. 1.4.1.
 ```
 
 A popular method to obtain imputations is to use the 'Multiple Imputation by Chained Equations' algorithm, shorthand 'MICE'[@mice]. With MICE, imputed values $y_{imp}$ are drawn from the posterior predictive distribution of the missing values $y_{mis}$. The algorithm is named after the iterative algorithmic procedure by which imputed values are generated: a multivariate distribution is obtained by iterating over a sequence of univariate imputations. The iterative nature of algorithms like MICE introduces a potential threat to the validity of the imputations: What if the algorithm has not converged? Are the implications then to be trusted? And can we rely on the inference obtained on the completed data? These are all open questions, because the convergence properties of iterative imputation algorithms have not been systematically studied [@buur18]. Moreover, there is no scientific consensus on how to evaluate convergence of imputation algorithms [@taka17]. Some default MICE techniques (e.g., 'predictive mean modeling') might not yield converged states at all [@murr18]. Therefore, algorithmic convergence should be monitored carefully.
@@ -106,11 +109,9 @@ There are two requirements for convergence of iterative algorithms: mixing and s
 **[Move to INTRO???]** To illustrate what non-convergence looks like in iterative imputation algorithms, we reproduce an example from van Buuren [-@buur18, $\S$ 6.5.2]. Figure \ref{fig:non-conv} displays a subset of the example: a variable that we will call $j$. We see two traceplots of the chain means for $j$---i.e., the average of the imputed values for $j$ in each imputation $y_{imp,m}$, plotted against the iteration number. Each line portrays one imputation. The plot on the left-hand side of the figure shows typical convergence of an iterative imputation algorithm. The right-hand side displays pathological non-convergence, induced by purposefully mis-specifying the imputation model. **[Leave this in if it's after mixing and stationarity are defined, otherwise remove?] In the typical convergence situation, the imputation chains intermingle nicely and there is little to no trending. In the non-convergence plot, there is a lot of trending and some chains do not intermingle.** Importantly, the chain means at the last iteration (the imputed value per $m$) are very different between the two plots. The algorithm with the mis-specified model yields imputed values that are on average a factor two larger than those of the typically converged algorithm. That means that non-convergence has a impact on the mean of $j$ in $y_{imp, m}$. This difference (presumably) translates to bias in the $M$ completed data estimates $\hat{\mu}_{j,m}$, and consequently also to the pooled estimate $\bar{\mu}_j$. Non-convergence thus leads to biased estimates. This shows the importance of reaching converged states in iterative imputation algorithms.
 
 ```{r non-conv, out.width='.49\\linewidth', fig.width=3.5, fig.height=3,fig.show='hold',fig.cap="Typical convergence versus pathological non-convergence. Please note that this is the same data with a different imputation model, leading to different imputations (e.g., see the units on the y-axis)."}
-load("./images/nonc_plot.Rdata")
-load("./images/conv_plot.Rdata")
 par(mar = c(2, 2, 0.1, 0.1))
-plot(conv)
-plot(nonc)
+con_plot
+non_plot
 ```
 
 **[Move to INTRO???]** Convergence has historically been inspected visually, by monitoring the imputation algorithm over iterations. This is typically done through traceplots. In a traceplot, the iteration number is plotted against a certain $\theta$. $\theta$s are scalar summaries of the state space of the algorithm at a specific iteration. The recommended scalar summaries to evaluate are chain means and chain variances. Additionally, researchers may "monitor some statistic of scientific interest" [@buur18, $\S$ 6.5.2]. As @buur18 describes, researchers can specify their quantity of scientific interest $Q$ (e.g., a regression coefficient) as scalar summary $\theta$. Such a user-defined scalar summary, however, may be somewhat advanced for empirical researchers. And moreover, it is not universal to all complete data problems. Focusing on the convergence of outcome parameters may influence the iterative imputation procedure in the sense that the model of evaluation favors the model of interest.  The downside to these two approaches is that they either focus on the univariate state space, or primarily track the change over the iterations of a multivariate outcome conform the scientific model of interest. Ideally, one would like to evaluate a model-independent parameter that summarizes the multivariate nature of the data. Therefore, we propose a $\theta$ that summarizes the multivariate state space of the algorithm, but is independent from the model of scientific interest. We propose $\lambda_1$ as such a scalar summary. We define $\lambda_1$ as the first eigenvalue of the variance-covariance matrix of the completed data. Let $\lambda_1 \geq \lambda_2 \geq ... \geq \lambda_j$ be the eigenvalues of $\Sigma$ in each of the $M$ completed datasets ${y_{obs}, y_{imp}}$. $\lambda_1$ is measure that summarizes the covariances in the completed datasets. **The first eigenvalue has the appealing property that is not dependent on the substantive model of interest. Eigenvalue decomposition is inspired by @mack03.**
@@ -180,17 +181,14 @@ In Figure \ref{fig:diagnostics}A, the chain means from Figure \ref{fig:non-conv}
 
 
 ```{r diagnostics, fig.cap="Convergence diagnostics applied on the imputation algorithms of Figure 2. $\\theta$ = chain mean in $y_{imp, m}$."}
-load("./images/diagnostics_plot.Rdata") #bquote(theta ~ "= chain mean in "~ y[imp][",m"])
-diagnostics_plot 
+# load("./images/diagnostics_plot.Rdata") #bquote(theta ~ "= chain mean in "~ y[imp][",m"])
+(theta + plot_layout(guides = "collect", ncol = 2)) + (ac_both + plot_layout(guides = "keep")) + old_rhat + new_rhat +  plot_annotation(tag_levels = "A", tag_suffix = ".") # add 'ncol=1' for plots under each other
 ```
-
 
 When we look at panel B, we conclude something weird. The $AC$-values calculated with the default function indicate equal performance for the typical convergence and the pathological non-convergence (up-to $t=5$), while there is obvious trending in the $\theta$s of the latter. Moreover, the best convergence (as indicated by the lowest $AC$-value) is observed at $t=2$, but looking at the chain means in panel A, there should be some signs of trending up-to iteration number seven. After consulting the documentation on `stats::acf()` [@R], we conclude that this $AC$ function is not suited for iterative imputation algorithms. The function is optimized for performance when $t\geq50$ [@box15], while the default number of iterations in iterative imputation is often much lower. Therefore, we compute $AC$ manually, see the solid line. These $AC$ values indicate non-stationarity as expected. We therefore calculate $AC$ manually.
 
 **Describe panel C here and why it is not optimal]** The $\widehat{R}$-values in panel D do meet the requirements specified above. $\widehat{R}$ as computed conform @veht19 does indeed indicate less signs of non-convergence as the number of iterations goes up.  **[explain the dip in Rhat values at t=2. Namely, because we can only use 2 of the 3 tricks by @veht19 if the number of iterations is very low (t<4). That's why the $\widehat{R}$s are more similar to the traditional GR.]**
 <!-- However, the superior performance of the typical convergence over the pathological non-convergence is less prominent, even flipped for $t<4$.  -->
-
-
 
 
 # Simulation study
@@ -227,7 +225,7 @@ The assumption inherent to the second set of simulation conditions---the number 
 
 ## Set-up
 
-Convergence of the MICE algorithm is investigated through model-based simulation in `R` [version `r paste(version$major,version$minor, sep = ".")`; @R]. The simulation set-up is summarized in the pseudo-code below. The complete `R` script of the simulation study is available from [github.com/gerkovink/shinyMice](https://github.com/gerkovink/shinyMice/tree/master/3.Thesis/1.SimulationStudy). 
+Convergence of the MICE algorithm is investigated through model-based simulation in `R` [version 3.6.3; @R]. The simulation set-up is summarized in the pseudo-code below. The complete `R` script of the simulation study is available from [github.com/gerkovink/shinyMice](https://github.com/gerkovink/shinyMice/tree/master/3.Thesis/1.SimulationStudy). 
 
 ```
 # pseudo-code of simulation 
