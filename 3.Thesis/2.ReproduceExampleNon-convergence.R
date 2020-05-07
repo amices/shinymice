@@ -59,12 +59,16 @@ save(conv, file = "3.Thesis/Results/example_conv.Rdata")
 
 # apply diagnostics on chain means of wgt (rows are iterations, columns are imputations)
 diagnostics1 <-
-  nonconv$chainMean[3, ,] %>% cbind(patho = "Non-convergence", convergence(., include_acf = TRUE), .) %>% mutate(signif = c(NA, NA, 1, qnorm((1 + .95) / 2) / sqrt(iteration[-(1:3)])))
-diagnostics2 <-
-  conv$chainMean[3, ,] %>% cbind(patho = "Typical convergence", convergence(., include_acf = TRUE), .) %>% mutate(signif = c(NA, NA, 1, qnorm((1 + .95) / 2) / sqrt(iteration[-(1:3)])))
+  nonconv$chainMean[3, , ] %>% 
+  cbind(patho = "Non-convergence", convergence(., include_acf = TRUE), .) %>% 
+  mutate(signif = c(NA, NA, 1, qnorm((1 + .95) / 2) / sqrt(iteration[-(1:3)])))
 
-# combine
-diagnostics <- rbind(diagnostics1, diagnostics2) 
+# repeat for typical convergence and combine
+diagnostics <-
+  conv$chainMean[3, , ] %>% 
+  cbind(patho = "Typical convergence", convergence(., include_acf = TRUE), .) %>% 
+  mutate(signif = c(NA, NA, 1, qnorm((1 + .95) / 2) / sqrt(iteration[-(1:3)]))) %>% 
+  rbind(diagnostics1)
 
 # save
 save(diagnostics, file = "3.Thesis/Results/example_diagnostics.Rdata")
