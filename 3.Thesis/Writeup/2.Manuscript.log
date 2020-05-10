@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.19 (MiKTeX 2.9.6880 64-bit) (preloaded format=pdflatex 2018.12.13)  11 MAY 2020 01:08
+This is pdfTeX, Version 3.14159265-2.6-1.40.19 (MiKTeX 2.9.6880 64-bit) (preloaded format=pdflatex 2018.12.13)  11 MAY 2020 01:26
 entering extended mode
 **./2.Manuscript.tex
 (2.Manuscript.tex
@@ -689,7 +689,7 @@ Underfull \hbox (badness 10000) has occurred while \output is active
  []
 
 [7]
-<2.Manuscript_files/figure-latex/diagnostics-1.pdf, id=353, 353.32pt x 325.215p
+<2.Manuscript_files/figure-latex/diagnostics-1.pdf, id=355, 353.32pt x 325.215p
 t>
 File: 2.Manuscript_files/figure-latex/diagnostics-1.pdf Graphic file (type pdf)
 
@@ -708,6 +708,11 @@ Underfull \hbox (badness 10000) has occurred while \output is active
  []
 
 [8]
+Underfull \hbox (badness 10000) has occurred while \output is active
+[]
+ []
+
+[9 <./2.Manuscript_files/figure-latex/diagnostics-1.pdf>]
 LaTeX Font Info:    Try loading font information for OML+ptm on input line 162.
 
 ("C:\Users\User\AppData\Local\Programs\MiKTeX 2.9\tex\latex\psnfss\omlptm.fd"
@@ -728,11 +733,6 @@ Underfull \hbox (badness 10000) has occurred while \output is active
 []
  []
 
-[9 <./2.Manuscript_files/figure-latex/diagnostics-1.pdf>]
-Underfull \hbox (badness 10000) has occurred while \output is active
-[]
- []
-
 [10]
 Underfull \hbox (badness 10000) has occurred while \output is active
 []
@@ -749,7 +749,7 @@ Underfull \hbox (badness 10000) has occurred while \output is active
  []
 
 [13]
-<2.Manuscript_files/figure-latex/Qs-1.pdf, id=449, 353.32pt x 490.83376pt>
+<2.Manuscript_files/figure-latex/Qs-1.pdf, id=451, 353.32pt x 490.83376pt>
 File: 2.Manuscript_files/figure-latex/Qs-1.pdf Graphic file (type pdf)
 <use 2.Manuscript_files/figure-latex/Qs-1.pdf>
 Package pdftex.def Info: 2.Manuscript_files/figure-latex/Qs-1.pdf  used on inpu
@@ -778,7 +778,13 @@ Underfull \hbox (badness 10000) in paragraph at lines 312--315
 
  []
 
-<2.Manuscript_files/figure-latex/rhats-acs-1.pdf, id=473, 353.32pt x 490.83376p
+
+Underfull \hbox (badness 10000) has occurred while \output is active
+[]
+ []
+
+[16]
+<2.Manuscript_files/figure-latex/rhats-acs-1.pdf, id=483, 353.32pt x 490.83376p
 t>
 File: 2.Manuscript_files/figure-latex/rhats-acs-1.pdf Graphic file (type pdf)
 <use 2.Manuscript_files/figure-latex/rhats-acs-1.pdf>
@@ -791,16 +797,6 @@ Overfull \hbox (0.50497pt too wide) in paragraph at lines 325--326
  []
 
 
-Underfull \hbox (badness 10000) has occurred while \output is active
-[]
- []
-
-[16]
-Underfull \hbox (badness 10000) has occurred while \output is active
-[]
- []
-
-[17 <./2.Manuscript_files/figure-latex/rhats-acs-1.pdf>]
 Underfull \hbox (badness 10000) in paragraph at lines 356--357
 
  []
@@ -810,7 +806,12 @@ Underfull \hbox (badness 10000) has occurred while \output is active
 []
  []
 
-[18]
+[17]
+Underfull \hbox (badness 10000) has occurred while \output is active
+[]
+ []
+
+[18 <./2.Manuscript_files/figure-latex/rhats-acs-1.pdf>]
 Underfull \hbox (badness 10000) has occurred while \output is active
 []
  []
@@ -863,11 +864,11 @@ Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 428.
 Here is how much of TeX's memory you used:
  9030 strings out of 492965
  136366 string characters out of 3126858
- 237109 words of memory out of 3000000
+ 237105 words of memory out of 3000000
  12574 multiletter control sequences out of 15000+200000
  46592 words of font info for 100 fonts, out of 3000000 for 9000
  1141 hyphenation exceptions out of 8191
- 43i,18n,40p,1313b,455s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 43i,18n,40p,1313b,451s stack positions out of 5000i,500n,10000p,200000b,50000s
 {C:/Users/User/AppData/Local/Programs/MiKTeX 2.9/fonts/enc/dvips/base/8r.enc}
 <C:/Users/User/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm
 /cmex10.pfb><C:/Users/User/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public
@@ -891,9 +892,9 @@ AppData/Local/Programs/MiKTeX 2.9/fonts/type1/urw/helvetic/uhvr8a.pfb><C:/Users
 ><C:/Users/User/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/urw/times/utmr8a.
 pfb><C:/Users/User/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/urw/times/utmr
 i8a.pfb>
-Output written on 2.Manuscript.pdf (23 pages, 615465 bytes).
+Output written on 2.Manuscript.pdf (23 pages, 615404 bytes).
 PDF statistics:
- 644 PDF objects out of 1000 (max. 8388607)
+ 647 PDF objects out of 1000 (max. 8388607)
  136 named destinations out of 1000 (max. 500000)
  308 words of extra memory for PDF output out of 10000 (max. 10000000)
 
