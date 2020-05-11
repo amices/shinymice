@@ -14,6 +14,8 @@ library(patchwork)
 # load("3.Thesis/Results/example_conv.Rdata")
 # load("3.Thesis/Results/example_diagnostics.Rdata")
 
+# define colorblind friendly colors
+paint2 <- c('#66CCEE', '#EE6677')
 
 #####################
 # Pathological non-c.
@@ -67,6 +69,7 @@ theta <- ggplot(diagnostics) +
   geom_line(aes(x = iteration, y = `Chain 3`, color = patho), size = .25, na.rm = TRUE) +
   geom_line(aes(x = iteration, y = `Chain 4`, color = patho), size = .25, na.rm = TRUE) +
   geom_line(aes(x = iteration, y = `Chain 5`, color = patho), size = .25, na.rm = TRUE) +
+  scale_colour_manual(values=paint2) +
   scale_x_continuous(breaks = 1:10) +
   xlab("Iteration") +
   ylab(bquote(theta)) +
@@ -82,6 +85,7 @@ ac_both <-
   geom_line(aes(x = iteration, y = acf.max, color = patho, linetype = "Default"), size = .25, na.rm = TRUE) +
   geom_point(aes(x = iteration, y = ac.max, color = patho), size = .25, na.rm = TRUE) +
   geom_line(aes(x = iteration, y = ac.max, color = patho, linetype = "Manual"), size = .25, na.rm = TRUE) +
+  scale_colour_manual(values=paint2) +
   scale_linetype_manual("",values=c("Default"=2,"Manual"=1))+
   scale_x_continuous(breaks = 1:10) +
   scale_y_continuous(limits = c(-0.5,1)) +
@@ -99,10 +103,11 @@ old_rhat <-
   #            lwd = 2) +
   geom_point(size = .25, na.rm = TRUE) +
   geom_line(size = .25, na.rm = TRUE) +
+  scale_colour_manual(values=paint2) +
   scale_x_continuous(breaks = 1:10) +
   scale_y_continuous(limits = c(0.98,1.86)) +
   xlab("Iteration") +
-  ylab(bquote(widehat(R)~" of "~theta)) +
+  ylab(bquote(widehat(R)~" of "~theta~"(original)")) +
   theme(legend.position = "")
 
 
@@ -114,8 +119,9 @@ new_rhat <-
   #            lwd = 2) +
   geom_point(size = .25, na.rm = TRUE) +
   geom_line(size = .25, na.rm = TRUE) +
+  scale_colour_manual(values=paint2) +
   scale_x_continuous(breaks = 1:10) +
   scale_y_continuous(limits = c(0.98,1.86)) +
   xlab("Iteration") +
-  ylab(bquote(widehat(R)~" of "~theta)) +
+  ylab(bquote(widehat(R)~" of "~theta~"(adapted)")) +
   theme(legend.position = "")

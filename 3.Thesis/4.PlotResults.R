@@ -10,6 +10,20 @@ library(patchwork)
 # # if necessary, load data
 # load("3.Thesis/Results/complete.Rdata")
 
+# define colorblind friendly colors
+# paint5 <- c("#0072B2", "#56B4E9",  "#F0E442", "#E69F00")
+# groen: "#009E73"
+# oranje: "#E69F00"
+# rood: "#D55E00"
+# Tol_light <- c('#BBCC33', '#AAAA00', '#77AADD', '#EE8866', '#EEDD88', '#FFAABB', '#99DDFF', '#44BB99', '#DDDDDD')
+# paint5 <- c('#77AADD', '#99DDFF', '#BBCC33', '#EEDD88', '#EE8866')
+# lichtroze: '#FFAABB',
+# Okabe_Ito <- c("#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7", "#000000")
+# paint5 <- c("#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7", "#000000")
+#Tol_muted <- c('#88CCEE', '#44AA99', '#117733', '#332288', '#DDCC77', '#999933','#CC6677', '#882255', '#AA4499', '#DDDDDD')
+# paint5 <- c('#88CCEE', '#44AA99', '#117733', '#332288', '#DDCC77', '#999933','#CC6677', '#882255', '#AA4499', '#DDDDDD')
+# Tol_bright <- c('#EE6677', '#228833', '#4477AA', '#CCBB44', '#66CCEE', '#AA3377', '#BBBBBB')
+paint5 <- c('#228833', '#66CCEE', '#CCBB44','#EE6677', '#AA3377')
 
 ####################
 #### UNIVARIATE ####
@@ -27,6 +41,7 @@ mean_bias <- results %>% ggplot(aes(x = t, y = bias.mean.Y, color = as.factor(p*
              lwd = 1) +
   geom_point(size = .25, na.rm = TRUE) +
   geom_line(size = .25, na.rm = TRUE) +
+  scale_colour_manual(values=paint5) +
   # scale_x_continuous(limits = c(0,100)) + 
   xlab("") +
   ylab(bquote("Bias in "~bar(Q))) +
@@ -45,6 +60,7 @@ mean_Rh <- results %>% ggplot(aes(x = t, y = r.hat.max.chain.mean.Y, color = as.
   geom_line(aes(x=t, y=thresh1.2), color = "grey", linetype = "dashed", size = .25, na.rm = TRUE) +
   geom_line(aes(x=t, y=thresh1.1), color = "grey", linetype = "dashed", size = .25, na.rm = TRUE) +
   geom_line(aes(x=t, y=thresh1.01), color = "grey", linetype = "dashed", size = .25, na.rm = TRUE) +
+  scale_colour_manual(values=paint5) +
   xlab("") +
   ylab(bquote(widehat(R)~" ("~theta~"= chain mean)")) +
   #ggtitle(bquote("B) " ~ widehat(R) ~ "of chain means" ~ y[imp][",Y"])) +
@@ -57,6 +73,7 @@ mean_AC <- results %>% ggplot(aes(x = t, y = ac.max.chain.mean.Y, color = as.fac
   geom_line(aes(x = t, y = crit), color = "grey", linetype = "dashed", size = .25, na.rm = TRUE) + 
   geom_point(size = .25, na.rm = TRUE) +
   geom_line(size = .25, na.rm = TRUE) +
+  scale_colour_manual(values=paint5) +
   xlab("") +
   # ylab(bquote("AC of "~theta)) +
   ylab(bquote("AC ("~theta~ " = chain mean)")) +
@@ -82,6 +99,7 @@ sd_bias <- results %>% ggplot(aes(x = t, y = bias.sd.Y, color = as.factor(p*100)
   #     ) +
   geom_point(size = .25, na.rm = TRUE) +
   geom_line(size = .25, na.rm = TRUE) +
+  scale_colour_manual(values=paint5) +
   xlab("") +
   # ylab(expression(paste("Bias in ", hat(sigma ^ 2)))) +
   ylab(bquote("Bias (Q = " ~ sigma[Y] ~ "= 11.32)")) +
@@ -99,6 +117,7 @@ var_Rh <- results %>% ggplot(aes(x = t, y = r.hat.max.chain.var.Y, color = as.fa
   geom_line(aes(x=t, y=thresh1.2), color = "grey", linetype = "dashed", size = .25, na.rm = TRUE) +
   geom_line(aes(x=t, y=thresh1.1), color = "grey", linetype = "dashed", size = .25, na.rm = TRUE) +
   geom_line(aes(x=t, y=thresh1.01), color = "grey", linetype = "dashed", size = .25, na.rm = TRUE) +
+  scale_colour_manual(values=paint5) +
   xlab("") +
   # ylab(bquote(widehat(R)~" of "~theta)) +
   ylab(bquote(widehat(R)~" ("~theta~"= chain variance)")) +
@@ -113,6 +132,7 @@ var_AC <- results %>% ggplot(aes(x = t, y = ac.max.chain.var.Y, color = as.facto
   geom_line(aes(x = t, y = crit), color = "grey", linetype = "dashed", size = .25, na.rm = TRUE) + 
   geom_point(size = .25, na.rm = TRUE) +
   geom_line(size = .25, na.rm = TRUE) +
+  scale_colour_manual(values=paint5) +
   xlab("") +
   # ylab(bquote("AC of "~theta)) +
   ylab(bquote("AC ("~theta~ " = chain variance)")) +
@@ -132,6 +152,7 @@ est_bias <- results %>% ggplot(aes(x = t, y = bias.est.X1, color = as.factor(p*1
              lwd = 1) +
   geom_point(size = .25, na.rm = TRUE) +
   geom_line(size = .25, na.rm = TRUE) +
+  scale_colour_manual(values=paint5) +
   xlab("") +
   # ylab(bquote("Bias in "~bar(Q))) +
   ylab(bquote("Bias (Q = " ~ beta[1] ~ "= 2.06)")) +
@@ -147,6 +168,7 @@ est_Rh <- results %>% ggplot(aes(x = t, y = r.hat.max.beta, color = as.factor(p*
   geom_line(aes(x=t, y=thresh1.2), color = "grey", linetype = "dashed", size = .25, na.rm = TRUE) +
   geom_line(aes(x=t, y=thresh1.1), color = "grey", linetype = "dashed", size = .25, na.rm = TRUE) +
   geom_line(aes(x=t, y=thresh1.01), color = "grey", linetype = "dashed", size = .25, na.rm = TRUE) +
+  scale_colour_manual(values=paint5) +
   xlab("") +
   # ylab(bquote(widehat(R)~" of "~theta)) +
   ylab(bquote(widehat(R)~" ("~theta~"= "~hat(Q)~")")) +
@@ -160,6 +182,7 @@ est_AC <- results %>% ggplot(aes(x = t, y = ac.max.beta, color = as.factor(p*100
   geom_line(aes(x = t, y = crit), color = "grey", linetype = "dashed", size = .25, na.rm = TRUE) + 
   geom_point(size = .25, na.rm = TRUE) +
   geom_line(size = .25, na.rm = TRUE) +
+  scale_colour_manual(values=paint5) +
   xlab("") +
   # ylab(bquote("AC of "~theta)) +
   ylab(bquote("AC ("~theta~ " = "~hat(Q)~")")) +
@@ -174,15 +197,16 @@ est_bias + est_Rh + est_AC + plot_layout(guides = "collect", ncol = 1)
 ####################
 
 # R squared
-Rsq_bias <- results %>% ggplot(aes(x = t, y = bias.R.sq*100, color = as.factor(p*100))) +
+Rsq_bias <- results %>% ggplot(aes(x = t, y = bias.R.sq, color = as.factor(p*100))) +
   geom_hline(yintercept = 0,
              color = "grey",
              lwd = 1) +
   geom_point(size = .25, na.rm = TRUE) +
   geom_line(size = .25, na.rm = TRUE) +
+  scale_colour_manual(values=paint5) +
   xlab("") +
   # ylab(bquote("Bias in "~bar(Q))) +
-  ylab(bquote("Bias (Q = " ~ r^2 ~ "\u00D7 100 = 19.25)")) +
+  ylab(bquote("Bias (Q = " ~ r^2 ~ " = 0.19)")) +
   #ggtitle(bquote("A) Bias in " ~ bar(R^2) ~ "; " ~ R^2 ~ "= 19.25")) +
   labs(colour = "Missingness (%)")
 
@@ -196,7 +220,8 @@ PCA_Rh <- results %>% ggplot(aes(x = t, y = r.hat.max.pca, color = as.factor(p*1
   geom_line(aes(x=t, y=thresh1.2), color = "grey", linetype = "dashed", size = .25, na.rm = TRUE) +
   geom_line(aes(x=t, y=thresh1.1), color = "grey", linetype = "dashed", size = .25, na.rm = TRUE) +
   geom_line(aes(x=t, y=thresh1.01), color = "grey", linetype = "dashed", size = .25, na.rm = TRUE) +
-  xlab("") +
+  scale_colour_manual(values=paint5) +
+  xlab("Number of iterations") +
   # ylab(bquote(widehat(R)~" of "~theta)) +
   ylab(bquote(widehat(R)~" ("~theta~"= "~lambda[1]~")")) +
   #ggtitle(bquote("B) " ~ widehat(R) ~ "of first eigenvalue" ~ Sigma ~ "{" ~ y[obs] ~ "," ~ y[imp] ~ "}")) +
@@ -210,7 +235,8 @@ PCA_AC <- results %>% ggplot(aes(x = t, y = ac.max.pca, color = as.factor(p*100)
   geom_line(aes(x = t, y = crit), color = "grey", linetype = "dashed", size = .25, na.rm = TRUE) + 
   geom_point(size = .25, na.rm = TRUE) +
   geom_line(size = .25, na.rm = TRUE) +
-  xlab("") +
+  scale_colour_manual(values=paint5) +
+  xlab("Number of iterations") +
   # ylab(bquote("AC of "~theta)) +
   ylab(bquote("AC ("~theta~ " = "~lambda[1]~")")) +
   #ggtitle(bquote("C) Autocorrelation of first eigenvalue" ~ Sigma ~ "{" ~ y[obs] ~ "," ~ y[imp] ~ "}")) +
@@ -230,7 +256,8 @@ est_cov <- results %>% ggplot(aes(x = t, y = cov.est.X1, color = as.factor(p*100
              lwd = 1) +
   geom_point(size = .25, na.rm = TRUE) +
   geom_line(size = .25, na.rm = TRUE) +
-  xlab("") +
+  scale_colour_manual(values=paint5) +
+  xlab("Number of iterations") +
   # ylab("Coverage rate") +
   ylab(bquote("CR (Q = " ~ beta[1] ~ ")")) +
   labs(colour = "Missingness (%)")
@@ -242,7 +269,8 @@ est_ciw <- results %>%  ggplot(aes(x = t, y = CIW.est.X1, color = as.factor(p*10
   #            lwd = 1) +
   geom_point(size = .25, na.rm = TRUE) +
   geom_line(size = .25, na.rm = TRUE) +
-  xlab("") +
+  scale_colour_manual(values=paint5) +
+  xlab("Number of iterations") +
   ylab(bquote("CIW (Q = " ~ beta[1] ~ ")")) +
   # ylab("CI width") +
   labs(colour = "Missingness (%)")
