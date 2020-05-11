@@ -556,7 +556,8 @@ $AC$-values are systematically higher for this $\theta$ than for other scalar su
 
 
 
-### Summary. Overall, the methods to diagnose non-convergence perform as expected: they indicate more signs of non-convergence in conditions with worse performance in terms of bias and confidence-validity. Under low to moderate missingness, it does not seem to matter on which $\theta$ the non-convergence diagnostics are applied. If we look at complete unbiasedness, however, we notice that univariate $\theta$s fail to diagnose the persistent bias in conditions where $p_{\rm inc}\geq.75$. 
+### Summary. 
+Overall, the methods to diagnose non-convergence perform as expected: they indicate more signs of non-convergence in conditions with worse performance in terms of bias and confidence-validity. Under low to moderate missingness, it does not seem to matter on which $\theta$ the non-convergence diagnostics are applied. If we look at complete unbiasedness, however, we notice that univariate $\theta$s fail to diagnose the persistent bias in conditions where $p_{\rm inc}\geq.75$. 
 
 The number of iterations necessary to obtain approximately unbiased, confidence-valid estimates corresponds to the $\widehat{R}$ threshold 1.2. The thresholds 1.1 and 1.01 seem too strict compared to the validity of the inferences. The threshold to diagnose significant $AC$-values does not appear to be appropriate in at least the current set-up, and perhaps in iterative imputation in general. A better heuristic to diagnose non-stationarity with $AC$ may be through evaluation of the $AC$-values across iterations: If the values do not substantially decrease with $T$, approximate stationarity may be concluded.
 <!-- **[similar to the elbow heuristic in PCA]**. -->
