@@ -107,7 +107,7 @@ old_rhat <-
   scale_x_continuous(breaks = 1:10) +
   scale_y_continuous(limits = c(0.98,1.86)) +
   xlab("Iteration") +
-  ylab(bquote(widehat(R)~" of "~theta)) +
+  ylab(bquote(widehat(R)~" of "~theta~"(original)")) +
   theme(legend.position = "")
 
 
@@ -123,5 +123,5 @@ new_rhat <-
   scale_x_continuous(breaks = 1:10) +
   scale_y_continuous(limits = c(0.98,1.86)) +
   xlab("Iteration") +
-  ylab(bquote(widehat(R)~" of "~theta)) +
+  ylab(bquote(widehat(R)~" of "~theta~"(adapted)")) +
   theme(legend.position = "")

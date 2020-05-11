@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.19 (MiKTeX 2.9.6880 64-bit) (preloaded format=pdflatex 2018.12.13)  11 MAY 2020 01:26
+This is pdfTeX, Version 3.14159265-2.6-1.40.19 (MiKTeX 2.9.6880 64-bit) (preloaded format=pdflatex 2018.12.13)  11 MAY 2020 02:44
 entering extended mode
 **./2.Manuscript.tex
 (2.Manuscript.tex
@@ -622,8 +622,6 @@ LaTeX Font Info:    Font shape `OT1/phv/bx/n' in size <9> not available
 (Font)              Font shape `OT1/phv/b/n' tried instead on input line 45.
 LaTeX Font Info:    Font shape `OT1/phv/b/n' will be
 (Font)              scaled to size 8.54997pt on input line 45.
-LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <10> not available
-(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 50.
 LaTeX Font Info:    Font shape `OT1/phv/m/it' in size <10> not available
 (Font)              Font shape `OT1/phv/m/sl' tried instead on input line 51.
 LaTeX Font Info:    Font shape `OT1/phv/m/sl' will be
@@ -650,13 +648,13 @@ File: omsptm.fd
 )
 LaTeX Font Info:    Font shape `OMS/ptm/m/n' in size <10> not available
 (Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 66.
-<2.Manuscript_files/figure-latex/non-conv-1.pdf, id=258, 252.945pt x 216.81pt>
+<2.Manuscript_files/figure-latex/non-conv-1.pdf, id=257, 252.945pt x 216.81pt>
 File: 2.Manuscript_files/figure-latex/non-conv-1.pdf Graphic file (type pdf)
 <use 2.Manuscript_files/figure-latex/non-conv-1.pdf>
 Package pdftex.def Info: 2.Manuscript_files/figure-latex/non-conv-1.pdf  used o
 n input line 70.
 (pdftex.def)             Requested size: 172.88087pt x 148.18643pt.
-<2.Manuscript_files/figure-latex/non-conv-2.pdf, id=259, 252.945pt x 216.81pt>
+<2.Manuscript_files/figure-latex/non-conv-2.pdf, id=258, 252.945pt x 216.81pt>
 File: 2.Manuscript_files/figure-latex/non-conv-2.pdf Graphic file (type pdf)
 <use 2.Manuscript_files/figure-latex/non-conv-2.pdf>
 Package pdftex.def Info: 2.Manuscript_files/figure-latex/non-conv-2.pdf  used o
@@ -684,12 +682,15 @@ Underfull \hbox (badness 10000) has occurred while \output is active
  []
 
 [6]
+LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <10> not available
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 117.
+
 Underfull \hbox (badness 10000) has occurred while \output is active
 []
  []
 
 [7]
-<2.Manuscript_files/figure-latex/diagnostics-1.pdf, id=355, 353.32pt x 325.215p
+<2.Manuscript_files/figure-latex/diagnostics-1.pdf, id=353, 353.32pt x 325.215p
 t>
 File: 2.Manuscript_files/figure-latex/diagnostics-1.pdf Graphic file (type pdf)
 
@@ -713,18 +714,7 @@ Underfull \hbox (badness 10000) has occurred while \output is active
  []
 
 [9 <./2.Manuscript_files/figure-latex/diagnostics-1.pdf>]
-LaTeX Font Info:    Try loading font information for OML+ptm on input line 162.
-
-("C:\Users\User\AppData\Local\Programs\MiKTeX 2.9\tex\latex\psnfss\omlptm.fd"
-File: omlptm.fd 
-)
-LaTeX Font Warning: Font shape `OML/ptm/bx/n' undefined
-(Font)              using `OML/ptm/m/it' instead
-(Font)              for symbol `textless' on input line 162.
-LaTeX Font Info:    Font shape `OML/ptm/m/it' in size <10> not available
-(Font)              Font shape `OML/cmm/m/it' tried instead on input line 162.
-
-Underfull \hbox (badness 10000) in paragraph at lines 162--163
+Underfull \hbox (badness 10000) in paragraph at lines 164--165
 
  []
 
@@ -749,19 +739,19 @@ Underfull \hbox (badness 10000) has occurred while \output is active
  []
 
 [13]
-<2.Manuscript_files/figure-latex/Qs-1.pdf, id=451, 353.32pt x 490.83376pt>
+<2.Manuscript_files/figure-latex/Qs-1.pdf, id=444, 353.32pt x 490.83376pt>
 File: 2.Manuscript_files/figure-latex/Qs-1.pdf Graphic file (type pdf)
 <use 2.Manuscript_files/figure-latex/Qs-1.pdf>
 Package pdftex.def Info: 2.Manuscript_files/figure-latex/Qs-1.pdf  used on inpu
-t line 285.
+t line 287.
 (pdftex.def)             Requested size: 353.31914pt x 490.83255pt.
 
-Overfull \hbox (0.50497pt too wide) in paragraph at lines 285--286
+Overfull \hbox (0.50497pt too wide) in paragraph at lines 287--288
  [][] 
  []
 
 
-LaTeX Warning: Float too large for page by 16.45656pt on input line 290.
+LaTeX Warning: Float too large for page by 16.45656pt on input line 292.
 
 
 Underfull \hbox (badness 10000) has occurred while \output is active
@@ -774,7 +764,7 @@ Underfull \hbox (badness 10000) has occurred while \output is active
  []
 
 [15 <./2.Manuscript_files/figure-latex/Qs-1.pdf>]
-Underfull \hbox (badness 10000) in paragraph at lines 312--315
+Underfull \hbox (badness 10000) in paragraph at lines 314--317
 
  []
 
@@ -784,22 +774,20 @@ Underfull \hbox (badness 10000) has occurred while \output is active
  []
 
 [16]
-<2.Manuscript_files/figure-latex/rhats-acs-1.pdf, id=483, 353.32pt x 490.83376p
+<2.Manuscript_files/figure-latex/rhats-acs-1.pdf, id=478, 353.32pt x 490.83376p
 t>
 File: 2.Manuscript_files/figure-latex/rhats-acs-1.pdf Graphic file (type pdf)
 <use 2.Manuscript_files/figure-latex/rhats-acs-1.pdf>
 Package pdftex.def Info: 2.Manuscript_files/figure-latex/rhats-acs-1.pdf  used 
-on input line 325.
+on input line 327.
 (pdftex.def)             Requested size: 353.31914pt x 490.83255pt.
 
-Overfull \hbox (0.50497pt too wide) in paragraph at lines 325--326
+Overfull \hbox (0.50497pt too wide) in paragraph at lines 327--328
  [][] 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 356--357
-
- []
+LaTeX Warning: Float too large for page by 19.05893pt on input line 332.
 
 
 Underfull \hbox (badness 10000) has occurred while \output is active
@@ -812,6 +800,11 @@ Underfull \hbox (badness 10000) has occurred while \output is active
  []
 
 [18 <./2.Manuscript_files/figure-latex/rhats-acs-1.pdf>]
+Underfull \hbox (badness 10000) in paragraph at lines 358--359
+
+ []
+
+
 Underfull \hbox (badness 10000) has occurred while \output is active
 []
  []
@@ -822,26 +815,31 @@ Underfull \hbox (badness 10000) has occurred while \output is active
  []
 
 [20]
-Underfull \hbox (badness 10000) in paragraph at lines 419--421
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 419--421
-
- []
-
-
 Underfull \hbox (badness 10000) has occurred while \output is active
 []
  []
 
-[21] (2.Manuscript.bbl
+[21]
+Underfull \hbox (badness 10000) in paragraph at lines 419--421
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 419--421
+
+ []
+
+(2.Manuscript.bbl
 Underfull \hbox (badness 10000) has occurred while \output is active
 []
  []
 
 [22]
+Underfull \hbox (badness 10000) has occurred while \output is active
+[]
+ []
+
+[23]
 LaTeX Font Info:    Font shape `OMS/ptm/m/n' in size <9> not available
 (Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 129.
 )
@@ -851,50 +849,49 @@ Underfull \hbox (badness 10000) has occurred while \output is active
 []
  []
 
-[23]
+[24]
 Package atveryend Info: Empty hook `AfterLastShipout' on input line 428.
 (2.Manuscript.aux)
 Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 428.
 Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 428.
 Package rerunfilecheck Info: File `2.Manuscript.out' has not changed.
 (rerunfilecheck)             Checksum: DB02B9525EA6D448F51660CF2DA597E7;2205.
-LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 428.
  ) 
 Here is how much of TeX's memory you used:
- 9030 strings out of 492965
- 136366 string characters out of 3126858
- 237105 words of memory out of 3000000
- 12574 multiletter control sequences out of 15000+200000
+ 9012 strings out of 492965
+ 136022 string characters out of 3126858
+ 236586 words of memory out of 3000000
+ 12558 multiletter control sequences out of 15000+200000
  46592 words of font info for 100 fonts, out of 3000000 for 9000
  1141 hyphenation exceptions out of 8191
- 43i,18n,40p,1313b,451s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 43i,18n,40p,1271b,479s stack positions out of 5000i,500n,10000p,200000b,50000s
 {C:/Users/User/AppData/Local/Programs/MiKTeX 2.9/fonts/enc/dvips/base/8r.enc}
 <C:/Users/User/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm
 /cmex10.pfb><C:/Users/User/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public
-/amsfonts/cm/cmmi10.pfb><C:/Users/User/AppData/Local/Programs/MiKTeX 2.9/fonts/
-type1/public/amsfonts/cm/cmmi6.pfb><C:/Users/User/AppData/Local/Programs/MiKTeX
- 2.9/fonts/type1/public/amsfonts/cm/cmmi7.pfb><C:/Users/User/AppData/Local/Prog
-rams/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmi9.pfb><C:/Users/User/AppData
-/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Users/U
-ser/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr6.pfb><
-C:/Users/User/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/
-cmr7.pfb><C:/Users/User/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/am
-sfonts/cm/cmr9.pfb><C:/Users/User/AppData/Local/Programs/MiKTeX 2.9/fonts/type1
-/public/amsfonts/cm/cmsy10.pfb><C:/Users/User/AppData/Local/Programs/MiKTeX 2.9
-/fonts/type1/public/amsfonts/cm/cmsy7.pfb><C:/Users/User/AppData/Local/Programs
-/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy9.pfb><C:/Users/User/AppData/Loc
-al/Programs/MiKTeX 2.9/fonts/type1/urw/courier/ucrr8a.pfb><C:/Users/User/AppDat
-a/Local/Programs/MiKTeX 2.9/fonts/type1/urw/helvetic/uhvb8a.pfb><C:/Users/User/
-AppData/Local/Programs/MiKTeX 2.9/fonts/type1/urw/helvetic/uhvr8a.pfb><C:/Users
-/User/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/urw/helvetic/uhvro8a.pfb><C
-:/Users/User/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/urw/times/utmb8a.pfb
-><C:/Users/User/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/urw/times/utmr8a.
-pfb><C:/Users/User/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/urw/times/utmr
-i8a.pfb>
-Output written on 2.Manuscript.pdf (23 pages, 615404 bytes).
+/amsfonts/cmextra/cmex9.pfb><C:/Users/User/AppData/Local/Programs/MiKTeX 2.9/fo
+nts/type1/public/amsfonts/cm/cmmi10.pfb><C:/Users/User/AppData/Local/Programs/M
+iKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmi7.pfb><C:/Users/User/AppData/Local
+/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmi9.pfb><C:/Users/User/Ap
+pData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Us
+ers/User/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr6.
+pfb><C:/Users/User/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfont
+s/cm/cmr7.pfb><C:/Users/User/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/publ
+ic/amsfonts/cm/cmr9.pfb><C:/Users/User/AppData/Local/Programs/MiKTeX 2.9/fonts/
+type1/public/amsfonts/cm/cmsy10.pfb><C:/Users/User/AppData/Local/Programs/MiKTe
+X 2.9/fonts/type1/public/amsfonts/cm/cmsy7.pfb><C:/Users/User/AppData/Local/Pro
+grams/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy9.pfb><C:/Users/User/AppDat
+a/Local/Programs/MiKTeX 2.9/fonts/type1/urw/courier/ucrr8a.pfb><C:/Users/User/A
+ppData/Local/Programs/MiKTeX 2.9/fonts/type1/urw/helvetic/uhvb8a.pfb><C:/Users/
+User/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/urw/helvetic/uhvr8a.pfb><C:/
+Users/User/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/urw/helvetic/uhvro8a.p
+fb><C:/Users/User/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/urw/times/utmb8
+a.pfb><C:/Users/User/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/urw/times/ut
+mr8a.pfb><C:/Users/User/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/urw/times
+/utmri8a.pfb>
+Output written on 2.Manuscript.pdf (24 pages, 612675 bytes).
 PDF statistics:
  647 PDF objects out of 1000 (max. 8388607)
- 136 named destinations out of 1000 (max. 500000)
+ 137 named destinations out of 1000 (max. 500000)
  308 words of extra memory for PDF output out of 10000 (max. 10000000)
 

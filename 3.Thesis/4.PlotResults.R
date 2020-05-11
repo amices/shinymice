@@ -221,7 +221,7 @@ PCA_Rh <- results %>% ggplot(aes(x = t, y = r.hat.max.pca, color = as.factor(p*1
   geom_line(aes(x=t, y=thresh1.1), color = "grey", linetype = "dashed", size = .25, na.rm = TRUE) +
   geom_line(aes(x=t, y=thresh1.01), color = "grey", linetype = "dashed", size = .25, na.rm = TRUE) +
   scale_colour_manual(values=paint5) +
-  xlab("") +
+  xlab("Number of iterations") +
   # ylab(bquote(widehat(R)~" of "~theta)) +
   ylab(bquote(widehat(R)~" ("~theta~"= "~lambda[1]~")")) +
   #ggtitle(bquote("B) " ~ widehat(R) ~ "of first eigenvalue" ~ Sigma ~ "{" ~ y[obs] ~ "," ~ y[imp] ~ "}")) +
@@ -236,7 +236,7 @@ PCA_AC <- results %>% ggplot(aes(x = t, y = ac.max.pca, color = as.factor(p*100)
   geom_point(size = .25, na.rm = TRUE) +
   geom_line(size = .25, na.rm = TRUE) +
   scale_colour_manual(values=paint5) +
-  xlab("") +
+  xlab("Number of iterations") +
   # ylab(bquote("AC of "~theta)) +
   ylab(bquote("AC ("~theta~ " = "~lambda[1]~")")) +
   #ggtitle(bquote("C) Autocorrelation of first eigenvalue" ~ Sigma ~ "{" ~ y[obs] ~ "," ~ y[imp] ~ "}")) +
@@ -257,7 +257,7 @@ est_cov <- results %>% ggplot(aes(x = t, y = cov.est.X1, color = as.factor(p*100
   geom_point(size = .25, na.rm = TRUE) +
   geom_line(size = .25, na.rm = TRUE) +
   scale_colour_manual(values=paint5) +
-  xlab("") +
+  xlab("Number of iterations") +
   # ylab("Coverage rate") +
   ylab(bquote("CR (Q = " ~ beta[1] ~ ")")) +
   labs(colour = "Missingness (%)")
@@ -270,7 +270,7 @@ est_ciw <- results %>%  ggplot(aes(x = t, y = CIW.est.X1, color = as.factor(p*10
   geom_point(size = .25, na.rm = TRUE) +
   geom_line(size = .25, na.rm = TRUE) +
   scale_colour_manual(values=paint5) +
-  xlab("") +
+  xlab("Number of iterations") +
   ylab(bquote("CIW (Q = " ~ beta[1] ~ ")")) +
   # ylab("CI width") +
   labs(colour = "Missingness (%)")
