@@ -1,6 +1,5 @@
-# create figure to display results
-# requires the packages "dplyr", "ggplot2"
-# and the object 'results' created with '1.Excecute'
+# create figure to display results, displays worst performing estimate in terms of bias by default
+# requires the packages "dplyr", "ggplot2" and the object 'results' created with '1.Excecute'
 
 # load packages
 library(dplyr)
@@ -8,31 +7,20 @@ library(ggplot2)
 library(patchwork)
 
 # # if necessary, load data
-# load("3.Thesis/Results/complete.Rdata")
+# load("Results/complete.Rdata")
 
-# define colorblind friendly colors
-# paint5 <- c("#0072B2", "#56B4E9",  "#F0E442", "#E69F00")
-# groen: "#009E73"
-# oranje: "#E69F00"
-# rood: "#D55E00"
-# Tol_light <- c('#BBCC33', '#AAAA00', '#77AADD', '#EE8866', '#EEDD88', '#FFAABB', '#99DDFF', '#44BB99', '#DDDDDD')
-# paint5 <- c('#77AADD', '#99DDFF', '#BBCC33', '#EEDD88', '#EE8866')
-# lichtroze: '#FFAABB',
-# Okabe_Ito <- c("#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7", "#000000")
-# paint5 <- c("#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7", "#000000")
-#Tol_muted <- c('#88CCEE', '#44AA99', '#117733', '#332288', '#DDCC77', '#999933','#CC6677', '#882255', '#AA4499', '#DDDDDD')
-# paint5 <- c('#88CCEE', '#44AA99', '#117733', '#332288', '#DDCC77', '#999933','#CC6677', '#882255', '#AA4499', '#DDDDDD')
-# Tol_bright <- c('#EE6677', '#228833', '#4477AA', '#CCBB44', '#66CCEE', '#AA3377', '#BBBBBB')
-paint5 <- c('#228833', '#66CCEE', '#CCBB44','#EE6677', '#AA3377')
-
-####################
-#### UNIVARIATE ####
-####################
-
+# add diagnostic thresholds
 results <- results %>% mutate(crit = qnorm((1 + .95) / 2) / sqrt(t), thresh1.01 = 1.01, thresh1.1 = 1.1, thresh1.2 = 1.2)
 results$crit[results$crit>1.2] <- NA
 results$crit[results$crit>1] <- 1
 
+# define colorblind friendly colors
+paint5 <- c('#228833', '#66CCEE', '#CCBB44','#EE6677', '#AA3377')
+
+
+####################
+#### UNIVARIATE ####
+####################
 
 # Univariate: mean estimate
 mean_bias <- results %>% ggplot(aes(x = t, y = bias.mean.Y, color = as.factor(p*100))) +
@@ -42,11 +30,9 @@ mean_bias <- results %>% ggplot(aes(x = t, y = bias.mean.Y, color = as.factor(p*
   geom_point(size = .25, na.rm = TRUE) +
   geom_line(size = .25, na.rm = TRUE) +
   scale_colour_manual(values=paint5) +
-  # scale_x_continuous(limits = c(0,100)) + 
   xlab("") +
   ylab(bquote("Bias in "~bar(Q))) +
   ylab(bquote("Bias (Q = " ~ mu[Y] ~ "= 25.81)")) +
-  #ggtitle(bquote("A) Bias in " ~ bar(mu[Y]) ~ "; " ~ mu[Y] ~ "= 25.81")) +
   labs(colour = "Missingness (%)") 
 
 
@@ -63,7 +49,6 @@ mean_Rh <- results %>% ggplot(aes(x = t, y = r.hat.max.chain.mean.Y, color = as.
   scale_colour_manual(values=paint5) +
   xlab("") +
   ylab(bquote(widehat(R)~" ("~theta~"= chain mean)")) +
-  #ggtitle(bquote("B) " ~ widehat(R) ~ "of chain means" ~ y[imp][",Y"])) +
   labs(colour = "Missingness (%)")  
 
 mean_AC <- results %>% ggplot(aes(x = t, y = ac.max.chain.mean.Y, color = as.factor(p*100))) +
@@ -75,10 +60,7 @@ mean_AC <- results %>% ggplot(aes(x = t, y = ac.max.chain.mean.Y, color = as.fac
   geom_line(size = .25, na.rm = TRUE) +
   scale_colour_manual(values=paint5) +
   xlab("") +
-  # ylab(bquote("AC of "~theta)) +
   ylab(bquote("AC ("~theta~ " = chain mean)")) +
-  # ggtitle(bquote("Autocorrelation of chain means")) + #~ theta[mean])) +
-  #ggtitle(bquote("C) Autocorrelation of chain means" ~ y[imp][",Y"])) +
   labs(colour = "Missingness (%)")
 
 mean_bias + mean_Rh + mean_AC + plot_layout(guides = "collect", ncol = 1)
@@ -92,19 +74,11 @@ sd_bias <- results %>% ggplot(aes(x = t, y = bias.sd.Y, color = as.factor(p*100)
   geom_hline(yintercept = 0,
              color = "grey",
              lwd = 1) +
-  # geom_errorbar(
-  #       aes(x = t, ymin = bias.sd.Y.LL, ymax = bias.sd.Y.UL),
-  #       width = .2,
-  #       color = "grey"
-  #     ) +
   geom_point(size = .25, na.rm = TRUE) +
   geom_line(size = .25, na.rm = TRUE) +
   scale_colour_manual(values=paint5) +
   xlab("") +
-  # ylab(expression(paste("Bias in ", hat(sigma ^ 2)))) +
   ylab(bquote("Bias (Q = " ~ sigma[Y] ~ "= 11.32)")) +
-  # ylab(bquote("Bias in "~bar(Q))) +
-  #ggtitle(bquote("A) Bias in " ~ bar(sigma[Y]) ~ "; " ~ sigma[Y] ~ "= 11.32")) +
   labs(colour = "Missingness (%)")
 
 # Univariate: convergence chain variance
@@ -119,10 +93,7 @@ var_Rh <- results %>% ggplot(aes(x = t, y = r.hat.max.chain.var.Y, color = as.fa
   geom_line(aes(x=t, y=thresh1.01), color = "grey", linetype = "dashed", size = .25, na.rm = TRUE) +
   scale_colour_manual(values=paint5) +
   xlab("") +
-  # ylab(bquote(widehat(R)~" of "~theta)) +
   ylab(bquote(widehat(R)~" ("~theta~"= chain variance)")) +
-  # ggtitle(bquote(widehat(R) ~ "of chain variance Y")) + # ~ "variance in" ~ y[imp][Y])) + #sigma[y[imp]]^2
-  #ggtitle(bquote("B) " ~ widehat(R) ~ "of chain variances" ~ y[imp][",Y"])) +
   labs(colour = "Missingness (%)")
 
 var_AC <- results %>% ggplot(aes(x = t, y = ac.max.chain.var.Y, color = as.factor(p*100))) +
@@ -134,9 +105,7 @@ var_AC <- results %>% ggplot(aes(x = t, y = ac.max.chain.var.Y, color = as.facto
   geom_line(size = .25, na.rm = TRUE) +
   scale_colour_manual(values=paint5) +
   xlab("") +
-  # ylab(bquote("AC of "~theta)) +
   ylab(bquote("AC ("~theta~ " = chain variance)")) +
-  #ggtitle(bquote("C) Autocorrelation of chain variances" ~ y[imp][",Y"])) +
   labs(colour = "Missingness (%)")
 
 sd_bias + var_Rh + var_AC + plot_layout(guides = "collect", ncol = 1)
@@ -154,9 +123,7 @@ est_bias <- results %>% ggplot(aes(x = t, y = bias.est.X1, color = as.factor(p*1
   geom_line(size = .25, na.rm = TRUE) +
   scale_colour_manual(values=paint5) +
   xlab("") +
-  # ylab(bquote("Bias in "~bar(Q))) +
   ylab(bquote("Bias (Q = " ~ beta[1] ~ "= 2.06)")) +
-  #ggtitle(bquote("A) Bias in " ~ bar(beta[2]) ~ "; " ~ beta[2] ~ "= 2.06")) +
   labs(colour = "Missingness (%)")
 
 est_Rh <- results %>% ggplot(aes(x = t, y = r.hat.max.beta, color = as.factor(p*100))) +
@@ -170,9 +137,7 @@ est_Rh <- results %>% ggplot(aes(x = t, y = r.hat.max.beta, color = as.factor(p*
   geom_line(aes(x=t, y=thresh1.01), color = "grey", linetype = "dashed", size = .25, na.rm = TRUE) +
   scale_colour_manual(values=paint5) +
   xlab("") +
-  # ylab(bquote(widehat(R)~" of "~theta)) +
   ylab(bquote(widehat(R)~" ("~theta~"= "~hat(Q)~")")) +
-  #ggtitle(bquote("B) " ~ widehat(R) ~ "of " ~ hat(beta[2]))) +
   labs(colour = "Missingness (%)")
 
 est_AC <- results %>% ggplot(aes(x = t, y = ac.max.beta, color = as.factor(p*100))) +
@@ -184,9 +149,7 @@ est_AC <- results %>% ggplot(aes(x = t, y = ac.max.beta, color = as.factor(p*100
   geom_line(size = .25, na.rm = TRUE) +
   scale_colour_manual(values=paint5) +
   xlab("") +
-  # ylab(bquote("AC of "~theta)) +
   ylab(bquote("AC ("~theta~ " = "~hat(Q)~")")) +
-  #ggtitle(bquote("C) Autocorrelation of " ~ hat(beta[2]))) +
   labs(colour = "Missingness (%)")
 
 est_bias + est_Rh + est_AC + plot_layout(guides = "collect", ncol = 1)
@@ -205,9 +168,7 @@ Rsq_bias <- results %>% ggplot(aes(x = t, y = bias.R.sq, color = as.factor(p*100
   geom_line(size = .25, na.rm = TRUE) +
   scale_colour_manual(values=paint5) +
   xlab("") +
-  # ylab(bquote("Bias in "~bar(Q))) +
   ylab(bquote("Bias (Q = " ~ r^2 ~ " = 0.19)")) +
-  #ggtitle(bquote("A) Bias in " ~ bar(R^2) ~ "; " ~ R^2 ~ "= 19.25")) +
   labs(colour = "Missingness (%)")
 
 # R hat for PCA
@@ -222,9 +183,7 @@ PCA_Rh <- results %>% ggplot(aes(x = t, y = r.hat.max.pca, color = as.factor(p*1
   geom_line(aes(x=t, y=thresh1.01), color = "grey", linetype = "dashed", size = .25, na.rm = TRUE) +
   scale_colour_manual(values=paint5) +
   xlab("Number of iterations") +
-  # ylab(bquote(widehat(R)~" of "~theta)) +
   ylab(bquote(widehat(R)~" ("~theta~"= "~lambda[1]~")")) +
-  #ggtitle(bquote("B) " ~ widehat(R) ~ "of first eigenvalue" ~ Sigma ~ "{" ~ y[obs] ~ "," ~ y[imp] ~ "}")) +
   labs(colour = "Missingness (%)")
 
 # AC for PCA
@@ -237,9 +196,7 @@ PCA_AC <- results %>% ggplot(aes(x = t, y = ac.max.pca, color = as.factor(p*100)
   geom_line(size = .25, na.rm = TRUE) +
   scale_colour_manual(values=paint5) +
   xlab("Number of iterations") +
-  # ylab(bquote("AC of "~theta)) +
   ylab(bquote("AC ("~theta~ " = "~lambda[1]~")")) +
-  #ggtitle(bquote("C) Autocorrelation of first eigenvalue" ~ Sigma ~ "{" ~ y[obs] ~ "," ~ y[imp] ~ "}")) +
   labs(colour = "Missingness (%)") 
 
 Rsq_bias + PCA_Rh + PCA_AC + plot_layout(guides = "collect", ncol = 1)
@@ -272,69 +229,322 @@ est_ciw <- results %>%  ggplot(aes(x = t, y = CIW.est.X1, color = as.factor(p*10
   scale_colour_manual(values=paint5) +
   xlab("Number of iterations") +
   ylab(bquote("CIW (Q = " ~ beta[1] ~ ")")) +
-  # ylab("CI width") +
   labs(colour = "Missingness (%)")
 
-########################
-## NOG IETS MEE DOEN? ##
-########################
-
-mean_Rh + var_Rh + est_Rh + PCA_Rh + plot_layout(guides = "collect") #scale_y_continuous with max =  results$r.hat.max.pca %>% max(., na.rm=T)
-
-mean_AC + var_AC + est_AC + PCA_AC + plot_layout(guides = "collect")
-
-mean_bias + sd_bias + est_bias + est_ciw + est_cov + Rsq_bias + plot_layout(ncol = 2, guides = "collect")
-
-results %>% filter(t<20, p==.5) %>% ggplot() +
-  geom_line(aes(x=t, y=pca.1), color = 1) + 
-  geom_line(aes(x=t, y=pca.2), color = 2) + 
-  geom_line(aes(x=t, y=pca.3), color = 3) + 
-  geom_line(aes(x=t, y=pca.4), color = 4) + 
-  geom_line(aes(x=t, y=pca.5), color = 5) 
-
-results %>% filter(t<20) %>% ggplot() +
-  geom_line(aes(x=t, y=r.hat.max.chain.mean.Y, color = as.factor(p)), linetype = 1, na.rm = T) + 
-  geom_line(aes(x=t, y=r.hat.max.chain.var.Y, color = as.factor(p)), linetype = 2, na.rm = T) + 
-  geom_line(aes(x=t, y=r.hat.max.beta, color = as.factor(p)), linetype =  3, na.rm = T) + 
-  geom_line(aes(x=t, y=r.hat.max.pca, color = as.factor(p)), linetype =  4, na.rm = T) 
-  
-results %>% filter(t<20) %>% ggplot() +
-  geom_line(aes(x=t, y=ac.max.chain.mean.Y, color = as.factor(p)), linetype = 1, na.rm = T) + 
-  geom_line(aes(x=t, y=ac.max.chain.var.Y, color = as.factor(p)), linetype = 2, na.rm = T) + 
-  geom_line(aes(x=t, y=ac.max.beta, color = as.factor(p)), linetype =  3, na.rm = T) + 
-  geom_line(aes(x=t, y=ac.max.pca, color = as.factor(p)), linetype =  4, na.rm = T) 
-
-results %>% filter(t<50) %>% ggplot() +
-  geom_point(aes(x=t, y=ac.max.chain.mean.Y, shape = as.factor(p)), color = 1, na.rm = T) + 
-  geom_point(aes(x=t, y=ac.max.chain.var.Y, shape = as.factor(p)), color = 2, na.rm = T) + 
-  geom_point(aes(x=t, y=ac.max.beta, shape = as.factor(p)), color =  3, na.rm = T) + 
-  geom_point(aes(x=t, y=ac.max.pca, shape = as.factor(p)), color =  4, na.rm = T) +
-  geom_line(aes(x=t, y=ac.max.chain.mean.Y, linetype = as.factor(p)), color = 1, na.rm = T) + 
-  geom_line(aes(x=t, y=ac.max.chain.var.Y, linetype = as.factor(p)), color = 2, na.rm = T) + 
-  geom_line(aes(x=t, y=ac.max.beta, linetype = as.factor(p)), color =  3, na.rm = T) + 
-  geom_line(aes(x=t, y=ac.max.pca, linetype = as.factor(p)), color =  4, na.rm = T) 
-
-results %>% filter(t<50) %>% ggplot() +
-  geom_point(aes(x=t, y=r.hat.max.chain.mean.Y, shape = as.factor(p)), color = 1, na.rm = T) + 
-  geom_point(aes(x=t, y=r.hat.max.chain.var.Y, shape = as.factor(p)), color = 2, na.rm = T) + 
-  geom_point(aes(x=t, y=r.hat.max.beta, shape = as.factor(p)), color =  3, na.rm = T) + 
-  geom_point(aes(x=t, y=r.hat.max.pca, shape = as.factor(p)), color =  4, na.rm = T) +
-  geom_line(aes(x=t, y=r.hat.max.chain.mean.Y, linetype = as.factor(p)), color = 1, na.rm = T) + 
-  geom_line(aes(x=t, y=r.hat.max.chain.var.Y, linetype = as.factor(p)), color = 2, na.rm = T) + 
-  geom_line(aes(x=t, y=r.hat.max.beta, linetype = as.factor(p)), color =  3, na.rm = T) + 
-  geom_line(aes(x=t, y=r.hat.max.pca, linetype = as.factor(p)), color =  4, na.rm = T) 
 
 
-# ## shows that higher max(ac) means more bias in estimate
-# results[-c(1, 51, 101, 151, 201),] %>% ggplot(aes(x = ac.max.beta, y = bias.est.X1, color = as.factor(p*100))) +
-#   geom_point(na.rm = TRUE) + 
-#   geom_smooth(na.rm = TRUE, method = lm, se=F) +
-#   labs(colour = "Missingness (%)")
-# 
-# results[-c(1, 51, 101, 151, 201),] %>% ggplot(aes(x = r.hat.max.beta, y = bias.est.X1, color = as.factor(p*100))) +
-#   geom_point(na.rm = TRUE) + 
-#   geom_smooth(na.rm = TRUE, method = lm, se=F) +
-#   labs(colour = "Missingness (%)")
+####################
+### ALL ESTIMATES ##
+####################
+
+mean_X1 <- results %>% ggplot(aes(x = t, y = bias.mean.X1, color = as.factor(p*100))) +
+  geom_hline(yintercept = 0,
+             color = "grey",
+             lwd = 1) +
+  geom_point(size = .25, na.rm = TRUE) +
+  geom_line(size = .25, na.rm = TRUE) +
+  scale_colour_manual(values=paint5) +
+  xlab("") +
+  ylab(bquote("Bias (Q = " ~ mu[X[1]] ~ ")")) +
+  labs(colour = "Missingness (%)") 
+
+mean_X2 <- results %>% ggplot(aes(x = t, y = bias.mean.X2, color = as.factor(p*100))) +
+  geom_hline(yintercept = 0,
+             color = "grey",
+             lwd = 1) +
+  geom_point(size = .25, na.rm = TRUE) +
+  geom_line(size = .25, na.rm = TRUE) +
+  scale_colour_manual(values=paint5) +
+  xlab("") +
+  ylab(bquote("Bias (Q = " ~ mu[X[2]] ~ ")")) +
+  labs(colour = "Missingness (%)") 
+
+mean_X3 <- results %>% ggplot(aes(x = t, y = bias.mean.X3, color = as.factor(p*100))) +
+  geom_hline(yintercept = 0,
+             color = "grey",
+             lwd = 1) +
+  geom_point(size = .25, na.rm = TRUE) +
+  geom_line(size = .25, na.rm = TRUE) +
+  scale_colour_manual(values=paint5) +
+  xlab("Number of iterations") +
+  ylab(bquote("Bias (Q = " ~ mu[X[3]] ~ ")")) +
+  labs(colour = "Missingness (%)") 
+
+sd_X1 <- results %>% ggplot(aes(x = t, y = bias.sd.X1, color = as.factor(p*100))) +
+  geom_hline(yintercept = 0,
+             color = "grey",
+             lwd = 1) +
+  geom_point(size = .25, na.rm = TRUE) +
+  geom_line(size = .25, na.rm = TRUE) +
+  scale_colour_manual(values=paint5) +
+  xlab("") +
+  ylab(bquote("Bias (Q = " ~ sigma[X[1]] ~ ")")) +
+  labs(colour = "Missingness (%)") 
+
+sd_X2 <- results %>% ggplot(aes(x = t, y = bias.sd.X2, color = as.factor(p*100))) +
+  geom_hline(yintercept = 0,
+             color = "grey",
+             lwd = 1) +
+  geom_point(size = .25, na.rm = TRUE) +
+  geom_line(size = .25, na.rm = TRUE) +
+  scale_colour_manual(values=paint5) +
+  xlab("") +
+  ylab(bquote("Bias (Q = " ~ sigma[X[3]] ~ ")")) +
+  labs(colour = "Missingness (%)") 
+
+sd_X3 <- results %>% ggplot(aes(x = t, y = bias.sd.X3, color = as.factor(p*100))) +
+  geom_hline(yintercept = 0,
+             color = "grey",
+             lwd = 1) +
+  geom_point(size = .25, na.rm = TRUE) +
+  geom_line(size = .25, na.rm = TRUE) +
+  scale_colour_manual(values=paint5) +
+  xlab("Number of iterations") +
+  ylab(bquote("Bias (Q = " ~ sigma[X[3]] ~ ")")) +
+  labs(colour = "Missingness (%)") 
+
+est_X2 <- results %>% ggplot(aes(x = t, y = bias.est.X2, color = as.factor(p*100))) +
+  geom_hline(yintercept = 0,
+             color = "grey",
+             lwd = 1) +
+  geom_point(size = .25, na.rm = TRUE) +
+  geom_line(size = .25, na.rm = TRUE) +
+  scale_colour_manual(values=paint5) +
+  xlab("") +
+  ylab(bquote("Bias (Q = " ~ beta[2] ~ ")")) +
+  labs(colour = "Missingness (%)") 
+
+est_X3 <- results %>% ggplot(aes(x = t, y = bias.est.X3, color = as.factor(p*100))) +
+  geom_hline(yintercept = 0,
+             color = "grey",
+             lwd = 1) +
+  geom_point(size = .25, na.rm = TRUE) +
+  geom_line(size = .25, na.rm = TRUE) +
+  scale_colour_manual(values=paint5) +
+  xlab("Number of iterations") +
+  ylab(bquote("Bias (Q = " ~ beta[3] ~ ")")) +
+  labs(colour = "Missingness (%)") 
+
+# Coverage rate regression coefficient
+cov_X1 <- results %>% ggplot(aes(x = t, y = cov.est.X1, color = as.factor(p*100))) +
+  geom_hline(yintercept = .95,
+             color = "grey",
+             lwd = 1) +
+  geom_point(size = .25, na.rm = TRUE) +
+  geom_line(size = .25, na.rm = TRUE) +
+  scale_colour_manual(values=paint5) +
+  xlab("") +
+  # ylab("Coverage rate") +
+  ylab(bquote("CR (Q = " ~ beta[1] ~ ")")) +
+  labs(colour = "Missingness (%)")
+
+cov_X2 <- results %>% ggplot(aes(x = t, y = cov.est.X2, color = as.factor(p*100))) +
+  geom_hline(yintercept = 0.95,
+             color = "grey",
+             lwd = 1) +
+  geom_point(size = .25, na.rm = TRUE) +
+  geom_line(size = .25, na.rm = TRUE) +
+  scale_colour_manual(values=paint5) +
+  xlab("") +
+  ylab(bquote("CR (Q = " ~ beta[2] ~ ")")) +
+  labs(colour = "Missingness (%)") 
+
+cov_X3 <- results %>% ggplot(aes(x = t, y = cov.est.X3, color = as.factor(p*100))) +
+  geom_hline(yintercept = 0.95,
+             color = "grey",
+             lwd = 1) +
+  geom_point(size = .25, na.rm = TRUE) +
+  geom_line(size = .25, na.rm = TRUE) +
+  scale_colour_manual(values=paint5) +
+  xlab("Number of iterations") +
+  ylab(bquote("CR (Q = " ~ beta[3] ~ ")")) +
+  labs(colour = "Missingness (%)") 
+
+CIW_X2 <- results %>% ggplot(aes(x = t, y = CIX.est.X2, color = as.factor(p*100))) +
+  geom_hline(yintercept = 0,
+             color = "grey",
+             lwd = 1) +
+  geom_point(size = .25, na.rm = TRUE) +
+  geom_line(size = .25, na.rm = TRUE) +
+  scale_colour_manual(values=paint5) +
+  xlab("") +
+  ylab(bquote("CIW (Q = " ~ beta[2] ~ ")")) +
+  labs(colour = "Missingness (%)") 
+
+CIW_X3 <- results %>% ggplot(aes(x = t, y = CIW.est.X3, color = as.factor(p*100))) +
+  geom_hline(yintercept = 0,
+             color = "grey",
+             lwd = 1) +
+  geom_point(size = .25, na.rm = TRUE) +
+  geom_line(size = .25, na.rm = TRUE) +
+  scale_colour_manual(values=paint5) +
+  xlab("") +
+  ylab(bquote("CIW (Q = " ~ beta[3] ~ ")")) +
+  labs(colour = "Missingness (%)") 
+
+
+####################
+### ALL THETAS #####
+####################
+
+mean_Rh_X1 <- results %>% ggplot(aes(x = t, y = r.hat.max.chain.mean.X1, color = as.factor(p*100))) +
+  geom_hline(yintercept = 1,
+             color = "grey",
+             lwd = 1) +
+  geom_point(size = .25, na.rm = TRUE) +
+  geom_line(size = .25, na.rm = TRUE) +
+  geom_line(aes(x=t, y=thresh1.2), color = "grey", linetype = "dashed", size = .25, na.rm = TRUE) +
+  geom_line(aes(x=t, y=thresh1.1), color = "grey", linetype = "dashed", size = .25, na.rm = TRUE) +
+  geom_line(aes(x=t, y=thresh1.01), color = "grey", linetype = "dashed", size = .25, na.rm = TRUE) +
+  scale_colour_manual(values=paint5) +
+  xlab("") +
+  ylab(bquote(widehat(R)~" ("~theta~"= chain mean" ~ X[1] ~")")) +
+  labs(colour = "Missingness (%)")  
+
+mean_Rh_X2 <- results %>% ggplot(aes(x = t, y = r.hat.max.chain.mean.X2, color = as.factor(p*100))) +
+  geom_hline(yintercept = 1,
+             color = "grey",
+             lwd = 1) +
+  geom_point(size = .25, na.rm = TRUE) +
+  geom_line(size = .25, na.rm = TRUE) +
+  geom_line(aes(x=t, y=thresh1.2), color = "grey", linetype = "dashed", size = .25, na.rm = TRUE) +
+  geom_line(aes(x=t, y=thresh1.1), color = "grey", linetype = "dashed", size = .25, na.rm = TRUE) +
+  geom_line(aes(x=t, y=thresh1.01), color = "grey", linetype = "dashed", size = .25, na.rm = TRUE) +
+  scale_colour_manual(values=paint5) +
+  xlab("") +
+  ylab(bquote(widehat(R)~" ("~theta~"= chain mean" ~ X[2] ~")")) +
+  labs(colour = "Missingness (%)")  
+
+mean_Rh_X3 <- results %>% ggplot(aes(x = t, y = r.hat.max.chain.mean.X3, color = as.factor(p*100))) +
+  geom_hline(yintercept = 1,
+             color = "grey",
+             lwd = 1) +
+  geom_point(size = .25, na.rm = TRUE) +
+  geom_line(size = .25, na.rm = TRUE) +
+  geom_line(aes(x=t, y=thresh1.2), color = "grey", linetype = "dashed", size = .25, na.rm = TRUE) +
+  geom_line(aes(x=t, y=thresh1.1), color = "grey", linetype = "dashed", size = .25, na.rm = TRUE) +
+  geom_line(aes(x=t, y=thresh1.01), color = "grey", linetype = "dashed", size = .25, na.rm = TRUE) +
+  scale_colour_manual(values=paint5) +
+  xlab("Number of iterations") +
+  ylab(bquote(widehat(R)~" ("~theta~"= chain mean" ~ X[3] ~")")) +
+  labs(colour = "Missingness (%)")  
+
+var_Rh_X1 <- results %>% ggplot(aes(x = t, y = r.hat.max.chain.var.X1, color = as.factor(p*100))) +
+  geom_hline(yintercept = 1,
+             color = "grey",
+             lwd = 1) +
+  geom_point(size = .25, na.rm = TRUE) +
+  geom_line(size = .25, na.rm = TRUE) +
+  geom_line(aes(x=t, y=thresh1.2), color = "grey", linetype = "dashed", size = .25, na.rm = TRUE) +
+  geom_line(aes(x=t, y=thresh1.1), color = "grey", linetype = "dashed", size = .25, na.rm = TRUE) +
+  geom_line(aes(x=t, y=thresh1.01), color = "grey", linetype = "dashed", size = .25, na.rm = TRUE) +
+  scale_colour_manual(values=paint5) +
+  xlab("") +
+  ylab(bquote(widehat(R)~" ("~theta~"= chain variance" ~ X[1] ~")")) +
+  labs(colour = "Missingness (%)")  
+
+var_Rh_X2 <- results %>% ggplot(aes(x = t, y = r.hat.max.chain.var.X2, color = as.factor(p*100))) +
+  geom_hline(yintercept = 1,
+             color = "grey",
+             lwd = 1) +
+  geom_point(size = .25, na.rm = TRUE) +
+  geom_line(size = .25, na.rm = TRUE) +
+  geom_line(aes(x=t, y=thresh1.2), color = "grey", linetype = "dashed", size = .25, na.rm = TRUE) +
+  geom_line(aes(x=t, y=thresh1.1), color = "grey", linetype = "dashed", size = .25, na.rm = TRUE) +
+  geom_line(aes(x=t, y=thresh1.01), color = "grey", linetype = "dashed", size = .25, na.rm = TRUE) +
+  scale_colour_manual(values=paint5) +
+  xlab("") +
+  ylab(bquote(widehat(R)~" ("~theta~"= chain variance" ~ X[2] ~")")) +
+  labs(colour = "Missingness (%)")  
+
+var_Rh_X3 <- results %>% ggplot(aes(x = t, y = r.hat.max.chain.var.X3, color = as.factor(p*100))) +
+  geom_hline(yintercept = 1,
+             color = "grey",
+             lwd = 1) +
+  geom_point(size = .25, na.rm = TRUE) +
+  geom_line(size = .25, na.rm = TRUE) +
+  geom_line(aes(x=t, y=thresh1.2), color = "grey", linetype = "dashed", size = .25, na.rm = TRUE) +
+  geom_line(aes(x=t, y=thresh1.1), color = "grey", linetype = "dashed", size = .25, na.rm = TRUE) +
+  geom_line(aes(x=t, y=thresh1.01), color = "grey", linetype = "dashed", size = .25, na.rm = TRUE) +
+  scale_colour_manual(values=paint5) +
+  xlab("Number of iterations") +
+  ylab(bquote(widehat(R)~" ("~theta~"= chain variance" ~ X[3] ~")")) +
+  labs(colour = "Missingness (%)") 
+
+
+mean_AC_X1 <- results %>% ggplot(aes(x = t, y = ac.max.chain.mean.X1, color = as.factor(p*100))) +
+  geom_hline(yintercept = 0,
+             color = "grey",
+             lwd = 1) +
+  geom_line(aes(x = t, y = crit), color = "grey", linetype = "dashed", size = .25, na.rm = TRUE) + 
+  geom_point(size = .25, na.rm = TRUE) +
+  geom_line(size = .25, na.rm = TRUE) +
+  scale_colour_manual(values=paint5) +
+  xlab("") +
+  ylab(bquote("AC ("~theta~ " = chain mean" ~ X[1] ~")")) +
+  labs(colour = "Missingness (%)")
+
+mean_AC_X2 <- results %>% ggplot(aes(x = t, y = ac.max.chain.mean.X2, color = as.factor(p*100))) +
+  geom_hline(yintercept = 0,
+             color = "grey",
+             lwd = 1) +
+  geom_line(aes(x = t, y = crit), color = "grey", linetype = "dashed", size = .25, na.rm = TRUE) + 
+  geom_point(size = .25, na.rm = TRUE) +
+  geom_line(size = .25, na.rm = TRUE) +
+  scale_colour_manual(values=paint5) +
+  xlab("") +
+  ylab(bquote("AC ("~theta~ " = chain mean" ~ X[2] ~")")) +
+  labs(colour = "Missingness (%)")
+
+mean_AC_X3 <- results %>% ggplot(aes(x = t, y = ac.max.chain.mean.X3, color = as.factor(p*100))) +
+  geom_hline(yintercept = 0,
+             color = "grey",
+             lwd = 1) +
+  geom_line(aes(x = t, y = crit), color = "grey", linetype = "dashed", size = .25, na.rm = TRUE) + 
+  geom_point(size = .25, na.rm = TRUE) +
+  geom_line(size = .25, na.rm = TRUE) +
+  scale_colour_manual(values=paint5) +
+  xlab("Number of iterations") +
+  ylab(bquote("AC ("~theta~ " = chain mean" ~ X[3] ~")")) +
+  labs(colour = "Missingness (%)")
+
+var_AC_X1 <- results %>% ggplot(aes(x = t, y = ac.max.chain.var.X1, color = as.factor(p*100))) +
+  geom_hline(yintercept = 0,
+             color = "grey",
+             lwd = 1) +
+  geom_line(aes(x = t, y = crit), color = "grey", linetype = "dashed", size = .25, na.rm = TRUE) + 
+  geom_point(size = .25, na.rm = TRUE) +
+  geom_line(size = .25, na.rm = TRUE) +
+  scale_colour_manual(values=paint5) +
+  xlab("") +
+  ylab(bquote("AC ("~theta~ " = chain variance" ~ X[1] ~")")) +
+  labs(colour = "Missingness (%)")
+
+var_AC_X2 <- results %>% ggplot(aes(x = t, y = ac.max.chain.var.X2, color = as.factor(p*100))) +
+  geom_hline(yintercept = 0,
+             color = "grey",
+             lwd = 1) +
+  geom_line(aes(x = t, y = crit), color = "grey", linetype = "dashed", size = .25, na.rm = TRUE) + 
+  geom_point(size = .25, na.rm = TRUE) +
+  geom_line(size = .25, na.rm = TRUE) +
+  scale_colour_manual(values=paint5) +
+  xlab("") +
+  ylab(bquote("AC ("~theta~ " = chain variance" ~ X[2] ~")")) +
+  labs(colour = "Missingness (%)")
+
+var_AC_X3 <- results %>% ggplot(aes(x = t, y = ac.max.chain.var.X3, color = as.factor(p*100))) +
+  geom_hline(yintercept = 0,
+             color = "grey",
+             lwd = 1) +
+  geom_line(aes(x = t, y = crit), color = "grey", linetype = "dashed", size = .25, na.rm = TRUE) + 
+  geom_point(size = .25, na.rm = TRUE) +
+  geom_line(size = .25, na.rm = TRUE) +
+  scale_colour_manual(values=paint5) +
+  xlab("Number of iterations") +
+  ylab(bquote("AC ("~theta~ " = chain variance" ~ X[3] ~")")) +
+  labs(colour = "Missingness (%)")
+
+
 
 ######################################################
 
@@ -344,8 +554,3 @@ results %>% filter(t<50) %>% ggplot() +
 #       width = .2,
 #       color = "grey"
 #     ) +
-
-# # if wanted, add loess line or average or stepwise line
-# geom_smooth(aes(x = t, y = R.mean.X1, color = "X1"), se = FALSE) +
-# geom_smooth(aes(x = t, y = CIW.est.4, color = "X3"), method = "lm", formula = "y ~1", se = F) +
-# geom_step(aes(x = t, y = 100 * R.sq, color = "R^2"), direction = "mid") +
