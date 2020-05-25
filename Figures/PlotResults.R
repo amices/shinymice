@@ -27,6 +27,10 @@ mean_bias <- results %>% ggplot(aes(x = t, y = bias.mean.Y, color = as.factor(p*
   geom_hline(yintercept = 0,
              color = "grey",
              lwd = 1) +
+  # geom_hline(yintercept = results$bias.mean.Y.SE[c(100,200,300,400,500)],
+  #            color = paint5) +
+  # geom_hline(yintercept = -results$bias.mean.Y.SE[c(100,200,300,400,500)],
+  #            color = paint5) +
   geom_point(size = .25, na.rm = TRUE) +
   geom_line(size = .25, na.rm = TRUE) +
   scale_colour_manual(values=paint5) +
@@ -208,7 +212,10 @@ Rsq_bias + PCA_Rh + PCA_AC + plot_layout(guides = "collect", ncol = 1)
 
 # Coverage rate regression coefficient
 est_cov <- results %>% ggplot(aes(x = t, y = cov.est.X1, color = as.factor(p*100))) +
-  geom_hline(yintercept = .95,
+  geom_hline(yintercept = .936,
+             color = "grey",
+             lwd = 1) +
+  geom_hline(yintercept = .964,
              color = "grey",
              lwd = 1) +
   geom_point(size = .25, na.rm = TRUE) +

@@ -15,7 +15,7 @@ evaluate.sim <-
     if (mean_or_SE == "se") {
       function_to_apply <-
         function(x)
-          sd(x, na.rm = TRUE) # or use: function(x) sqrt((var(x)))
+          sqrt(var(x, na.rm = TRUE)/length(sims)) # or use: function(x) sqrt((var(x)))
     } else if (mean_or_SE == "lower") {
       function_to_apply <- function(x)
         quantile(x, .025, na.rm = TRUE)
@@ -33,6 +33,9 @@ evaluate.sim <-
         as.data.frame(.)
       }) %>% aggregate(. ~ t + p, data = ., function_to_apply)
     
+    if (mean_or_SE == "se") {return(without_conv)} else {
+      
+      
     # define which variables do need convergence diagnostics
     thetas <-
       c(
@@ -47,6 +50,7 @@ evaluate.sim <-
         "pca",
         "beta"
       )
+    
     
     # for the defined thetas, compute Rhat and AC at each iteration,
     # then average over repetitions with the same missingness proportion and number of iterations
@@ -70,4 +74,5 @@ evaluate.sim <-
     
     #output
     return(left_join(without_conv, conv, by = c("t", "p")))
+    }
   }

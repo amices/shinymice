@@ -82,12 +82,12 @@ results <-
             suffix = c("", ".UL"))
 
 # # if necessary, calculate MCMC SEs
-# MCMCSE <- evaluate.sim(sims = out, n.iter = n.iter, mean_or_SE = "se")
+# MCMCSE <- evaluate.sim(sims = out, mean_or_SE = "se")
 # # combine with other results
-# results_with_SE <- left_join(results, MCMCSE, by = "t", suffix = c("", ".SE"))
+# results <- left_join(results, MCMCSE, by = c("t", "p"), suffix = c("", ".SE"))
 
 # save results
-save(results, file = "Results/complete.Rdata")
+save(results, file = "Results/results.Rdata")
 
 # # if necessary, save raw results (too large for Github)
 # save(out, file = "Results/raw.Rdata")
