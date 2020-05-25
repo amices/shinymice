@@ -27,12 +27,10 @@ mean_bias <- results %>% ggplot(aes(x = t, y = bias.mean.Y, color = as.factor(p*
   geom_hline(yintercept = 0,
              color = "grey",
              lwd = 1) +
-  # geom_hline(yintercept = results$bias.mean.Y.SE[c(100,200,300,400,500)],
-  #            color = paint5) +
-  # geom_hline(yintercept = -results$bias.mean.Y.SE[c(100,200,300,400,500)],
-  #            color = paint5) +
   geom_point(size = .25, na.rm = TRUE) +
   geom_line(size = .25, na.rm = TRUE) +
+  # geom_line(aes(x=t, y=bias.mean.Y.SE, color = as.factor(p*100))) +
+  # geom_line(aes(x=t, y=-bias.mean.Y.SE, color = as.factor(p*100))) +
   scale_colour_manual(values=paint5) +
   xlab("") +
   ylab(bquote("Bias in "~bar(Q))) +
