@@ -3,6 +3,8 @@ title: "ICML submission"
 output: html_notebook
 ---
 
+# Proposal
+
 ## In general
 
 There is clear problem, existing methodology, a new proposed theta for identifying non-convergence, and the simulation approach results in a clear investigation into the convergence properties of iterative imputation algorithms. We propose guidelines for practice, identify pitfalls that arise with contemporary evaluation functions, and detail how to avoid such problems.
@@ -33,3 +35,13 @@ Valid inferences may be obtained when there is still non-convergence in the algo
 ## Discussion
 
 Does this also work for other situations? ...
+
+# Call for papers (for reference)
+
+Analysis of large amounts of data offers new opportunities to understand many processes better. Yet, data accumulation often implies relaxing acquisition procedures or compounding diverse sources, leading to many observations with missing features. From questionnaires to collaborative filtering, from electronic health records to single-cell analysis, missingness is everywhere at play and is rather the norm than the exception. Even "clean" data sets are often barely "cleaned" versions of incomplete data sets—with all the unfortunate biases this cleaning process may have created.
+
+Despite this ubiquity, tackling missing values is often overlooked. Handling missing values poses many challenges, and there is a vast literature in the statistical community, with many implementations available. Yet, there are still many open issues and the need to design new methods or to introduce new point of views: for missing values in a supervised-learning setting, in deep learning architectures, to adapt available methods for high dimensional observed data with different type of missing values, deal with feature mismatch and distribution mismatch. Missing data is one of the eight pillars of causal wisdom for Judea Pearl who brought graphical model reasoning to tackle some missing not at random values.
+
+The goal of the Art of Learning with Missing Values (ARTEMISS) workshop is to give more momentum and exposition to research on missing values, both theoretical, methodological, and applied, and emphasize the connections with other areas of machine learning (e.g. causal inference, semi-supervised learning, generative modelling, uncertainty quantification, transfer learning, distributional shift, etc.). We will also attach importance to discussing the reproducibility problems that can be caused by missing data, the danger of forgetting the missing values issues and the importance of providing sound implementations.
+
+https://artemiss-workshop.github.io/
