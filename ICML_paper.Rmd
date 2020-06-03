@@ -1,0 +1,35 @@
+---
+title: "ICML submission"
+output: html_notebook
+---
+
+## In general
+
+There is clear problem, existing methodology, a new proposed theta for identifying non-convergence, and the simulation approach results in a clear investigation into the convergence properties of iterative imputation algorithms. We propose guidelines for practice, identify pitfalls that arise with contemporary evaluation functions, and detail how to avoid such problems.
+
+## Aim
+
+Obtain valid inferences from incomplete data with statistical analyses or (un)supervised machine learning techniques. E.g., convey uncertainty due to missingness in potential outcomes framework for causal inference. Convergence of the algorithm used to solve the missing data problem is a topic that has not received much attention but is ever so important, as most imputation software packages draw inference from iterative imputation procedures.
+
+## Missing data method
+MI is...
+
+## Problem
+
+The validity of the inference all depends on the state space of the algorithm at the final iteration. If the algorithm does not reach convergence, "the imputed datasets will not be truly independent and the variability among them may understate the true levels of missing-data uncertainty" (Schafer and Olsen, p. 556). But when is this the case? Current practice of visually inspecting imputations is not sufficient because 1) no objective point at which convergence is established, 2) only severely pathological cases of non-convergence may be identified, and 3) diagnosing non-convergence can be challenging to the untrained eye. On top of that, the statistics to inspect are either univariate or dependent on the substantive model of interest. Converged univariate statistics do not guarantee multivariate convergence, and with a model-dependent statistic there is no guarantee that the algorithm is converged *enough* for other models of scientific interest. This negates the advantages of MI: solving the missing data - and scientific problem separately.
+
+## Solution
+
+Use quantitative diagnostic methods to identify non-convergence in the iterative imputation algorithm. We propose ...
+
+## Simulation study
+
+We simulate and investigate the plausibility of identifiers for non-convergence for iterative imputation algorithms ...
+
+## Results
+
+Valid inferences may be obtained when there is still non-convergence in the algorithm.
+
+## Discussion
+
+Does this also work for other situations? ...
