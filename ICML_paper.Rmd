@@ -1,40 +1,10 @@
 ---
 title: "ICML submission"
-output: html_notebook
+output:
+  html_document: 
+    theme: journal
+    number_sections: yes
 ---
-
-# Proposal
-
-## In general
-
-There is clear problem, existing methodology, a new proposed theta for identifying non-convergence, and the simulation approach results in a clear investigation into the convergence properties of iterative imputation algorithms. We propose guidelines for practice, identify pitfalls that arise with contemporary evaluation functions, and detail how to avoid such problems.
-
-## Aim
-
-Obtain valid inferences from incomplete data with statistical analyses or (un)supervised machine learning techniques. E.g., convey uncertainty due to missingness in potential outcomes framework for causal inference. Convergence of the algorithm used to solve the missing data problem is a topic that has not received much attention but is ever so important, as most imputation software packages draw inference from iterative imputation procedures.
-
-## Missing data method
-MI is...
-
-## Problem
-
-The validity of the inference all depends on the state space of the algorithm at the final iteration. If the algorithm does not reach convergence, "the imputed datasets will not be truly independent and the variability among them may understate the true levels of missing-data uncertainty" (Schafer and Olsen, p. 556). But when is this the case? Current practice of visually inspecting imputations is not sufficient because 1) no objective point at which convergence is established, 2) only severely pathological cases of non-convergence may be identified, and 3) diagnosing non-convergence can be challenging to the untrained eye. On top of that, the statistics to inspect are either univariate or dependent on the substantive model of interest. Converged univariate statistics do not guarantee multivariate convergence, and with a model-dependent statistic there is no guarantee that the algorithm is converged *enough* for other models of scientific interest. This negates the advantages of MI: solving the missing data - and scientific problem separately.
-
-## Solution
-
-Use quantitative diagnostic methods to identify non-convergence in the iterative imputation algorithm. We propose ...
-
-## Simulation study
-
-We simulate and investigate the plausibility of identifiers for non-convergence for iterative imputation algorithms ...
-
-## Results
-
-Valid inferences may be obtained when there is still non-convergence in the algorithm.
-
-## Discussion
-
-Does this also work for other situations? ...
 
 # Call for papers (for reference)
 
@@ -42,6 +12,41 @@ Analysis of large amounts of data offers new opportunities to understand many pr
 
 Despite this ubiquity, tackling missing values is often overlooked. Handling missing values poses many challenges, and there is a vast literature in the statistical community, with many implementations available. Yet, there are still many open issues and the need to design new methods or to introduce new point of views: for missing values in a supervised-learning setting, in deep learning architectures, to adapt available methods for high dimensional observed data with different type of missing values, deal with feature mismatch and distribution mismatch. Missing data is one of the eight pillars of causal wisdom for Judea Pearl who brought graphical model reasoning to tackle some missing not at random values.
 
-The goal of the Art of Learning with Missing Values (ARTEMISS) workshop is to give more momentum and exposition to research on missing values, both theoretical, methodological, and applied, and emphasize the connections with other areas of machine learning (e.g. causal inference, semi-supervised learning, generative modelling, uncertainty quantification, transfer learning, distributional shift, etc.). We will also attach importance to discussing the reproducibility problems that can be caused by missing data, the danger of forgetting the missing values issues and the importance of providing sound implementations.
+The goal of the Art of Learning with Missing Values (ARTEMISS) workshop is to give more momentum and exposition to research on missing values, both theoretical, methodological, and applied, and emphasize the connections with other areas of machine learning (e.g. causal inference, semi-supervised learning, generative modeling, uncertainty quantification, transfer learning, distributional shift, etc.). We will also attach importance to discussing the reproducibility problems that can be caused by missing data, the danger of forgetting the missing values issues and the importance of providing sound implementations.
 
 https://artemiss-workshop.github.io/
+
+# Proposal
+
+## In general
+
+There is clear problem (how to diagnose non-convergence of iterative imputation algorithms), existing methodology (diagnostic methods to identify non-convergence in MCMC algorithms), and a novel contribution (a new proposed parameter to inspect). The simulation approach results in a clear investigation into the convergence properties of iterative imputation algorithms. We propose guidelines for practice, identify pitfalls that arise with contemporary evaluation functions, and detail how to avoid such problems. We conclude that iterative imputation algorithms may yield statistically valid inferences despite signs of non-convergence in the algorithm.
+
+## Aim of the method
+
+Obtain valid inferences from incomplete data with statistical analyses or (un)supervised machine learning techniques. E.g., convey uncertainty due to missingness in potential outcomes framework for causal inference. Convergence of the algorithm used to solve the missing data problem is a topic that has not received much attention but is ever so important, as most imputation software packages draw inference from iterative imputation procedures.
+
+## Missing data methodology
+MI is...
+
+## Problem with the method
+
+The validity of the inference all depends on the state space of the algorithm at the final iteration. If the algorithm does not reach convergence, "the imputed datasets will not be truly independent and the variability among them may understate the true levels of missing-data uncertainty" (Schafer and Olsen, p. 556). But when is this the case? Current practice of visually inspecting imputations is not sufficient because 1) no objective point at which convergence is established, 2) only severely pathological cases of non-convergence may be identified, and 3) diagnosing non-convergence can be challenging to the untrained eye. On top of that, the statistics to inspect are either univariate or dependent on the substantive model of interest. Converged univariate statistics do not guarantee multivariate convergence, and with a model-dependent statistic there is no guarantee that the algorithm is converged *enough* for other models of scientific interest. This negates the advantages of MI: solving the missing data - and scientific problem separately.
+
+## Solution to this problem
+
+Use quantitative diagnostic methods to identify non-convergence in the iterative imputation algorithm. We propose ...
+
+## Simulation study to test solution
+
+We simulate and investigate the plausibility of identifiers for non-convergence for iterative imputation algorithms ...
+
+## Results of simulation
+
+Valid inferences may be obtained when there is still non-convergence in the algorithm.
+
+## Discussion of results
+
+Does this also work for other situations? ...
+
+

@@ -1,0 +1,126 @@
+%%%%%%%% ICML 2020 EXAMPLE LATEX SUBMISSION FILE %%%%%%%%%%%%%%%%%
+
+\documentclass{article}
+
+% Recommended, but optional, packages for figures and better typesetting:
+\usepackage{microtype}
+\usepackage{graphicx}
+\usepackage{subfigure}
+\usepackage{booktabs} % for professional tables
+
+% hyperref makes hyperlinks in the resulting PDF.
+% If your build breaks (sometimes temporarily if a hyperlink spans a page)
+% please comment out the following usepackage line and replace
+% \usepackage{icml2020} with \usepackage[nohyperref]{icml2020} above.
+\usepackage{hyperref}
+
+% Attempt to make hyperref and algorithmic work together better:
+\newcommand{\theHalgorithm}{\arabic{algorithm}}
+
+% Use the following line for the initial blind version submitted for review:
+\usepackage{icml2020}
+
+% If accepted, instead use the following line for the camera-ready submission:
+%\usepackage[accepted]{icml2020}
+
+% The \icmltitle you define below is probably too long as a header.
+% Therefore, a short form for the running title is supplied here:
+\icmltitlerunning{Missing the Point}
+
+\begin{document}
+
+\twocolumn[
+\icmltitle{Missing the Point: Non-Convergence in Iterative Imputation Algorithms}
+
+% It is OKAY to include author information, even for blind
+% submissions: the style file will automatically remove it for you
+% unless you've provided the [accepted] option to the icml2020
+% package.
+
+% List of affiliations: The first argument should be a (short)
+% identifier you will use later to specify author affiliations
+% Academic affiliations should list Department, University, City, Region, Country
+% Industry affiliations should list Company, City, Region, Country
+
+% You can specify symbols, otherwise they are numbered in order.
+% Ideally, you should not use this facility. Affiliations will be numbered
+% in order of appearance and this is the preferred way.
+\icmlsetsymbol{equal}{*}
+
+\begin{icmlauthorlist}
+\icmlauthor{Hanne I.~Oberman}{UU}
+\icmlauthor{Stef van~Buuren}{UU}
+\icmlauthor{Gerko Vink}{UU}
+\end{icmlauthorlist}
+
+\icmlaffiliation{UU}{Department of Methodology and Statistics, Utrecht University, Utrecht, The Netherlands}
+
+\icmlcorrespondingauthor{Hanne Oberman}{h.i.oberman@uu.nl}
+
+% You may provide any keywords that you
+% find helpful for describing your paper; these are used to populate
+% the "keywords" metadata in the PDF but will not be shown in the document
+\icmlkeywords{Iterative imputation, MICE, non-convergence}
+
+\vskip 0.3in
+]
+
+% this must go after the closing bracket ] following \twocolumn[ ...
+
+% This command actually creates the footnote in the first column
+% listing the affiliations and the copyright notice.
+% The command takes one argument, which is text to display at the start of the footnote.
+% The \icmlEqualContribution command is standard text for equal contribution.
+% Remove it (just {}) if you do not need this facility.
+
+%\printAffiliationsAndNotice{}  % leave blank if no need to mention equal contribution
+\printAffiliationsAndNotice{\icmlEqualContribution} % otherwise use the standard text.
+
+\begin{abstract}
+Iterative imputation is a popular tool to accommodate missing data. While it is widely accepted that valid inferences can be obtained with this technique, these inferences all rely on algorithmic convergence. There is no consensus on how to evaluate the convergence properties of the method. This paper provides insight into identifying non-convergence in iterative imputation algorithms. Our study found that---in the cases considered---inferential validity was achieved after five to ten iterations, much earlier than indicated by diagnostic methods. We conclude that it never hurts to iterate longer, but such calculations hardly bring added value.
+\end{abstract}
+
+\section{Introduction}
+\label{intro}
+
+A popular method to accommodate missing data is to \textit{impute} (i.e., `fill in') the missing values in an incomplete dataset. It is widely accepted that imputation techniques such as multiple imputation (MI; @rubin76) can yield statistically valid inferences. The validity of these inferences relies on the method through which imputations are obtained---often iterative algorithms. Iterative imputation algorithms are employed in e.g., $\mathtt{SPSS}$, $\mathtt{Stata}$, and the $\mathtt{R}$ packages $\mathtt{MI}$, and $\mathtt{mice}$. \textbf{Or use:} Convergence of the algorithm used to solve the missing data problem is a topic that has not received much attention but is ever so important, as most imputation software packages draw inference from iterative imputation procedures.
+
+The validity of the inference all depends on the state space of the algorithm at the final iteration. If the algorithm does not reach convergence, ``the imputed datasets will not be truly independent and the variability among them may understate the true levels of missing-data uncertainty'' (Schafer and Olsen, p. 556). 
+
+But when is this the case? Current practice of visually inspecting imputations is not sufficient because 1) no objective point at which convergence is established, 2) only severely pathological cases of non-convergence may be identified, and 3) diagnosing non-convergence can be challenging to the untrained eye. On top of that, the statistics to inspect are either univariate or dependent on the substantive model of interest. Converged univariate statistics do not guarantee multivariate convergence, and with a model-dependent statistic there is no guarantee that the algorithm is converged \textit{enough} for other models of scientific interest. This negates the advantages of MI: solving the missing data problem and complete data problem separately.
+
+Therefore, we propose a novel parameter to inspect. We use this parameter to identify non-convergence with two quantitative diagnostic methods: Rhat and AC. 
+
+We simulate and investigate the plausibility of identifiers for non-convergence for iterative imputation algorithms ...
+
+\section{Discussion}
+\label{discussion}
+
+Valid inferences may be obtained when there is still non-convergence in the algorithm.
+
+
+
+
+% In the unusual situation where you want a paper to appear in the
+% references without citing it in the main text, use \nocite
+
+\bibliography{example_paper}
+\bibliographystyle{icml2020}
+
+
+
+
+\end{document}
+
+
+% This document was modified from the file originally made available by
+% Pat Langley and Andrea Danyluk for ICML-2K. This version was created
+% by Iain Murray in 2018, and modified by Alexandre Bouchard in
+% 2019 and 2020. Previous contributors include Dan Roy, Lise Getoor and Tobias
+% Scheffer, which was slightly modified from the 2010 version by
+% Thorsten Joachims & Johannes Fuernkranz, slightly modified from the
+% 2009 version by Kiri Wagstaff and Sam Roweis's 2008 version, which is
+% slightly modified from Prasad Tadepalli's 2007 version which is a
+% lightly changed version of the previous year's version by Andrew
+% Moore, which was in turn edited from those of Kristian Kersting and
+% Codrina Lauth. Alex Smola contributed to the algorithmic style files.
