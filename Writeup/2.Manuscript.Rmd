@@ -316,7 +316,7 @@ Our results show the performance of the MICE algorithm under different condition
 ## Quantities of scientific interest
 
 ```{r Qs, fig.height = 6.8, fig.cap="Impact of non-convergence on statistical inferences. Depicted are the bias, coverage rate (CR) and confidence interval width (CIW) of the estimates $\\bar{Q}$. We present the subset of $Q$s with the worst performance in terms of bias: the mean and standard deviation of $Y$, and the regression coefficient of $X_1$. The solid gray line depicts the targets (unbiased estimates and nominal coverage rate)."}
-mean_bias + sd_bias + Rsq_bias + est_bias + est_cov + est_ciw + plot_layout(ncol = 2, guides = "collect") + plot_annotation(tag_levels = "A", tag_suffix = ".")
+mean_bias + sd_bias + Rsq_bias + est_bias + est_cov + est_ciw + plot_annotation(tag_levels = "A", tag_suffix = ".") + plot_layout(ncol = 2, guides = "collect") 
 ```
 
 

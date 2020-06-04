@@ -1,54 +1,97 @@
-\begin{thebibliography}{8}
+\begin{thebibliography}{13}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
   \providecommand{\doi}[1]{doi: #1}\else
   \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
 
-\bibitem[Author(2020)]{anonymous}
-Author, N.~N.
-\newblock Suppressed for anonymity, 2020.
+\bibitem[Cowles \& Carlin(1996)Cowles and Carlin]{cowl96}
+Cowles, M.~K. and Carlin, B.~P.
+\newblock Markov chain {Monte} {Carlo} convergence diagnostics: a comparative
+  review.
+\newblock \emph{Journal of the American Statistical Association}, 91\penalty0
+  (434):\penalty0 883--904, 1996.
 
-\bibitem[Duda et~al.(2000)Duda, Hart, and Stork]{DudaHart2nd}
-Duda, R.~O., Hart, P.~E., and Stork, D.~G.
-\newblock \emph{Pattern Classification}.
-\newblock John Wiley and Sons, 2nd edition, 2000.
+\bibitem[Gelman \& Rubin(1992)Gelman and Rubin]{gelm92}
+Gelman, A. and Rubin, D.~B.
+\newblock Inference from {Iterative} {Simulation} {Using} {Multiple}
+  {Sequences}.
+\newblock \emph{Statistical Science}, 7\penalty0 (4):\penalty0 457--472,
+  November 1992.
+\newblock \doi{10.1214/ss/1177011136}.
 
-\bibitem[Kearns(1989)]{kearns89}
-Kearns, M.~J.
-\newblock \emph{Computational Complexity of Machine Learning}.
-\newblock PhD thesis, Department of Computer Science, Harvard University, 1989.
+\bibitem[Gelman et~al.(2013)Gelman, Carlin, Stern, Dunson, Vehtari, and
+  Rubin]{gelm13}
+Gelman, A., Carlin, J.~B., Stern, H.~S., Dunson, D.~B., Vehtari, A., and Rubin,
+  D.~B.
+\newblock \emph{Bayesian {Data} {Analysis}}.
+\newblock CRC Press LLC, Philadelphia, PA, United States, 2013.
 
-\bibitem[Langley(2000)]{langley00}
-Langley, P.
-\newblock Crafting papers on machine learning.
-\newblock In Langley, P. (ed.), \emph{Proceedings of the 17th International
-  Conference on Machine Learning (ICML 2000)}, pp.\  1207--1216, Stanford, CA,
-  2000. Morgan Kaufmann.
+\bibitem[Hyndman \& Athanasopoulos(2018)Hyndman and Athanasopoulos]{hynd18}
+Hyndman, R.~J. and Athanasopoulos, G.
+\newblock \emph{Forecasting: principles and practice}.
+\newblock OTexts, 2018.
 
-\bibitem[Michalski et~al.(1983)Michalski, Carbonell, and
-  Mitchell]{MachineLearningI}
-Michalski, R.~S., Carbonell, J.~G., and Mitchell, T.~M. (eds.).
-\newblock \emph{Machine Learning: An Artificial Intelligence Approach, Vol. I}.
-\newblock Tioga, Palo Alto, CA, 1983.
+\bibitem[Lynch(2007)]{lync07}
+Lynch, S.~M.
+\newblock \emph{Introduction to applied {Bayesian} statistics and estimation
+  for social scientists}.
+\newblock Springer Science \& Business Media, 2007.
 
-\bibitem[Mitchell(1980)]{mitchell80}
-Mitchell, T.~M.
-\newblock The need for biases in learning generalizations.
-\newblock Technical report, Computer Science Department, Rutgers University,
-  New Brunswick, MA, 1980.
+\bibitem[Murray(2018)]{murr18}
+Murray, J.~S.
+\newblock Multiple {Imputation}: {A} {Review} of {Practical} and {Theoretical}
+  {Findings}.
+\newblock \emph{Statistical Science}, 33\penalty0 (2):\penalty0 142--159, May
+  2018.
+\newblock \doi{10.1214/18-STS644}.
 
-\bibitem[Newell \& Rosenbloom(1981)Newell and Rosenbloom]{Newell81}
-Newell, A. and Rosenbloom, P.~S.
-\newblock Mechanisms of skill acquisition and the law of practice.
-\newblock In Anderson, J.~R. (ed.), \emph{Cognitive Skills and Their
-  Acquisition}, chapter~1, pp.\  1--51. Lawrence Erlbaum Associates, Inc.,
-  Hillsdale, NJ, 1981.
+\bibitem[{R Core Team}(2020)]{R}
+{R Core Team}.
+\newblock \emph{R: {A} language and environment for statistical computing}.
+\newblock Vienna, Austria, 2020.
 
-\bibitem[Samuel(1959)]{Samuel59}
-Samuel, A.~L.
-\newblock Some studies in machine learning using the game of checkers.
-\newblock \emph{IBM Journal of Research and Development}, 3\penalty0
-  (3):\penalty0 211--229, 1959.
+\bibitem[Rubin(1976)]{rubin76}
+Rubin, D.~B.
+\newblock Inference and {Missing} {Data}.
+\newblock \emph{Biometrika}, 63\penalty0 (3):\penalty0 581--592, 1976.
+\newblock \doi{10.2307/2335739}.
+
+\bibitem[Takahashi(2017)]{taka17}
+Takahashi, M.
+\newblock Statistical {Inference} in {Missing} {Data} by {MCMC} and
+  {Non}-{MCMC} {Multiple} {Imputation} {Algorithms}: {Assessing} the {Effects}
+  of {Between}-{Imputation} {Iterations}.
+\newblock \emph{Data Science Journal}, 16:\penalty0 37, July 2017.
+\newblock \doi{10.5334/dsj-2017-037}.
+
+\bibitem[Van~Buuren(2018)]{buur18}
+Van~Buuren, S.
+\newblock \emph{Flexible imputation of missing data}.
+\newblock Chapman and Hall/CRC, 2018.
+
+\bibitem[Van~Buuren \& Groothuis-Oudshoorn(2011)Van~Buuren and
+  Groothuis-Oudshoorn]{mice}
+Van~Buuren, S. and Groothuis-Oudshoorn, K.
+\newblock mice: {Multivariate} {Imputation} by {Chained} {Equations} in {R}.
+\newblock \emph{Journal of Statistical Software}, 45\penalty0 (1):\penalty0
+  1--67, December 2011.
+\newblock \doi{10.18637/jss.v045.i03}.
+
+\bibitem[Vehtari et~al.(2019)Vehtari, Gelman, Simpson, Carpenter, and
+  Bürkner]{veht19}
+Vehtari, A., Gelman, A., Simpson, D., Carpenter, B., and Bürkner, P.-C.
+\newblock Rank-normalization, folding, and localization: {An} improved
+  \${\textbackslash}widehat\{{R}\}\$ for assessing convergence of {MCMC}.
+\newblock March 2019.
+\newblock URL \url{http://arxiv.org/abs/1903.08008}.
+
+\bibitem[Zhu \& Raghunathan(2015)Zhu and Raghunathan]{zhu15}
+Zhu, J. and Raghunathan, T.~E.
+\newblock Convergence {Properties} of a {Sequential} {Regression} {Multiple}
+  {Imputation} {Algorithm}.
+\newblock \emph{Journal of the American Statistical Association}, 110\penalty0
+  (511):\penalty0 1112--1124, July 2015.
+\newblock \doi{10.1080/01621459.2014.948117}.
 
 \end{thebibliography}
