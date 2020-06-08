@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.14159265-2.6-0.99999 (MiKTeX 2.9.6880 64-bit) (preloaded format=xelatex 2020.5.5)  8 JUN 2020 18:40
+This is XeTeX, Version 3.14159265-2.6-0.99999 (MiKTeX 2.9.6880 64-bit) (preloaded format=xelatex 2020.5.5)  8 JUN 2020 18:55
 entering extended mode
 **./ARTEMISS_proposal.tex
 (ARTEMISS_proposal.tex
@@ -464,7 +464,7 @@ LaTeX Font Warning: Font shape `TU/ptm/m/sl' undefined
 (Font)              using `TU/ptm/m/n' instead on input line 173.
 
 
-Underfull \hbox (badness 1092) in paragraph at lines 200--201
+Underfull \hbox (badness 1092) in paragraph at lines 202--203
 \TU/ptm/bx/n/10 Our study found that—in the cases considered—
  []
 
@@ -489,19 +489,19 @@ odernRoman.cfg"
 File: mt-LatinModernRoman.cfg 2013/03/13 v1.0 microtype config. file: Latin Mod
 ern Roman (RS)
 ))
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 212.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 214.
  [2] [3]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 212.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 214.
  (ARTEMISS_proposal.aux)
-Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 212.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 212.
+Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 214.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 214.
 Package rerunfilecheck Info: File `ARTEMISS_proposal.out' has not changed.
 (rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E.
 
 
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 212.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 214.
  ) 
 Here is how much of TeX's memory you used:
  10734 strings out of 427767

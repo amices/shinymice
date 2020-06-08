@@ -28,7 +28,7 @@ theme_update(
 # load results and figures
 load("Results/complete.Rdata") 
 # test correlation between two thetas
-r <- cor(results$r.hat.max.beta, results$r.hat.max.pca, use = "complete.obs")
+r <- cor(results$r.hat.max.beta, results$r.hat.max.pca, use = "complete.obs", method = "spearman")
 
 # pre-processing
 results <- results %>% filter(t<51)
