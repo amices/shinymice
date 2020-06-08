@@ -27,13 +27,85 @@ theme_update(
 
 # load results and figures
 load("Results/complete.Rdata") 
+# test correlation between two thetas
+r <- cor(results$r.hat.max.beta, results$r.hat.max.pca, use = "complete.obs")
+
+# pre-processing
 results <- results %>% filter(t<51)
-source("Figures/PlotResults.R")
+results <- results %>% mutate(bias.est.X1 = bias.est.X1/.0206)
+
+# create figures
+# source("Figures/PlotResults.R")
+
+# add diagnostic thresholds
+results <- results %>% mutate(crit = qnorm((1 + .95) / 2) / sqrt(t), thresh1.01 = 1.01, thresh1.1 = 1.1, thresh1.2 = 1.2)
+results$crit[results$crit>1] <- NA
+
+# define colorblind friendly colors
+paint5 <- c('#228833', '#66CCEE', '#CCBB44','#EE6677', '#AA3377')
+
+# create plots
+est_bias <- results %>% ggplot(aes(x = t, y = bias.est.X1, color = as.factor(p*100))) +
+  geom_hline(yintercept = 0,
+             color = "grey",
+             lwd = 1) +
+  geom_point(size = .25, na.rm = TRUE) +
+  geom_line(size = .25, na.rm = TRUE) +
+  scale_colour_manual(values=paint5) +
+  xlab("") +
+  ylab("Bias (%)") +
+  # ylab(bquote("Bias (Q = " ~ beta[1] ~ "= 2.06)")) +
+  labs(colour = "Proportion of missing cases (%)")
+
+est_Rh <- results %>% ggplot(aes(x = t, y = r.hat.max.beta, color = as.factor(p*100))) +
+  geom_hline(yintercept = 1,
+             color = "grey",
+             lwd = 1) +
+  geom_point(size = .25, na.rm = TRUE) +
+  geom_line(size = .25, na.rm = TRUE) +
+  geom_line(aes(x=t, y=thresh1.2), color = "grey", linetype = "dashed", size = .25, na.rm = TRUE) +
+  geom_line(aes(x=t, y=thresh1.1), color = "grey", linetype = "dashed", size = .25, na.rm = TRUE) +
+  geom_line(aes(x=t, y=thresh1.01), color = "grey", linetype = "dashed", size = .25, na.rm = TRUE) +
+  scale_colour_manual(values=paint5) +
+  scale_y_continuous(limits = c(1,1.53), breaks = c(1,1.1,1.2,1.3,1.4,1.5)) +
+  xlab("Number of iterations") +
+  # ylab(bquote(widehat(R)~" ("~theta~"= "~hat(Q)~")")) +
+  ylab(bquote(widehat(R))) +
+  labs(colour = "Proportion of missing cases (%)")
+
+est_AC <- results %>% ggplot(aes(x = t, y = ac.max.beta, color = as.factor(p*100))) +
+  geom_hline(yintercept = 0,
+             color = "grey",
+             lwd = 1) +
+  geom_line(aes(x = t, y = crit), color = "grey", linetype = "dashed", size = .25, na.rm = TRUE) + 
+  geom_point(size = .25, na.rm = TRUE) +
+  geom_line(size = .25, na.rm = TRUE) +
+  scale_colour_manual(values=paint5) +
+  xlab("Number of iterations") +
+  # ylab(bquote("AC ("~theta~ " = "~hat(Q)~")")) +
+  ylab("Autocorrelation") + 
+  labs(colour = "Proportion of missing cases (%)")
+
+est_cov <- results %>% ggplot(aes(x = t, y = cov.est.X1*100, color = as.factor(p*100))) +
+  geom_hline(yintercept = 95,
+             color = "grey",
+             lwd = 1) +
+  # geom_hline(yintercept = .936,
+  #            color = "grey",
+  #            lwd = 1) +
+  # geom_hline(yintercept = .964,
+  #            color = "grey",
+  #            lwd = 1) +
+  geom_point(size = .25, na.rm = TRUE) +
+  geom_line(size = .25, na.rm = TRUE) +
+  scale_colour_manual(values=paint5) +
+  xlab("") +
+  ylab("Coverage rate (%)") +
+  # ylab(bquote("CR (Q = " ~ beta[1] ~ ")")) +
+  labs(colour = "Proportion of missing cases (%)")
 
 # plot estimates, save 6.75x4.5in or 5.5
-mean_bias + est_bias + est_cov + est_ciw + plot_annotation(tag_levels = "A", tag_suffix = ".") + plot_layout(ncol = 1, guides = "collect") 
+est_bias + est_cov + est_AC + est_Rh + plot_annotation(tag_levels = "A", tag_suffix = ".") + plot_layout(ncol = 2, guides = "collect") 
 
 
-# plot diagnostics, save 6.75x6.5in or 8.0
-mean_Rh + mean_AC + est_Rh + est_AC + PCA_Rh + PCA_AC + plot_layout(guides = "collect", ncol = 2) + plot_annotation(tag_levels = "A", tag_suffix = ".")
 

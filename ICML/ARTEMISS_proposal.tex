@@ -84,14 +84,16 @@ Iterative imputation is a popular tool to accommodate missing data. While it is 
 \section{Iterative Imputation}
 \label{intro}
 
-Most imputation software packages draw inference from iterative imputation procedures. With iterative imputation, the validity of the inference depends on the state-space of the algorithm at the final iteration. This introduces a potential threat to the validity of the imputations: What if the algorithm has not converged? Are the imputations then to be trusted? And can we rely on the inference obtained on the completed data?
+To draw inference from incomplete data, most imputation software packages use iterative imputation procedures. With iterative imputation, the validity of the inference depends on the state-space of the algorithm at the final iteration. This introduces a potential threat to the validity of the imputations: What if the algorithm has not converged? Are the imputations then to be trusted? And can we rely on the inference obtained on the completed data?
 
-These remain open questions since the convergence properties of iterative imputation algorithms have not been systematically studied \citep[\(\S\) 6.5.2]{buur18}. There is no scientific consensus on how to evaluate the convergence of imputation algorithms \citep{ragh07, zhu15, taka17}. The current recommended practice is to visually inspect imputations for signs of non-convergence. This approach may be undesirable for several reasons: 1) it may be challenging to the untrained eye, 2) only severely pathological cases of non-convergence may be diagnosed, and 3) there is not an objective measure that quantifies convergence \citep[\(\S\) 6.5.2]{buur18}. Therefore, a quantitative, diagnostic method to identify non-convergence would be preferred. 
+These remain open questions since the convergence properties of iterative imputation algorithms have not been systematically studied \citep[\(\S\) 6.5.2]{buur18}. While there is no scientific consensus on how to evaluate the convergence of imputation algorithms \citep{zhu15, taka17}, the current practice is to visually inspect imputations for signs of non-convergence. This approach may be undesirable for several reasons: 1) it may be challenging to the untrained eye, 2) only severely pathological cases of non-convergence may be diagnosed, and 3) there is not an objective measure that quantifies convergence \citep[\(\S\) 6.5.2]{buur18}. Therefore, a quantitative, diagnostic method to identify non-convergence would be preferred. 
 
 \section{Identifying Non-Convergence}
 \label{methods}
 
-In our study, we consider two identifiers for non-convergence in iterative algorithms: autocorrelation and potential scale reduction factor $\widehat{R}$ \citep[as~recommended~by~e.g.][]{cowl96}. We follow \citep[p.~147]{lync07} to calculate autocorrelation, and use the recently proposed adapted version of $\widehat{R}$ by \citep[p.~5]{veht19}. Aside from the usual parameters to monitor through visual inspection (i.e., chain means and chain variances), we also look at multivariate parameters to summarize the state-space of the algorithm. We investigate convergence of the parameter of scientific interest, and propose a novel parameter: the first eigenvalue of the variance-covariance matrix after imputation. This novel parameter has the appealing quality that it is not dependent on the model of scientific interest. With that, it suits one of the main advantages of imputation techniques---solving the missing data problem and the substantive scientific problem separately.
+In our study, we consider two non-convergence identifiers:\footnote{\citep[as recommended~by~e.g.][]{cowl96}} autocorrelation \citep[conform][p.~147]{lync07} and potential scale reduction factor $\widehat{R}$ \citep[conform][p.~5]{veht19}. Aside from the usual parameters to monitor---chain means and chain variances---we also investigate convergence of the multivariate state-space of the algorithm. 
+
+We implement \cite{buur18}'s recommendation to track the parameter of scientific interest, and henceforth propose a novel parameter: the first eigenvalue of the variance-covariance matrix that is obtained after imputing the missing data. This novel parameter has the appealing quality that it is not dependent on the model of scientific interest. With that, it suits one of the main advantages of imputation techniques---solving the missing data problem and the substantive scientific problem separately.
 
 % Moreover, the behavior of such algorithms under certain default imputation models (e.g., `predictive mean matching') is an entirely open question \citep{murr18}. 
 
@@ -101,7 +103,8 @@ In our study, we consider two identifiers for non-convergence in iterative algor
 % 
 % Therefore, we propose a novel parameter to inspect. We use this parameter to identify non-convergence with two quantitative diagnostic methods. We use model-based simulation to investigate the plausibility of identifiers for non-convergence for iterative imputation algorithms and provide guidelines for empirical research. For reasons of brevity, we only focus on the iterative imputation algorithm implemented in the popular \texttt{mice} package in \texttt{R} \citep{mice, R}. \textit{[Provide notation here? E.g., the number of imputations, iterations, etc.]}
 
-We evaluate the performance and plausibility of these methods to identify non-convergence through model-based simulation in $\mathtt{R}$ \cite{R}. For reasons of brevity, we only focus on the iterative imputation algorithm implemented in the popular $\mathtt{mice}$ package in $\mathtt{R}$ \citep{mice}.
+We evaluate the performance and plausibility of these diagnostic methods through model-based simulation in $\mathtt{R}$ \cite{R}. For reasons of brevity, we only focus on the iterative imputation algorithm implemented in the popular $\mathtt{mice}$ package in $\mathtt{R}$ \citep{mice}. 
+
 
 % \section{Methods}
 % \label{methods}
@@ -117,9 +120,9 @@ We evaluate the performance and plausibility of these methods to identify non-co
 
 \section{Simulation Study}
 
-We induce non-convergence in the imputation algorithm using two sets of simulation conditions: early stopping and  missingness severity. Early stopping means that we terminate the imputation algorithm after a different number of iterations in each condition ($T = 1, 2, ..., 100$). The severity of the missingness is determined by the proportion of missing cases ($p_{\rm inc} = .05, .25, .50, .75, .95$)\footnote{We only consider a `missing completely at random' missingness mechanism \citep{rubin76}.}. For each simulation condition, we evaluate the validity of several statistical inferences, where inferential validity is defined as unbiased estimates and nominal coverage rates across simulation repetitions ($n_{\rm sim}=1000$).  
+The aim of the simulation study is to determine the impact of non-convergence on the validity of statistical inferences, and to assess whether non-convergence may be detected using several diagnostic methods. Inferential validity is reached when estimates are both unbiased and have nominal coverage across simulation repetitions ($n_{\rm sim}=1000$).
 
-The simulation set-up is summarized in pseudo-code (see Algorithm \ref{alg:setup}). The complete script and technical details are available from \href{https://github.com/hanneoberman/MissingThePoint}{github.com/hanneoberman/MissingThePoint}. 
+We induce non-convergence in the imputation algorithm with two sets of simulation conditions: early stopping and missingness severity. Early stopping implies that we vary the number of iterations before terminating the imputation algorithm (between 1 and 100 iterations). And the missingness severity is determined by the proportion of incomplete cases (between 5 and 95\%)\footnote{We only consider a `missing completely at random' missingness mechanism \citep{rubin76}.}. The simulation set-up is summarized in pseudo-code (see Algorithm \ref{alg:setup}). The complete script and technical details are available from \href{https://github.com/hanneoberman/MissingThePoint}{github.com/hanneoberman/MissingThePoint}. 
 
 \begin{algorithm}
    \caption{Simulation set-up}
@@ -145,6 +148,7 @@ The simulation set-up is summarized in pseudo-code (see Algorithm \ref{alg:setup
 \end{algorithmic}
 \end{algorithm}
 
+
 % The aim of the simulation study is twofold: 1) to determine the effect of early stopping and missingness conditions on the validity of statistical inferences, 2) to investigate the plausibility of identifiers for non-convergence. 
 % 
 % We assess the validity of statistical inferences with bias, coverage rate and confidence interval width as performance measures (see @buur18 for definitions). And we evaluate the plausibility of the identifiers using the diagnostic thresholds for $\widehat{R}$ and autocorrelation (i.e., $\widehat{R}=1.2,1.1,1.01$ and the critical value for AC = 0).
@@ -160,25 +164,27 @@ The simulation set-up is summarized in pseudo-code (see Algorithm \ref{alg:setup
 \section{Results}
 \label{results}
 
-Our results demonstrate that inferential validity was achieved after five to ten iterations---much earlier than indicated by the diagnostic methods. For example, 
+Our results demonstrate that inferential validity is achieved after five to ten iterations---even in the worst missingness conditions (i.e., up-to 95\% of cases having missing values). Conditions with a lower proportion of incomplete cases yield valid inferences almost instantly (after just two iterations). This is in grave contrast to the non-convergence identified by the diagnostic methods. Autocorrelation- and $\widehat{R}$-values still indicate improving convergence after 20 to 30 iterations. 
 
 
 \begin{figure*}
-{\centering \includegraphics{Figures/estimates} 
+{\centering \includegraphics{Figures/resultssquare} 
 }
-\caption{Impact of non-convergence on statistical inferences. Depicted are the bias, coverage rate (CR) and confidence interval width (CIW) of the worst-performing quantities of scientific interest $Q$ in terms of bias. The gray lines represent the objectives: unbiased estimates with nominal coverage.}\label{fig:est}
+\caption{Subset of simulation results (truncated at 50 iterations). Depicted are performance measures bias and coverage rate, and non-convergence identifiers autocorrelation and $\widehat{R}$ for the same scientific estimate. The solid gray lines represent inferential validity of the estimate (i.e., unbiasedness and nominal coverage), whereas the dashed gray lines depict the common diagnostic thresholds of the identifiers.}\label{fig:res}
 \end{figure*}
+
+For example, in Figure \ref{fig:res} we see that... The novel parameter has equal performance to the quantity of scientific interest as parameter ($r=.975$), while having the advantage of being model-independent.
 
 % Results are displayed in Figure \ref{fig:est} and \ref{fig:diag}. Simulation conditions with a high proportion of missing cases and a low number of iterations most often result in biased estimates and non-nominal coverages. 
 % 
 % \textit{[Copy-paste from here!]} These results demonstrate that the estimates of univariate scientific estimands \(Q\) are not impacted by early stopping of the MICE algorithm or the proportion of incomplete cases in \(y\). Unbiased estimates may be obtained after just one iteration. Multivariate estimates, by contrast, are affected by both the number of iterations and the proportion of missing cases. Completely unbiased estimates are only obtained under low to moderate missingness (\(p_{\rm inc}\leq.50\)), after at most three iterations. We observe approximately unbiased estimates after at most seven iterations (for any \(p_{\rm inc}\) considered). This implies that the algorithm produces stable, non-improving estimates when \(T\geq7\).
 
-\begin{figure*}
-{\centering \includegraphics{Figures/diagnostics} 
-}
-\caption{Non-convergence identified by diagnostic methods: $\widehat{R}$ and $AC$ applied on several $\theta$s. The left-hand side of the figure contains $\widehat{R}$-values, and the right-hand side contains $AC$-values. Depicted in the rows are the scalar summaries $\theta$: chain mean, chain variance, the quantity of scientific interest $\hat{Q}$, and the first eigenvalue of the variance-covariance matrix $\lambda_1$.}\label{fig:diag}
-\end{figure*}
-
+% \begin{figure*}
+% {\centering \includegraphics{Figures/Rplot} 
+% }
+% \caption{Non-convergence identified by diagnostic methods: $\widehat{R}$ and $AC$ applied on several $\theta$s. The left-hand side of the figure contains $\widehat{R}$-values, and the right-hand side contains $AC$-values. Depicted in the rows are the scalar summaries $\theta$: chain mean, chain variance, the quantity of scientific interest $\hat{Q}$, and the first eigenvalue of the variance-covariance matrix $\lambda_1$.}\label{fig:diag}
+% \end{figure*}
+% 
 
 % Overall, the methods to diagnose non-convergence perform as expected: they indicate more signs of non-convergence in conditions with worse performance in terms of bias and confidence-validity. Under low to moderate missingness, it does not seem to matter on which \(\theta\) the non-convergence diagnostics are applied. If we look at complete unbiasedness, however, we notice that univariate \(\theta\)s fail to diagnose the persistent bias in conditions where \(p_{\rm inc}\geq.75\).
 % 
@@ -191,7 +197,7 @@ Our results demonstrate that inferential validity was achieved after five to ten
 \section{Discussion}
 \label{discussion}
 
-We have shown that iterative imputation algorithms can yield correct outcomes, even when a converged state has not yet formally been reached. Any further iterations would then burn computational resources without improving the statistical inferences. Our study found that---in the cases considered---inferential validity was achieved after five to ten iterations, much earlier than indicated by the \(\widehat{R}\) and AC diagnostics. Of course, it never hurts to iterate longer, but such calculations hardly bring added value.
+With this study, we show that iterative imputation algorithms can yield correct outcomes, even when a converged state has not yet formally been reached. Any further iterations would then burn computational resources without improving the statistical inferences. Our study found that---in the cases considered---inferential validity was achieved after five to ten iterations, much earlier than indicated by the autocorrelation and \(\widehat{R}\) diagnostics. Of course, it never hurts to iterate longer, but such calculations hardly bring added value.
 
 
 % In the unusual situation where you want a paper to appear in the

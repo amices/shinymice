@@ -1,4 +1,4 @@
-\begin{thebibliography}{10}
+\begin{thebibliography}{9}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -22,13 +22,6 @@ Lynch, S.~M.
 {R Core Team}.
 \newblock \emph{R: {A} language and environment for statistical computing}.
 \newblock Vienna, Austria, 2020.
-
-\bibitem[Raghunathan \& Bondarenko(2007)Raghunathan and Bondarenko]{ragh07}
-Raghunathan, T. and Bondarenko, I.
-\newblock Diagnostics for {Multiple} {Imputations}.
-\newblock {SSRN} {Scholarly} {Paper} ID 1031750, Social Science Research
-  Network, Rochester, NY, November 2007.
-\newblock URL \url{https://papers.ssrn.com/abstract=1031750}.
 
 \bibitem[Rubin(1976)]{rubin76}
 Rubin, D.~B.
