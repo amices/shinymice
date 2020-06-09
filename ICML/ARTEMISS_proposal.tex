@@ -81,6 +81,8 @@
 Iterative imputation is a popular tool to accommodate missing data. While it is widely accepted that valid inferences can be obtained with this technique, these inferences all rely on algorithmic convergence. There is no consensus on how to evaluate the convergence properties of the method. This paper provides insight into identifying non-convergence in iterative imputation algorithms. Our study found that---in the cases considered---inferential validity was achieved after five to ten iterations, much earlier than indicated by diagnostic methods. We conclude that it never hurts to iterate longer, but such calculations hardly bring added value.
 \end{abstract}
 
+\setcounter{footnote}{2}
+
 \section{Iterative Imputation}
 \label{intro}
 
@@ -91,9 +93,9 @@ These remain open questions since the convergence properties of iterative imputa
 \section{Identifying Non-Convergence}
 \label{methods}
 
-In our study, we consider two non-convergence identifiers:\footnote{\citep[as recommended~by~e.g.][]{cowl96}} autocorrelation \citep[conform][p.~147]{lync07} and potential scale reduction factor $\widehat{R}$ \citep[conform][p.~5]{veht19}. Aside from the usual parameters to monitor---chain means and chain variances---we also investigate convergence of the multivariate state-space of the algorithm. 
+In our study, we consider two non-convergence identifiers: autocorrelation \citep[conform][p.~147]{lync07} and potential scale reduction factor $\widehat{R}$ \citep[conform][p.~5]{veht19}.\footnote{As recommended by e.g. \citet{cowl96}.} Aside from the usual parameters to monitor---chain means and chain variances \citep[\(\S\) 4.5.6]{buur18}---we also investigate convergence in the multivariate state-space of the algorithm. 
 
-We implement \cite{buur18}'s recommendation to track the parameter of scientific interest, and henceforth propose a novel parameter: the first eigenvalue of the variance-covariance matrix that is obtained after imputing the missing data. This novel parameter has the appealing quality that it is not dependent on the model of scientific interest. With that, it suits one of the main advantages of imputation techniques---solving the missing data problem and the substantive scientific problem separately.
+We implement \citet[\(\S\) 6.5.1]{buur18}'s recommendation to track the parameter of scientific interest, and henceforth propose a novel parameter: the first eigenvalue of the variance-covariance matrix that is obtained after imputing the missing data. This novel parameter has the appealing quality that it is not dependent on the model of scientific interest. With that, it suits one of the main advantages of imputation techniques---solving the missing data problem and the substantive scientific problem separately.
 
 % Moreover, the behavior of such algorithms under certain default imputation models (e.g., `predictive mean matching') is an entirely open question \citep{murr18}. 
 
@@ -103,7 +105,7 @@ We implement \cite{buur18}'s recommendation to track the parameter of scientific
 % 
 % Therefore, we propose a novel parameter to inspect. We use this parameter to identify non-convergence with two quantitative diagnostic methods. We use model-based simulation to investigate the plausibility of identifiers for non-convergence for iterative imputation algorithms and provide guidelines for empirical research. For reasons of brevity, we only focus on the iterative imputation algorithm implemented in the popular \texttt{mice} package in \texttt{R} \citep{mice, R}. \textit{[Provide notation here? E.g., the number of imputations, iterations, etc.]}
 
-We evaluate the performance and plausibility of these diagnostic methods through model-based simulation in $\mathtt{R}$ \cite{R}. For reasons of brevity, we only focus on the iterative imputation algorithm implemented in the popular $\mathtt{mice}$ package in $\mathtt{R}$ \citep{mice}. 
+We evaluate the performance and plausibility of these diagnostic methods through model-based simulation in $\mathtt{R}$ \citep{R}. For reasons of brevity, we only focus on the iterative imputation algorithm implemented in the popular $\mathtt{mice}$ package in $\mathtt{R}$ \citep{mice}. 
 
 
 % \section{Methods}
@@ -122,7 +124,7 @@ We evaluate the performance and plausibility of these diagnostic methods through
 
 The aim of the simulation study is to determine the impact of non-convergence on the validity of statistical inferences, and to assess whether non-convergence may be detected using several diagnostic methods. Inferential validity is reached when estimates are both unbiased and have nominal coverage across simulation repetitions ($n_{\rm sim}=1000$).
 
-We induce non-convergence in the imputation algorithm with two sets of simulation conditions: early stopping and missingness severity. Early stopping implies that we vary the number of iterations before terminating the imputation algorithm (between 1 and 100 iterations). And the missingness severity is determined by the proportion of incomplete cases (between 5 and 95\%)\footnote{We only consider a `missing completely at random' missingness mechanism \citep{rubin76}.}. The simulation set-up is summarized in pseudo-code (see Algorithm \ref{alg:setup}). The complete script and technical details are available from \href{https://github.com/hanneoberman/MissingThePoint}{github.com/hanneoberman/MissingThePoint}. 
+We induce non-convergence in the imputation algorithm with two sets of simulation conditions: early stopping and missingness severity. Early stopping implies that we vary the number of iterations before terminating the imputation algorithm (between 1 and 100 iterations). The missingness severity is determined\footnote{I.e., we only consider a `missing completely at random' missingness mechanism \citep{rubin76}.} by the proportion of incomplete cases (between 5 and 95\%). The simulation set-up is summarized in pseudo-code (see Algorithm \ref{alg:setup}), while the complete script and technical details are available from \href{https://github.com/hanneoberman/MissingThePoint}{github.com/hanneoberman/MissingThePoint}. 
 
 \begin{algorithm}
    \caption{Simulation set-up}
@@ -168,14 +170,12 @@ Our results demonstrate that inferential validity is achieved after five to ten 
 
 
 \begin{figure*}
-{\centering \includegraphics{Figures/resultssquare} 
+{\centering \includegraphics{Figures/results} 
 }
-\caption{Subset of simulation results (truncated at 50 iterations). Depicted are performance measures bias and coverage rate, and non-convergence identifiers autocorrelation and $\widehat{R}$ for the same scientific estimate. The solid gray lines represent inferential validity of the estimate (i.e., unbiasedness and nominal coverage), whereas the dashed gray lines depict the common diagnostic thresholds of the identifiers.}\label{fig:res}
+\caption{Subset of simulation results (truncated at 50 iterations). Depicted are performance measures percentage bias and coverage rate, and non-convergence identifiers autocorrelation and $\widehat{R}$ for a regression estimate. The solid gray lines represent inferential validity of the estimate (i.e., unbiasedness and nominal coverage), whereas the dashed gray lines depict common diagnostic thresholds of the identifiers.}\label{fig:res}
 \end{figure*}
 
-For example, in Figure \ref{fig:res} we see... 
-
-The novel parameter has equal performance to the quantity of scientific interest as parameter (Spearman $r=.978$), while having the advantage of being model-independent.
+For example, in Figure \ref{fig:res} we show some results for a regression estimate. Depicted are percentage bias, coverage rate,  autocorrelation and $\widehat{R}$ of the estimate. From this, we see that within a few iterations the percentage bias approaches zero and nominal coverage is quickly reached---even when autocorrelation and $\widehat{R}$ would still signal non-convergence. This also holds for scenarios with severe missingness. Moreover, results seem invariant to the choice of parameter for the non-convergence diagnostics. The novel parameter that we propose has equal performance to the scientific estimate presented in Figure \ref{fig:res},\footnote{The Spearman correlation between the autocorrelation values for the two parameters is $r=.982$, and $r=.978$ between the $\widehat{R}$-values.} while having the advantage of being independent from the scientific model of interest. 
 
 % Results are displayed in Figure \ref{fig:est} and \ref{fig:diag}. Simulation conditions with a high proportion of missing cases and a low number of iterations most often result in biased estimates and non-nominal coverages. 
 % 
@@ -199,7 +199,9 @@ The novel parameter has equal performance to the quantity of scientific interest
 \section{Discussion}
 \label{discussion}
 
-With this study, we show that iterative imputation algorithms can yield correct outcomes, even when a converged state has not yet formally been reached. Any further iterations would then burn computational resources without improving the statistical inferences. Our study found that---in the cases considered---inferential validity was achieved after five to ten iterations, much earlier than indicated by the autocorrelation and \(\widehat{R}\) diagnostics. Of course, it never hurts to iterate longer, but such calculations hardly bring added value.
+With this study, we show that iterative imputation algorithms can yield correct outcomes, even when a converged state has not yet formally been reached. Any further iterations would then burn computational resources without improving the statistical inferences. Preliminary findings suggest that these results also hold for more challenging scenarios, e.g. under different missingness mechanisms or imputation models. 
+
+Our study found that---in the cases considered---inferential validity was achieved after five to ten iterations, much earlier than indicated by the autocorrelation and \(\widehat{R}\) diagnostics. Of course, it never hurts to iterate longer, but such calculations hardly bring added value.
 
 
 % In the unusual situation where you want a paper to appear in the

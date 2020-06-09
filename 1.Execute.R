@@ -29,8 +29,8 @@ source("Functions/EvaluateResults.R")
 
 # simulation parameters
 populationsize <- 1000 #nr of observations in simulated dataset
-n.iter <- 100 #nr of iterations (varying 1:n.iter)
-n.sim <- 1000 #nr of simulations per iteration value
+n.iter <- 10 #nr of iterations (varying 1:n.iter)
+n.sim <- 100 #nr of simulations per iteration value
 p.miss <- c(.05, .25, .5, .75, .95) #proportion of incomplete cases
 true.effect <- 2 #regression coefficient to be estimated
 
@@ -63,23 +63,23 @@ out <-
 ########################
 
 # summarize raw results
-results_without_CI <- evaluate.sim(sims = out)
+results <- evaluate.sim(sims = out)
 
-# calculate empirical CI
-CI_lower <-
-  evaluate.sim(sims = out, mean_or_SE = "lower")
-CI_upper <-
-  evaluate.sim(sims = out, mean_or_SE = "upper")
-
-# combine with other results
-results <-
-  results_without_CI %>%
-  left_join(CI_lower,
-            by = c("t", "p"),
-            suffix = c("", ".LL")) %>%
-  left_join(CI_upper,
-            by = c("t", "p"),
-            suffix = c("", ".UL"))
+# # calculate empirical CI
+# CI_lower <-
+#   evaluate.sim(sims = out, mean_or_SE = "lower")
+# CI_upper <-
+#   evaluate.sim(sims = out, mean_or_SE = "upper")
+# 
+# # combine with other results
+# results <-
+#   results %>%
+#   left_join(CI_lower,
+#             by = c("t", "p"),
+#             suffix = c("", ".LL")) %>%
+#   left_join(CI_upper,
+#             by = c("t", "p"),
+#             suffix = c("", ".UL"))
 
 # # if necessary, calculate MCMC SEs
 # MCMCSE <- evaluate.sim(sims = out, mean_or_SE = "se")
@@ -87,7 +87,7 @@ results <-
 # results <- left_join(results, MCMCSE, by = c("t", "p"), suffix = c("", ".SE"))
 
 # save results
-save(results, file = "Results/results.Rdata")
+save(results, file = "Results/data_Y_first.Rdata")
 
 # # if necessary, save raw results (too large for Github)
 # save(out, file = "Results/raw.Rdata")

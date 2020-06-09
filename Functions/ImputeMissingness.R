@@ -14,6 +14,7 @@ test.impute <- function(amp_data,
     impsim <<- mice(
       data = amp_data,
       method = "norm",
+      visitSequence = c("Y", "X1", "X2", "X3"),
       m = 5,
       maxit = 1,
       print = FALSE

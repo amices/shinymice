@@ -18,17 +18,19 @@ theme_update(
   legend.key = element_blank(),
   legend.position = "bottom",
   legend.margin = margin(0,0,0,0),
-  text = element_text(size = 7),
-  title = element_text(size = 7),
-  legend.title = element_text(size = 7),
-  axis.text=element_text(size=7),
-  axis.title=element_text(size=7)
+  text = element_text(size = 8),
+  title = element_text(size = 8),
+  legend.title = element_text(size = 8),
+  axis.text=element_text(size=8),
+  axis.title=element_text(size=8)
 )
 
 # load results and figures
 load("Results/complete.Rdata") 
 # test correlation between two thetas
 r <- cor(results$r.hat.max.beta, results$r.hat.max.pca, use = "complete.obs", method = "spearman")
+# test correlation between two thetas
+r.ac <- cor(results$ac.max.beta, results$ac.max.pca, use = "complete.obs", method = "spearman")
 
 # pre-processing
 results <- results %>% filter(t<51)
@@ -99,6 +101,7 @@ est_cov <- results %>% ggplot(aes(x = t, y = cov.est.X1*100, color = as.factor(p
   geom_point(size = .25, na.rm = TRUE) +
   geom_line(size = .25, na.rm = TRUE) +
   scale_colour_manual(values=paint5) +
+  # xlab("") +
   xlab("") +
   ylab("Coverage rate (%)") +
   # ylab(bquote("CR (Q = " ~ beta[1] ~ ")")) +

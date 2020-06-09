@@ -54,7 +54,7 @@ Van~Buuren, S. and Groothuis-Oudshoorn, K.
   Bürkner]{veht19}
 Vehtari, A., Gelman, A., Simpson, D., Carpenter, B., and Bürkner, P.-C.
 \newblock Rank-normalization, folding, and localization: {An} improved
-  \${\textbackslash}widehat\{{R}\}\$ for assessing convergence of {MCMC}.
+  {$\widehat{R}$} for assessing convergence of {MCMC}.
 \newblock March 2019.
 \newblock URL \url{http://arxiv.org/abs/1903.08008}.
 
