@@ -95,7 +95,7 @@ These remain open questions since the convergence properties of iterative imputa
 
 In our study, we consider two non-convergence identifiers: autocorrelation \citep[conform][p.~147]{lync07} and potential scale reduction factor $\widehat{R}$ \citep[conform][p.~5]{veht19}.\footnote{As recommended by e.g. \citet{cowl96}.} Aside from the usual parameters to monitor---chain means and chain variances \citep[\(\S\) 4.5.6]{buur18}---we also investigate convergence in the multivariate state-space of the algorithm. 
 
-We implement \citet[\(\S\) 6.5.1]{buur18}'s recommendation to track the parameter of scientific interest, and henceforth propose a novel parameter: the first eigenvalue of the variance-covariance matrix that is obtained after imputing the missing data. This novel parameter has the appealing quality that it is not dependent on the model of scientific interest. With that, it suits one of the main advantages of imputation techniques---solving the missing data problem and the substantive scientific problem separately.
+We implement \citet[\(\S\) 6.5.1]{buur18}'s recommendation to track the parameter of scientific interest, and subsequently propose a novel parameter: the first eigenvalue of the variance-covariance matrix that is obtained after imputing the missing data. Compared to monitoring the estimate of scientific interest, this novel parameter has the appealing quality that it is not dependent on the complete-data inference. With that, it suits one of the main advantages of imputation techniques---solving the missing data problem and the substantive scientific problem separately.
 
 % Moreover, the behavior of such algorithms under certain default imputation models (e.g., `predictive mean matching') is an entirely open question \citep{murr18}. 
 
@@ -166,7 +166,7 @@ We induce non-convergence in the imputation algorithm with two sets of simulatio
 \section{Results}
 \label{results}
 
-Our results demonstrate that inferential validity is achieved after five to ten iterations, even under severe missingness conditions (i.e., up-to 95\% of cases having missing values). Conditions with a lower proportion of incomplete cases yield valid inferences almost instantly---after just two iterations. This is in grave contrast to the non-convergence identified by the diagnostic methods. Autocorrelation- and $\widehat{R}$-values still indicate improving convergence after 20 to 30 iterations. 
+Our results indicate that inferential validity is achieved after five to ten iterations, even under severe missingness conditions (i.e., up-to 95\% of cases having missing values). Conditions with a lower proportion of incomplete cases yield valid inferences almost instantly---after just two iterations. This is in grave contrast to the non-convergence identified by the diagnostic methods. Autocorrelation- and $\widehat{R}$-values still indicate improving convergence after 20 to 30 iterations. 
 
 
 \begin{figure*}
