@@ -15,15 +15,13 @@ theme_update(
   panel.background = element_blank(),
   axis.line = element_line(colour = "black"),
   legend.key = element_blank(),
-  legend.position = "bottom",
-  legend.margin = margin(0,0,0,0),
-  text = element_text(size = 7),
-  title = element_text(size = 8),
-  legend.title = element_text(size = 7),
-  axis.text=element_text(size=5),
-  axis.title=element_text(size=5)
+  legend.position = "bottom"
 )
 
+# define colorblind friendly colors
+paint5 <- c('#228833', '#66CCEE', '#CCBB44','#EE6677', '#AA3377')
+
+# load results
 load("Results/regular.Rdata") 
 reg <- results
 load("Results/visitseq_Y_first.Rdata") 

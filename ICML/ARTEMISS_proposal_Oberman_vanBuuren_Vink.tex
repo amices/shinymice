@@ -78,7 +78,7 @@
 \printAffiliationsAndNotice{\icmlEqualContribution} % otherwise use the standard text.
 
 \begin{abstract}
-Iterative imputation is a popular tool to accommodate missing data. While it is widely accepted that valid inferences can be obtained with this technique, these inferences all rely on algorithmic convergence. There is no consensus on how to evaluate the convergence properties of the method. This paper provides insight into identifying non-convergence in iterative imputation algorithms. Our study found that---in the cases considered---inferential validity was achieved after five to ten iterations, much earlier than indicated by diagnostic methods. We conclude that it never hurts to iterate longer, but such calculations hardly bring added value.
+Iterative imputation is a popular tool to accommodate missing data. While it is widely accepted that valid inferences can be obtained with this technique, these inferences all rely on algorithmic convergence. There is no consensus on how to evaluate the convergence properties of the method. Our study provides insight into identifying non-convergence in iterative imputation algorithms. We found that---in the cases considered---inferential validity was achieved after five to ten iterations, much earlier than indicated by diagnostic methods. We conclude that it never hurts to iterate longer, but such calculations hardly bring added value.
 \end{abstract}
 
 \setcounter{footnote}{2}
@@ -124,7 +124,7 @@ We evaluate the performance and plausibility of these diagnostic methods through
 
 The aim of the simulation study is to determine the impact of non-convergence on the validity of statistical inferences, and to assess whether non-convergence may be detected using several diagnostic methods. Inferential validity is reached when estimates are both unbiased and have nominal coverage across simulation repetitions ($n_{\rm sim}=1000$).
 
-We induce non-convergence in the imputation algorithm with two sets of simulation conditions: early stopping and missingness severity. Early stopping implies that we vary the number of iterations before terminating the imputation algorithm (between 1 and 100 iterations). The missingness severity is determined\footnote{I.e., we only consider a `missing completely at random' missingness mechanism \citep{rubin76}.} by the proportion of incomplete cases (between 5 and 95\%). The simulation set-up is summarized in pseudo-code (see Algorithm \ref{alg:setup}), while the complete script and technical details are available from \href{https://github.com/hanneoberman/MissingThePoint}{github.com/hanneoberman/MissingThePoint}. 
+To induce non-convergence in the imputation algorithm we use  two sets of simulation conditions: early stopping and missingness severity. Early stopping implies that we vary the number of iterations before terminating the imputation algorithm (between 1 and 100 iterations). The missingness severity is determined\footnote{I.e., we only consider a `missing completely at random' missingness mechanism \citep{rubin76}.} by the proportion of incomplete cases (between 5 and 95\%). We provide a summary of the simulation set-up in Algorithm \ref{alg:setup}, whereas the complete script and technical details are available from \href{https://github.com/hanneoberman/MissingThePoint}{github.com/hanneoberman/MissingThePoint}. 
 
 \begin{algorithm}
    \caption{Simulation set-up}
