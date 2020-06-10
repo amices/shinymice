@@ -33,12 +33,18 @@ colnames(dat) <- c("X1", "X2", "X3") #set predictors names
 means <- colMeans(dat)
 # betas <- lm(X1~., data = dat)$coefficients
 
+# create patterns to ampute the data with multivariate missingness
+amp.pat <-
+  expand.grid(c(0, 1), c(0, 1), c(0, 1)) %>% #define all possible combinations of univariate and multivariate missingness
+  .[c(-1,-8), ] #remove the completely (un)observed cases  
+names(amp.pat) <- ampute(dat)$patterns %>% names() #obtain correct names of patterns
 
-simulation <- function(dataset, proportions){
+simulation <- function(dataset, proportions, pattern){
 # ampute data with different missingness
 purrr::map_dfr(p.inc, function(p){
   mice::ampute(
     data = dat,
+    patterns = pattern,
     prop = p,
     mech = "MCAR"
   )$amp %>% 
@@ -55,15 +61,23 @@ purrr::map_dfr(p.inc, function(p){
 # run simulation n.sim times
 out <-
   replicate(n = n.sims,
-            expr = simulation(dataset = dat, proportions = p.inc),
+            expr = simulation(dataset = dat, proportions = p.inc, pattern = amp.pat),
             simplify = FALSE) %>% 
   map_df(., ~ {
               as.data.frame(.)
   })
 
-results <-  out %>% aggregate(. ~ prop, data = ., mean) %>% mutate(sd = aggregate(. ~ prop, data = out, sd)[,2])
+save(out, file = "multivar_missingness_proportions_raw.Rdata")
 
-save(results, file = "effect_of_missingness.Rdata")
+
+results <-  out %>% 
+  aggregate(. ~ prop, data = ., mean) %>% 
+  mutate(
+    sd = aggregate(. ~ prop, data = out, sd)[,2], 
+    ci_lo = aggregate(. ~ prop, data = out, quantile, probs = 0.025)[,2],
+    ci_hi = aggregate(. ~ prop, data = out, quantile, probs = 0.975)[,2])
+
+save(results, file = "multivar_missingness_proportions.Rdata")
 
 
 # set default graphing behavior
@@ -83,12 +97,12 @@ theme_update(
 # plot
 results %>% ggplot() + 
   geom_point(aes(x = prop, y = est)) +
-  geom_hline(yintercept=means[2], color = "gray") +
+  # geom_hline(yintercept=means[2], color = "gray") +
   geom_errorbar(
-        aes(x = prop, ymin = est-sd, ymax = est+sd),
+        aes(x = prop, ymin = ci_lo, ymax = ci_hi),
         width = .02,
         color = "grey"
       ) + 
   xlab("Proportion of incomplete cases") + 
   ylab("Estimated mean") +
-  ggtitle("Small simulation for effect of missingness", subtitle = "(MCAR; error bars are SD between 100 simulation runs)")
+  ggtitle("Small simulation for effect of missingness", subtitle = "(MCAR; 5 iterations, 95% CI in 100 simulation runs)")

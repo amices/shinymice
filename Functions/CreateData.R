@@ -18,7 +18,7 @@ data.simulation <- function(n = populationsize, true_effect = 2) {
   # compute  outcome variable from predictors
   Y <-
     1 + true_effect * simdata$X1 + 0.5 * simdata$X2 - 1 * simdata$X3 + rnorm(n = populationsize, sd = 10)
-  simdata <- cbind(Y, simdata)
+  simdata <- cbind(simdata, Y)
   
   # estimate comlpete data parameters Q
   true.effect <<-

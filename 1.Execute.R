@@ -29,8 +29,8 @@ source("Functions/EvaluateResults.R")
 
 # simulation parameters
 populationsize <- 1000 #nr of observations in simulated dataset
-n.iter <- 10 #nr of iterations (varying 1:n.iter)
-n.sim <- 100 #nr of simulations per iteration value
+n.iter <- 100 #nr of iterations (varying 1:n.iter)
+n.sim <- 1000 #nr of simulations per iteration value
 p.miss <- c(.05, .25, .5, .75, .95) #proportion of incomplete cases
 true.effect <- 2 #regression coefficient to be estimated
 
@@ -87,7 +87,7 @@ results <- evaluate.sim(sims = out)
 # results <- left_join(results, MCMCSE, by = c("t", "p"), suffix = c("", ".SE"))
 
 # save results
-save(results, file = "Results/data_Y_first.Rdata")
+save(results, file = "Results/complete.Rdata")
 
 # # if necessary, save raw results (too large for Github)
 # save(out, file = "Results/raw.Rdata")
