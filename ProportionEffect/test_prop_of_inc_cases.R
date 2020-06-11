@@ -1,3 +1,6 @@
+# to do: korte note schrijven over hoe de hoeveelheid missingness regelateerd is aan de estimates --> bias trend boven 50% miss
+# does the miss prop shift the bias towards a particular direction?
+
 # set-up environment
 library(dplyr)
 library(mice)
@@ -13,7 +16,6 @@ p.inc <- seq(0.05, 0.95, by = 0.05)
 
 # set number of simulations
 n.sims <- 100
-
 
 # generate some data and get true values
 # data generating mechanism = multivariate normal distribution
@@ -70,14 +72,14 @@ out <-
 save(out, file = "multivar_missingness_proportions_raw.Rdata")
 
 
-results <-  out %>% 
+results_prop <-  out %>% 
   aggregate(. ~ prop, data = ., mean) %>% 
   mutate(
     sd = aggregate(. ~ prop, data = out, sd)[,2], 
     ci_lo = aggregate(. ~ prop, data = out, quantile, probs = 0.025)[,2],
     ci_hi = aggregate(. ~ prop, data = out, quantile, probs = 0.975)[,2])
 
-save(results, file = "multivar_missingness_proportions.Rdata")
+save(results_prop, file = "multivar_missingness_proportions.Rdata")
 
 
 # set default graphing behavior
@@ -90,14 +92,13 @@ theme_update(
   panel.background = element_blank(),
   axis.line = element_line(colour = "black"),
   legend.key = element_blank(),
-  legend.position = "bottom",
-  legend.margin = margin(0,0,0,0)
-)
+  legend.position = "bottom"
+  )
 
 # plot
-results %>% ggplot() + 
+results_prop %>% ggplot() + 
   geom_point(aes(x = prop, y = est)) +
-  # geom_hline(yintercept=means[2], color = "gray") +
+  geom_hline(yintercept=3.509, linetype = "dashed") +
   geom_errorbar(
         aes(x = prop, ymin = ci_lo, ymax = ci_hi),
         width = .02,

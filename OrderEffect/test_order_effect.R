@@ -1,4 +1,6 @@
 # plot to check order effects
+# met dezelfde seed in mice 
+# note schrijven over deze sim met plotje van resultaten, dat het geen bal uitmaakt!
 
 # load packages
 library(dplyr) #version 0.8.5
@@ -44,7 +46,7 @@ full_dat <- rbind(reg, seqY, seqX2, seqX3, datY)
 
 # plot for just one proportion
 full_dat %>% 
-  filter(p==.95) %>% 
+  filter(p==.5) %>% 
   ggplot() +
   geom_line(aes(x=t, y=bias.est.X1, linetype = sim), color = paint5[2], size = 1) + # add this for percentage bias: /0.0206 
   geom_line(aes(x=t, y=bias.est.X2, linetype = sim), color = paint5[3], size = 1) + # add this for percentage bias: /0.0047 

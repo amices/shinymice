@@ -1,4 +1,5 @@
 # small sim for trending
+# over-disp versie maken!
 
 # set-up
 library(dplyr)
@@ -52,10 +53,10 @@ stat <- convergence(dat[,c("stat1", "stat2")]) %>% cbind(sim = "Stationary")
 trend <- convergence(dat[,c("up1", "up2")]) %>% cbind(sim = "Upward trending")
 diver <- convergence(dat[,c("up3", "down")]) %>% cbind(sim = "Divergence")
 # combine
-results <- rbind(stat, trend, diver)
+results_trend <- rbind(stat, trend, diver)
 
 # plot results
-rhat <- results %>% ggplot(aes(x = iteration, y = r.hat.max, color = sim)) +
+rhat <- results_trend %>% ggplot(aes(x = iteration, y = r.hat.max, color = sim)) +
   geom_hline(yintercept = 1,
              color = "grey",
              lwd = 1) +
@@ -66,7 +67,7 @@ rhat <- results %>% ggplot(aes(x = iteration, y = r.hat.max, color = sim)) +
   ylab(bquote("Adapted"~widehat(R))) +
   labs(color = "Trending scenario")  
 
-old_rhat <- results %>% ggplot(aes(x = iteration, y = r.hat, color = sim)) +
+old_rhat <- results_trend %>% ggplot(aes(x = iteration, y = r.hat, color = sim)) +
   geom_hline(yintercept = 1,
              color = "grey",
              lwd = 1) +
@@ -77,7 +78,7 @@ old_rhat <- results %>% ggplot(aes(x = iteration, y = r.hat, color = sim)) +
   ylab(bquote("Original"~widehat(R))) +
   labs(color = "Trending scenario")  
 
-ac <- results %>% ggplot(aes(x = iteration, y = ac.max, color = sim)) +
+ac <- results_trend %>% ggplot(aes(x = iteration, y = ac.max, color = sim)) +
   geom_hline(yintercept = 0,
              color = "grey",
              lwd = 1) +
