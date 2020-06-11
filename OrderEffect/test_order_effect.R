@@ -1,11 +1,102 @@
 # plot to check order effects
-# met dezelfde seed in mice 
-# note schrijven over deze sim met plotje van resultaten, dat het geen bal uitmaakt!
 
-# load packages
-library(dplyr) #version 0.8.5
-library(ggplot2) #version 3.3.0
-library(patchwork) #version 1.0.0
+# set-up environment
+library(dplyr)
+library(mice)
+library(purrr)
+library(ggplot2)
+library(patchwork) 
+
+
+# set random seed
+set.seed(1111)
+
+# set proportions
+# p.inc <- c(.05, .25, .5, .75, .95)
+
+# set orders
+var.order <- list(
+  c("X1", "X2", "X3"), 
+  c("X1", "X3", "X2"), 
+  c("X2", "X1", "X3"), 
+  c("X2", "X3", "X1"), 
+  c("X3", "X1", "X2"), 
+  c("X3", "X2", "X1"))
+
+# set number of simulations
+n.sims <- 100
+
+# generate some data and get true values
+# data generating mechanism = multivariate normal distribution
+means <- c(12, 3, 0.5) #means
+vars  <- c(4, 16, 9) #variances
+R <- matrix(numeric(3 * 3), nrow = 3) #correlation matrix
+diag(R) <- 1 #set diagonal to 1
+R[upper.tri(R)] <-
+  R[lower.tri(R)] <- c(.5, .3, .4) #set bivariate correlations
+sigma <-
+  diag(sqrt(vars)) %*% R %*% diag(sqrt(vars)) #variance-covariance matrix
+dat <-
+  as.data.frame(mvtnorm::rmvnorm(n = 100, mean = means, sigma = sigma)) #create data
+colnames(dat) <- c("X1", "X2", "X3") #set predictors names
+
+# true estimates
+# means <- colMeans(dat)
+betas <- lm(X1~., data = dat)$coefficients
+
+# create patterns to ampute the data with multivariate missingness
+amp.pat <-
+  expand.grid(c(0, 1), c(0, 1), c(0, 1)) %>% #define all possible combinations of univariate and multivariate missingness
+  .[c(-1,-8), ] #remove the completely (un)observed cases  
+names(amp.pat) <- ampute(dat)$patterns %>% names() #obtain correct names of patterns
+
+simulation <- function(dataset, orders, pattern){
+  purrr::map_dfr(orders, .id = "ord", function(o){
+    mice::ampute(
+      data = dat,
+      patterns = pattern,
+      prop = .5,
+      mech = "MCAR"
+    )$amp %>% 
+      mice::mice(., 
+                 visitSequence = o, 
+                 maxit = 2,
+                 print = FALSE,
+                 seed = 1111) %>% 
+      mice::complete(., "all") %>% 
+      map(., lm, formula = X1 ~ X2 + X3) %>% 
+      pool() %>% 
+      .$pooled %>% 
+      .$estimate %>% 
+      data.frame(est = ., var = c("Intercept", "X2", "X3"))
+  })
+}
+
+# run simulation n.sim times
+out <-
+  replicate(n = n.sims,
+            expr = simulation(dataset = dat, orders = var.order, pattern = amp.pat),
+            simplify = FALSE) %>% 
+  map_df(., ~ {
+    as.data.frame(.)
+  })
+
+# save raw
+save(out, file = "OrderEffect/order_effect_sim_raw.Rdata")
+
+# evaluate across sims
+results_ord <-  out %>% 
+  aggregate(. ~ ord+var, data = ., mean) %>% 
+  mutate(
+  # sd = aggregate(. ~ ord+var, data = out, sd)[,3])#, 
+    ci_lo = aggregate(. ~ ord+var, data = out, quantile, probs = 0.025)[,3],
+    ci_hi = aggregate(. ~ ord+var, data = out, quantile, probs = 0.975)[,3])
+
+# save results
+save(results_ord, file = "OrderEffect/order_effect_sim.Rdata")
+
+
+###############################################################################
 
 # set default graphing behavior
 theme_update(
@@ -24,37 +115,20 @@ theme_update(
 paint5 <- c('#228833', '#66CCEE', '#CCBB44','#EE6677', '#AA3377')
 
 # load results
-load("OrderEffect/regular.Rdata") 
-reg <- results %>% cbind(sim = "Default")
-
-# data order
-load("OrderEffect/data_Y_first.Rdata") 
-datY <- results %>% cbind(sim = "Data columns Y first")
-load("OrderEffect/data_X3_first.Rdata") 
-datX3 <- results %>% cbind(sim = "Data columns X3 first")
-
-# visit sequence order
-load("OrderEffect/visitseq_Y_first.Rdata") 
-seqY <- results %>% cbind(sim = "Visit sequence Y first")
-load("OrderEffect/visitseq_X2_first.Rdata") 
-seqX2 <- results %>% cbind(sim = "Visit sequence X2 first")
-load("OrderEffect/visitseq_X3_first.Rdata") 
-seqX3 <- results %>% cbind(sim = "Visit sequence X3 first")
-
-# connect datasets for better figure
-full_dat <- rbind(reg, seqY, seqX2, seqX3, datY)
+load("OrderEffect/order_effect_sim.Rdata") 
 
 # plot for just one proportion
-full_dat %>% 
-  filter(p==.5) %>% 
-  ggplot() +
-  geom_line(aes(x=t, y=bias.est.X1, linetype = sim), color = paint5[2], size = 1) + # add this for percentage bias: /0.0206 
-  geom_line(aes(x=t, y=bias.est.X2, linetype = sim), color = paint5[3], size = 1) + # add this for percentage bias: /0.0047 
-  geom_line(aes(x=t, y=bias.est.X3, linetype = sim), color = paint5[4], size = 1) + # add this for percentage bias: /0.0076 
-  scale_x_continuous(breaks = 1:10) +
-  xlab("Number of iterations") +
-  ylab("Bias in the regression estimate") +
-  labs(linetype = "How was the order determined?")
+results_ord %>% filter(., var != "Intercept") %>% 
+  ggplot(.) +
+  geom_hline(yintercept=0.2425, linetype = "dashed", color ="gray") +
+  geom_hline(yintercept=0.0977, linetype = "dashed", color ="gray") +
+  #geom_jitter(aes(x=ord, y=est, color = var), width = 0.1, height = 0) +
+  geom_point(aes(x=ord, y=est, color = var)) +
+  geom_errorbar(
+    aes(x = ord, ymin = ci_lo, ymax = ci_hi, color = var),
+    width = .2,
+    alpha = .25) 
+  
 
 
 # # regression coeff
