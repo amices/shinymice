@@ -36,44 +36,42 @@ theme_update(
 # get some test data
 mids <- mice(boys, printFlag = FALSE)
 
-# generate original mice plots
-# box and whiskers of completed data (for large n)
-mice::bwplot(mids)
-
-# NEW BWPLOT
-mids$imp$hgt %>% 
-  setNames(., c("M1", "M2", "M3", "M4", "M5")) %>% 
-  ggplot() +
-  stat_boxplot(aes(x=1, y=M1), color = cols[2], geom = "errorbar", width = 0.25, size = 1) +  
-  stat_boxplot(aes(x=2, y=M2), color = cols[2], geom = "errorbar", width = 0.25, size = 1) +  
-  stat_boxplot(aes(x=3, y=M3), color = cols[2], geom = "errorbar", width = 0.25, size = 1) +  
-  stat_boxplot(aes(x=4, y=M4), color = cols[2], geom = "errorbar", width = 0.25, size = 1) +  
-  stat_boxplot(aes(x=5, y=M5), color = cols[2], geom = "errorbar", width = 0.25, size = 1) +  
-  stat_boxplot(data = mids$data, mapping = aes(x=0, y=hgt), na.rm = TRUE, color = cols[1], geom = "errorbar", width = 0.25, size = 1) +  
-  geom_boxplot(aes(x=1, y=M1), color = cols[2], size = 1) +
-  geom_boxplot(aes(x=2, y=M2), color = cols[2], size = 1) +
-  geom_boxplot(aes(x=3, y=M3), color = cols[2], size = 1) +
-  geom_boxplot(aes(x=4, y=M4), color = cols[2], size = 1) +
-  geom_boxplot(aes(x=5, y=M5), color = cols[2], size = 1) +
-  geom_boxplot(data = mids$data, mapping = aes(x=0, y=hgt), na.rm = TRUE, color = cols[1], size =1) +
-  scale_x_continuous(breaks = c(0, 1:5)) +
-  xlab("Imputation number (0 = observed data)") + 
-  ylab("Height")
 
 # stripplot of completed data (for small n)
 mice::stripplot(mids)
 
+# # NEW STRIPPLOT
+# mids$imp$hgt %>% 
+#   setNames(., c("M1", "M2", "M3", "M4", "M5")) %>% 
+#   ggplot() +
+#   geom_jitter(aes(x=1, y=M1), height = 0.1, width = 0.1, color = mice:::mdc(2)) +
+#   geom_jitter(aes(x=2, y=M2), height = 0.1, width = 0.1, color = mice:::mdc(2)) +
+#   geom_jitter(aes(x=3, y=M3), height = 0.1, width = 0.1, color = mice:::mdc(2)) +
+#   geom_jitter(aes(x=4, y=M4), height = 0.1, width = 0.1, color = mice:::mdc(2)) +
+#   geom_jitter(aes(x=5, y=M5), height = 0.1, width = 0.1, color = mice:::mdc(2)) +
+#   geom_jitter(data = mids$data, mapping = aes(x=0, y=hgt), height = 0.1, width = 0.1, na.rm = TRUE, color = mice:::mdc(1)) +
+#   scale_x_continuous(breaks = c(0, 1:5)) +
+#   xlab("Imputation number (0 = observed data)") + 
+#   ylab("Height")
+
 # NEW STRIPPLOT
-mids$imp$wgt %>% 
-  setNames(., c("M1", "M2", "M3", "M4", "M5")) %>% 
+mids$imp$hgt %>% tidyr::gather(., ".imp") %>% 
   ggplot() +
-  geom_jitter(aes(x=1, y=M1), height = 0.1, width = 0.1, color = cols[2]) +
-  geom_jitter(aes(x=2, y=M2), height = 0.1, width = 0.1, color = cols[2]) +
-  geom_jitter(aes(x=3, y=M3), height = 0.1, width = 0.1, color = cols[2]) +
-  geom_jitter(aes(x=4, y=M4), height = 0.1, width = 0.1, color = cols[2]) +
-  geom_jitter(aes(x=5, y=M5), height = 0.1, width = 0.1, color = cols[2]) +
-  geom_jitter(data = mids$data, mapping = aes(x=0, y=wgt), height = 0.1, width = 0.1, na.rm = TRUE, color = cols[1]) +
-  scale_x_continuous(breaks = c(0, 1:5)) +
+  geom_jitter(aes(x=.imp, y=value), height = 0.1, width = 0.1, color = mice:::mdc(2)) +
+  geom_jitter(data = mids$data, mapping = aes(x=as.factor(0), y=hgt), height = 0.1, width = 0.1, na.rm = TRUE, color = mice:::mdc(1)) +
+  xlab("Imputation number (0 = observed data)") + 
+  ylab("Height")
+
+# box and whiskers of completed data (for large n)
+mice::bwplot(mids)
+
+# NEW BWPLOT
+mids$imp$hgt %>% tidyr::gather(., ".imp") %>% 
+  ggplot() +
+  stat_boxplot(aes(x=.imp, y=value), color = mice:::mdc(2), geom = "errorbar", width = 0.25, size = 1) +  
+  stat_boxplot(data = mids$data, mapping = aes(x=as.factor(0), y=hgt), na.rm = TRUE, color = mice:::mdc(1), geom = "errorbar", width = 0.25, size = 1) +  
+  geom_boxplot(aes(x=.imp, y=value), color = mice:::mdc(2), size = 1) +
+  geom_boxplot(data = mids$data, mapping = aes(x=as.factor(0), y=hgt), na.rm = TRUE, color = mice:::mdc(1), size =1) +
   xlab("Imputation number (0 = observed data)") + 
   ylab("Height")
 
@@ -81,18 +79,12 @@ mids$imp$wgt %>%
 mice::densityplot(mids)
 
 # NEW DENSITYPLOT
-mids$imp$hgt %>% 
-  setNames(., c("M1", "M2", "M3", "M4", "M5")) %>% 
+mids$imp$hgt %>% tidyr::gather(., ".imp") %>% 
   ggplot() +
-  geom_density(aes(x=M1), color = cols[2]) +
-  geom_density(aes(x=M2), color = cols[2]) +
-  geom_density(aes(x=M3), color = cols[2]) +
-  geom_density(aes(x=M4), color = cols[2]) +
-  geom_density(aes(x=M5), color = cols[2]) +
-  geom_density(data = mids$data, aes(x=hgt), na.rm = TRUE, color = cols[1], size = 1) +
+  geom_density(aes(x=value, group = .imp), color = mice:::mdc(2)) +
+  geom_density(data = mids$data, aes(x=hgt), na.rm = TRUE, color = mice:::mdc(1), size = 1) +
   xlab("Height") + 
   ylab("Density")
-
 
 # scatterplot of completed data
 mice::xyplot(mids, hgt~wgt)
@@ -101,8 +93,8 @@ mice::xyplot(mids, hgt~wgt)
 # mids %>% 
 #   complete("long") %>% 
 #   ggplot() +
-#   geom_point(data = mids$data, aes(x=wgt, y=hgt), na.rm = TRUE, color = cols[1])+
-#   geom_point(aes(x=wgt, y=hgt), color = cols[2]) 
+#   geom_point(data = mids$data, aes(x=wgt, y=hgt), na.rm = TRUE, color = mice:::mdc(1))+
+#   geom_point(aes(x=wgt, y=hgt), color = mice:::mdc(2)) 
   # better to add imputed values to this instead?
 
 # or make it more generic by adding the original data to the completed object?
@@ -114,16 +106,16 @@ cdf <- mids %>%
 
 # this works!!
 left_join(cdf, r, by = ".id", suffix=c("", "r")) %>% filter(hgtr == T | wgt == T) %>% ggplot() +
-  geom_point(data = mids$data , aes(x=wgt, y=hgt), color = cols[1], na.rm=T) +
-  geom_point(aes(x=wgt, y=hgt), color = cols[2], na.rm = TRUE) 
+  geom_point(data = mids$data , aes(x=wgt, y=hgt), color = mice:::mdc(1), na.rm=T) +
+  geom_point(aes(x=wgt, y=hgt), color = mice:::mdc(2), na.rm = TRUE) 
 
 
 # plot separately
 # ggplot() +
-#   geom_point(data = mids$data , aes(x=wgt, y=hgt), color = cols[1], na.rm=T) 
+#   geom_point(data = mids$data , aes(x=wgt, y=hgt), color = mice:::mdc(1), na.rm=T) 
 # cd %>%  
 #   ggplot() +
-#   geom_point(aes(x=wgt, y=hgt), color = cols[2], na.rm = TRUE) 
+#   geom_point(aes(x=wgt, y=hgt), color = mice:::mdc(2), na.rm = TRUE) 
 
 
 
