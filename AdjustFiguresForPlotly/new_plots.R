@@ -40,28 +40,28 @@ mids <- mice(boys, printFlag = FALSE)
 vars <-
   mids$data %>% select_if(is.numeric) %>% names %>% set_names(., .) %>% .[-1]
 
-mice_stripplot = function(x, mids = dat) {
-  mids$imp[[x]] %>% tidyr::gather(., key = ".imp", value = x) %>%
+mice_stripplot = function(x, dat) {
+  dat$imp[[x]] %>% tidyr::pivot_longer(everything(), names_to = ".imp", values_to = x) %>%
   ggplot(.) +
   geom_jitter(
-      aes(x = .data$.imp, y = .data$x),
+      aes(x = .data$.imp, y = .data[[x]]),
       height = 0.1,
       width = 0.1,
       color = mice:::mdc(2)
     ) +
-    # geom_jitter(
-    #   data = mids$data,
-    #   mapping = aes(x = as.factor(0), y = hgt),
-    #   height = 0.1,
-    #   width = 0.1,
-    #   na.rm = TRUE,
-    #   color = mice:::mdc(1)
-    # )
+    geom_jitter(
+      data = dat$data,
+      mapping = aes(x = as.factor(0), y = .data[[x]]),
+      height = 0.1,
+      width = 0.1,
+      na.rm = TRUE,
+      color = mice:::mdc(1)
+    ) +
     labs(y = x,
          x = "Imputation")
 }
 
-mice_stripplot(vars[1])
+mice_stripplot(vars[1], mids)
 
 # stripplot of completed data (for small n)
 mice::stripplot(mids)
@@ -81,7 +81,7 @@ mice::stripplot(mids)
 #   ylab("Height")
 
 # NEW STRIPPLOT
-mids$imp$hgt %>% tidyr::gather(., ".imp") %>%
+mids$imp$hgt %>% tidyr::pivot_longer(everything(), names_to = ".imp") %>%
   ggplot() +
   geom_jitter(
     aes(x = .imp, y = value),
@@ -104,7 +104,7 @@ mids$imp$hgt %>% tidyr::gather(., ".imp") %>%
 mice::bwplot(mids)
 
 # NEW BWPLOT
-mids$imp$hgt %>% tidyr::gather(., ".imp") %>%
+mids$imp$hgt %>% tidyr::pivot_longer(everything(), names_to = ".imp") %>%
   ggplot() +
   stat_boxplot(
     aes(x = .imp, y = value),
@@ -139,7 +139,7 @@ mids$imp$hgt %>% tidyr::gather(., ".imp") %>%
 mice::densityplot(mids)
 
 # NEW DENSITYPLOT
-mids$imp$hgt %>% tidyr::gather(., ".imp") %>%
+mids$imp$hgt %>% tidyr::pivot_longer(everything(), names_to = ".imp") %>%
   ggplot() +
   geom_density(aes(x = value, group = .imp), color = mice:::mdc(2)) +
   geom_density(
