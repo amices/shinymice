@@ -10,7 +10,7 @@ set.seed(11)
 n <- 1000
 
 # define colorblind friendly colors
-paint3 <- c('#CCBB44', '#66CCEE','#EE6677')
+paint3 <- c('#CCBB44', '#66CCEE', '#EE6677')
 
 # set default graphing behavior
 theme_update(
@@ -29,65 +29,71 @@ theme_update(
 dat <- data.frame(
   stat1 = rnorm(n, 0, 1),
   stat2 = rnorm(n, 0, 1),
-  up1 = rnorm(n, 0, 1)+1:n/(0.2*n), 
-  up2 = rnorm(n, 0, 1)+1:n/(0.2*n),
-  over1 = rnorm(n, 0, 1)+((n-(1:n))/(0.5*n))^2,
-  over2 = rnorm(n, 0, 1)-((n-(1:n))/(0.5*n))^2,
-  t = 1:n)
+  up1 = rnorm(n, 0, 1) + 1:n / (0.2 * n),
+  up2 = rnorm(n, 0, 1) + 1:n / (0.2 * n),
+  over1 = rnorm(n, 0, 1) + ((n - (1:n)) / (0.5 * n)) ^ 2,
+  over2 = rnorm(n, 0, 1) - ((n - (1:n)) / (0.5 * n)) ^ 2,
+  t = 1:n
+)
 
 # plot data
-chains <- dat %>% 
-  ggplot() + 
-  geom_line(aes(x=t, y=stat1), color = paint3[1]) +
-  geom_line(aes(x=t, y=stat2), color = paint3[1]) +
-  geom_line(aes(x=t, y=up1), color = paint3[2]) + 
-  geom_line(aes(x=t, y=up2), color = paint3[2]) +
-  geom_line(aes(x=t, y=over1), color = paint3[3]) +
-  geom_line(aes(x=t, y=over2), color = paint3[3]) + 
+chains <- dat %>%
+  ggplot() +
+  geom_line(aes(x = t, y = stat1), color = paint3[1]) +
+  geom_line(aes(x = t, y = stat2), color = paint3[1]) +
+  geom_line(aes(x = t, y = up1), color = paint3[2]) +
+  geom_line(aes(x = t, y = up2), color = paint3[2]) +
+  geom_line(aes(x = t, y = over1), color = paint3[3]) +
+  geom_line(aes(x = t, y = over2), color = paint3[3]) +
   xlab("Iteration number") +
-  ylab("Chain value") 
-  
+  ylab("Chain value")
+
 
 # check convergence
-stat <- convergence(dat[,c("stat1", "stat2")]) %>% cbind(sim = "Stationary")
-trend <- convergence(dat[,c("up1", "up2")]) %>% cbind(sim = "Upward trending")
-diver <- convergence(dat[,c("over1", "over2")]) %>% cbind(sim = "Over-dispersion")
+stat <-
+  convergence(dat[, c("stat1", "stat2")]) %>% cbind(sim = "Stationary")
+trend <-
+  convergence(dat[, c("up1", "up2")]) %>% cbind(sim = "Upward trending")
+diver <-
+  convergence(dat[, c("over1", "over2")]) %>% cbind(sim = "Over-dispersion")
 # combine
 results_trend <- rbind(stat, trend, diver)
 
 # plot results
-rhat <- results_trend %>% ggplot(aes(x = iteration, y = r.hat.max, color = sim)) +
+rhat <-
+  results_trend %>% ggplot(aes(x = iteration, y = r.hat.max, color = sim)) +
   geom_hline(yintercept = 1,
              color = "grey",
              lwd = 1) +
   geom_point(size = .25, na.rm = TRUE) +
   geom_line(size = .25, na.rm = TRUE) +
-  scale_colour_manual(values=paint3) +
+  scale_colour_manual(values = paint3) +
   xlab("Iteration number") +
-  ylab(bquote("Adapted"~widehat(R))) +
-  labs(color = "Trending scenario")  
+  ylab(bquote("Adapted" ~ widehat(R))) +
+  labs(color = "Trending scenario")
 
-old_rhat <- results_trend %>% ggplot(aes(x = iteration, y = r.hat, color = sim)) +
+old_rhat <-
+  results_trend %>% ggplot(aes(x = iteration, y = r.hat, color = sim)) +
   geom_hline(yintercept = 1,
              color = "grey",
              lwd = 1) +
   geom_point(size = .25, na.rm = TRUE) +
   geom_line(size = .25, na.rm = TRUE) +
-  scale_colour_manual(values=paint3) +
+  scale_colour_manual(values = paint3) +
   xlab("Iteration number") +
-  ylab(bquote("Original"~widehat(R))) +
-  labs(color = "Trending scenario")  
+  ylab(bquote("Original" ~ widehat(R))) +
+  labs(color = "Trending scenario")
 
-ac <- results_trend %>% ggplot(aes(x = iteration, y = ac.max, color = sim)) +
+ac <-
+  results_trend %>% ggplot(aes(x = iteration, y = ac.max, color = sim)) +
   geom_hline(yintercept = 0,
              color = "grey",
              lwd = 1) +
   geom_point(size = .25, na.rm = TRUE) +
   geom_line(size = .25, na.rm = TRUE) +
-  scale_colour_manual(values=paint3) +
+  scale_colour_manual(values = paint3) +
   xlab("Iteration number") +
   ylab("Autocorrelation") +
-  labs(color = "Trending scenario")  
+  labs(color = "Trending scenario")
 
 chains + rhat + old_rhat + ac + plot_layout(guides = "collect", ncol = 1)
-
