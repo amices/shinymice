@@ -46,8 +46,8 @@ mice::stripplot(mids)
 
 mice_stripplot <- function(x, dat) {
   dat$imp[[x]] %>% tidyr::pivot_longer(everything(), names_to = ".imp", values_to = x) %>%
-  ggplot(.) +
-  geom_jitter(
+    ggplot(.) +
+    geom_jitter(
       aes(x = .data$.imp, y = .data[[x]]),
       height = 0.1,
       width = 0.1,
@@ -67,42 +67,8 @@ mice_stripplot <- function(x, dat) {
 
 mice_stripplot(vars[1], mids)
 
-stripplots <- map(vars, ~mice_stripplot(.x, mids))
+stripplots <- map(vars, ~ mice_stripplot(.x, mids))
 
-
-# # NEW STRIPPLOT
-# mids$imp$hgt %>%
-#   setNames(., c("M1", "M2", "M3", "M4", "M5")) %>%
-#   ggplot() +
-#   geom_jitter(aes(x=1, y=M1), height = 0.1, width = 0.1, color = mice:::mdc(2)) +
-#   geom_jitter(aes(x=2, y=M2), height = 0.1, width = 0.1, color = mice:::mdc(2)) +
-#   geom_jitter(aes(x=3, y=M3), height = 0.1, width = 0.1, color = mice:::mdc(2)) +
-#   geom_jitter(aes(x=4, y=M4), height = 0.1, width = 0.1, color = mice:::mdc(2)) +
-#   geom_jitter(aes(x=5, y=M5), height = 0.1, width = 0.1, color = mice:::mdc(2)) +
-#   geom_jitter(data = mids$data, mapping = aes(x=0, y=hgt), height = 0.1, width = 0.1, na.rm = TRUE, color = mice:::mdc(1)) +
-#   scale_x_continuous(breaks = c(0, 1:5)) +
-#   xlab("Imputation number (0 = observed data)") +
-#   ylab("Height")
-
-# # NEW STRIPPLOT
-# mids$imp$hgt %>% tidyr::pivot_longer(everything(), names_to = ".imp") %>%
-#   ggplot() +
-#   geom_jitter(
-#     aes(x = .imp, y = value),
-#     height = 0.1,
-#     width = 0.1,
-#     color = mice:::mdc(2)
-#   ) +
-#   geom_jitter(
-#     data = mids$data,
-#     mapping = aes(x = as.factor(0), y = hgt),
-#     height = 0.1,
-#     width = 0.1,
-#     na.rm = TRUE,
-#     color = mice:::mdc(1)
-#   ) +
-#   xlab("Imputation number (0 = observed data)") +
-#   ylab("Height")
 
 # box and whiskers of completed data (for large n)
 mice::bwplot(mids)
@@ -117,10 +83,9 @@ mice_bwplot <- function(x, dat) {
       geom = "errorbar",
       color = mice:::mdc(2)
     ) +
-    geom_boxplot(
-      aes(x = .data$.imp, y = .data[[x]]),
-      size = 1,
-      color = mice:::mdc(2)) +
+    geom_boxplot(aes(x = .data$.imp, y = .data[[x]]),
+                 size = 1,
+                 color = mice:::mdc(2)) +
     stat_boxplot(
       data = dat$data,
       mapping = aes(x = as.factor(0), y = .data[[x]]),
@@ -135,47 +100,16 @@ mice_bwplot <- function(x, dat) {
       mapping = aes(x = as.factor(0), y = .data[[x]]),
       na.rm = TRUE,
       size = 1,
-      color = mice:::mdc(1)) +
+      color = mice:::mdc(1)
+    ) +
     labs(y = x,
          x = "Imputation")
 }
 
 mice_bwplot(vars[1], mids)
 
-bwplots <- map(vars, ~mice_bwplot(.x, mids))
+bwplots <- map(vars, ~ mice_bwplot(.x, mids))
 
-
-# # NEW BWPLOT
-# mids$imp$hgt %>% tidyr::pivot_longer(everything(), names_to = ".imp") %>%
-#   ggplot() +
-#   stat_boxplot(
-#     aes(x = .imp, y = value),
-#     color = mice:::mdc(2),
-#     geom = "errorbar",
-#     width = 0.25,
-#     size = 1
-#   ) +
-#   stat_boxplot(
-#     data = mids$data,
-#     mapping = aes(x = as.factor(0), y = hgt),
-#     na.rm = TRUE,
-#     color = mice:::mdc(1),
-#     geom = "errorbar",
-#     width = 0.25,
-#     size = 1
-#   ) +
-#   geom_boxplot(aes(x = .imp, y = value),
-#                color = mice:::mdc(2),
-#                size = 1) +
-#   geom_boxplot(
-#     data = mids$data,
-#     mapping = aes(x = as.factor(0), y = hgt),
-#     na.rm = TRUE,
-#     color = mice:::mdc(1),
-#     size = 1
-#   ) +
-#   xlab("Imputation number (0 = observed data)") +
-#   ylab("Height")
 
 # density plot of completed data
 mice::densityplot(mids)
@@ -183,10 +117,8 @@ mice::densityplot(mids)
 mice_densityplot <- function(x, dat) {
   dat$imp[[x]] %>% tidyr::pivot_longer(everything(), names_to = ".imp", values_to = x) %>%
     ggplot(.) +
-    geom_density(
-      aes(x = .data[[x]], group = .data$.imp),
-      color = mice:::mdc(2)
-    ) +
+    geom_density(aes(x = .data[[x]], group = .data$.imp),
+                 color = mice:::mdc(2)) +
     geom_density(
       data = dat$data,
       mapping = aes(x = .data[[x]]),
@@ -194,61 +126,60 @@ mice_densityplot <- function(x, dat) {
       size = 1,
       color = mice:::mdc(1)
     ) +
-    labs(x = x, 
+    labs(x = x,
          y = "Density")
 }
 
 mice_densityplot(vars[1], mids)
 
-densplots <- map(vars, ~mice_densityplot(.x, mids))
+densplots <- map(vars, ~ mice_densityplot(.x, mids))
 
-
-# # NEW DENSITYPLOT
-# mids$imp$hgt %>% tidyr::pivot_longer(everything(), names_to = ".imp") %>%
-#   ggplot() +
-#   geom_density(aes(x = value, group = .imp), color = mice:::mdc(2)) +
-#   geom_density(
-#     data = mids$data,
-#     aes(x = hgt),
-#     na.rm = TRUE,
-#     color = mice:::mdc(1),
-#     size = 1
-#   ) +
-#   xlab("Height") +
-#   ylab("Density")
 
 # scatterplot of completed data
 mice::xyplot(mids, hgt ~ wgt)
 
-# NEW XYPLOT
-# mids %>%
-#   complete("long") %>%
-#   ggplot() +
-#   geom_point(data = mids$data, aes(x=wgt, y=hgt), na.rm = TRUE, color = mice:::mdc(1))+
-#   geom_point(aes(x=wgt, y=hgt), color = mice:::mdc(2))
-# better to add imputed values to this instead?
-
-# or make it more generic by adding the original data to the completed object?
-# cd <- mids %>%
-#   complete("long", include = TRUE)
-r <-
-  as.data.frame(is.na(mids$data)) %>% mutate(.id = 1:dim(.)[1])# dit als filter gebruiken!! als of hgt of wgt missing is plotten
-cdf <- mids %>%
-  complete("long", include = FALSE)
-
 # this works!!
-left_join(cdf, r, by = ".id", suffix = c("", "r")) %>% filter(hgtr == T |
-                                                                wgt == T) %>% ggplot() +
-  geom_point(
-    data = mids$data ,
-    aes(x = wgt, y = hgt),
-    color = mice:::mdc(1),
-    na.rm = T
-  ) +
-  geom_point(aes(x = wgt, y = hgt),
-             color = mice:::mdc(2),
-             na.rm = TRUE)
+dat <-
+  mids$data %>% is.na() %>% as.data.frame() %>% mutate(.id = 1:dim(.)[1]) %>% left_join(complete(mids, "long", include = FALSE),
+                                                                                        by = ".id",
+                                                                                        suffix = c("r", ""))
+x = "hgt"
+y = "wgt"
 
+mice_densityplot <- function(x, y, dat) {
+  dat %>% filter(.data[[paste0(x, "r")]] == T | .data[[paste0(y, "r")]] == T) %>% 
+    ggplot() +
+    geom_point(
+      data = mids$data ,
+      aes(x = .data[[x]], y = .data[[y]]),
+      color = mice:::mdc(1),
+      na.rm = T
+    ) +
+    geom_point(aes(x = .data[[x]], y = .data[[y]]),
+               color = mice:::mdc(2),
+               na.rm = TRUE) +
+    labs(x = x,
+         y = y)
+}
+
+mice_densityplot(vars[1], vars[2], dat)
+
+densplots <- map(vars, function(x){map(vars, function(y){mice_densityplot(x = x, y = y, dat = dat)})})
+
+# 
+# dat %>% filter(.data[[paste0(x, "r")]] == T | .data[[paste0(y, "r")]] == T) %>% ggplot() +
+#   geom_point(
+#     data = mids$data ,
+#     aes(x = .data[[x]], y = .data[[y]]),
+#     color = mice:::mdc(1),
+#     na.rm = T
+#   ) +
+#   geom_point(aes(x = .data[[x]], y = .data[[y]]),
+#              color = mice:::mdc(2),
+#              na.rm = TRUE)
+# 
+# 
+# paste0(vars[1],"r")
 
 # plot separately
 # ggplot() +
