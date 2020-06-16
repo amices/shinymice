@@ -11,14 +11,6 @@ library(patchwork) #version 1.0.0
 library(mice)
 library(tidyr)
 
-# # test the colors
-# obs <- grDevices::hcl(240, 100, 40, 0.7)
-# mis <- grDevices::hcl(0, 100, 40, 0.7)
-# dat <- data.frame(xx=1:10, yy=1:10)
-# dat %>% ggplot(aes(x=xx, y=yy))+geom_jitter(color=mis)+geom_jitter(color=obs)
-#
-# # save the colors
-# cols <- c(obs,mis)
 
 # set default graphing behavior
 theme_update(
@@ -138,19 +130,18 @@ densplots <- map(vars, ~ mice_densityplot(.x, mids))
 # scatterplot of completed data
 mice::xyplot(mids, hgt ~ wgt)
 
-# this works!!
-dat <-
-  mids$data %>% is.na() %>% as.data.frame() %>% mutate(.id = 1:dim(.)[1]) %>% left_join(complete(mids, "long", include = FALSE),
-                                                                                        by = ".id",
-                                                                                        suffix = c("r", ""))
-x = "hgt"
-y = "wgt"
 
-mice_densityplot <- function(x, y, dat) {
-  dat %>% filter(.data[[paste0(x, "r")]] == T | .data[[paste0(y, "r")]] == T) %>% 
+mice_xyplot <- function(x, y, dat) {
+  if (x==y){return(NULL)} else {
+  # combine imputations and missingness indicator
+  imps <-
+      mids$data %>% is.na() %>% as.data.frame() %>% mutate(.id = 1:dim(.)[1]) %>% left_join(complete(mids, "long", include = FALSE),
+                                                                                            by = ".id",
+                                                                                            suffix = c("r", ""))
+  imps %>% filter(.data[[paste0(x, "r")]] == T | .data[[paste0(y, "r")]] == T) %>% 
     ggplot() +
     geom_point(
-      data = mids$data ,
+      data = dat$data ,
       aes(x = .data[[x]], y = .data[[y]]),
       color = mice:::mdc(1),
       na.rm = T
@@ -160,35 +151,15 @@ mice_densityplot <- function(x, y, dat) {
                na.rm = TRUE) +
     labs(x = x,
          y = y)
+  }
 }
 
-mice_densityplot(vars[1], vars[2], dat)
+mice_xyplot(vars[1], vars[2], dat = mids)
 
-densplots <- map(vars, function(x){map(vars, function(y){mice_densityplot(x = x, y = y, dat = dat)})})
+xyplots <- map(vars, function(x){map(vars, function(y){mice_xyplot(x = x, y = y, dat = mids)})})
 
-# 
-# dat %>% filter(.data[[paste0(x, "r")]] == T | .data[[paste0(y, "r")]] == T) %>% ggplot() +
-#   geom_point(
-#     data = mids$data ,
-#     aes(x = .data[[x]], y = .data[[y]]),
-#     color = mice:::mdc(1),
-#     na.rm = T
-#   ) +
-#   geom_point(aes(x = .data[[x]], y = .data[[y]]),
-#              color = mice:::mdc(2),
-#              na.rm = TRUE)
-# 
-# 
-# paste0(vars[1],"r")
-
-# plot separately
-# ggplot() +
-#   geom_point(data = mids$data , aes(x=wgt, y=hgt), color = mice:::mdc(1), na.rm=T)
-# cd %>%
-#   ggplot() +
-#   geom_point(aes(x=wgt, y=hgt), color = mice:::mdc(2), na.rm = TRUE)
-
-
+# test with different data
+mice_xyplot("age", "bmi", dat = mice(nhanes))
 
 # # OPTIONAL: influx-outflux plot of incomplete data
 # mice::fluxplot(boys)
