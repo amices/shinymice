@@ -40,7 +40,11 @@ mids <- mice(boys, printFlag = FALSE)
 vars <-
   mids$data %>% select_if(is.numeric) %>% names %>% set_names(., .) %>% .[-1]
 
-mice_stripplot = function(x, dat) {
+
+# stripplot of completed data (for small n)
+mice::stripplot(mids)
+
+mice_stripplot <- function(x, dat) {
   dat$imp[[x]] %>% tidyr::pivot_longer(everything(), names_to = ".imp", values_to = x) %>%
   ggplot(.) +
   geom_jitter(
@@ -63,8 +67,8 @@ mice_stripplot = function(x, dat) {
 
 mice_stripplot(vars[1], mids)
 
-# stripplot of completed data (for small n)
-mice::stripplot(mids)
+stripplots <- map(vars, ~mice_stripplot(.x, mids))
+
 
 # # NEW STRIPPLOT
 # mids$imp$hgt %>%
@@ -80,77 +84,138 @@ mice::stripplot(mids)
 #   xlab("Imputation number (0 = observed data)") +
 #   ylab("Height")
 
-# NEW STRIPPLOT
-mids$imp$hgt %>% tidyr::pivot_longer(everything(), names_to = ".imp") %>%
-  ggplot() +
-  geom_jitter(
-    aes(x = .imp, y = value),
-    height = 0.1,
-    width = 0.1,
-    color = mice:::mdc(2)
-  ) +
-  geom_jitter(
-    data = mids$data,
-    mapping = aes(x = as.factor(0), y = hgt),
-    height = 0.1,
-    width = 0.1,
-    na.rm = TRUE,
-    color = mice:::mdc(1)
-  ) +
-  xlab("Imputation number (0 = observed data)") +
-  ylab("Height")
+# # NEW STRIPPLOT
+# mids$imp$hgt %>% tidyr::pivot_longer(everything(), names_to = ".imp") %>%
+#   ggplot() +
+#   geom_jitter(
+#     aes(x = .imp, y = value),
+#     height = 0.1,
+#     width = 0.1,
+#     color = mice:::mdc(2)
+#   ) +
+#   geom_jitter(
+#     data = mids$data,
+#     mapping = aes(x = as.factor(0), y = hgt),
+#     height = 0.1,
+#     width = 0.1,
+#     na.rm = TRUE,
+#     color = mice:::mdc(1)
+#   ) +
+#   xlab("Imputation number (0 = observed data)") +
+#   ylab("Height")
 
 # box and whiskers of completed data (for large n)
 mice::bwplot(mids)
 
-# NEW BWPLOT
-mids$imp$hgt %>% tidyr::pivot_longer(everything(), names_to = ".imp") %>%
-  ggplot() +
-  stat_boxplot(
-    aes(x = .imp, y = value),
-    color = mice:::mdc(2),
-    geom = "errorbar",
-    width = 0.25,
-    size = 1
-  ) +
-  stat_boxplot(
-    data = mids$data,
-    mapping = aes(x = as.factor(0), y = hgt),
-    na.rm = TRUE,
-    color = mice:::mdc(1),
-    geom = "errorbar",
-    width = 0.25,
-    size = 1
-  ) +
-  geom_boxplot(aes(x = .imp, y = value),
-               color = mice:::mdc(2),
-               size = 1) +
-  geom_boxplot(
-    data = mids$data,
-    mapping = aes(x = as.factor(0), y = hgt),
-    na.rm = TRUE,
-    color = mice:::mdc(1),
-    size = 1
-  ) +
-  xlab("Imputation number (0 = observed data)") +
-  ylab("Height")
+mice_bwplot <- function(x, dat) {
+  dat$imp[[x]] %>% tidyr::pivot_longer(everything(), names_to = ".imp", values_to = x) %>%
+    ggplot(.) +
+    stat_boxplot(
+      aes(x = .data$.imp, y = .data[[x]]),
+      width = 0.25,
+      size = 1,
+      geom = "errorbar",
+      color = mice:::mdc(2)
+    ) +
+    geom_boxplot(
+      aes(x = .data$.imp, y = .data[[x]]),
+      size = 1,
+      color = mice:::mdc(2)) +
+    stat_boxplot(
+      data = dat$data,
+      mapping = aes(x = as.factor(0), y = .data[[x]]),
+      na.rm = TRUE,
+      color = mice:::mdc(1),
+      geom = "errorbar",
+      width = 0.25,
+      size = 1
+    ) +
+    geom_boxplot(
+      data = dat$data,
+      mapping = aes(x = as.factor(0), y = .data[[x]]),
+      na.rm = TRUE,
+      size = 1,
+      color = mice:::mdc(1)) +
+    labs(y = x,
+         x = "Imputation")
+}
+
+mice_bwplot(vars[1], mids)
+
+bwplots <- map(vars, ~mice_bwplot(.x, mids))
+
+
+# # NEW BWPLOT
+# mids$imp$hgt %>% tidyr::pivot_longer(everything(), names_to = ".imp") %>%
+#   ggplot() +
+#   stat_boxplot(
+#     aes(x = .imp, y = value),
+#     color = mice:::mdc(2),
+#     geom = "errorbar",
+#     width = 0.25,
+#     size = 1
+#   ) +
+#   stat_boxplot(
+#     data = mids$data,
+#     mapping = aes(x = as.factor(0), y = hgt),
+#     na.rm = TRUE,
+#     color = mice:::mdc(1),
+#     geom = "errorbar",
+#     width = 0.25,
+#     size = 1
+#   ) +
+#   geom_boxplot(aes(x = .imp, y = value),
+#                color = mice:::mdc(2),
+#                size = 1) +
+#   geom_boxplot(
+#     data = mids$data,
+#     mapping = aes(x = as.factor(0), y = hgt),
+#     na.rm = TRUE,
+#     color = mice:::mdc(1),
+#     size = 1
+#   ) +
+#   xlab("Imputation number (0 = observed data)") +
+#   ylab("Height")
 
 # density plot of completed data
 mice::densityplot(mids)
 
-# NEW DENSITYPLOT
-mids$imp$hgt %>% tidyr::pivot_longer(everything(), names_to = ".imp") %>%
-  ggplot() +
-  geom_density(aes(x = value, group = .imp), color = mice:::mdc(2)) +
-  geom_density(
-    data = mids$data,
-    aes(x = hgt),
-    na.rm = TRUE,
-    color = mice:::mdc(1),
-    size = 1
-  ) +
-  xlab("Height") +
-  ylab("Density")
+mice_densityplot <- function(x, dat) {
+  dat$imp[[x]] %>% tidyr::pivot_longer(everything(), names_to = ".imp", values_to = x) %>%
+    ggplot(.) +
+    geom_density(
+      aes(x = .data[[x]], group = .data$.imp),
+      color = mice:::mdc(2)
+    ) +
+    geom_density(
+      data = dat$data,
+      mapping = aes(x = .data[[x]]),
+      na.rm = TRUE,
+      size = 1,
+      color = mice:::mdc(1)
+    ) +
+    labs(x = x, 
+         y = "Density")
+}
+
+mice_densityplot(vars[1], mids)
+
+densplots <- map(vars, ~mice_densityplot(.x, mids))
+
+
+# # NEW DENSITYPLOT
+# mids$imp$hgt %>% tidyr::pivot_longer(everything(), names_to = ".imp") %>%
+#   ggplot() +
+#   geom_density(aes(x = value, group = .imp), color = mice:::mdc(2)) +
+#   geom_density(
+#     data = mids$data,
+#     aes(x = hgt),
+#     na.rm = TRUE,
+#     color = mice:::mdc(1),
+#     size = 1
+#   ) +
+#   xlab("Height") +
+#   ylab("Density")
 
 # scatterplot of completed data
 mice::xyplot(mids, hgt ~ wgt)
