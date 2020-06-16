@@ -1,5 +1,8 @@
 # convert lattice plots to ggplot to use with plotly
-# kleuren in mice.theme()  mice:::mdc(1:2)
+# kleuren in mice.theme()  mice:::mdc(1:2) where 1 = obs and 2 = mis
+# plot them side by side, obs data on the left and imputed on the right
+# potentially add options to choose which imp to show
+
 
 # load packages
 library(dplyr) #version 0.8.5
@@ -37,35 +40,6 @@ mids <- mice(boys, printFlag = FALSE)
 # box and whiskers of completed data (for large n)
 mice::bwplot(mids)
 
-# stripplot of completed data (for small n)
-mice::stripplot(mids)
-
-# density plot of completed data
-mice::densityplot(mids)
-
-# scatterplot of completed data
-mice::xyplot(mids, hgt~wgt)
-
-# # OPTIONAL: influx-outflux plot of incomplete data
-# mice::fluxplot(boys)
-# # outflux: hoeveel hangen andere var ervan af?
-# # influx hoeveel invloed is er van andere vars?
-# # liefst zo hoog mogelijke outflux
-
-# NEW STRIPPLOT
-mids$imp$gen %>% 
-  setNames(., c("M1", "M2", "M3", "M4", "M5")) %>% 
-  ggplot() +
-  geom_jitter(aes(x=1, y=M1), height = 0.1, width = 0.1, color = cols[2]) +
-  geom_jitter(aes(x=2, y=M2), height = 0.1, width = 0.1, color = cols[2]) +
-  geom_jitter(aes(x=3, y=M3), height = 0.1, width = 0.1, color = cols[2]) +
-  geom_jitter(aes(x=4, y=M4), height = 0.1, width = 0.1, color = cols[2]) +
-  geom_jitter(aes(x=5, y=M5), height = 0.1, width = 0.1, color = cols[2]) +
-  geom_jitter(data = mids$data, mapping = aes(x=0, y=gen), height = 0.1, width = 0.1, na.rm = TRUE, color = cols[1]) +
-  scale_x_continuous(breaks = c(0, 1:5)) +
-  xlab("Imputation number (0 = observed data)") + 
-  ylab("Height")
-
 # NEW BWPLOT
 mids$imp$hgt %>% 
   setNames(., c("M1", "M2", "M3", "M4", "M5")) %>% 
@@ -86,6 +60,26 @@ mids$imp$hgt %>%
   xlab("Imputation number (0 = observed data)") + 
   ylab("Height")
 
+# stripplot of completed data (for small n)
+mice::stripplot(mids)
+
+# NEW STRIPPLOT
+mids$imp$wgt %>% 
+  setNames(., c("M1", "M2", "M3", "M4", "M5")) %>% 
+  ggplot() +
+  geom_jitter(aes(x=1, y=M1), height = 0.1, width = 0.1, color = cols[2]) +
+  geom_jitter(aes(x=2, y=M2), height = 0.1, width = 0.1, color = cols[2]) +
+  geom_jitter(aes(x=3, y=M3), height = 0.1, width = 0.1, color = cols[2]) +
+  geom_jitter(aes(x=4, y=M4), height = 0.1, width = 0.1, color = cols[2]) +
+  geom_jitter(aes(x=5, y=M5), height = 0.1, width = 0.1, color = cols[2]) +
+  geom_jitter(data = mids$data, mapping = aes(x=0, y=wgt), height = 0.1, width = 0.1, na.rm = TRUE, color = cols[1]) +
+  scale_x_continuous(breaks = c(0, 1:5)) +
+  xlab("Imputation number (0 = observed data)") + 
+  ylab("Height")
+
+# density plot of completed data
+mice::densityplot(mids)
+
 # NEW DENSITYPLOT
 mids$imp$hgt %>% 
   setNames(., c("M1", "M2", "M3", "M4", "M5")) %>% 
@@ -99,23 +93,42 @@ mids$imp$hgt %>%
   xlab("Height") + 
   ylab("Density")
 
+
+# scatterplot of completed data
+mice::xyplot(mids, hgt~wgt)
+
 # NEW XYPLOT
-mids %>% 
-  complete("long") %>% 
-  ggplot() +
-  geom_point(data = mids$data, aes(x=wgt, y=hgt), na.rm = TRUE, color = cols[1])+
-  geom_point(aes(x=wgt, y=hgt), color = cols[2]) 
-  
-# better to add imputed values to this instead?
-mids$data %>% 
-  ggplot() +
-  geom_point(aes(x=wgt, y=hgt), color = cols[1], na.rm=T) 
+# mids %>% 
+#   complete("long") %>% 
+#   ggplot() +
+#   geom_point(data = mids$data, aes(x=wgt, y=hgt), na.rm = TRUE, color = cols[1])+
+#   geom_point(aes(x=wgt, y=hgt), color = cols[2]) 
+  # better to add imputed values to this instead?
 
 # or make it more generic by adding the original data to the completed object?
-cd <- mids %>% 
-  complete("long", include = TRUE) 
-r <- as.data.frame(is.na(mids$data)) # dit als filter gebruiken!! als of hgt of wgt missing is plotten
+# cd <- mids %>% 
+#   complete("long", include = TRUE) 
+r <- as.data.frame(is.na(mids$data)) %>% mutate(.id = 1:dim(.)[1])# dit als filter gebruiken!! als of hgt of wgt missing is plotten
+cdf <- mids %>% 
+  complete("long", include = FALSE) 
 
-cd %>%  
-  ggplot() +
+# this works!!
+left_join(cdf, r, by = ".id", suffix=c("", "r")) %>% filter(hgtr == T | wgt == T) %>% ggplot() +
+  geom_point(data = mids$data , aes(x=wgt, y=hgt), color = cols[1], na.rm=T) +
   geom_point(aes(x=wgt, y=hgt), color = cols[2], na.rm = TRUE) 
+
+
+# plot separately
+# ggplot() +
+#   geom_point(data = mids$data , aes(x=wgt, y=hgt), color = cols[1], na.rm=T) 
+# cd %>%  
+#   ggplot() +
+#   geom_point(aes(x=wgt, y=hgt), color = cols[2], na.rm = TRUE) 
+
+
+
+# # OPTIONAL: influx-outflux plot of incomplete data
+# mice::fluxplot(boys)
+# # outflux: hoeveel hangen andere var ervan af?
+# # influx hoeveel invloed is er van andere vars?
+# # liefst zo hoog mogelijke outflux

@@ -7,7 +7,7 @@ library(ggplot2)
 library(patchwork)
 source("Functions/ComputeDiagnostics.R")
 set.seed(11)
-n <- 100
+n <- 1000
 
 # define colorblind friendly colors
 paint3 <- c('#CCBB44', '#66CCEE','#EE6677')
@@ -29,10 +29,10 @@ theme_update(
 dat <- data.frame(
   stat1 = rnorm(n, 0, 1),
   stat2 = rnorm(n, 0, 1),
-  up1 = rnorm(n, 0, 1)+1:n/10, 
-  up2 = rnorm(n, 0, 1)+1:n/10,
-  up3 = rnorm(n, 0, 1)+1:n/10,
-  down = rnorm(n, 0, 1)-1:n/10,
+  up1 = rnorm(n, 0, 1)+1:n/(0.2*n), 
+  up2 = rnorm(n, 0, 1)+1:n/(0.2*n),
+  over1 = rnorm(n, 0, 1)+((n-(1:n))/(0.5*n))^2,
+  over2 = rnorm(n, 0, 1)-((n-(1:n))/(0.5*n))^2,
   t = 1:n)
 
 # plot data
@@ -42,8 +42,8 @@ chains <- dat %>%
   geom_line(aes(x=t, y=stat2), color = paint3[1]) +
   geom_line(aes(x=t, y=up1), color = paint3[2]) + 
   geom_line(aes(x=t, y=up2), color = paint3[2]) +
-  geom_line(aes(x=t, y=up3), color = paint3[3]) +
-  geom_line(aes(x=t, y=down), color = paint3[3]) + 
+  geom_line(aes(x=t, y=over1), color = paint3[3]) +
+  geom_line(aes(x=t, y=over2), color = paint3[3]) + 
   xlab("Iteration number") +
   ylab("Chain value") 
   
@@ -51,7 +51,7 @@ chains <- dat %>%
 # check convergence
 stat <- convergence(dat[,c("stat1", "stat2")]) %>% cbind(sim = "Stationary")
 trend <- convergence(dat[,c("up1", "up2")]) %>% cbind(sim = "Upward trending")
-diver <- convergence(dat[,c("up3", "down")]) %>% cbind(sim = "Divergence")
+diver <- convergence(dat[,c("over1", "over2")]) %>% cbind(sim = "Over-dispersion")
 # combine
 results_trend <- rbind(stat, trend, diver)
 

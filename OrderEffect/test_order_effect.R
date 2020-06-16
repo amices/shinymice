@@ -33,7 +33,7 @@ vars  <- c(4, 16, 9) #variances
 R <- matrix(numeric(3 * 3), nrow = 3) #correlation matrix
 diag(R) <- 1 #set diagonal to 1
 R[upper.tri(R)] <-
-  R[lower.tri(R)] <- c(.5, .3, .4) #set bivariate correlations
+  R[lower.tri(R)] <- c(.5, .5, .5) #set bivariate correlations
 sigma <-
   diag(sqrt(vars)) %*% R %*% diag(sqrt(vars)) #variance-covariance matrix
 dat <-
@@ -98,6 +98,13 @@ save(results_ord, file = "OrderEffect/order_effect_sim.Rdata")
 
 ###############################################################################
 
+# set-up environment
+library(dplyr)
+library(mice)
+library(purrr)
+library(ggplot2)
+library(patchwork) 
+
 # set default graphing behavior
 theme_update(
   plot.title = element_text(hjust = 0.5),
@@ -127,9 +134,25 @@ results_ord %>% filter(., var != "Intercept") %>%
   geom_errorbar(
     aes(x = ord, ymin = ci_lo, ymax = ci_hi, color = var),
     width = .2,
-    alpha = .25) 
+    alpha = .25,
+    size = .9) +
+  ylab("Regression estimate")+
+  xlab("Order in VisitSequence")
   
-
+# plot again but better 
+results_ord %>% filter(., var != "Intercept") %>% 
+  ggplot(.) +
+  # geom_hline(yintercept=0.2425, linetype = "dashed", color ="gray") +
+  # geom_hline(yintercept=0.0977, linetype = "dashed", color ="gray") +
+  # #geom_jitter(aes(x=ord, y=est, color = var), width = 0.1, height = 0) +
+  geom_point(aes(x=var, y=est, color = ord)) +
+  # geom_errorbar(
+  #   aes(x = ord, ymin = ci_lo, ymax = ci_hi, color = var),
+  #   width = .2,
+  #   alpha = .25,
+  #   size = .9) +
+  ylab("Regression estimate")+
+  xlab("Regression effect")
 
 # # regression coeff
 # ggplot() +
