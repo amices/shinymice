@@ -16,8 +16,8 @@ mpat <- md.pattern(boys, plot = FALSE)
 Rgen <- is.na(boys$gen)
 levels(Rgen) <- c("Missing", "Observed")
 data <- boys %>% as_tibble %>% cbind(Rgen)
-histogram( ~ gen, data = boys)
-histogram( ~ age | Rgen, data = boys)
+lattice::histogram( ~ gen, data = boys)
+lattice::histogram( ~ age | Rgen, data = boys)
 # now with ggplot:
 data %>%
   ggplot(aes(x = age)) +
@@ -79,3 +79,4 @@ AIC(out_all, out_int)
 # or use anova
 anova(out_int, out_Rgen)
 anova(out_int_gen, out_gen)
+

@@ -25,7 +25,7 @@ var.order <- list(
 )
 
 # set number of simulations
-n.sims <- 100
+n.sims <- 1000
 
 # generate some data and get true values
 # data generating mechanism = multivariate normal distribution
@@ -135,45 +135,43 @@ paint5 <- c('#228833', '#66CCEE', '#CCBB44', '#EE6677', '#AA3377')
 # load results
 load("OrderEffect/order_effect_sim.Rdata")
 
-# plot for just one proportion
-results_ord %>% filter(., var != "Intercept") %>%
-  ggplot(.) +
-  geom_hline(yintercept = 0.2425,
-             linetype = "dashed",
-             color = "gray") +
-  geom_hline(yintercept = 0.0977,
-             linetype = "dashed",
-             color = "gray") +
-  #geom_jitter(aes(x=ord, y=est, color = var), width = 0.1, height = 0) +
-  geom_point(aes(x = ord, y = est, color = var)) +
-  geom_errorbar(
-    aes(
-      x = ord,
-      ymin = ci_lo,
-      ymax = ci_hi,
-      color = var
-    ),
-    width = .2,
-    alpha = .25,
-    size = .9
-  ) +
-  ylab("Regression estimate") +
-  xlab("Order in VisitSequence")
+# # plot for just one proportion
+# results_ord %>% filter(., var != "Intercept") %>%
+#   ggplot(.) +
+#   geom_hline(yintercept = 0.2425,
+#              linetype = "dashed",
+#              color = "gray") +
+#   geom_hline(yintercept = 0.0977,
+#              linetype = "dashed",
+#              color = "gray") +
+#   #geom_jitter(aes(x=ord, y=est, color = var), width = 0.1, height = 0) +
+#   geom_point(aes(x = ord, y = est, color = var)) +
+#   geom_errorbar(
+#     aes(
+#       x = ord,
+#       ymin = ci_lo,
+#       ymax = ci_hi,
+#       color = var
+#     ),
+#     width = .2,
+#     alpha = .25,
+#     size = .9
+#   ) +
+#   ylab("Regression estimate") +
+#   xlab("Order in VisitSequence")
 
 # plot again but better
-results_ord %>% filter(., var != "Intercept") %>%
+results_ord %>% filter(., var == "X2") %>%
   ggplot(.) +
-  # geom_hline(yintercept=0.2425, linetype = "dashed", color ="gray") +
-  # geom_hline(yintercept=0.0977, linetype = "dashed", color ="gray") +
-  # #geom_jitter(aes(x=ord, y=est, color = var), width = 0.1, height = 0) +
-  geom_point(aes(x = var, y = est, color = ord)) +
-  # geom_errorbar(
-  #   aes(x = ord, ymin = ci_lo, ymax = ci_hi, color = var),
-  #   width = .2,
-  #   alpha = .25,
-  #   size = .9) +
+  geom_hline(yintercept=0.176, linetype = "dashed", color ="gray") +
+  geom_point(aes(x = ord, y = est)) +
+  geom_errorbar(
+    aes(x = ord, ymin = ci_lo, ymax = ci_hi),
+    width = .2,
+    alpha = .25,
+    size = .9) +
   ylab("Regression estimate") +
-  xlab("Regression effect")
+  xlab("VisitSequence permutation")
 
 # # regression coeff
 # ggplot() +
@@ -196,3 +194,4 @@ results_ord %>% filter(., var != "Intercept") %>%
 #   xlab("Number of iterations") +
 #   ylab(bquote("Bias (Q = " ~ r^2 ~ "= 0.19)")) +
 #   labs(colour = "Proportion of missing cases (%)")
+
