@@ -186,9 +186,9 @@ mids$data %>% flux() %>% ggplot(aes(x = influx, y = outflux)) +
 
 mice_fluxplot <- function(dat){
   # add step to check data type and subset if necessary
-  dat %>% flux() %>% ggplot(aes(x = influx, y = outflux)) +
+  dat %>% flux() %>% mutate(variable = rownames(.)) %>% ggplot() +
     geom_line(data = data.frame(x=0:1, y=1:0), aes(x=x, y=y), linetype = "dashed", color = "gray") + 
-    geom_text(aes(label=row.names(flux(dat)))) + 
+    geom_text(aes(x = influx, y = outflux, label=variable)) + 
     scale_x_continuous(limits = c(0,1)) + 
     scale_y_continuous(limits = c(0,1)) + 
     labs(x = "Influx", y = "Outflux")
@@ -196,7 +196,7 @@ mice_fluxplot <- function(dat){
   
 fluxplot <- mice_fluxplot(mids$data)
 
-ggplotly(fluxplot)
+ggplotly(fluxplot) #, tooltip = c("text", "influx", "outflux"))
 
 # mids$data %>% flux() %>% ggplot(aes(x = influx, y = outflux)) +
 #   geom_line(data = data.frame(x=0:1, y=1:0), aes(x=x, y=y), linetype = "dashed", color = "gray") + 
