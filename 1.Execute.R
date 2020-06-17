@@ -63,23 +63,23 @@ out <-
 ########################
 
 # summarize raw results
-results_without_CI <- evaluate.sim(sims = out)
+results <- evaluate.sim(sims = out)
 
-# calculate empirical CI
-CI_lower <-
-  evaluate.sim(sims = out, mean_or_SE = "lower")
-CI_upper <-
-  evaluate.sim(sims = out, mean_or_SE = "upper")
-
-# combine with other results
-results <-
-  results_without_CI %>%
-  left_join(CI_lower,
-            by = c("t", "p"),
-            suffix = c("", ".LL")) %>%
-  left_join(CI_upper,
-            by = c("t", "p"),
-            suffix = c("", ".UL"))
+# # calculate empirical CI
+# CI_lower <-
+#   evaluate.sim(sims = out, mean_or_SE = "lower")
+# CI_upper <-
+#   evaluate.sim(sims = out, mean_or_SE = "upper")
+# 
+# # combine with other results
+# results <-
+#   results %>%
+#   left_join(CI_lower,
+#             by = c("t", "p"),
+#             suffix = c("", ".LL")) %>%
+#   left_join(CI_upper,
+#             by = c("t", "p"),
+#             suffix = c("", ".UL"))
 
 # # if necessary, calculate MCMC SEs
 # MCMCSE <- evaluate.sim(sims = out, mean_or_SE = "se")
@@ -87,7 +87,7 @@ results <-
 # results <- left_join(results, MCMCSE, by = c("t", "p"), suffix = c("", ".SE"))
 
 # save results
-save(results, file = "Results/results.Rdata")
+save(results, file = "Results/complete.Rdata")
 
 # # if necessary, save raw results (too large for Github)
 # save(out, file = "Results/raw.Rdata")

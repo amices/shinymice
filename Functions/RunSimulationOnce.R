@@ -26,7 +26,7 @@ simulate <- function(complete_data = data,
     )$amp
   }) %>% set_names(as.character(mis_prop))
   
-  # with amputed datasets (as many as there are missingess proportions), impute missingness and compute diagnostics for every nr. of iterations
+  # with amputed datasets (as many as there are missingness proportions), impute missingness and compute diagnostics for every nr. of iterations
   imps <-
     map_df(mis_prop, function(mis) {
       map_df(1:n.iter, function(it) {

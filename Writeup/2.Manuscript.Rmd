@@ -236,7 +236,7 @@ We investigate non-convergence of the MICE algorithm through model-based simulat
 # pseudo-code of simulation 
 1. simulate data 
 for (number of simulation runs from 1 to 1000)
- for (missingness proportions 5%, 25%, 50%, 75% and 95%)
+ for (proportion of missing cases between 5% and 95%)
   2. create missingness
   for (number of iterations from 1 to 100)
    3. impute missingness
@@ -244,8 +244,8 @@ for (number of simulation runs from 1 to 1000)
    5. compute non-convergence diagnostics 
    6. pool results across imputations
    7. compute performance measures
- 8. combine outcomes of all missingness proportions
-9. aggregate outcomes of all simulation runs 
+ 8. combine outcomes of all conditions
+9. aggregate outcomes across simulation runs
 
 ```
 ### Data-generating mechanism.
@@ -318,8 +318,8 @@ Our results show the performance of the MICE algorithm under different condition
 
 ## Quantities of scientific interest
 
-```{r Qs, fig.height = 6.8, fig.cap="Impact of non-convergence on statistical inferences. Depicted are the bias, coverage rate (CR) and confidence interval width (CIW) of the estimates $\\bar{Q}$. We present the subset of $Q$s with the worst performance in terms of bias: the mean and standard deviation of $Y$, and the regression coefficient of $X_1$."}
-mean_bias + sd_bias + Rsq_bias + est_bias + est_cov + est_ciw + plot_layout(ncol = 2, guides = "collect") + plot_annotation(tag_levels = "A", tag_suffix = ".")
+```{r Qs, fig.height = 6.8, fig.cap="Impact of non-convergence on statistical inferences. Depicted are the bias, coverage rate (CR) and confidence interval width (CIW) of the estimates $\\bar{Q}$. We present the subset of $Q$s with the worst performance in terms of bias: the mean and standard deviation of $Y$, and the regression coefficient of $X_1$. The solid gray line depicts the targets (unbiased estimates and nominal coverage rate)."}
+mean_bias + sd_bias + Rsq_bias + est_bias + est_cov + est_ciw + plot_annotation(tag_levels = "A", tag_suffix = ".") + plot_layout(ncol = 2, guides = "collect") 
 ```
 
 
@@ -352,13 +352,13 @@ These results demonstrate that the estimates of univariate scientific estimands 
 Figure \ref{fig:rhats-acs} displays results of the eight sets of diagnostic methods. The two columns in the figure represent the  non-convergence diagnostics $\widehat{R}$ and $AC$; the rows depict the four scalar summaries $\theta$ under consideration. The first row in Figure \ref{fig:rhats-acs} thus shows $\widehat{R}$ and $AC$ applied on the chain means (panels A and B). In the second row, we see the diagnostics applied on the chain variances (C and D). The third row depicts the same for $\theta=\hat{Q}$ (E and F). And in the last row, we see the diagnostics applied on the novel $\theta$ to consider: $\lambda_1$ (G and H). We evaluate the performance of the methods by establishing whether they correctly identify conditions in which $\bar{Q}$ is *not* an unbiased, confidence-valid estimate of $Q$. As we concluded in the last section, substantially biased estimates were only obtained in conditions where $T\leq6$, and we observed non-nominal coverage only when $T\leq3$. However, there was some persistent bias in conditions where $p_{\rm inc}\geq.75$, irrespective of the number of iterations. If the diagnostic methods are appropriate for MI, we will detect non-convergence in these conditions.
 
 
-```{r rhats-acs, fig.height = 6.8, fig.cap="Non-convergence diagnostics $\\widehat{R}$ and $AC$ applied on several $\\theta$s. The left-hand side of the figure contains $\\widehat{R}$-values, and the right-hand side contains $AC$-values. Depicted in the rows are the scalar summaries $\\theta$: chain mean, chain variance, the quantity of scientific interest $\\hat{Q}$, and the first eigenvalue of the variance-covariance matrix $\\lambda_1$."}
+```{r rhats-acs, fig.height = 6.8, fig.cap="Non-convergence diagnostics $\\widehat{R}$ and $AC$ applied on several $\\theta$s. The left-hand side of the figure contains $\\widehat{R}$-values, and the right-hand side contains $AC$-values. Depicted in the rows are the scalar summaries $\\theta$: chain mean, chain variance, the quantity of scientific interest $\\hat{Q}$, and the first eigenvalue of the variance-covariance matrix $\\lambda_1$. The dashed gray lines depict the different thresholds to diagnose non-convergence."}
 mean_Rh + mean_AC + var_Rh + var_AC + est_Rh + est_AC + PCA_Rh + PCA_AC + plot_layout(guides = "collect", ncol = 2) + plot_annotation(tag_levels = "A", tag_suffix = ".")
 ```
 
 
 ### $\theta=$ chain mean. 
-As expected, $\widehat{R}$ lowers with the number of iterations. After an initial 'dip' in conditions where $T=3$, we observe a gradual decrease in $\widehat{R}$-values with every additional iteration. This implies improving convergence, until the decrease tapers off after 30 to 40 iterations. Using the threshold $\widehat{R}>1.2$, we diagnose non-convergence in conditions where $T\leq7$, whereas the threshold 1.1 is exceeded when $T\leq13$. The very strict threshold 1.01 is surpassed in all conditions $T\leq100$ (not shown), and therefore not informative under the current specifications. With this set of methods, we fail to identify simulation conditions with persistent bias due to high missingness proportions.
+As expected, $\widehat{R}$ lowers with the number of iterations. After an initial 'dip' in conditions where $T=3$, we observe a gradual decrease in $\widehat{R}$-values with every additional iteration. This implies improving convergence, until the decrease tapers off after 30 to 40 iterations. Using the threshold $\widehat{R}>1.2$, we diagnose non-convergence in conditions where $T\leq7$, whereas the threshold 1.1 is exceeded when $T\leq13$. The very strict threshold 1.01 is surpassed in all conditions $T\leq100$ (not shown), and therefore not informative under the current specifications. With this set of methods, we fail to identify non-convergence in conditions with persistent bias due to missingness.
 
 Similarly, $AC$ decreases with higher $T$s. $AC$ indicates improving stationarity in conditions where $T\leq6$. The $AC$-values do not exceed the threshold defined by statistical significance of the $AC$-values. Based on this threshold, we fail to diagnose non-convergence in any condition.  
 
@@ -368,14 +368,14 @@ As panel C and D in Figure \ref{fig:rhats-acs} show, the results of this set of 
 
 
 ### $\theta=\hat{Q}$.
-The $\widehat{R}$-values in Figure \ref{fig:rhats-acs}E show a similar trend across iterations as we observed for chain means and chain variances. Only conditions with very high missingness proportions ($p_{\rm inc}\geq.75$) diverge from the earlier observations. The $\widehat{R}$-values in these conditions do not taper off after 30 to 40 iterations, but rather between 40 to 50 iterations. The highest number of iterations at which non-convergence is still diagnosed according to the thresholds are 11 for $\widehat{R}>1.2$, 23 for $\widehat{R}>1.1$, and 100 for $\widehat{R}>1.01$ (not shown). 
+The $\widehat{R}$-values in Figure \ref{fig:rhats-acs}E show a similar trend across iterations as we observed for chain means and chain variances. Only conditions with a very high  proportion of missing cases ($p_{\rm inc}\geq.75$) diverge from the earlier observations. The $\widehat{R}$-values in these conditions do not taper off after 30 to 40 iterations, but rather between 40 to 50 iterations. The highest number of iterations at which non-convergence is still diagnosed according to the thresholds are 11 for $\widehat{R}>1.2$, 23 for $\widehat{R}>1.1$, and 100 for $\widehat{R}>1.01$ (not shown). 
 
 The $AC$-values also follow earlier observations, with the same exception as for $\widehat{R}$ (when $p_{\rm inc}\geq.75$). To reach maximum stationarity, these conditions require at most seven iterations instead of five. Moreover, the $AC$-values in these conditions exceed the threshold to diagnose non-convergence. Interestingly, this only occurs after ten or even thirty iterations, while we would expect more signs of trending early in the iterations. Since the $AC$-values are not improving or worsening when $T\geq7$, we conclude that non-convergence is incorrectly diagnosed based on the threshold.
 
 ### $\theta=\lambda_{1}$.
 Once again, we observe $\widehat{R}$-values with a similar trend across iterations. For this $\theta$, the results differ only in the most extreme missingness condition. When $p_{\rm inc}=.95$, we diagnose non-convergence at $T\leq9$ according to $\widehat{R}>1.2$, $T\leq19$ for $\widehat{R}>1.1$, and 100 for $\widehat{R}>1.01$ (not shown). The 'dip' in $\widehat{R}$-values at $T=3$ is even more pronounced than with other $\theta$s. Some $\widehat{R}$-values even overcome the threshold of 1.2. If we would terminate the algorithm at $T=3$, we would incorrectly conclude that the algorithm reached approximate convergence, according to this threshold.
 
-$AC$-values are systematically higher for this $\theta$ than for other scalar summaries. The $AC$-values also taper off at a later point in the iterations. This suggests improving stationarity up-to ten, or even thirty iterations, depending on the missingness proportion. Using the threshold, we diagnose non-convergence at some point in all missingness conditions. However, this occurs only after reasonably decreasing $AC$-values are obtained---again suggesting that non-convergence is incorrectly diagnosed.   
+$AC$-values are systematically higher for this $\theta$ than for other scalar summaries. The $AC$-values also taper off at a later point in the iterations. This suggests improving stationarity up-to ten, or even thirty iterations, depending on the missingness condition. According to the threshold, we should diagnose non-convergence at some point in any missingness condition. However, this occurs only after reasonably decreasing $AC$-values are obtained---again suggesting that non-convergence is incorrectly diagnosed.   
 
 
 ### Summary. 
@@ -392,11 +392,11 @@ Before drawing any further conclusions, let us first return to the hypotheses th
 
 2. Our results also support the hypothesis that $\widehat{R}$ and $AC$ would correctly identify signs of non-convergence. We observed higher $\widehat{R}$ and $AC$-values in conditions where $\bar{Q}$s were biased, invalid estimates of $Q$s. 
 
-3. We hypothesized that the recommended thresholds to diagnose non-convergence with $\widehat{R}$ would be too stringent for iterative imputation applications. This hypothesis is only partially supported. $\widehat{R}$ indicated improving convergence until 30 to 40 iterations, while approximately unbiased, confidence-valid estimates were obtained after just seven iterations. This roughly corresponds to the threshold of 1.2. The more stringent threshold 1.1 seems plausible compared to the decrease in $\widehat{R}$-values across iterations. The most recent threshold 1.01 does indeed seem to over-estimate the signs of non-convergence.
+3. We hypothesized that the recommended thresholds to diagnose non-convergence with $\widehat{R}$ would be too stringent for iterative imputation applications, compared to the number of iterations necessary for statistically valid inferences. This hypothesis is partially supported: On the one hand, the 1.01 and 1.1 thresholds indeed seem to over-estimate the signs of non-convergence. On the other hand, however, we observed that the traditional threshold of 1.2 roughly corresponds to the number of iterations required to obtain approximately unbiased, confidence-valid estimates. 
 
 4. The results of this simulation study do not support the hypothesis that high $AC$-values are implausible in iterative imputation algorithms with typical convergence. We expected that the randomness induced by the algorithm would effectively mitigate the risk of dependency within chains after a few iterations. In this study, however, we observed $AC$-values as high as theoretically possible ($AC=1$). The second part of the hypothesis is not refuted: the $AC$-values did decrease quickly as a function of $T$.
 
-5. Our final hypothesis was that multivariate $\theta$s would be better at detecting non-convergence than univariate $\theta$s. Multivariate $\theta$s did indeed show superior performance under certain conditions (e.g., multivariate $Q$s and extreme missingness proportions).
+5. Our final hypothesis was that multivariate $\theta$s would be better at detecting non-convergence than univariate $\theta$s. Multivariate $\theta$s did indeed show superior performance under certain conditions (e.g., multivariate $Q$s and extreme missingness).
 
 
 
