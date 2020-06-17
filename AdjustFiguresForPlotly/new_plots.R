@@ -168,8 +168,34 @@ mice::fluxplot(boys)
 # influx hoeveel invloed is er van andere vars?
 # liefst zo hoog mogelijke outflux
 
+
 mids$data %>% flux() %>% ggplot(aes(x = influx, y = outflux)) +
-  geom_abline(intercept=1, slope = -1, linetype = "dashed", color = "gray") + 
-  geom_text(aes(label=row.names(a)),hjust=0, vjust=0) + 
+  geom_line(data = data.frame(x=0:1, y=1:0), aes(x=x, y=y), linetype = "dashed", color = "gray") + 
+  geom_text(aes(label=row.names(a))) + 
   scale_x_continuous(limits = c(0,1)) + 
-  scale_y_continuous(limits = c(0,1))
+  scale_y_continuous(limits = c(0,1)) + 
+  labs(x = "Influx", y = "Outflux")
+
+mice_fluxplot <- function(dat){
+  # add step to check data type and subset if necessary
+  dat %>% flux() %>% ggplot(aes(x = influx, y = outflux)) +
+    geom_line(data = data.frame(x=0:1, y=1:0), aes(x=x, y=y), linetype = "dashed", color = "gray") + 
+    geom_text(aes(label=row.names(a))) + 
+    scale_x_continuous(limits = c(0,1)) + 
+    scale_y_continuous(limits = c(0,1)) + 
+    labs(x = "Influx", y = "Outflux")
+  }
+  
+mice_fluxplot(mids$data)
+
+# mids$data %>% flux() %>% ggplot(aes(x = influx, y = outflux)) +
+#   geom_abline(intercept=1, slope = -1, linetype = "dashed", color = "gray") + 
+#   geom_text(aes(label=row.names(a))) + 
+#   scale_x_continuous(limits = c(0,1)) + 
+#   scale_y_continuous(limits = c(0,1)) 
+# 
+# mids$data %>% flux() %>% ggplot(aes(x = influx, y = outflux)) +
+#   geom_line(data = data.frame(x=0:1, y=1:0), aes(x=x, y=y), linetype = "dashed", color = "gray") + 
+#   geom_label(aes(label=row.names(a))) + 
+#   scale_x_continuous(limits = c(0,1)) + 
+#   scale_y_continuous(limits = c(0,1))
