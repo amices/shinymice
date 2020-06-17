@@ -11,6 +11,7 @@ library(patchwork) #version 1.0.0
 library(mice)
 library(tidyr)
 library(purrr)
+library(plotly)
 
 
 # set default graphing behavior
@@ -62,6 +63,10 @@ mice_stripplot(vars[1], mids)
 
 stripplots <- map(vars, ~ mice_stripplot(.x, mids))
 
+ggplotly(stripplots[[1]], tooltip = "y")
+
+# maybe change this to show both the value and the imp number label
+# text = paste("Province:", NAME_1, "<br>", "Example III:", example1)
 
 # box and whiskers of completed data (for large n)
 mice::bwplot(mids)
@@ -103,6 +108,7 @@ mice_bwplot(vars[1], mids)
 
 bwplots <- map(vars, ~ mice_bwplot(.x, mids))
 
+ggplotly(bwplots[[1]])
 
 # density plot of completed data
 mice::densityplot(mids)
@@ -127,6 +133,7 @@ mice_densityplot(vars[1], mids)
 
 densplots <- map(vars, ~ mice_densityplot(.x, mids))
 
+ggplotly(densplots[[1]])
 
 # scatterplot of completed data
 mice::xyplot(mids, hgt ~ wgt)
@@ -176,18 +183,29 @@ mids$data %>% flux() %>% ggplot(aes(x = influx, y = outflux)) +
   scale_y_continuous(limits = c(0,1)) + 
   labs(x = "Influx", y = "Outflux")
 
+
 mice_fluxplot <- function(dat){
   # add step to check data type and subset if necessary
   dat %>% flux() %>% ggplot(aes(x = influx, y = outflux)) +
     geom_line(data = data.frame(x=0:1, y=1:0), aes(x=x, y=y), linetype = "dashed", color = "gray") + 
-    geom_text(aes(label=row.names(a))) + 
+    geom_text(aes(label=row.names(flux(dat)))) + 
     scale_x_continuous(limits = c(0,1)) + 
     scale_y_continuous(limits = c(0,1)) + 
     labs(x = "Influx", y = "Outflux")
   }
   
-mice_fluxplot(mids$data)
+fluxplot <- mice_fluxplot(mids$data)
 
+ggplotly(fluxplot)
+
+# mids$data %>% flux() %>% ggplot(aes(x = influx, y = outflux)) +
+#   geom_line(data = data.frame(x=0:1, y=1:0), aes(x=x, y=y), linetype = "dashed", color = "gray") + 
+#   geom_point(size = 5, color = "gray", alpha = 0.3) +
+#   geom_text(aes(label=row.names(a)), size = 2) + 
+#   scale_x_continuous(limits = c(0,1)) + 
+#   scale_y_continuous(limits = c(0,1)) + 
+#   labs(x = "Influx", y = "Outflux")
+# 
 # mids$data %>% flux() %>% ggplot(aes(x = influx, y = outflux)) +
 #   geom_abline(intercept=1, slope = -1, linetype = "dashed", color = "gray") + 
 #   geom_text(aes(label=row.names(a))) + 
