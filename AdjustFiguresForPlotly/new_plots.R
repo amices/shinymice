@@ -10,6 +10,7 @@ library(ggplot2) #version 3.3.0
 library(patchwork) #version 1.0.0
 library(mice)
 library(tidyr)
+library(purrr)
 
 
 # set default graphing behavior
@@ -161,8 +162,14 @@ xyplots <- map(vars, function(x){map(vars, function(y){mice_xyplot(x = x, y = y,
 # test with different data
 mice_xyplot("age", "bmi", dat = mice(nhanes))
 
-# # OPTIONAL: influx-outflux plot of incomplete data
-# mice::fluxplot(boys)
-# # outflux: hoeveel hangen andere var ervan af?
-# # influx hoeveel invloed is er van andere vars?
-# # liefst zo hoog mogelijke outflux
+# OPTIONAL: influx-outflux plot of incomplete data
+mice::fluxplot(boys)
+# outflux: hoeveel hangen andere var ervan af?
+# influx hoeveel invloed is er van andere vars?
+# liefst zo hoog mogelijke outflux
+
+mids$data %>% flux() %>% ggplot(aes(x = influx, y = outflux)) +
+  geom_abline(intercept=1, slope = -1, linetype = "dashed", color = "gray") + 
+  geom_text(aes(label=row.names(a)),hjust=0, vjust=0) + 
+  scale_x_continuous(limits = c(0,1)) + 
+  scale_y_continuous(limits = c(0,1))
