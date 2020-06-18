@@ -2,7 +2,9 @@
 # kleuren in mice.theme()  mice:::mdc(1:2) where 1 = obs and 2 = mis
 # plot them side by side, obs data on the left and imputed on the right
 # potentially add options to choose which imp to show
-
+# check use of x and data in mice vs lattice/ggplot
+# ask to import purrr or use lapply
+# get bwplot to work with plotly when all is obs!
 
 # load packages
 library(dplyr) #version 0.8.5
@@ -32,7 +34,7 @@ theme_update(
 mids <- mice(boys, printFlag = FALSE)
 
 vars <-
-  mids$data %>% select_if(is.numeric) %>% names %>% set_names(., .) %>% .[-1] # ook select if voor NA
+  mids$data %>% select_if(is.numeric) %>% names %>% set_names(., .) # ook select if voor NA
 
 
 # stripplot of completed data (for small n)
@@ -56,7 +58,7 @@ mice_stripplot <- function(x, dat) {
       color = mice:::mdc(1)
     ) +
     labs(y = x,
-         x = "Imputation")
+         x = "Imputation (0 = observed data)")
 }
 
 mice_stripplot(vars[1], mids)
@@ -101,28 +103,29 @@ mice_bwplot <- function(x, dat) {
       color = mice:::mdc(1)
     ) +
     labs(y = x,
-         x = "Imputation")
+         x = "Imputation (0 = observed data)")
 }
 
 mice_bwplot(vars[1], mids)
 
 bwplots <- map(vars, ~ mice_bwplot(.x, mids))
 
-ggplotly(bwplots[[1]])
+ggplotly(bwplots[[2]])
 
 # density plot of completed data
 mice::densityplot(mids)
 
-mice_densityplot <- function(x, dat) {
+mice_densityplot <- function(x, dat, thicker = 2) {
   dat$imp[[x]] %>% tidyr::pivot_longer(everything(), names_to = ".imp", values_to = x) %>%
     ggplot(.) +
     geom_density(aes(x = .data[[x]], group = .data$.imp),
-                 color = mice:::mdc(2)) +
+                 color = mice:::mdc(2),
+                 na.rm = TRUE) +
     geom_density(
       data = dat$data,
       mapping = aes(x = .data[[x]]),
       na.rm = TRUE,
-      size = 1,
+      size = thicker/2,
       color = mice:::mdc(1)
     ) +
     labs(x = x,
@@ -133,7 +136,7 @@ mice_densityplot(vars[1], mids)
 
 densplots <- map(vars, ~ mice_densityplot(.x, mids)) #alpha lichter voor vakjes plotly
 
-ggplotly(densplots[[1]])
+ggplotly(densplots[[2]])
 
 # scatterplot of completed data
 mice::xyplot(mids, hgt ~ wgt)
@@ -169,7 +172,7 @@ xyplots <- map(vars, function(x){map(vars, function(y){mice_xyplot(x = x, y = y,
 ggplotly(xyplots[[1]][[2]])
 
 # test with different data
-mice_xyplot("age", "bmi", dat = mice(nhanes))
+mice_xyplot("age", "bmi", dat = mice(nhanes, printFlag = F))
 
 # OPTIONAL: influx-outflux plot of incomplete data
 mice::fluxplot(boys)

@@ -15,7 +15,7 @@ set.seed(1111)
 p.inc <- seq(0.05, 0.95, by = 0.05)
 
 # set number of simulations
-n.sims <- 100
+n.sims <- 1000
 
 # generate some data and get true values
 # data generating mechanism = multivariate normal distribution
