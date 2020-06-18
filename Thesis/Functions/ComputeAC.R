@@ -2,7 +2,7 @@
 # requires packages 'purrr' and 'magrittr'/'dplyr', and the functions in 'SupplementAC.R'
 
 # load supplementary file
-source('Functions/SupplementAC.R')
+source('Thesis/Functions/SupplementAC.R')
 
 # function for lag 1 AC for one or more imputation chains
 ac_adapted <- function(x, ac_function = "ac") {

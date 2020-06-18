@@ -3,7 +3,7 @@
 # and the non-convergence diagnostics function 'ComputeDiagnostics.R'
 
 # load function
-source("Functions/ComputeDiagnostics.R")
+source("Thesis/Functions/ComputeDiagnostics.R")
 
 evaluate.sim <-
   # input: the 'out' object obtained by running '1.Execute.R'

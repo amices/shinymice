@@ -3,7 +3,7 @@
 # and the adapted imputation function
 
 # load function
-source("Functions/ImputeMissingness.R")
+source("Thesis/Functions/ImputeMissingness.R")
 
 # combine separate functions into wrapper
 simulate <- function(complete_data = data,

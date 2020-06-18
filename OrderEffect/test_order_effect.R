@@ -1,4 +1,5 @@
 # plot to check order effects
+# rerun with different seed for dataset
 
 # set-up environment
 library(dplyr)
@@ -161,7 +162,8 @@ load("OrderEffect/order_effect_sim.Rdata")
 #   xlab("Order in VisitSequence")
 
 # plot again but better
-results_ord %>% filter(., var == "X2") %>%
+
+x2 <- results_ord %>% filter(., var == "X2") %>%
   ggplot(.) +
   geom_hline(yintercept=0.176, linetype = "dashed", color ="gray") +
   geom_point(aes(x = ord, y = est)) +
@@ -170,9 +172,22 @@ results_ord %>% filter(., var == "X2") %>%
     width = .2,
     alpha = .25,
     size = .9) +
-  ylab("Regression estimate") +
+  ylab("Regression estimate X2") +
   xlab("VisitSequence permutation")
 
+x3 <- results_ord %>% filter(., var == "X3") %>%
+  ggplot(.) +
+  geom_hline(yintercept=0.244, linetype = "dashed", color ="gray") +
+  geom_point(aes(x = ord, y = est)) +
+  geom_errorbar(
+    aes(x = ord, ymin = ci_lo, ymax = ci_hi),
+    width = .2,
+    alpha = .25,
+    size = .9) +
+  ylab("Regression estimate X3") +
+  xlab("VisitSequence permutation")
+
+x2+x3 + patchwork::plot_layout(ncol = 1)
 # # regression coeff
 # ggplot() +
 #   geom_line(aes(x = reg$t, y = reg$bias.est.X1, color = as.factor(reg$p*100)), size = .25, na.rm = TRUE) +

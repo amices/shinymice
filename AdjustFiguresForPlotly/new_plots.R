@@ -32,7 +32,7 @@ theme_update(
 mids <- mice(boys, printFlag = FALSE)
 
 vars <-
-  mids$data %>% select_if(is.numeric) %>% names %>% set_names(., .) %>% .[-1]
+  mids$data %>% select_if(is.numeric) %>% names %>% set_names(., .) %>% .[-1] # ook select if voor NA
 
 
 # stripplot of completed data (for small n)
@@ -131,7 +131,7 @@ mice_densityplot <- function(x, dat) {
 
 mice_densityplot(vars[1], mids)
 
-densplots <- map(vars, ~ mice_densityplot(.x, mids))
+densplots <- map(vars, ~ mice_densityplot(.x, mids)) #alpha lichter voor vakjes plotly
 
 ggplotly(densplots[[1]])
 
@@ -166,6 +166,8 @@ mice_xyplot(vars[1], vars[2], dat = mids)
 
 xyplots <- map(vars, function(x){map(vars, function(y){mice_xyplot(x = x, y = y, dat = mids)})})
 
+ggplotly(xyplots[[1]][[2]])
+
 # test with different data
 mice_xyplot("age", "bmi", dat = mice(nhanes))
 
@@ -174,15 +176,6 @@ mice::fluxplot(boys)
 # outflux: hoeveel hangen andere var ervan af?
 # influx hoeveel invloed is er van andere vars?
 # liefst zo hoog mogelijke outflux
-
-
-mids$data %>% flux() %>% ggplot(aes(x = influx, y = outflux)) +
-  geom_line(data = data.frame(x=0:1, y=1:0), aes(x=x, y=y), linetype = "dashed", color = "gray") + 
-  geom_text(aes(label=row.names(a))) + 
-  scale_x_continuous(limits = c(0,1)) + 
-  scale_y_continuous(limits = c(0,1)) + 
-  labs(x = "Influx", y = "Outflux")
-
 
 mice_fluxplot <- function(dat){
   # add step to check data type and subset if necessary
@@ -194,26 +187,6 @@ mice_fluxplot <- function(dat){
     labs(x = "Influx", y = "Outflux")
   }
   
-fluxplot <- mice_fluxplot(mids$data)
+(fluxplot <- mice_fluxplot(mids$data))
 
 ggplotly(fluxplot) #, tooltip = c("text", "influx", "outflux"))
-
-# mids$data %>% flux() %>% ggplot(aes(x = influx, y = outflux)) +
-#   geom_line(data = data.frame(x=0:1, y=1:0), aes(x=x, y=y), linetype = "dashed", color = "gray") + 
-#   geom_point(size = 5, color = "gray", alpha = 0.3) +
-#   geom_text(aes(label=row.names(a)), size = 2) + 
-#   scale_x_continuous(limits = c(0,1)) + 
-#   scale_y_continuous(limits = c(0,1)) + 
-#   labs(x = "Influx", y = "Outflux")
-# 
-# mids$data %>% flux() %>% ggplot(aes(x = influx, y = outflux)) +
-#   geom_abline(intercept=1, slope = -1, linetype = "dashed", color = "gray") + 
-#   geom_text(aes(label=row.names(a))) + 
-#   scale_x_continuous(limits = c(0,1)) + 
-#   scale_y_continuous(limits = c(0,1)) 
-# 
-# mids$data %>% flux() %>% ggplot(aes(x = influx, y = outflux)) +
-#   geom_line(data = data.frame(x=0:1, y=1:0), aes(x=x, y=y), linetype = "dashed", color = "gray") + 
-#   geom_label(aes(label=row.names(a))) + 
-#   scale_x_continuous(limits = c(0,1)) + 
-#   scale_y_continuous(limits = c(0,1))
