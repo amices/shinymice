@@ -153,7 +153,7 @@ mice_histogram <- function(x, dat) {
     geom_histogram(aes(x = .data[[x]], color = .data$.imp), position = "identity",
                    fill = mice:::mdc(2), alpha = 1,
                    na.rm = TRUE) +
-    scale_color_manual(values = c(mice:::mdc(2), mice:::mdc(2), mice:::mdc(2), mice:::mdc(2), mice:::mdc(2))) +
+    scale_color_manual(values = c(rep(mice:::mdc(2), dat$m))) +
     labs(x = x,
          y = "Count")
 }
