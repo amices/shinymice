@@ -135,7 +135,7 @@ mice_densityplot <- function(x, dat, thicker = 2) {
          y = "Density")
 }
 
-mice_densityplot(vars[1], mids)
+mice_densityplot(vars[2], mids)
 
 densplots <- map(vars, ~ mice_densityplot(.x, mids)) #alpha lichter voor vakjes plotly
 
@@ -150,19 +150,53 @@ mice_histogram <- function(x, dat) {
       mapping = aes(x = .data[[x]]),
       na.rm = TRUE,
       fill = mice:::mdc(1)    ) +
-    geom_histogram(aes(x = .data[[x]]),
-                   fill = mice:::mdc(2),
-                   na.rm = TRUE) + 
+    geom_histogram(aes(x = .data[[x]], color = .data$.imp), position = "identity",
+                   fill = mice:::mdc(2), alpha = 1,
+                   na.rm = TRUE) +
+    scale_color_manual(values = c(mice:::mdc(2), mice:::mdc(2), mice:::mdc(2), mice:::mdc(2), mice:::mdc(2))) +
     labs(x = x,
-         y = "Count") +
-    facet_grid(cols = vars(.imp), margins = TRUE) #remove margins argument to plot without (all)
+         y = "Count")
 }
 
-mice_histogram(vars[2], mids)
+# # add histogram for discrete data
+# mice_histogram <- function(x, dat) {
+#   dat$imp[[x]] %>% tidyr::pivot_longer(everything(), names_to = ".imp", values_to = x) %>%
+#     ggplot(.) +
+#     geom_histogram(
+#       data = dat$data,
+#       mapping = aes(x = .data[[x]]),
+#       na.rm = TRUE,
+#       fill = mice:::mdc(1)    ) +
+#     geom_histogram(aes(x = .data[[x]]),
+#                    fill = mice:::mdc(2),
+#                    na.rm = TRUE) + 
+#     labs(x = x,
+#          y = "Count") +
+#     facet_grid(cols = vars(.imp), margins = TRUE) #does not yet work for completely observed variable #remove margins argument to plot without (all)
+# }
+
+# # add histogram for discrete data
+# mice_histogram <- function(x, dat) {
+#   dat$imp[[x]] %>% tidyr::pivot_longer(everything(), names_to = ".imp", values_to = x) %>%
+#     ggplot(.) +
+#     geom_histogram(
+#       data = dat$data,
+#       mapping = aes(x = .data[[x]]),
+#       na.rm = TRUE,
+#       color = mice:::mdc(1),
+#       fill = "white", size = 1) +
+#     geom_histogram(aes(x = .data[[x]]),
+#                    color = mice:::mdc(2), fill = "white", size = 1.5,
+#                    na.rm = TRUE) + 
+#     labs(x = x,
+#          y = "Count") 
+# }
+
+mice_histogram(vars[2], mids) 
 
 histplots <- map(vars, ~ mice_histogram(.x, mids)) #alpha lichter voor vakjes plotly
 
-ggplotly(histplots[[1]])
+ggplotly(histplots[[2]])
 
 
 # scatterplot of completed data
