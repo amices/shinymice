@@ -5,6 +5,9 @@
 # check use of x and data in mice vs lattice/ggplot
 # ask to import purrr or use lapply
 # get bwplot to work with plotly when all is obs!
+# use hardhat package from tidymodels
+# argument 'interactive = TRUE'
+# make a generic plot
 
 # load packages
 library(dplyr) #version 0.8.5
@@ -61,11 +64,11 @@ mice_stripplot <- function(x, dat) {
          x = "Imputation (0 = observed data)")
 }
 
-mice_stripplot(vars[1], mids)
+mice_stripplot(vars[1], mids) + mice_stripplot(vars[2], mids)
 
 stripplots <- map(vars, ~ mice_stripplot(.x, mids))
 
-ggplotly(stripplots[[1]], tooltip = "y")
+ggplotly(stripplots[[2]], tooltip = "y")
 
 # maybe change this to show both the value and the imp number label
 # text = paste("Province:", NAME_1, "<br>", "Example III:", example1)
@@ -138,6 +141,30 @@ densplots <- map(vars, ~ mice_densityplot(.x, mids)) #alpha lichter voor vakjes 
 
 ggplotly(densplots[[2]])
 
+# add histogram for discrete data
+mice_histogram <- function(x, dat) {
+  dat$imp[[x]] %>% tidyr::pivot_longer(everything(), names_to = ".imp", values_to = x) %>%
+    ggplot(.) +
+    geom_histogram(
+      data = dat$data,
+      mapping = aes(x = .data[[x]]),
+      na.rm = TRUE,
+      fill = mice:::mdc(1)    ) +
+    geom_histogram(aes(x = .data[[x]]),
+                   fill = mice:::mdc(2),
+                   na.rm = TRUE) + 
+    labs(x = x,
+         y = "Count") +
+    facet_grid(cols = vars(.imp), margins = TRUE) #remove margins argument to plot without (all)
+}
+
+mice_histogram(vars[2], mids)
+
+histplots <- map(vars, ~ mice_histogram(.x, mids)) #alpha lichter voor vakjes plotly
+
+ggplotly(histplots[[1]])
+
+
 # scatterplot of completed data
 mice::xyplot(mids, hgt ~ wgt)
 
@@ -168,8 +195,9 @@ mice_xyplot <- function(x, y, dat) {
 mice_xyplot(vars[1], vars[2], dat = mids)
 
 xyplots <- map(vars, function(x){map(vars, function(y){mice_xyplot(x = x, y = y, dat = mids)})})
+# create default coaand to create them all
 
-ggplotly(xyplots[[1]][[2]])
+ggplotly(xyplots[[3]][[2]])
 
 # test with different data
 mice_xyplot("age", "bmi", dat = mice(nhanes, printFlag = F))
