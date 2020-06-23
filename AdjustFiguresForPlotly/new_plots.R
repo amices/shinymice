@@ -228,27 +228,25 @@ mice::xyplot(mids, hgt ~ wgt)
 mice_xyplot <- function(x, y, dat) {
   if (x==y){return(NULL)} else {
   # combine imputations and missingness indicator
-  imps <-
-      mids$data %>% is.na() %>% as.data.frame() %>% mutate(.id = 1:dim(.)[1]) %>% left_join(complete(mids, "long", include = FALSE),
-                                                                                            by = ".id",
-                                                                                            suffix = c("r", ""))
-  imps %>% filter(.data[[paste0(x, "r")]] == T | .data[[paste0(y, "r")]] == T) %>% 
+  dat$data %>% 
+      is.na() %>% 
+      as.data.frame() %>% 
+      mutate(.id = 1:dim(.)[1]) %>% 
+      left_join(complete(dat, "long", include = FALSE), by = ".id", suffix = c("r", ""))  %>% 
+      filter(.data[[paste0(x, "r")]] == T | .data[[paste0(y, "r")]] == T) %>% 
     ggplot() +
     geom_point(
-      data = dat$data ,
+      data = dat$data,
       aes(x = .data[[x]], y = .data[[y]]),
       color = mice:::mdc(1),
       na.rm = T
     ) +
     geom_point(aes(x = .data[[x]], y = .data[[y]]),
                color = mice:::mdc(2),
-               na.rm = TRUE) +
-    labs(x = x,
-         y = y)
-  }
+               na.rm = TRUE)}
 }
 
-mice_xyplot(vars[1], vars[2], dat = mids)
+mice_xyplot("wgt", "hgt", dat = mids)
 
 xyplots <- map(vars, function(x){map(vars, function(y){mice_xyplot(x = x, y = y, dat = mids)})})
 # create default coaand to create them all
