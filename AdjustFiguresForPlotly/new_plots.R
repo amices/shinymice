@@ -21,15 +21,15 @@ library(plotly)
 
 # set default graphing behavior
 theme_update(
-  plot.title = element_text(hjust = 0.5),
-  plot.subtitle = element_text(hjust = 0.5),
+  # plot.title = element_text(hjust = 0.5),
+  # plot.subtitle = element_text(hjust = 0.5),
   panel.border = element_blank(),
   panel.grid.major = element_blank(),
   panel.grid.minor = element_blank(),
   panel.background = element_blank(),
-  axis.line = element_line(colour = "black"),
-  legend.key = element_blank(),
-  legend.position = "bottom"
+  axis.line = element_line(colour = "black")#,
+  # legend.key = element_blank(),
+  # legend.position = "bottom"
 )
 
 
@@ -197,6 +197,28 @@ mice_histogram(vars[2], mids)
 histplots <- map(vars, ~ mice_histogram(.x, mids)) #alpha lichter voor vakjes plotly
 
 ggplotly(histplots[[2]])
+
+# hist matching density
+mice_histogram_dens <- function(x, dat) {
+  dat$imp[[x]] %>% tidyr::pivot_longer(everything(), names_to = ".imp", values_to = x) %>%
+    ggplot(.) +
+    geom_histogram(
+      data = dat$data,
+      mapping = aes(x = .data[[x]], y = ..density..),
+      na.rm = TRUE,
+      fill = mice:::mdc(1), alpha = 0.5, color = mice:::mdc(1)    ) +
+    geom_histogram(aes(x = .data[[x]], y = ..density.., color = .data$.imp), position = "identity",
+                   fill = mice:::mdc(2), alpha = 0.2,
+                   na.rm = TRUE) +
+    scale_color_manual(values = c(rep(mice:::mdc(2), dat$m))) +
+    labs(x = x,
+         y = "Density")
+}
+
+mice_histogram_dens(vars[2], mids) 
+histdensplots <- map(vars, ~ mice_histogram_dens(.x, mids)) #alpha lichter voor vakjes plotly
+
+ggplotly(histdensplots[[2]])
 
 
 # scatterplot of completed data
