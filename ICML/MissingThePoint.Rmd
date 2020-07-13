@@ -1,0 +1,165 @@
+---
+title: "Missing The Point:"
+subtitle: "Non-Convergence in Iterative Imputation Algorithms"
+author: "Hanne I. Oberman, Stef van Buuren, Gerko Vink"
+institute: "Utrecht University"
+date: "17-07-2020" #(updated: `r Sys.Date()`)"
+output:
+  xaringan::moon_reader:
+    css: [default, default-fonts]
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+```
+
+
+# Algorithmic Non-Convergence
+
+With iterative imputation, the validity of the inferences relies on algorithmic convergence.
+
+```{r non-conv, echo=FALSE,  message=FALSE, warning=FALSE}
+# set-up env
+library(dplyr)
+library(ggplot2)
+library(plotly)
+load("example_diagnostics.Rdata")
+
+# define colorblind friendly colors
+paint2 <- c('#66CCEE', '#EE6677')
+
+# plot chains
+trace <- ggplot(diagnostics) +
+  geom_point(aes(x = iteration, y = `Chain 1`, color = patho),
+             size = .25,
+             na.rm = TRUE) +
+  geom_point(aes(x = iteration, y = `Chain 2`, color = patho),
+             size = .25,
+             na.rm = TRUE) +
+  geom_point(aes(x = iteration, y = `Chain 3`, color = patho),
+             size = .25,
+             na.rm = TRUE) +
+  geom_point(aes(x = iteration, y = `Chain 4`, color = patho),
+             size = .25,
+             na.rm = TRUE) +
+  geom_point(aes(x = iteration, y = `Chain 5`, color = patho),
+             size = .25,
+             na.rm = TRUE) +
+  geom_line(aes(x = iteration, y = `Chain 1`, color = patho), size = .25, na.rm = TRUE) +
+  geom_line(aes(x = iteration, y = `Chain 2`, color = patho), size = .25, na.rm = TRUE) +
+  geom_line(aes(x = iteration, y = `Chain 3`, color = patho), size = .25, na.rm = TRUE) +
+  geom_line(aes(x = iteration, y = `Chain 4`, color = patho), size = .25, na.rm = TRUE) +
+  geom_line(aes(x = iteration, y = `Chain 5`, color = patho), size = .25, na.rm = TRUE) +
+  scale_colour_manual(values=paint2) +
+  scale_x_continuous(breaks = 1:10) +
+  xlab("Iteration") +
+  ylab("Chain mean") + #bquote(theta)) +
+  labs(color = "") + 
+  theme_classic() +
+  theme(legend.position = "bottom")
+  
+ggplotly(trace)
+
+# alternatively, use the actual data
+# run 1.Execute.R until imputing anything, than run RunSimulationOnce.R until after amputing the data
+# with the 'amps' object
+load("../traceplotdata.Rdata")
+set.seed(12)
+d75 <- amps[[4]] %>% mice(maxit=20)
+plot(d75)
+gg.mids(d4, x="Y")[[1]]
+```
+
+---
+
+# Results
+
+```{r results, echo=FALSE, fig.width=9.8, message=FALSE, warning=FALSE}
+load("complete.Rdata") 
+#library(patchwork) 
+
+# pre-processing
+results <- results %>% filter(t<51) %>% mutate(bias.est.X1 = bias.est.X1/.0206) %>% mutate(crit = qnorm((1 + .95) / 2) / sqrt(t), thresh1.01 = 1.01, thresh1.1 = 1.1, thresh1.2 = 1.2)
+results$crit[results$crit>1] <- NA
+
+# define colorblind friendly colors
+paint5 <- c('#228833', '#66CCEE', '#CCBB44','#EE6677', '#AA3377')
+
+# create plots
+est_bias <- results %>% ggplot(aes(x = t, y = bias.est.X1, color = as.factor(p*100))) +
+  geom_hline(yintercept = 0,
+             color = "grey",
+             lwd = 1) +
+  geom_point(size = .25, na.rm = TRUE) +
+  geom_line(size = .25, na.rm = TRUE) +
+  scale_colour_manual(values=paint5) +
+  xlab("") +
+  ylab("Bias (%)") +
+  labs(colour = "Proportion of missing cases (%)") +
+  theme_classic() +
+  theme(legend.position = "bottom")
+
+est_Rh <- results %>% ggplot(aes(x = t, y = r.hat.max.beta, color = as.factor(p*100))) +
+  geom_hline(yintercept = 1,
+             color = "grey",
+             lwd = 
+               1) +
+  geom_point(size = .25, na.rm = TRUE) +
+  geom_line(size = .25, na.rm = TRUE) +
+  geom_line(aes(x=t, y=thresh1.2), color = "grey", linetype = "dashed", size = .25, na.rm = TRUE) +
+  geom_line(aes(x=t, y=thresh1.1), color = "grey", linetype = "dashed", size = .25, na.rm = TRUE) +
+  geom_line(aes(x=t, y=thresh1.01), color = "grey", linetype = "dashed", size = .25, na.rm = TRUE) +
+  scale_colour_manual(values=paint5) +
+  scale_y_continuous(limits = c(1,1.53), breaks = c(1,1.1,1.2,1.3,1.4,1.5)) +
+  xlab("Number of iterations") +
+  ylab(bquote(widehat(R))) +
+  labs(colour = "Proportion of missing cases (%)") +
+  theme_classic() +
+  theme(legend.position = "")
+
+est_AC <- results %>% ggplot(aes(x = t, y = ac.max.beta, color = as.factor(p*100))) +
+  geom_hline(yintercept = 0,
+             color = "grey",
+             lwd = 1) +
+  geom_line(aes(x = t, y = crit), color = "grey", linetype = "dashed", size = .25, na.rm = TRUE) + 
+  geom_point(size = .25, na.rm = TRUE) +
+  geom_line(size = .25, na.rm = TRUE) +
+  scale_colour_manual(values=paint5) +
+  xlab("Number of iterations") +
+  ylab("Autocorrelation") + 
+  labs(colour = "Proportion of missing cases (%)") +
+  theme_classic() +
+  theme(legend.position = "")
+
+est_cov <- results %>% ggplot(aes(x = t, y = cov.est.X1*100, color = as.factor(p*100))) +
+  geom_hline(yintercept = 95,
+             color = "grey",
+             lwd = 1) +
+  geom_point(size = .25, na.rm = TRUE) +
+  geom_line(size = .25, na.rm = TRUE) +
+  scale_colour_manual(values=paint5) +
+  xlab("") +
+  ylab("Coverage rate (%)") +
+  labs(colour = "Proportion of missing cases (%)") +
+  theme_classic() +
+  theme(legend.position = "") 
+
+# plot estimates, save 6.75x4.5in or 5.5
+# est_bias + est_cov + est_AC + est_Rh + plot_annotation(tag_levels = "A", tag_suffix = ".") + plot_layout(ncol = 2, guides = "collect")
+
+ggplotly(est_bias)
+
+```
+
+---
+
+# Thanks!
+
+Slides created via the R package [**xaringan**](https://github.com/yihui/xaringan).
+
