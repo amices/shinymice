@@ -20,7 +20,7 @@ options(htmltools.dir.version = FALSE)
 ```
 
 
-# Algorithmic Non-Convergence
+# Algorithmic Convergence
 
 With iterative imputation, the validity of the inferences relies on algorithmic convergence.
 
@@ -204,6 +204,10 @@ ggplotly(est_AC)
 
 ---
 # Thanks!
+
+Read more: [github.com/hanneoberman/MissingThePoint](https://github.com/hanneoberman/MissingThePoint).
+
+Or follow my updates on Twitter: [@hioberman](https://twitter.com/hioberman)
 
 .footnote[Slides created via the R package [**xaringan**](https://github.com/yihui/xaringan).]
 
