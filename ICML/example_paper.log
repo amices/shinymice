@@ -1,7 +1,7 @@
-This is XeTeX, Version 3.14159265-2.6-0.99999 (MiKTeX 2.9.6880 64-bit) (preloaded format=xelatex 2020.5.5)  14 JUL 2020 16:21
+This is pdfTeX, Version 3.14159265-2.6-1.40.19 (MiKTeX 2.9.6880 64-bit) (preloaded format=pdflatex 2018.12.13)  14 JUL 2020 16:15
 entering extended mode
-**./ARTEMISS_proposal_Oberman_vanBuuren_Vink.tex
-(ARTEMISS_proposal_Oberman_vanBuuren_Vink.tex
+**./example_paper.tex
+(example_paper.tex
 LaTeX2e <2018-04-01> patch level 5
 ("C:\Users\User\AppData\Local\Programs\MiKTeX 2.9\tex\latex\base\article.cls"
 Document Class: article 2014/09/29 v1.4h Standard LaTeX document class
@@ -37,9 +37,12 @@ LaTeX Info: Redefining \textmicrotypecontext on input line 1339.
 \MT@listname@count=\count89
 
 ("C:\Users\User\AppData\Local\Programs\MiKTeX 2.9\tex\latex\microtype\microtype
--xetex.def"
-File: microtype-xetex.def 2018/01/14 v2.7a Definitions specific to xetex (RS)
-LaTeX Info: Redefining \lsstyle on input line 256.
+-pdftex.def"
+File: microtype-pdftex.def 2018/01/14 v2.7a Definitions specific to pdftex (RS)
+
+LaTeX Info: Redefining \lsstyle on input line 913.
+LaTeX Info: Redefining \lslig on input line 913.
+\MT@outer@space=\skip43
 )
 Package microtype Info: Loading configuration file microtype.cfg.
 
@@ -62,11 +65,11 @@ Package: trig 2016/01/03 v1.10 sin cos tan (DPC)
 cs.cfg"
 File: graphics.cfg 2016/06/04 v1.11 sample graphics configuration
 )
-Package graphics Info: Driver file: xetex.def on input line 99.
+Package graphics Info: Driver file: pdftex.def on input line 99.
 
-("C:\Users\User\AppData\Local\Programs\MiKTeX 2.9\tex\latex\graphics-def\xetex.
-def"
-File: xetex.def 2017/06/24 v5.0h Graphics/color driver for xetex
+("C:\Users\User\AppData\Local\Programs\MiKTeX 2.9\tex\latex\graphics-def\pdftex
+.def"
+File: pdftex.def 2018/01/08 v1.0l Graphics/color driver for pdftex
 ))
 \Gin@req@height=\dimen104
 \Gin@req@width=\dimen105
@@ -74,12 +77,12 @@ File: xetex.def 2017/06/24 v5.0h Graphics/color driver for xetex
 ("C:\Users\User\AppData\Local\Programs\MiKTeX 2.9\tex\latex\subfigure\subfigure
 .sty"
 Package: subfigure 2002/07/30 v2.1.4 subfigure package
-\subfigtopskip=\skip43
-\subfigcapskip=\skip44
+\subfigtopskip=\skip44
+\subfigcapskip=\skip45
 \subfigcaptopadj=\dimen106
-\subfigbottomskip=\skip45
+\subfigbottomskip=\skip46
 \subfigcapmargin=\dimen107
-\subfiglabelskip=\skip46
+\subfiglabelskip=\skip47
 \c@subfigure=\count90
 \c@lofdepth=\count91
 \c@subtable=\count92
@@ -91,8 +94,8 @@ Package: subfigure 2002/07/30 v2.1.4 subfigure package
 
 ("C:\Users\User\AppData\Local\Programs\MiKTeX 2.9\tex\latex\subfigure\subfigure
 .cfg")
-\subfig@top=\skip47
-\subfig@bottom=\skip48
+\subfig@top=\skip48
+\subfig@bottom=\skip49
 )
 ("C:\Users\User\AppData\Local\Programs\MiKTeX 2.9\tex\latex\booktabs\booktabs.s
 ty"
@@ -142,10 +145,9 @@ Package: kvdefinekeys 2016/05/16 v1.4 Define keys (HO)
 Package: pdftexcmds 2018/09/10 v0.29 Utility functions of pdfTeX for LuaTeX (HO
 )
 Package pdftexcmds Info: LuaTeX not detected.
-Package pdftexcmds Info: pdfTeX >= 1.30 not detected.
 Package pdftexcmds Info: \pdf@primitive is available.
 Package pdftexcmds Info: \pdf@ifprimitive is available.
-Package pdftexcmds Info: \pdfdraftmode not found.
+Package pdftexcmds Info: \pdfdraftmode found.
 Package: pdfescape 2016/05/16 v1.14 Implements pdfTeX's escape features (HO)
 Package: bigintcalc 2016/05/16 v1.4 Expandable calculations on big integers (HO
 )
@@ -181,6 +183,8 @@ Package: kvoptions 2016/05/16 v3.12 Key value format for package options (HO)
 ("C:\Users\User\AppData\Local\Programs\MiKTeX 2.9\tex\latex\hyperref\pd1enc.def
 "
 File: pd1enc.def 2018/11/30 v6.88e Hyperref: PDFDocEncoding definition (HO)
+Now handling font encoding PD1 ...
+... no UTF-8 mapping file for font encoding PD1
 )
 \Hy@SavedSpaceFactor=\count100
 
@@ -218,24 +222,13 @@ LaTeX Info: Redefining \pageref on input line 6454.
 \c@Item=\count104
 \c@Hfootnote=\count105
 )
-Package hyperref Info: Driver (autodetected): hxetex.
-("C:\Users\User\AppData\Local\Programs\MiKTeX 2.9\tex\latex\hyperref\hxetex.def
-"
-File: hxetex.def 2018/11/30 v6.88e Hyperref driver for XeTeX
- ("C:\Users\User\AppData\Local\Programs\MiKTeX 2.9\tex\latex\hyperref\puenc.def
-"
-File: puenc.def 2018/11/30 v6.88e Hyperref: PDF Unicode definition (HO)
-)
-("C:\Users\User\AppData\Local\Programs\MiKTeX 2.9\tex\generic\oberdiek\stringen
-c.sty"
-Package: stringenc 2016/05/16 v1.11 Convert strings between diff. encodings (HO
-)
-)
-\pdfm@box=\box26
-\c@Hy@AnnotLevel=\count106
-\HyField@AnnotCount=\count107
-\Fld@listcount=\count108
-\c@bookmark@seq@number=\count109
+Package hyperref Info: Driver (autodetected): hpdftex.
+
+("C:\Users\User\AppData\Local\Programs\MiKTeX 2.9\tex\latex\hyperref\hpdftex.de
+f"
+File: hpdftex.def 2018/11/30 v6.88e Hyperref driver for pdfTeX
+\Fld@listcount=\count106
+\c@bookmark@seq@number=\count107
 
 ("C:\Users\User\AppData\Local\Programs\MiKTeX 2.9\tex\latex\oberdiek\rerunfilec
 heck.sty"
@@ -243,7 +236,7 @@ Package: rerunfilecheck 2016/05/16 v1.8 Rerun checks for auxiliary files (HO)
 Package uniquecounter Info: New unique counter `rerunfilecheck' on input line 2
 82.
 )
-\Hy@SectionHShift=\skip49
+\Hy@SectionHShift=\skip50
 ) (artemiss2020icml.sty
 
 LaTeX Warning: You have requested package `artemiss2020icml',
@@ -254,15 +247,15 @@ Package: icmlartemiss2020 2020/12/17 v2.0 ICML Conference Style File
 Package: times 2005/04/12 PSNFSS-v9.2a (SPQR) 
 )
 (fancyhdr.sty
-\fancy@headwidth=\skip50
-\f@ncyO@elh=\skip51
-\f@ncyO@erh=\skip52
-\f@ncyO@olh=\skip53
-\f@ncyO@orh=\skip54
-\f@ncyO@elf=\skip55
-\f@ncyO@erf=\skip56
-\f@ncyO@olf=\skip57
-\f@ncyO@orf=\skip58
+\fancy@headwidth=\skip51
+\f@ncyO@elh=\skip52
+\f@ncyO@erh=\skip53
+\f@ncyO@olh=\skip54
+\f@ncyO@orh=\skip55
+\f@ncyO@elf=\skip56
+\f@ncyO@erf=\skip57
+\f@ncyO@olf=\skip58
+\f@ncyO@orf=\skip59
 )
 ("C:\Users\User\AppData\Local\Programs\MiKTeX 2.9\tex\latex\graphics\color.sty"
 Package: color 2016/07/10 v1.1e Standard LaTeX Color (DPC)
@@ -271,24 +264,24 @@ Package: color 2016/07/10 v1.1e Standard LaTeX Color (DPC)
 cfg"
 File: color.cfg 2016/01/02 v1.6 sample color configuration
 )
-Package color Info: Driver file: xetex.def on input line 147.
+Package color Info: Driver file: pdftex.def on input line 147.
 ) (algorithm.sty
 Package: algorithm 
 
 Document Style `algorithm' - floating environment
 ("C:\Users\User\AppData\Local\Programs\MiKTeX 2.9\tex\latex\float\float.sty"
 Package: float 2001/11/08 v1.3d Float enhancements (AL)
-\c@float@type=\count110
+\c@float@type=\count108
 \float@exts=\toks16
-\float@box=\box27
+\float@box=\box26
 \@float@everytoks=\toks17
-\@floatcapt=\box28
+\@floatcapt=\box27
 )
 ("C:\Users\User\AppData\Local\Programs\MiKTeX 2.9\tex\latex\base\ifthen.sty"
 Package: ifthen 2014/09/29 v1.1c Standard LaTeX ifthen package (DPC)
 )
 \@float@every@algorithm=\toks18
-\c@algorithm=\count111
+\c@algorithm=\count109
 )
 (algorithmic.sty
 Package: algorithmic 
@@ -296,27 +289,27 @@ Package: algorithmic
 Document Style `algorithmic' - environment
 ("C:\Users\User\AppData\Local\Programs\MiKTeX 2.9\tex\latex\tools\calc.sty"
 Package: calc 2017/05/25 v4.3 Infix arithmetic (KKT,FJ)
-\calc@Acount=\count112
-\calc@Bcount=\count113
+\calc@Acount=\count110
+\calc@Bcount=\count111
 \calc@Adimen=\dimen125
 \calc@Bdimen=\dimen126
-\calc@Askip=\skip59
-\calc@Bskip=\skip60
+\calc@Askip=\skip60
+\calc@Bskip=\skip61
 LaTeX Info: Redefining \setlength on input line 80.
 LaTeX Info: Redefining \addtolength on input line 81.
-\calc@Ccount=\count114
-\calc@Cskip=\skip61
+\calc@Ccount=\count112
+\calc@Cskip=\skip62
 )
-\c@ALC@line=\count115
-\c@ALC@rem=\count116
-\ALC@tlm=\skip62
+\c@ALC@line=\count113
+\c@ALC@rem=\count114
+\ALC@tlm=\skip63
 )
 ("C:\Users\User\AppData\Local\Programs\MiKTeX 2.9\tex\latex\natbib\natbib.sty"
 Package: natbib 2010/09/13 8.31b (PWD, AO)
-\bibhang=\skip63
-\bibsep=\skip64
+\bibhang=\skip64
+\bibsep=\skip65
 LaTeX Info: Redefining \cite on input line 694.
-\c@NAT@ctr=\count117
+\c@NAT@ctr=\count115
 ) ("C:\Users\User\AppData\Local\Programs\MiKTeX 2.9\tex\latex\eso-pic\eso-pic.s
 ty"
 Package: eso-pic 2018/04/12 v2.0h eso-pic (RN)
@@ -325,29 +318,24 @@ Package: eso-pic 2018/04/12 v2.0h eso-pic (RN)
 "
 Package: forloop 2006/09/18 v3.0 For Loops for LaTeX
 )
-("C:\Users\User\AppData\Local\Programs\MiKTeX 2.9\tex\generic\oberdiek\se-ascii
--print.def"
-File: se-ascii-print.def 2016/05/16 v1.11 stringenc: Printable ASCII characters
-
-)
 Package hyperref Info: Option `colorlinks' set `true' on input line 111.
-\titrun=\box29
-\c@@affiliationcounter=\count118
-\c@@affilnum=\count119
-\newcaptionbox=\box30
+\titrun=\box28
+\c@@affiliationcounter=\count116
+\c@@affilnum=\count117
+\newcaptionbox=\box29
 \newcaptionboxwid=\dimen127
-\icmlrulerbox=\box31
-\icmlrulercount=\count120
+\icmlrulerbox=\box30
+\icmlrulercount=\count118
 \icmlruleroffset=\dimen128
 \cv@lineheight=\dimen129
 \cv@boxheight=\dimen130
-\cv@tmpbox=\box32
-\cv@refno=\count121
-\cv@tot=\count122
-\cv@tmpc@=\count123
-\cv@tmpc=\count124
-) (ARTEMISS_proposal_Oberman_vanBuuren_Vink.aux)
-\openout1 = `ARTEMISS_proposal_Oberman_vanBuuren_Vink.aux'.
+\cv@tmpbox=\box31
+\cv@refno=\count119
+\cv@tot=\count120
+\cv@tmpc@=\count121
+\cv@tmpc=\count122
+) (example_paper.aux)
+\openout1 = `example_paper.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 30.
 LaTeX Font Info:    ... okay on input line 30.
@@ -357,38 +345,62 @@ LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 30.
 LaTeX Font Info:    ... okay on input line 30.
 LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 30.
 LaTeX Font Info:    ... okay on input line 30.
-LaTeX Font Info:    Checking defaults for TU/lmr/m/n on input line 30.
-LaTeX Font Info:    ... okay on input line 30.
 LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 30.
 LaTeX Font Info:    ... okay on input line 30.
 LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 30.
 LaTeX Font Info:    ... okay on input line 30.
 LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 30.
 LaTeX Font Info:    ... okay on input line 30.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 30.
-LaTeX Font Info:    ... okay on input line 30.
-LaTeX Font Info:    Try loading font information for TU+ptm on input line 30.
-LaTeX Font Info:    No file TUptm.fd. on input line 30.
+LaTeX Font Info:    Try loading font information for OT1+ptm on input line 30.
 
-
-LaTeX Font Warning: Font shape `TU/ptm/m/n' undefined
-(Font)              using `TU/lmr/m/n' instead on input line 30.
-
+("C:\Users\User\AppData\Local\Programs\MiKTeX 2.9\tex\latex\psnfss\ot1ptm.fd"
+File: ot1ptm.fd 2001/06/04 font definitions for OT1/ptm.
+)
 LaTeX Info: Redefining \microtypecontext on input line 30.
+Package microtype Info: Generating PDF output.
 Package microtype Info: Character protrusion enabled (level 2).
 Package microtype Info: Using default protrusion set `alltext'.
+Package microtype Info: Automatic font expansion enabled (level 2),
+(microtype)             stretch: 20, shrink: 20, step: 1, non-selected.
+Package microtype Info: Using default expansion set `basictext'.
 Package microtype Info: No adjustment of tracking.
-Package microtype Info: No adjustment of spacing.
-Package microtype Info: No adjustment of kerning.
+Package microtype Info: No adjustment of interword spacing.
+Package microtype Info: No adjustment of character kerning.
 
 ("C:\Users\User\AppData\Local\Programs\MiKTeX 2.9\tex\latex\microtype\mt-ptm.cf
 g"
 File: mt-ptm.cfg 2006/04/20 v1.7 microtype config. file: Times (RS)
 )
-Package microtype Info: Loading generic protrusion settings for font family
-(microtype)             `ptm' (encoding: TU).
-(microtype)             For optimal results, create family-specific settings.
-(microtype)             See the microtype manual for details.
+("C:\Users\User\AppData\Local\Programs\MiKTeX 2.9\tex\context\base\supp-pdf.mki
+i"
+[Loading MPS to PDF converter (version 2006.09.02).]
+\scratchcounter=\count123
+\scratchdimen=\dimen131
+\scratchbox=\box32
+\nofMPsegments=\count124
+\nofMParguments=\count125
+\everyMPshowfont=\toks19
+\MPscratchCnt=\count126
+\MPscratchDim=\dimen132
+\MPnumerator=\count127
+\makeMPintoPDFobject=\count128
+\everyMPtoPDFconversion=\toks20
+)
+("C:\Users\User\AppData\Local\Programs\MiKTeX 2.9\tex\latex\oberdiek\epstopdf-b
+ase.sty"
+Package: epstopdf-base 2016/05/15 v2.6 Base part for package epstopdf
+
+("C:\Users\User\AppData\Local\Programs\MiKTeX 2.9\tex\latex\oberdiek\grfext.sty
+"
+Package: grfext 2016/05/16 v1.2 Manage graphics extensions (HO)
+)
+Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 4
+38.
+Package grfext Info: Graphics extension search list:
+(grfext)             [.pdf,.png,.jpg,.mps,.jpeg,.jbig2,.jb2,.PDF,.PNG,.JPG,.JPE
+G,.JBIG2,.JB2,.eps]
+(grfext)             \AppendGraphicsExtensions on input line 456.
+)
 \AtBeginShipoutBox=\box33
 Package hyperref Info: Link coloring ON on input line 30.
 
@@ -400,22 +412,26 @@ Package: nameref 2016/05/21 v2.44 Cross-referencing by name of section
 string.sty"
 Package: gettitlestring 2016/05/16 v1.5 Cleanup title references (HO)
 )
-\c@section@level=\count125
+\c@section@level=\count129
 )
 LaTeX Info: Redefining \ref on input line 30.
 LaTeX Info: Redefining \pageref on input line 30.
 LaTeX Info: Redefining \nameref on input line 30.
- (ARTEMISS_proposal_Oberman_vanBuuren_Vink.out)
-(ARTEMISS_proposal_Oberman_vanBuuren_Vink.out)
+ (example_paper.out) (example_paper.out)
 \@outlinefile=\write3
-\openout3 = `ARTEMISS_proposal_Oberman_vanBuuren_Vink.out'.
+\openout3 = `example_paper.out'.
 
 
 
-LaTeX Font Warning: Font shape `TU/ptm/bx/n' undefined
-(Font)              using `TU/ptm/m/n' instead on input line 67.
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `\\' on input line 79.
 
-\c@@affilUU=\count126
+LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <9> not available
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 79.
+LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <14.4> not available
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 79.
+LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <10> not available
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 79.
 
 ("C:\Users\User\AppData\Local\Programs\MiKTeX 2.9\tex\latex\microtype\mt-cmr.cf
 g"
@@ -423,98 +439,170 @@ File: mt-cmr.cfg 2013/05/19 v2.2 microtype config. file: Computer Modern Roman
 (RS)
 )
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <7> on input line 67.
+(Font)              <7> on input line 79.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <5> on input line 67.
-\c@@affilTNO=\count127
+(Font)              <5> on input line 79.
+\c@@affilto=\count130
+\c@@affilgoo=\count131
+\c@@affiled=\count132
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <9> on input line 78.
+(Font)              <9> on input line 90.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <6> on input line 78.
+(Font)              <6> on input line 90.
 
 
-Package hyperref Warning: Ignoring empty anchor on input line 78.
+Package hyperref Warning: Ignoring empty anchor on input line 90.
+
+LaTeX Font Info:    Try loading font information for OML+ptm on input line 90.
+("C:\Users\User\AppData\Local\Programs\MiKTeX 2.9\tex\latex\psnfss\omlptm.fd"
+File: omlptm.fd 
+)
+LaTeX Font Info:    Font shape `OML/ptm/m/n' in size <9> not available
+(Font)              Font shape `OML/cmm/m/it' tried instead on input line 90.
+LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <12> not available
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 92.
+LaTeX Font Info:    Try loading font information for OT1+pcr on input line 105.
 
 
-Underfull \hbox (badness 1137) in paragraph at lines 78--78
-\TU/ptm/m/n/9 TNO, Leiden, The Netherlands. Correspondence to:
+("C:\Users\User\AppData\Local\Programs\MiKTeX 2.9\tex\latex\psnfss\ot1pcr.fd"
+File: ot1pcr.fd 2001/06/04 font definitions for OT1/pcr.
+)
+LaTeX Font Info:    Font shape `OT1/pcr/bx/n' in size <10> not available
+(Font)              Font shape `OT1/pcr/b/n' tried instead on input line 105.
+Package microtype Info: Loading generic protrusion settings for font family
+(microtype)             `pcr' (encoding: OT1).
+(microtype)             For optimal results, create family-specific settings.
+(microtype)             See the microtype manual for details.
+LaTeX Font Info:    Try loading font information for OMS+ptm on input line 111.
+
+
+("C:\Users\User\AppData\Local\Programs\MiKTeX 2.9\tex\latex\psnfss\omsptm.fd"
+File: omsptm.fd 
+)
+LaTeX Font Info:    Font shape `OMS/ptm/m/n' in size <10> not available
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 111.
+
+[1{C:/Users/User/AppData/Local/MiKTeX/2.9/pdftex/config/pdftex.map}
+
+
+
+]
+LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <7> not available
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 164.
+
+Overfull \hbox (13.52222pt too wide) in paragraph at lines 172--172
+[]\OT1/pcr/m/n/9 dvips -Ppdf -tletter -G0 -o paper.ps paper.dvi[] 
  []
-
-
-LaTeX Font Warning: Font shape `TU/ptm/m/it' undefined
-(Font)              using `TU/ptm/m/n' instead on input line 78.
 
 Package microtype Info: Loading generic protrusion settings for font family
 (microtype)             `cmtt' (encoding: OT1).
 (microtype)             For optimal results, create family-specific settings.
 (microtype)             See the microtype manual for details.
 
+Underfull \hbox (badness 1371) in paragraph at lines 206--209
+\OT1/ptm/m/n/10 (+20) oth-ers) is han-dled au-to-mat-i-cally by sim-ply chang-i
+ng
+ []
+
+
+Underfull \hbox (badness 1755) in paragraph at lines 258--265
+\OT1/ptm/m/n/10 (+20) must not ap-pear. If you are us-ing L[]T[]X and the
+ []
+
+
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [1
+ [2]
+LaTeX Font Info:    Font shape `OML/ptm/m/n' in size <10> not available
+(Font)              Font shape `OML/cmm/m/it' tried instead on input line 306.
 
-
-
-]
-File: Figures/resultssquare.pdf Graphic file (type pdf)
-<use Figures/resultssquare.pdf>
-
-Underfull \hbox (badness 10000) in paragraph at lines 173--175
-[][]
+Underfull \hbox (badness 1189) in paragraph at lines 309--313
+[]\OT1/ptm/m/n/10 (+20) A sam-ple file with au-thor names is in-cluded in the
  []
 
 
-LaTeX Font Warning: Font shape `TU/ptm/m/sl' undefined
-(Font)              using `TU/ptm/m/n' instead on input line 175.
+Underfull \hbox (badness 1460) in paragraph at lines 316--323
+[]\OT1/ptm/m/n/10 (+20) The pa-per ab-stract should be-gin in the left col-umn,
 
-
-Underfull \hbox (badness 1092) in paragraph at lines 204--205
-[]\TU/ptm/bx/n/10 Our study found that—in the cases considered—
  []
 
-(ARTEMISS_proposal_Oberman_vanBuuren_Vink.bbl
-Underfull \hbox (badness 1661) in paragraph at lines 33--39
-\TU/ptm/m/it/10 Algorithms: Assessing the Effects of Between-
- []
 
-[2] [3]
-LaTeX Font Info:    Try loading font information for TU+pcr on input line 59.
-LaTeX Font Info:    No file TUpcr.fd. on input line 59.
+Underfull \vbox (badness 10000) has occurred while \output is active []
 
+<icml_numpapers.pdf, id=41, 495.8525pt x 392.46625pt>
+File: icml_numpapers.pdf Graphic file (type pdf)
+<use icml_numpapers.pdf>
+Package pdftex.def Info: icml_numpapers.pdf  used on input line 366.
+(pdftex.def)             Requested size: 234.8775pt x 185.90239pt.
 
-LaTeX Font Warning: Font shape `TU/pcr/m/n' undefined
-(Font)              using `TU/lmr/m/n' instead on input line 59.
+Underfull \vbox (badness 10000) has occurred while \output is active []
 
+ [3]
+Underfull \vbox (badness 2277) has occurred while \output is active []
 
-("C:\Users\User\AppData\Local\Programs\MiKTeX 2.9\tex\latex\microtype\mt-LatinM
-odernRoman.cfg"
-File: mt-LatinModernRoman.cfg 2013/03/13 v1.0 microtype config. file: Latin Mod
-ern Roman (RS)
-))
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 216.
- [4
+ [4pdfTeX warning (ext4): destination with the same identifier (name{figure.1})
+ has been already used, duplicate ignored
 
-]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 216.
- (ARTEMISS_proposal_Oberman_vanBuuren_Vink.aux)
-Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 216.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 216.
-Package rerunfilecheck Info: File `ARTEMISS_proposal_Oberman_vanBuuren_Vink.out
-' has not changed.
-(rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E.
+\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
+                                                  \fi \fi 
+l.488 
+      pdfTeX warning (ext4): destination with the same identifier (name{table.1
+}) has been already used, duplicate ignored
 
+\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
+                                                  \fi \fi 
+l.488 
+       <./icml_numpapers.pdf>] (example_paper.bbl
+Underfull \vbox (badness 10000) has occurred while \output is active []
 
-LaTeX Font Warning: Some font shapes were not available, defaults substituted.
+)
+LaTeX Font Info:    Font shape `OT1/ptm/bx/it' in size <12> not available
+(Font)              Font shape `OT1/ptm/b/it' tried instead on input line 553.
+LaTeX Font Info:    Font shape `OT1/ptm/bx/it' in size <10> not available
+(Font)              Font shape `OT1/ptm/b/it' tried instead on input line 555.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 572.
+ [5]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 572.
 
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 216.
+(example_paper.aux)
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 572.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 572.
+Package rerunfilecheck Info: File `example_paper.out' has not changed.
+(rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 572.
  ) 
 Here is how much of TeX's memory you used:
- 10734 strings out of 427767
- 156177 string characters out of 3147455
- 274323 words of memory out of 3000000
- 14653 multiletter control sequences out of 15000+200000
- 8448 words of font info for 37 fonts, out of 3000000 for 9000
- 1328 hyphenation exceptions out of 8191
- 35i,11n,45p,972b,575s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 8279 strings out of 492965
+ 126383 string characters out of 3126858
+ 252130 words of memory out of 3000000
+ 11785 multiletter control sequences out of 15000+200000
+ 45807 words of font info for 199 fonts, out of 3000000 for 9000
+ 1141 hyphenation exceptions out of 8191
+ 33i,11n,45p,413b,577s stack positions out of 5000i,500n,10000p,200000b,50000s
+{C:/Users/User/AppData/Local/Programs/MiKTeX 2.9/fonts/enc/dvips/base/8r.enc}
+<C:/Users/User/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm
+/cmmi10.pfb><C:/Users/User/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public
+/amsfonts/cm/cmmi6.pfb><C:/Users/User/AppData/Local/Programs/MiKTeX 2.9/fonts/t
+ype1/public/amsfonts/cm/cmmi7.pfb><C:/Users/User/AppData/Local/Programs/MiKTeX 
+2.9/fonts/type1/public/amsfonts/cm/cmmi9.pfb><C:/Users/User/AppData/Local/Progr
+ams/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Users/User/AppData/
+Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr7.pfb><C:/Users/Use
+r/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy10.pfb><
+C:/Users/User/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/
+cmsy9.pfb><C:/Users/User/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/a
+msfonts/cm/cmti10.pfb><C:/Users/User/AppData/Local/Programs/MiKTeX 2.9/fonts/ty
+pe1/public/amsfonts/cm/cmti9.pfb><C:/Users/User/AppData/Local/Programs/MiKTeX 2
+.9/fonts/type1/public/amsfonts/cm/cmtt10.pfb><C:/Users/User/AppData/Local/Progr
+ams/MiKTeX 2.9/fonts/type1/urw/courier/ucrb8a.pfb><C:/Users/User/AppData/Local/
+Programs/MiKTeX 2.9/fonts/type1/urw/courier/ucrr8a.pfb><C:/Users/User/AppData/L
+ocal/Programs/MiKTeX 2.9/fonts/type1/urw/times/utmb8a.pfb><C:/Users/User/AppDat
+a/Local/Programs/MiKTeX 2.9/fonts/type1/urw/times/utmbi8a.pfb><C:/Users/User/Ap
+pData/Local/Programs/MiKTeX 2.9/fonts/type1/urw/times/utmr8a.pfb><C:/Users/User
+/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/urw/times/utmr8a.pfb><C:/Users/U
+ser/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/urw/times/utmri8a.pfb>
+Output written on example_paper.pdf (5 pages, 226762 bytes).
+PDF statistics:
+ 185 PDF objects out of 1000 (max. 8388607)
+ 40 named destinations out of 1000 (max. 500000)
+ 45062 words of extra memory for PDF output out of 51595 (max. 10000000)
 
-Output written on ARTEMISS_proposal_Oberman_vanBuuren_Vink.pdf (4 pages).
