@@ -91,7 +91,7 @@ p %>% ggplotly()
 
 # Simulation Study
 
-From an incomplete multivariate normal set ( $n_{\rm obs}=1000, n_{\rm sim} = 1000$ ), we obtain valid regression estimates after 5 to 10 iterations. <!-- Multivariate normal set ( $n = 1000$ ), 'amputed' with a varying proportion of incomplete cases, and 'imputed' with a varying number of iterations. Depicted are the bias and coverage rate of an estimated regression coefficient ( $n_{\rm sim} = 1000$ ). -->
+When imputing an incomplete multivariate normal set ( $n_{\rm obs}=1000$, $m=5$, $n_{\rm sim} = 1000$), we obtain valid regression estimates after 5 to 10 iterations. <!-- Multivariate normal set ( $n = 1000$ ), 'amputed' with a varying proportion of incomplete cases, and 'imputed' with a varying number of iterations. Depicted are the bias and coverage rate of an estimated regression coefficient ( $n_{\rm sim} = 1000$ ). -->
 
 <br>
 
@@ -133,7 +133,7 @@ est_Rh <- results %>% ggplot(aes(x = t, y = r.hat.max.beta, color = as.factor(p*
   scale_colour_manual(values=paint5) +
   scale_y_continuous(limits = c(1,1.53), breaks = c(1,1.1,1.2,1.3,1.4,1.5)) +
   labs(x = "Number of iterations", 
-       y = "$\\widehat{R}$",
+       y = "Ř", #r'$\\widehat{R}$'
        colour = "Miss. (%)") +
   theme_classic() +
   theme(legend.position = "bottom")
