@@ -24,7 +24,7 @@ options(htmltools.dir.version = FALSE)
 
 With iterative imputation, the validity of the inferences relies on algorithmic convergence.
 
-```{r non-conv, echo=FALSE,  message=FALSE, warning=FALSE}
+```{r non-conv, echo=FALSE, fig.width=10, fig.height = 6.2, message=FALSE, warning=FALSE}
 # set-up env
 library(dplyr)
 library(ggplot2)
@@ -32,53 +32,68 @@ library(plotly)
 load("example_diagnostics.Rdata")
 
 # define colorblind friendly colors
-paint2 <- c('#66CCEE', '#EE6677')
-
-# plot chains
-trace <- ggplot(diagnostics) +
-  geom_point(aes(x = iteration, y = `Chain 1`, color = patho),
-             size = .25,
-             na.rm = TRUE) +
-  geom_point(aes(x = iteration, y = `Chain 2`, color = patho),
-             size = .25,
-             na.rm = TRUE) +
-  geom_point(aes(x = iteration, y = `Chain 3`, color = patho),
-             size = .25,
-             na.rm = TRUE) +
-  geom_point(aes(x = iteration, y = `Chain 4`, color = patho),
-             size = .25,
-             na.rm = TRUE) +
-  geom_point(aes(x = iteration, y = `Chain 5`, color = patho),
-             size = .25,
-             na.rm = TRUE) +
-  geom_line(aes(x = iteration, y = `Chain 1`, color = patho), size = .25, na.rm = TRUE) +
-  geom_line(aes(x = iteration, y = `Chain 2`, color = patho), size = .25, na.rm = TRUE) +
-  geom_line(aes(x = iteration, y = `Chain 3`, color = patho), size = .25, na.rm = TRUE) +
-  geom_line(aes(x = iteration, y = `Chain 4`, color = patho), size = .25, na.rm = TRUE) +
-  geom_line(aes(x = iteration, y = `Chain 5`, color = patho), size = .25, na.rm = TRUE) +
-  scale_colour_manual(values=paint2) +
-  scale_x_continuous(breaks = 1:10) +
-  xlab("Iteration") +
-  ylab("Chain mean") + #bquote(theta)) +
-  labs(color = "") + 
-  theme_classic() +
-  theme(legend.position = "bottom")
+paint5 <- c('#228833', '#66CCEE', '#CCBB44','#EE6677', '#AA3377')
+# paint2 <- c('#66CCEE', '#EE6677')
+# 
+# # plot chain
+# trace <- ggplot(diagnostics) +
+#   geom_point(aes(x = iteration, y = `Chain 1`, color = patho),
+#              size = .5,
+#              na.rm = TRUE) +
+#   geom_point(aes(x = iteration, y = `Chain 2`, color = patho),
+#              size = .5,
+#              na.rm = TRUE) +
+#   geom_point(aes(x = iteration, y = `Chain 3`, color = patho),
+#              size = .5,
+#              na.rm = TRUE) +
+#   geom_point(aes(x = iteration, y = `Chain 4`, color = patho),
+#              size = .5,
+#              na.rm = TRUE) +
+#   geom_point(aes(x = iteration, y = `Chain 5`, color = patho),
+#              size = .5,
+#              na.rm = TRUE) +
+#   geom_line(aes(x = iteration, y = `Chain 2`, color = patho), size = .5, na.rm = TRUE) +
+#   geom_line(aes(x = iteration, y = `Chain 3`, color = patho), size = .5, na.rm = TRUE) +
+#   geom_line(aes(x = iteration, y = `Chain 1`, color = patho), size = .5, na.rm = TRUE) +
+#   geom_line(aes(x = iteration, y = `Chain 4`, color = patho), size = .5, na.rm = TRUE) +
+#   geom_line(aes(x = iteration, y = `Chain 5`, color = patho), size = .5, na.rm = TRUE) +
+#   scale_colour_manual(values=paint2) +
+#   scale_x_continuous(breaks = 1:10) +
+#   xlab("Iteration") +
+#   ylab("Chain mean") + #bquote(theta)) +
+#   labs(color = "") + 
+#   theme_classic() +
+#   theme(legend.position = "bottom")
   
-ggplotly(trace)
+#ggplotly(trace)
 
 # alternatively, use the actual data
 # run 1.Execute.R until imputing anything, than run RunSimulationOnce.R until after amputing the data
 # with the 'amps' object
+library(mice)
 load("../traceplotdata.Rdata")
 set.seed(12)
-d75 <- amps[[4]] %>% mice(maxit=20)
-plot(d75)
-gg.mids(d4, x="Y")[[1]]
+d75 <- amps[[4]] %>% mice(maxit=10, printFlag = FALSE)
+#plot(d75)
+p <- gg.mids(d75, x="Y")[[1]] 
+p <- p + 
+  scale_color_manual(values = paint5) + 
+  scale_x_continuous(breaks = 1:10) + 
+  labs(
+    #title = "Traceplot", 
+    y = "Chain mean", 
+    colour = "Imp.")
+
+p %>% ggplotly()
 ```
 
 ---
 
-# Results
+# Simulation Study
+
+From an incomplete multivariate normal set ( $n_{\rm obs}=1000, n_{\rm sim} = 1000$ ), we obtain valid regression estimates after 5 to 10 iterations. <!-- Multivariate normal set ( $n = 1000$ ), 'amputed' with a varying proportion of incomplete cases, and 'imputed' with a varying number of iterations. Depicted are the bias and coverage rate of an estimated regression coefficient ( $n_{\rm sim} = 1000$ ). -->
+
+<br>
 
 ```{r results, echo=FALSE, fig.width=9.8, message=FALSE, warning=FALSE}
 load("complete.Rdata") 
@@ -88,78 +103,107 @@ load("complete.Rdata")
 results <- results %>% filter(t<51) %>% mutate(bias.est.X1 = bias.est.X1/.0206) %>% mutate(crit = qnorm((1 + .95) / 2) / sqrt(t), thresh1.01 = 1.01, thresh1.1 = 1.1, thresh1.2 = 1.2)
 results$crit[results$crit>1] <- NA
 
-# define colorblind friendly colors
-paint5 <- c('#228833', '#66CCEE', '#CCBB44','#EE6677', '#AA3377')
-
 # create plots
 est_bias <- results %>% ggplot(aes(x = t, y = bias.est.X1, color = as.factor(p*100))) +
   geom_hline(yintercept = 0,
              color = "grey",
              lwd = 1) +
-  geom_point(size = .25, na.rm = TRUE) +
-  geom_line(size = .25, na.rm = TRUE) +
+  geom_point(size = .5, na.rm = TRUE) +
+  geom_line(size = .5, na.rm = TRUE) +
   scale_colour_manual(values=paint5) +
-  xlab("") +
-  ylab("Bias (%)") +
-  labs(colour = "Proportion of missing cases (%)") +
+  labs(
+    #title = "Average bias in regression estimate", 
+    #subtitle = "Multivariate normal data (n = 1000, nsim = 1000)", 
+    x = "Number of iterations", 
+    y = "Bias (%)", 
+    colour = "Miss. (%)") +
   theme_classic() +
-  theme(legend.position = "bottom")
+  theme(legend.position = "top")
 
 est_Rh <- results %>% ggplot(aes(x = t, y = r.hat.max.beta, color = as.factor(p*100))) +
   geom_hline(yintercept = 1,
              color = "grey",
              lwd = 
                1) +
-  geom_point(size = .25, na.rm = TRUE) +
-  geom_line(size = .25, na.rm = TRUE) +
+  geom_point(size = .5, na.rm = TRUE) +
+  geom_line(size = .5, na.rm = TRUE) +
   geom_line(aes(x=t, y=thresh1.2), color = "grey", linetype = "dashed", size = .25, na.rm = TRUE) +
   geom_line(aes(x=t, y=thresh1.1), color = "grey", linetype = "dashed", size = .25, na.rm = TRUE) +
   geom_line(aes(x=t, y=thresh1.01), color = "grey", linetype = "dashed", size = .25, na.rm = TRUE) +
   scale_colour_manual(values=paint5) +
   scale_y_continuous(limits = c(1,1.53), breaks = c(1,1.1,1.2,1.3,1.4,1.5)) +
-  xlab("Number of iterations") +
-  ylab(bquote(widehat(R))) +
-  labs(colour = "Proportion of missing cases (%)") +
+  labs(x = "Number of iterations", 
+       y = "$\\widehat{R}$",
+       colour = "Miss. (%)") +
   theme_classic() +
-  theme(legend.position = "")
+  theme(legend.position = "bottom")
 
 est_AC <- results %>% ggplot(aes(x = t, y = ac.max.beta, color = as.factor(p*100))) +
   geom_hline(yintercept = 0,
              color = "grey",
              lwd = 1) +
   geom_line(aes(x = t, y = crit), color = "grey", linetype = "dashed", size = .25, na.rm = TRUE) + 
-  geom_point(size = .25, na.rm = TRUE) +
-  geom_line(size = .25, na.rm = TRUE) +
+  geom_point(size = .5, na.rm = TRUE) +
+  geom_line(size = .5, na.rm = TRUE) +
   scale_colour_manual(values=paint5) +
-  xlab("Number of iterations") +
-  ylab("Autocorrelation") + 
-  labs(colour = "Proportion of missing cases (%)") +
+  labs(x = "Number of iterations",
+       y = "Auto-correlation",
+       colour = "Miss. (%)") +
   theme_classic() +
-  theme(legend.position = "")
+  theme(legend.position = "bottom")
 
 est_cov <- results %>% ggplot(aes(x = t, y = cov.est.X1*100, color = as.factor(p*100))) +
   geom_hline(yintercept = 95,
              color = "grey",
              lwd = 1) +
-  geom_point(size = .25, na.rm = TRUE) +
-  geom_line(size = .25, na.rm = TRUE) +
+  geom_point(size = .5, na.rm = TRUE) +
+  geom_line(size = .5, na.rm = TRUE) +
   scale_colour_manual(values=paint5) +
-  xlab("") +
+  xlab("Number of iterations") +
   ylab("Coverage rate (%)") +
-  labs(colour = "Proportion of missing cases (%)") +
+  labs(colour = "Miss. (%)") +
   theme_classic() +
   theme(legend.position = "") 
 
 # plot estimates, save 6.75x4.5in or 5.5
 # est_bias + est_cov + est_AC + est_Rh + plot_annotation(tag_levels = "A", tag_suffix = ".") + plot_layout(ncol = 2, guides = "collect")
 
-ggplotly(est_bias)
-
 ```
+
+.pull-left[
+```{r echo=FALSE, fig.width=5.1, fig.height=5.4, message=FALSE, warning=FALSE}
+ggplotly(est_bias)
+```
+]
+
+.pull-right[
+```{r echo=FALSE, fig.width=5.1, fig.height=5.4, message=FALSE, warning=FALSE}
+ggplotly(est_cov)
+```
+]
 
 ---
 
+# Simulation Study (2)
+
+Whereas non-convergence diagnostics $\widehat{R}$ and auto-correlation identify signs of non-convergence up-to 30 to 50 iterations.
+
+<br>
+
+.pull-left[
+```{r echo=FALSE, fig.width=5.1, fig.height=5.4, message=FALSE, warning=FALSE}
+ggplotly(est_Rh)
+```
+]
+
+.pull-right[
+```{r echo=FALSE, fig.width=5.1, fig.height=5.4, message=FALSE, warning=FALSE}
+ggplotly(est_AC)
+```
+]
+
+---
 # Thanks!
 
-Slides created via the R package [**xaringan**](https://github.com/yihui/xaringan).
+.footnote[Slides created via the R package [**xaringan**](https://github.com/yihui/xaringan).]
 
