@@ -7,7 +7,7 @@ date: "17-07-2020" #(updated: `r Sys.Date()`)"
 output:
   xaringan::moon_reader:
     seal: false
-    self_contained: true
+    self_contained: false
     css: [default, default-fonts]
     lib_dir: libs
     nature:
@@ -37,60 +37,13 @@ library(mice)
 # d75 <- amps[[4]] %>% mice(maxit=10, printFlag = FALSE)
 # save(d75, file = "imps.Rdata")
 load("imps.Rdata")
+load("complete.Rdata") 
 
 # define colorblind friendly colors
 paint5 <- c('#228833', '#66CCEE', '#CCBB44','#EE6677', '#AA3377')
 # paint2 <- c('#66CCEE', '#EE6677')
-```
 
-
-.left-column[ 
-```{r echo=TRUE, eval=FALSE}
-
-Missing The Point 
-
-Non-Convergence 
-In Iterative 
-Imputation 
-Algorithms
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Hanne I. Oberman, 
-Stef van Buuren, 
-& Gerko Vink
-
-ARTEMISS workshop
-ICML 2020
-
-```
-
-]
-
-.right-column[ 
-# Algorithmic Convergence
-
-With iterative imputation, the validity of inferences relies on algorithmic convergence. Signs of non-convergence (i.e., non-mixing, trending) are typically identified through visual inspection.
-
-<br>
-
-<!-- .footer[Missing The Point | Oberman, van Buuren, Vink | 2020 | github.com/hanneoberman/MissingThePoint] -->
-
-
-```{r non-conv, echo=FALSE, fig.width=10, fig.height = 5.2, message=FALSE, warning=FALSE}
+# traceplot
 p <- gg.mids(d75, x="Y")[[1]] 
 p_up <- p + 
   scale_color_manual(values = paint5) + 
@@ -100,61 +53,6 @@ p_up <- p +
     x = "Iteration",
     y = "Chain mean", 
     colour = "Imp.")
-
-```
-
-```{r echo=FALSE, fig.width=10, fig.height = 5.2, message=FALSE, warning=FALSE}
-ggplotly(p_up)
-```
-]
----
-
-.left-column[ 
-```{r echo=TRUE, eval=FALSE}
-
-Missing The Point 
-
-Non-Convergence 
-In Iterative 
-Imputation 
-Algorithms
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Hanne I. Oberman, 
-Stef van Buuren, 
-& Gerko Vink
-
-ARTEMISS workshop
-ICML 2020
-
-```
-
-]
-
-.right-column[ 
-# Simulation Study
-
-When imputing an incomplete multivariate normal set ( $n_{\rm obs}=$ 1000, $n_{\rm sim}=$ 1000), we obtain valid regression estimates after 5 to 10 iterations. <!-- Multivariate normal set ( $n = 1000$ ), 'amputed' with a varying proportion of incomplete cases, and 'imputed' with a varying number of iterations. Depicted are the bias and coverage rate of an estimated regression coefficient ( $n_{\rm sim} = 1000$ ). -->
-
-<br>
-
-```{r results, echo=FALSE, fig.width=9.8, message=FALSE, warning=FALSE}
-load("complete.Rdata") 
-#library(patchwork) 
 
 # pre-processing
 results <- results %>% filter(t<51) %>% mutate(bias.est.X1 = bias.est.X1/.0206) %>% mutate(crit = qnorm((1 + .95) / 2) / sqrt(t), thresh1.01 = 1.01, thresh1.1 = 1.1, thresh1.2 = 1.2)
@@ -175,7 +73,7 @@ est_bias <- results %>% ggplot(aes(x = t, y = bias.est.X1, color = as.factor(p*1
     y = "Bias (%)", 
     colour = "Miss. (%)") +
   theme_classic() +
-  theme(legend.position = "top")
+  theme(legend.position = "bottom")
 
 est_Rh <- results %>% ggplot(aes(x = t, y = r.hat.max.beta, color = as.factor(p*100))) +
   geom_hline(yintercept = 1,
@@ -220,15 +118,106 @@ est_cov <- results %>% ggplot(aes(x = t, y = cov.est.X1*100, color = as.factor(p
   ylab("Coverage rate (%)") +
   labs(colour = "Miss. (%)") +
   theme_classic() +
-  theme(legend.position = "") 
+  theme(legend.position = "bottom") 
 
-# plot estimates, save 6.75x4.5in or 5.5
-# est_bias + est_cov + est_AC + est_Rh + plot_annotation(tag_levels = "A", tag_suffix = ".") + plot_layout(ncol = 2, guides = "collect")
 
 ```
 
+.left-column[ 
+```{r echo=TRUE, eval=FALSE}
+Missing The Point 
+
+Non-Convergence 
+In Iterative 
+Imputation 
+Algorithms
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Hanne I. Oberman, 
+Stef van Buuren, 
+& Gerko Vink
+
+ARTEMISS workshop
+ICML 2020
+
+```
+
+]
+
+.right-column[ 
+
+# Algorithmic Convergence
+
+With iterative imputation, the validity of inferences relies on algorithmic convergence. Signs of non-convergence (i.e., non-mixing, trending) are typically identified through visual inspection.
+
+<br>
+
+```{r echo=FALSE, fig.width=10, fig.height = 5.2, message=FALSE, warning=FALSE}
+ggplotly(p_up)
+```
+]
+
+---
+
+.left-column[ 
+```{r echo=TRUE, eval=FALSE}
+
+Missing The Point 
+
+Non-Convergence 
+In Iterative 
+Imputation 
+Algorithms
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Hanne I. Oberman, 
+Stef van Buuren, 
+& Gerko Vink
+
+ARTEMISS workshop
+ICML 2020
+
+```
+]
+
+.right-column[ 
+# Simulation Study
+
+When imputing an incomplete multivariate normal set ( $n_{\rm obs}=$ 1000, $n_{\rm sim}=$ 1000), we obtain valid regression estimates after 5 to 10 iterations. 
+
+<br>
+
+
 .pull-left[
-```{r echo=FALSE, fig.width=5.1, fig.height=5.4, message=FALSE, warning=FALSE}
+```{r echo=FALSE, fig.height=5.4, fig.width=5.1, message=FALSE, warning=FALSE}
 ggplotly(est_bias)
 ```
 ]
@@ -239,6 +228,7 @@ ggplotly(est_cov)
 ```
 ]
 ]
+
 ---
 
 .left-column[ 
@@ -278,9 +268,10 @@ ICML 2020
 ]
 
 .right-column[ 
+
 # Simulation Study (2)
 
-Whereas non-convergence diagnostics (potential scale reduction factor, auto-correlation) identify signs of non-convergence up-to 30 to 50 iterations.
+Whereas non-convergence diagnostics (potential scale reduction factor and auto-correlation) identify signs of non-convergence up-to 30 to 50 iterations.
 
 <br>
 
@@ -352,7 +343,7 @@ Upcoming...
 ]
 
 .pull-right[
-<img src="https://github.com/gerkovink/shinyMice/blob/edits/ICML/shinymicehex.png?raw=true" width="255">
+<img src="https://raw.githubusercontent.com/gerkovink/shinyMice/edits/shinymicehex.png" width="255">
 ]
 ]
 <!-- .footnote[Slides created via the R package [**xaringan**](https://github.com/yihui/xaringan).] -->
