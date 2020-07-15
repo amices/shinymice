@@ -6,20 +6,81 @@ institute: "ICML ARTEMISS workshop 2020"
 date: "17-07-2020" #(updated: `r Sys.Date()`)"
 output:
   xaringan::moon_reader:
+    #seal: false
+    self_contained: true
     css: [default, default-fonts]
     lib_dir: libs
     nature:
       highlightStyle: github
       highlightLines: true
       countIncrementalSlides: false
+      ratio: "16:9"
 ---
 
+```{css echo=FALSE}
+.right-column{
+  padding-top: 0;
+}
+```
 
 ```{r setup, include=FALSE}
 options(htmltools.dir.version = FALSE)
+
+# set-up env
+library(dplyr)
+library(ggplot2)
+library(plotly)
+library(mice)
+#load("example_diagnostics.Rdata")
+# load("../traceplotdata.Rdata")
+# set.seed(12)
+# d75 <- amps[[4]] %>% mice(maxit=10, printFlag = FALSE)
+# save(d75, file = "imps.Rdata")
+load("imps.Rdata")
+
+# define colorblind friendly colors
+paint5 <- c('#228833', '#66CCEE', '#CCBB44','#EE6677', '#AA3377')
+# paint2 <- c('#66CCEE', '#EE6677')
 ```
 
 
+.left-column[ 
+```{r echo=TRUE, eval=FALSE}
+
+Missing The Point 
+
+Non-Convergence 
+In Iterative 
+Imputation 
+Algorithms
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Hanne I. Oberman, 
+Stef van Buuren, 
+& Gerko Vink
+
+ARTEMISS workshop
+ICML 2020
+
+```
+
+]
+
+.right-column[ 
 # Algorithmic Convergence
 
 With iterative imputation, the validity of inferences relies on algorithmic convergence. Signs of non-convergence (i.e., non-mixing, trending) are typically identified through visual inspection.
@@ -30,58 +91,8 @@ With iterative imputation, the validity of inferences relies on algorithmic conv
 
 
 ```{r non-conv, echo=FALSE, fig.width=10, fig.height = 5.2, message=FALSE, warning=FALSE}
-# set-up env
-library(dplyr)
-library(ggplot2)
-library(plotly)
-library(mice)
-#load("example_diagnostics.Rdata")
-load("../traceplotdata.Rdata")
-
-# define colorblind friendly colors
-paint5 <- c('#228833', '#66CCEE', '#CCBB44','#EE6677', '#AA3377')
-# paint2 <- c('#66CCEE', '#EE6677')
-# 
-# # plot chain
-# trace <- ggplot(diagnostics) +
-#   geom_point(aes(x = iteration, y = `Chain 1`, color = patho),
-#              size = .5,
-#              na.rm = TRUE) +
-#   geom_point(aes(x = iteration, y = `Chain 2`, color = patho),
-#              size = .5,
-#              na.rm = TRUE) +
-#   geom_point(aes(x = iteration, y = `Chain 3`, color = patho),
-#              size = .5,
-#              na.rm = TRUE) +
-#   geom_point(aes(x = iteration, y = `Chain 4`, color = patho),
-#              size = .5,
-#              na.rm = TRUE) +
-#   geom_point(aes(x = iteration, y = `Chain 5`, color = patho),
-#              size = .5,
-#              na.rm = TRUE) +
-#   geom_line(aes(x = iteration, y = `Chain 2`, color = patho), size = .5, na.rm = TRUE) +
-#   geom_line(aes(x = iteration, y = `Chain 3`, color = patho), size = .5, na.rm = TRUE) +
-#   geom_line(aes(x = iteration, y = `Chain 1`, color = patho), size = .5, na.rm = TRUE) +
-#   geom_line(aes(x = iteration, y = `Chain 4`, color = patho), size = .5, na.rm = TRUE) +
-#   geom_line(aes(x = iteration, y = `Chain 5`, color = patho), size = .5, na.rm = TRUE) +
-#   scale_colour_manual(values=paint2) +
-#   scale_x_continuous(breaks = 1:10) +
-#   xlab("Iteration") +
-#   ylab("Chain mean") + #bquote(theta)) +
-#   labs(color = "") + 
-#   theme_classic() +
-#   theme(legend.position = "bottom")
-  
-#ggplotly(trace)
-
-# alternatively, use the actual data
-# run 1.Execute.R until imputing anything, than run RunSimulationOnce.R until after amputing the data
-# with the 'amps' object
-set.seed(12)
-d75 <- amps[[4]] %>% mice(maxit=10, printFlag = FALSE)
-#plot(d75)
 p <- gg.mids(d75, x="Y")[[1]] 
-p <- p + 
+p_up <- p + 
   scale_color_manual(values = paint5) + 
   scale_x_continuous(breaks = 1:10) + 
   labs(
@@ -90,14 +101,54 @@ p <- p +
     y = "Chain mean", 
     colour = "Imp.")
 
-ggplotly(p)
-
 ```
+
+```{r echo=FALSE, fig.width=10, fig.height = 5.2, message=FALSE, warning=FALSE}
+ggplotly(p_up)
+```
+]
 ---
 
+.left-column[ 
+```{r echo=TRUE, eval=FALSE}
+
+Missing The Point 
+
+Non-Convergence 
+In Iterative 
+Imputation 
+Algorithms
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Hanne I. Oberman, 
+Stef van Buuren, 
+& Gerko Vink
+
+ARTEMISS workshop
+ICML 2020
+
+```
+
+]
+
+.right-column[ 
 # Simulation Study
 
-When imputing an incomplete multivariate normal set ( $n_{\rm obs}=1000$, $n_{\rm sim} = 1000$), we obtain valid regression estimates after 5 to 10 iterations. <!-- Multivariate normal set ( $n = 1000$ ), 'amputed' with a varying proportion of incomplete cases, and 'imputed' with a varying number of iterations. Depicted are the bias and coverage rate of an estimated regression coefficient ( $n_{\rm sim} = 1000$ ). -->
+When imputing an incomplete multivariate normal set ( $n_{\rm obs}=$ 1000, $n_{\rm sim}=$ 1000), we obtain valid regression estimates after 5 to 10 iterations. <!-- Multivariate normal set ( $n = 1000$ ), 'amputed' with a varying proportion of incomplete cases, and 'imputed' with a varying number of iterations. Depicted are the bias and coverage rate of an estimated regression coefficient ( $n_{\rm sim} = 1000$ ). -->
 
 <br>
 
@@ -139,7 +190,7 @@ est_Rh <- results %>% ggplot(aes(x = t, y = r.hat.max.beta, color = as.factor(p*
   scale_colour_manual(values=paint5) +
   scale_y_continuous(limits = c(1,1.53), breaks = c(1,1.1,1.2,1.3,1.4,1.5)) +
   labs(x = "Number of iterations", 
-       y = "Ř", #r'$\\widehat{R}$'
+       y = "Potential scale reduction factor", #r'$\\widehat{R}$'
        colour = "Miss. (%)") +
   theme_classic() +
   theme(legend.position = "bottom")
@@ -187,12 +238,49 @@ ggplotly(est_bias)
 ggplotly(est_cov)
 ```
 ]
-
+]
 ---
 
+.left-column[ 
+```{r echo=TRUE, eval=FALSE}
+
+Missing The Point 
+
+Non-Convergence 
+In Iterative 
+Imputation 
+Algorithms
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Hanne I. Oberman, 
+Stef van Buuren, 
+& Gerko Vink
+
+ARTEMISS workshop
+ICML 2020
+
+```
+
+]
+
+.right-column[ 
 # Simulation Study (2)
 
-Whereas non-convergence diagnostics $\widehat{R}$ and auto-correlation identify signs of non-convergence up-to 30 to 50 iterations.
+Whereas non-convergence diagnostics (potential scale reduction factor, auto-correlation) identify signs of non-convergence up-to 30 to 50 iterations.
 
 <br>
 
@@ -207,13 +295,51 @@ ggplotly(est_Rh)
 ggplotly(est_AC)
 ```
 ]
-
+]
 ---
+
+.left-column[ 
+```{r echo=TRUE, eval=FALSE}
+
+Missing The Point 
+
+Non-Convergence 
+In Iterative 
+Imputation 
+Algorithms
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Hanne I. Oberman, 
+Stef van Buuren, 
+& Gerko Vink
+
+ARTEMISS workshop
+ICML 2020
+
+```
+
+]
+
+.right-column[ 
 # Take-away
 
 We conclude that&mdash;in the cases considered&mdash;it never hurts to iterate longer, but such calculations hardly bring added value.
 
-<br> 
+
 
 Read more on [github.com/hanneoberman/MissingThePoint](https://github.com/hanneoberman/MissingThePoint). Or follow my updates through Twitter [@hioberman](https://twitter.com/hioberman).
 
@@ -221,12 +347,13 @@ Read more on [github.com/hanneoberman/MissingThePoint](https://github.com/hanneo
 <br> <br> <br>
 <br> <br> <br>
 <br> <br> <br>
+<br> <br> <br>
 Upcoming...
 ]
 
 .pull-right[
-<img src="https://raw.githubusercontent.com/gerkovink/shinyMice/2dae400d9d23ede7bec031c1501acdc681eab13c/ThesisProposal/Figures/logo.png" width="420">
+<img src="https://raw.githubusercontent.com/gerkovink/shinyMice/2dae400d9d23ede7bec031c1501acdc681eab13c/ThesisProposal/Figures/logo.png" width="595">
 ]
-
+]
 <!-- .footnote[Slides created via the R package [**xaringan**](https://github.com/yihui/xaringan).] -->
 
