@@ -2,7 +2,7 @@
 title: "Missing The Point:"
 subtitle: "Non-Convergence in Iterative Imputation Algorithms"
 author: "Hanne I. Oberman, Stef van Buuren, Gerko Vink"
-institute: "Utrecht University"
+institute: "ICML ARTEMISS workshop 2020"
 date: "17-07-2020" #(updated: `r Sys.Date()`)"
 output:
   xaringan::moon_reader:
@@ -22,14 +22,21 @@ options(htmltools.dir.version = FALSE)
 
 # Algorithmic Convergence
 
-With iterative imputation, the validity of the inferences relies on algorithmic convergence.
+With iterative imputation, the validity of inferences relies on algorithmic convergence. Signs of non-convergence (i.e., non-mixing, trending) are typically identified through visual inspection.
 
-```{r non-conv, echo=FALSE, fig.width=10, fig.height = 6.2, message=FALSE, warning=FALSE}
+<br>
+
+<!-- .footer[Missing The Point | Oberman, van Buuren, Vink | 2020 | github.com/hanneoberman/MissingThePoint] -->
+
+
+```{r non-conv, echo=FALSE, fig.width=10, fig.height = 5.2, message=FALSE, warning=FALSE}
 # set-up env
 library(dplyr)
 library(ggplot2)
 library(plotly)
-load("example_diagnostics.Rdata")
+library(mice)
+#load("example_diagnostics.Rdata")
+load("../traceplotdata.Rdata")
 
 # define colorblind friendly colors
 paint5 <- c('#228833', '#66CCEE', '#CCBB44','#EE6677', '#AA3377')
@@ -70,8 +77,6 @@ paint5 <- c('#228833', '#66CCEE', '#CCBB44','#EE6677', '#AA3377')
 # alternatively, use the actual data
 # run 1.Execute.R until imputing anything, than run RunSimulationOnce.R until after amputing the data
 # with the 'amps' object
-library(mice)
-load("../traceplotdata.Rdata")
 set.seed(12)
 d75 <- amps[[4]] %>% mice(maxit=10, printFlag = FALSE)
 #plot(d75)
@@ -81,17 +86,18 @@ p <- p +
   scale_x_continuous(breaks = 1:10) + 
   labs(
     #title = "Traceplot", 
+    x = "Iteration",
     y = "Chain mean", 
     colour = "Imp.")
 
-p %>% ggplotly()
-```
+ggplotly(p)
 
+```
 ---
 
 # Simulation Study
 
-When imputing an incomplete multivariate normal set ( $n_{\rm obs}=1000$, $m=5$, $n_{\rm sim} = 1000$), we obtain valid regression estimates after 5 to 10 iterations. <!-- Multivariate normal set ( $n = 1000$ ), 'amputed' with a varying proportion of incomplete cases, and 'imputed' with a varying number of iterations. Depicted are the bias and coverage rate of an estimated regression coefficient ( $n_{\rm sim} = 1000$ ). -->
+When imputing an incomplete multivariate normal set ( $n_{\rm obs}=1000$, $n_{\rm sim} = 1000$), we obtain valid regression estimates after 5 to 10 iterations. <!-- Multivariate normal set ( $n = 1000$ ), 'amputed' with a varying proportion of incomplete cases, and 'imputed' with a varying number of iterations. Depicted are the bias and coverage rate of an estimated regression coefficient ( $n_{\rm sim} = 1000$ ). -->
 
 <br>
 
@@ -203,11 +209,24 @@ ggplotly(est_AC)
 ]
 
 ---
-# Thanks!
+# Take-away
 
-Read more: [github.com/hanneoberman/MissingThePoint](https://github.com/hanneoberman/MissingThePoint).
+We conclude that&mdash;in the cases considered&mdash;it never hurts to iterate longer, but such calculations hardly bring added value.
 
-Or follow my updates on Twitter: [@hioberman](https://twitter.com/hioberman)
+<br> 
 
-.footnote[Slides created via the R package [**xaringan**](https://github.com/yihui/xaringan).]
+Read more on [github.com/hanneoberman/MissingThePoint](https://github.com/hanneoberman/MissingThePoint). Or follow my updates through Twitter [@hioberman](https://twitter.com/hioberman).
+
+.pull-left[
+<br> <br> <br>
+<br> <br> <br>
+<br> <br> <br>
+Upcoming...
+]
+
+.pull-right[
+<img src="https://raw.githubusercontent.com/gerkovink/shinyMice/2dae400d9d23ede7bec031c1501acdc681eab13c/ThesisProposal/Figures/logo.png" width="420">
+]
+
+<!-- .footnote[Slides created via the R package [**xaringan**](https://github.com/yihui/xaringan).] -->
 
