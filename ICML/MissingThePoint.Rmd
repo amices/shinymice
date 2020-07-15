@@ -6,7 +6,7 @@ institute: "ICML ARTEMISS workshop 2020"
 date: "17-07-2020" #(updated: `r Sys.Date()`)"
 output:
   xaringan::moon_reader:
-    #seal: false
+    seal: false
     self_contained: true
     css: [default, default-fonts]
     lib_dir: libs
@@ -352,7 +352,7 @@ Upcoming...
 ]
 
 .pull-right[
-<img src="https://raw.githubusercontent.com/gerkovink/shinyMice/2dae400d9d23ede7bec031c1501acdc681eab13c/ThesisProposal/Figures/logo.png" width="595">
+<img src="https://github.com/gerkovink/shinyMice/blob/edits/ICML/shinymicehex.png?raw=true" width="255">
 ]
 ]
 <!-- .footnote[Slides created via the R package [**xaringan**](https://github.com/yihui/xaringan).] -->
