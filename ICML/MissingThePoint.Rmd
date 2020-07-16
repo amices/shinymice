@@ -21,6 +21,13 @@ output:
 .right-column{
   padding-top: 0;
 }
+.remark-slide-number {
+  font-size: 10pt;
+  margin-bottom: -11.6px;
+  margin-right: 10px;
+  color: #FFFFFF; /* white */
+  opacity: 1; /* default: 0.5 */
+}
 ```
 
 ```{r setup, include=FALSE}
@@ -170,9 +177,8 @@ With iterative imputation, the validity of inferences relies on algorithmic conv
 ggplotly(p_up)
 ```
 ]
-
 ---
-
+---
 .left-column[ 
 ```{r echo=TRUE, eval=FALSE}
 
@@ -346,5 +352,4 @@ Upcoming...
 <img src="https://raw.githubusercontent.com/gerkovink/shinyMice/edits/shinymicehex.png" width="255">
 ]
 ]
-<!-- .footnote[Slides created via the R package [**xaringan**](https://github.com/yihui/xaringan).] -->
 
