@@ -177,7 +177,7 @@ With iterative imputation, the validity of inferences relies on algorithmic conv
 ggplotly(p_up)
 ```
 ]
----
+
 ---
 .left-column[ 
 ```{r echo=TRUE, eval=FALSE}
