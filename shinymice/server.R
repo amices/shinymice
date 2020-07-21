@@ -12,7 +12,7 @@ options(htmlwidgets.TOJSON_ARGS = list(na = 'string')) #to show NA values in dt,
 # Define server logic required to draw a histogram
 shinyServer(function(input, output, session) {
     
-    rv <- reactiveValues(data = NULL, mids = NULL, m = NULL, maxit = NULL)
+    rv <- reactiveValues(data = NULL, mids = NULL, m = NULL, maxit = NULL, done = NULL)
     
     observe({
         if (is.null(input$upload)) {
@@ -69,11 +69,21 @@ shinyServer(function(input, output, session) {
         })
     
     observeEvent(input$mice, {
+        #rv$mids <- list(1)
         rv$mids <- mice(rv$data, m = input$m, maxit = rv$maxit, printFlag = FALSE)
     })
     
+    observe({
+        if (is.null(rv$mids)) {
+            rv$done <- "not done yet..."} 
+        #else if (rv$mids == 1) {rv$done <- "processing..."}
+        else {rv$done <- "done!"}
+    })
+    
+    output$done <- renderPrint(rv$done)
+    
     output$traceplot <- renderPlot({
-        if(!is.null(rv$mids)){gg.mids(rv$mids, x = "hgt")}
+        gg.mids(rv$mids)
     })
     
     

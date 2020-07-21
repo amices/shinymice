@@ -13,6 +13,8 @@ library("DT")
 library("data.table")
 library("naniar")
 library("rmarkdown")
+library("shinycssloaders")
+
 
 # Define UI for application that draws a histogram
 shinyUI(navbarPage(
@@ -45,14 +47,14 @@ shinyUI(navbarPage(
                      DT::DTOutput("table"))
              )),
     tabPanel(
-        "Explore", icon = icon("table"), #icon("bar-chart-o")
+        "Explore", icon = icon("th"), #icon("bar-chart-o") or table
         h2("Observed missingness pattern per variable"),
         helpText("Observed data is blue, missing data is red."),
         plotOutput("md_pattern", height = "150%", width = "100%"), 
         style = 'width:100%;height:85vh;overflow-y: scroll;'
     ),
     tabPanel(
-        "Impute", icon = icon("chart-line"), #icon("list-alt")
+        "Impute", icon = icon("calculator"), #icon("list-alt")
         h2("Impute missing data using `mice`"),
         tags$b("Dataset to impute"),
         verbatimTextOutput("names"),
@@ -61,6 +63,12 @@ shinyUI(navbarPage(
         numericInput("maxit", label = "Number of iterations", value = 5, min = 1, step = 1),
         actionButton("mice", "Impute", icon = icon("hourglass-start")),
         helpText("This may take a minute."),
+        verbatimTextOutput("done")
+        #plotOutput("traceplot")
+    ),
+    tabPanel(
+        "Evaluate", icon = icon("chart-line"), #icon("list-alt")
+        h2("Evaluate convergence"),
         plotOutput("traceplot")
     ),
     navbarMenu(
