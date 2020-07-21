@@ -5,61 +5,73 @@
 # Find out more about building applications with Shiny here:
 #
 #    http://shiny.rstudio.com/
-#
+# Icons: https://fontawesome.com/icons?d=gallery&m=free
 
-library(shiny)
+library("shiny")
+library("mice")
+library("DT")
+library("data.table")
+library("naniar")
+library("rmarkdown")
 
 # Define UI for application that draws a histogram
 shinyUI(navbarPage(
-    "shinymice",
+    title = "shinymice", theme = shinythemes::shinytheme("flatly"),
     #sets basic virtual structure (layout function)
-    tabPanel("Data",
+    tabPanel("Data", icon = icon("file-upload"),
              sidebarLayout(
                  sidebarPanel(
                      shinyjs::useShinyjs(),
                      id = "sidebar",
-                     fileInput("upload", label = h3("Upload CSV file..."), 
+                     h2("Select a dataset"),
+                     fileInput("upload", label = h4("Upload a CSV file..."), 
                                accept = c(
                                    "text/csv",
                                    "text/comma-separated-values,text/plain",
                                    ".csv")
                      ),
-                     checkboxInput("header", h6("Un-check this box if the CSV file does not have headers"), TRUE),
+                     checkboxInput("header", label = "CSV file contains variable names", value = TRUE),
                      selectInput(
                          #is the input of the app that the user interacts with
                          "choice",
-                         label = h3("...or use `mice` data"),
+                         label = h4("...or use `mice` data"),
                          choices = data(package = "mice")$results[-c(5,7, 17, 18), "Item"]
                      ),
-                     actionButton("reset", "Reset"),
+                     actionButton("reset", "Reset", icon = icon("redo")),
                  ),
                  mainPanel(
                      h2("Tabulated dataset"),
-                     helpText("Sort columns descending to view missing values."),
-                     DTOutput("table"))
+                     helpText("Sort variables descending to view missing values."),
+                     DT::DTOutput("table"))
              )),
     tabPanel(
-        "Explore missingness",
+        "Explore", icon = icon("table"), #icon("bar-chart-o")
         h2("Observed missingness pattern per variable"),
         helpText("Observed data is blue, missing data is red."),
-        plotOutput("md_pattern", height = "100%")
+        plotOutput("md_pattern", height = "150%", width = "100%"), 
+        style = 'width:100%;height:85vh;overflow-y: scroll;'
     ),
     tabPanel(
-        "Impute missingness",
+        "Impute", icon = icon("chart-line"), #icon("list-alt")
         h2("Impute missing data using `mice`"),
-        helpText("This may take a while."),
-        actionButton("mice", "Impute"),
+        tags$b("Dataset to impute"),
+        verbatimTextOutput("names"),
+        helpText("Showing only the first 5 variable names to check what data is used."),
+        numericInput("m", label = "Number of imputations", value = 5, min = 1, step = 1),
+        numericInput("maxit", label = "Number of iterations", value = 5, min = 1, step = 1),
+        actionButton("mice", "Impute", icon = icon("hourglass-start")),
+        helpText("This may take a minute."),
         plotOutput("traceplot")
     ),
     navbarMenu(
-        "More",
-        tabPanel(
-            "Summary", 
-            h2("Descriptive statistics per variable"),
-            h5("NB. Particularly the number of NA values is of interest."),
-            verbatimTextOutput(#where to place the output code
-                "summary")),
-        tabPanel("About",
+        "More", icon = icon("ellipsis-h"),
+        # tabPanel(
+        #     "Summary", 
+        #     h2("Descriptive statistics per variable"),
+        #     helpText("Check the number of NAs."),
+        #     verbatimTextOutput(#where to place the output code
+        #         "summary")),
+        tabPanel("About", icon = icon("info-circle"),
                  h2("About this app"),
                  fluidRow(
                      column(6,
@@ -71,7 +83,7 @@ shinyUI(navbarPage(
                              src = paste0(
                                  "https://raw.githubusercontent.com/gerkovink/shinyMice/edits/ICML/shinymicehex.png"
                              ),
-                             style = paste0("width:110%;")
+                             style = paste0("width:100%;")
                          ),
                          tags$small(
                              "Impression of the hex sticker ",

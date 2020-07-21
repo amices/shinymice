@@ -5,20 +5,14 @@
 # Find out more about building applications with Shiny here:
 #
 #    http://shiny.rstudio.com/
-#
 
-library("shiny")
-library("mice")
-library("DT")
-library("naniar")
-library("rmarkdown")
 
 options(htmlwidgets.TOJSON_ARGS = list(na = 'string')) #to show NA values in dt, see https://github.com/rstudio/DT/issues/496
 
 # Define server logic required to draw a histogram
 shinyServer(function(input, output, session) {
     
-    rv <- reactiveValues(data = NULL, mids = NULL)
+    rv <- reactiveValues(data = NULL, mids = NULL, m = NULL, maxit = NULL)
     
     observe({
         if (is.null(input$upload)) {
@@ -31,16 +25,21 @@ shinyServer(function(input, output, session) {
         rv$data <- get(input$choice, "package:mice")
     })
     
-    output$summary <-
-        renderPrint({
-            #display a statistical summary of the data with fixed-width (verbatim) text
-            # dataset <- get(input$dataset, "package:datasets") #redundant, after adding reactive and () after dataset
-            summary(rv$data)
-        })
+    observe({
+        if (is.null(input$m)) {
+            rv$m <- NULL
+        } else {rv$m <- input$m}
+    })
+    
+    observe({
+        if (is.null(input$maxit)) {
+            rv$maxit <- NULL
+        } else {rv$maxit <- input$maxit}
+    })
     
     output$table <-
         renderDT({rv$data %>% 
-                datatable() %>% 
+                datatable(options = list(pageLength = 5)) %>% 
             formatStyle(
                 names(rv$data ),
                 target = "cell",
@@ -52,15 +51,30 @@ shinyServer(function(input, output, session) {
     output$md_pattern <-
         renderPlot({
             md.pattern(rv$data)
-        }, height = function() {
-            1.5 * session$clientData$output_md_pattern_width
+        }#, height = function() {2*session$clientData$output_md_pattern_width}
+    )
+    
+    output$summary <-
+        renderPrint({
+            #display a statistical summary of the data with fixed-width (verbatim) text
+            # dataset <- get(input$dataset, "package:datasets") #redundant, after adding reactive and () after dataset
+            summary(rv$data)
+        })
+
+    output$names <-
+        renderPrint({
+            #display a statistical summary of the data with fixed-width (verbatim) text
+            # dataset <- get(input$dataset, "package:datasets") #redundant, after adding reactive and () after dataset
+            names(rv$data)[1:5]
         })
     
     observeEvent(input$mice, {
-        rv$mids <- mice(rv$data, printFlag = FALSE)
+        rv$mids <- mice(rv$data, m = input$m, maxit = rv$maxit, printFlag = FALSE)
     })
     
     output$traceplot <- renderPlot({
         if(!is.null(rv$mids)){gg.mids(rv$mids, x = "hgt")}
     })
+    
+    
 })
