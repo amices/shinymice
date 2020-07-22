@@ -19,25 +19,30 @@ library("rmarkdown")
 
 # Define UI for application that draws a histogram
 shinyUI(
-    # # for logo/name as browser icon, see https://stackoverflow.com/questions/51688463/shiny-page-title-and-image
-    # fluidPage(
-    # theme = shinytheme("paper"),
-    # tags$head(HTML("<title>Baller Lab</title>")), #Without company logo
-    # #tags$head(HTML("<title>Baller Lab</title> <link rel='icon' type='image/gif/png' href='ballerlablogo.png'>")), #WIth company logo
-    # #navbarPage(title = div(img(src="ballerlablogo.png", style="margin-top: -14px;", height = 50))))
-    
     navbarPage(
-        #tags$head(tags$style(HTML(".navbar-default .navbar-brand:hover {color: blue;}"))), # or ul.nav a:hover { color: #fff !important; }
-        title = "shinymice", #does not work: div("Report", img(src = "www/logo.png", height = "10px", style = "position: relative; top: -3px; left: -1000px;")),#
+        title = "shinymice", 
+        selected = "Data",
+        header = checkboxInput(
+            inputId = "themeToggle",
+            label = icon("moon"),
+            value = FALSE
+            ),
+        shinyjs::useShinyjs(),
+        # # for logo/name as browser icon, see https://stackoverflow.com/questions/51688463/shiny-page-title-and-image
+        # # does not work: div("Report", img(src = "www/logo.png", height = "10px", style = "position: relative; top: -3px; left: -1000px;")),#
+        # # for right aligned navbar, see https://stackoverflow.com/questions/35584644/r-shiny-navbarpage-right-aligned-tabs
+        # tags$head(
+        #     tags$style(HTML("
+        #   .navbar .navbar-nav {float: right}
+        #   .navbar .navbar-header {float: right}
+        # "))),
         theme = shinythemes::shinytheme("flatly"),
-        collapsible = TRUE,
-        #sets basic virtual structure (layout function)
+        collapsible = TRUE, #make 'hamburger' menu on small screens
         tabPanel(
-            "Data",
+            title = "Data",
             icon = icon("file-upload"),
             sidebarLayout(
                 sidebarPanel(
-                    shinyjs::useShinyjs(),
                     id = "sidebar",
                     h2("Select a dataset"),
                     fileInput(
@@ -57,9 +62,12 @@ shinyUI(
                     actionButton("reset", "Reset", icon = icon("redo")),
                 ),
                 mainPanel(
-                    checkboxInput(inputId = "themeToggle",
-                                                         label = icon("moon"),
-                                                         value = FALSE, width = "100%"),
+                    # checkboxInput(
+                    #     inputId = "themeToggle",
+                    #     label = icon("moon"),
+                    #     value = FALSE,
+                    #     width = "100%"
+                    # ),
                     h2("Tabulated dataset"),
                     helpText("Sort variables descending to view missing values."),
                     DT::DTOutput("table")
@@ -144,7 +152,8 @@ shinyUI(
                              )
                          ))
             ),
-            tags$script( #for light/dark theme, see https://stackoverflow.com/questions/61632272/r-shiny-light-dark-mode-switch
+            tags$script(
+                #for light/dark theme, see https://stackoverflow.com/questions/61632272/r-shiny-light-dark-mode-switch
                 "
         // define css theme filepaths
         const themes = {
@@ -174,7 +183,7 @@ shinyUI(
         const toggle = document.getElementById('themeToggle');
 
         // define extra css and add as default
-        const extraDarkThemeCSS = '.dataTables_length label, .dataTables_filter label, .dataTables_info {       color: white!important;} .paginate_button { background: white!important;} thead { color: white;}'
+        const extraDarkThemeCSS = '.dataTables_length label, .dataTables_filter label, .dataTables_info {       color: grey!important;} .paginate_button { background: white!important;} thead { color: white;}'
         const extraDarkThemeElement = document.createElement('style');
         extraDarkThemeElement.appendChild(document.createTextNode(extraDarkThemeCSS));
         head.appendChild(extraDarkThemeElement);

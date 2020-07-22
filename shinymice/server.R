@@ -82,7 +82,6 @@ shinyServer(function(input, output, session) {
     
     output$done <- renderPrint(rv$done)
     
-    
     observe({
         if (is.null(rv$mids)) {
             rv$trace <- ggplot(data.frame(x=NA, y=NA), aes(x, y))  + labs(x = "", y = "", title = "No imputations to evaluate.") + theme_classic()} 
@@ -92,7 +91,4 @@ shinyServer(function(input, output, session) {
     output$traceplot <- renderPlot({
         rv$trace
     })
-    
-    
-    
 })
