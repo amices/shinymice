@@ -28,9 +28,8 @@ shinyUI(
     
     navbarPage(
         #tags$head(tags$style(HTML(".navbar-default .navbar-brand:hover {color: blue;}"))), # or ul.nav a:hover { color: #fff !important; }
-        title = "shinymice",
+        title = "shinymice", #does not work: div("Report", img(src = "www/logo.png", height = "10px", style = "position: relative; top: -3px; left: -1000px;")),#
         theme = shinythemes::shinytheme("flatly"),
-        
         collapsible = TRUE,
         #sets basic virtual structure (layout function)
         tabPanel(
@@ -59,8 +58,8 @@ shinyUI(
                 ),
                 mainPanel(
                     checkboxInput(inputId = "themeToggle",
-                                  label = icon("moon"),
-                                  value = FALSE),
+                                                         label = icon("moon"),
+                                                         value = FALSE, width = "100%"),
                     h2("Tabulated dataset"),
                     helpText("Sort variables descending to view missing values."),
                     DT::DTOutput("table")
@@ -110,6 +109,9 @@ shinyUI(
             h2("Evaluate convergence"),
             plotOutput("traceplot")
         ),
+        # tabPanel(checkboxInput(inputId = "themeToggle",
+        #                        label = icon("moon"),
+        #                        value = FALSE)),
         navbarMenu(
             "More",
             icon = icon("ellipsis-h"),
