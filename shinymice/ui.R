@@ -14,6 +14,7 @@ library("DT")
 library("data.table")
 #library("naniar")
 library("rmarkdown")
+library("ggplot2")
 #library("shinycssloaders")
 
 
