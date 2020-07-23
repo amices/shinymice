@@ -17,6 +17,10 @@ library("rmarkdown")
 library("ggplot2")
 #library("shinycssloaders")
 
+# menu bar naar dropdown
+# data of csv of rdata file --> met verschillende mids objecten om te evalueren
+# nieuwe kleuren: blauw #006CC2, rood #B61A51
+# lighter blue #66a6da, lighter red #d37596
 
 # Define UI for application that draws a histogram
 shinyUI(
@@ -25,13 +29,29 @@ shinyUI(
             tags$head(
                 HTML('<link rel="icon" href="logo_square.png" 
                 type="image/png" />'))),
-    navbarPage(
-        title = "shinymice",#div(img(src="logo.png", style="style="float:right; padding-right:25px", width = "10%"), "shinymice"), 
+        tags$head(
+            tags$style(HTML("#themeToggle, .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    clip: rect(0 0 0 0);
+    clip: rect(0, 0, 0, 0);
+    overflow: hidden;
+};
+    "))
+        ),
+        # add logo in right corner, see https://stackoverflow.com/questions/48529495/placing-an-image-on-right-end-of-navigation-bar-in-navbarpage-layout-in-r-shin
+        # tagList(
+        #     tags$head(tags$script(type="text/javascript", src = "logo.js")),
+        navbarPage(
+        title = div(img(src="logo_wide.png", style = "width:11%;position:fixed;"), ".................."), #, style="float:right; padding-right:25px", width = "10%"), "shinymice"), 
         selected = "Data",
-        header = checkboxInput(
+        # add theme toggle in header, for themes, see below, for placement see https://stackoverflow.com/questions/56873774/change-css-properties-of-shiny-checkbox
+        header = div(checkboxInput(
             inputId = "themeToggle",
             label = icon("moon"),
-            value = FALSE
+            value = FALSE, width = "150%"), 
+            style = "text-align:right;" #add this? "; background-color: blue"
             ),
         shinyjs::useShinyjs(),
         # # for logo/name as browser icon, see https://stackoverflow.com/questions/51688463/shiny-page-title-and-image
@@ -129,6 +149,12 @@ shinyUI(
         navbarMenu(
             "More",
             icon = icon("ellipsis-h"),
+            # make options appear on hover, see https://stackoverflow.com/questions/34597421/dropdown-bootstrap-menu-with-unfold-effect
+            tags$script(HTML("$('.navbar .dropdown').hover(function() {
+                $(this).find('.dropdown-menu').first().stop(true, true).slideDown();
+            }, function() {
+                $(this).find('.dropdown-menu').first().stop(true, true).slideUp()
+            });")),
             # tabPanel(
             #     "Summary",
             #     h2("Descriptive statistics per variable"),
