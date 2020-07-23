@@ -43,7 +43,8 @@ shinyServer(function(input, output, session) {
             formatStyle(
                 names(rv$data ),
                 target = "cell",
-                color = styleInterval(9999, c("grey", "black"))
+                color = styleEqual("NA", "#B61A51"),
+                fontWeight = styleEqual("NA", "bold")
             )}, server = F)
     #display the actual data frame in a table
     # dataset <- get(input$dataset, "package:datasets") #redundant

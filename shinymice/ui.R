@@ -24,7 +24,7 @@ library("ggplot2")
 
 # Define UI for application that draws a histogram
 shinyUI(
-    fluidPage(  
+    fluidPage(title = "shinymice", 
         list(
             tags$head(
                 HTML('<link rel="icon" href="logo_square.png" 
@@ -88,12 +88,6 @@ shinyUI(
                     actionButton("reset", "Reset", icon = icon("redo")),
                 ),
                 mainPanel(
-                    # checkboxInput(
-                    #     inputId = "themeToggle",
-                    #     label = icon("moon"),
-                    #     value = FALSE,
-                    #     width = "100%"
-                    # ),
                     h2("Tabulated dataset"),
                     helpText("Sort variables descending to view missing values."),
                     DT::DTOutput("table")
@@ -215,7 +209,7 @@ shinyUI(
         const toggle = document.getElementById('themeToggle');
 
         // define extra css and add as default
-        const extraDarkThemeCSS = '.dataTables_length label, .dataTables_filter label, .dataTables_info {       color: grey!important;} .paginate_button { background: white!important;} thead { color: white;}'
+        const extraDarkThemeCSS = '.dataTables_length label, .dataTables_filter label, .dataTables_info {color: grey!important;} .paginate_button {background: white!important;} thead {color: grey;}'
         const extraDarkThemeElement = document.createElement('style');
         extraDarkThemeElement.appendChild(document.createTextNode(extraDarkThemeCSS));
         head.appendChild(extraDarkThemeElement);
