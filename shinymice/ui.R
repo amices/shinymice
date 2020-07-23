@@ -20,8 +20,13 @@ library("ggplot2")
 
 # Define UI for application that draws a histogram
 shinyUI(
+    fluidPage(  
+        list(
+            tags$head(
+                HTML('<link rel="icon" href="logo_square.png" 
+                type="image/png" />'))),
     navbarPage(
-        title = "shinymice", 
+        title = "shinymice",#div(img(src="logo.png", style="style="float:right; padding-right:25px", width = "10%"), "shinymice"), 
         selected = "Data",
         header = checkboxInput(
             inputId = "themeToggle",
@@ -208,4 +213,4 @@ shinyUI(
             )
         )
     )
-)
+))
