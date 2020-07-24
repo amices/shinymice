@@ -16,7 +16,11 @@ shinyServer(function(input, output, session) {
     observe({
         if (is.null(input$upload)) {
             rv$data <- get(input$choice, "package:mice")
-        } else {
+        } else if (grepl("\\.Rdata$", input$upload$datapath, ignore.case = TRUE)) {
+            env <- attach(input$upload$datapath)
+            nm <- ls(name = env)
+            rv$data <- env[[nm]] 
+        } else if (grepl("\\.csv$", input$upload$datapath, ignore.case = TRUE)) {
             rv$data <- read.csv(input$upload$datapath, header = input$header)
         }
     })
@@ -44,7 +48,7 @@ shinyServer(function(input, output, session) {
     
     output$table <-
         renderDT({
-            rv$data %>%
+            rv$data %>%  dplyr::mutate_if(is.numeric, round, 2) %>% 
                 datatable(options = list(pageLength = 5)) %>%
                 formatStyle(
                     names(rv$data),
@@ -52,7 +56,7 @@ shinyServer(function(input, output, session) {
                     color = styleEqual("NA", "#B61A51"),
                     fontWeight = styleEqual("NA", "bold")
                 )
-        }, server = F)
+            }, server = F)
     
     output$md_pattern <-
         renderPlot({

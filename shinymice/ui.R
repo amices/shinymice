@@ -76,10 +76,11 @@ shinyUI(
                         h2("Select a dataset"),
                         fileInput(
                             "upload",
-                            label = h4("Upload a CSV file..."),
+                            label = h4("Upload a CSV or RData file..."),
                             accept = c("text/csv",
                                        "text/comma-separated-values,text/plain",
-                                       ".csv")
+                                       ".csv", 
+                                       ".Rdata")
                         ),
                         checkboxInput("header", label = "CSV file contains variable names", value = TRUE),
                         selectInput(
