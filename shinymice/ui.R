@@ -82,7 +82,7 @@ shinyUI(
                                        ".csv", 
                                        ".Rdata")
                         ),
-                        div(style = "margin-top:-2em;", checkboxInput("header", label = "CSV file contains variable names", value = TRUE)),
+                        div(style = "margin-top:-1em;", checkboxInput("header", label = "CSV file contains variable names", value = TRUE)),
                         selectInput(
                             "choice",
                             label = tags$b("...or use `mice` data"),

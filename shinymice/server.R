@@ -19,7 +19,10 @@ shinyServer(function(input, output, session) {
         } else if (grepl("\\.Rdata$", input$upload$datapath, ignore.case = TRUE)) {
             env <- attach(input$upload$datapath)
             nm <- ls(name = env)
-            rv$data <- env[[nm]] 
+            if(is.mids(env[[nm]])){
+                rv$mids <- env[[nm]]
+                rv$data <- env[[nm]][["data"]]
+            } else {rv$data <- env[[nm]]}
         } else if (grepl("\\.csv$", input$upload$datapath, ignore.case = TRUE)) {
             rv$data <- read.csv(input$upload$datapath, header = input$header)
         }
