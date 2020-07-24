@@ -98,14 +98,30 @@ shinyUI(
                 )
             ),
             
-            tabPanel(
+            navbarMenu(
                 "Explore",
+                icon = icon("search"),
+            
+            tabPanel(
+                "Pattern",
                 icon = icon("th"),
                 h2("Observed missingness pattern per variable"),
                 helpText("Observed data is blue, missing data is red."),
                 plotOutput("md_pattern", height = "150%", width = "100%"),
                 style = 'width:100%;height:85vh;overflow-y: scroll;'
             ),
+            
+            tabPanel(
+                "Distributions",
+                icon = icon("chart-area"),
+                #icon("list-alt")
+                h2("Inspect relations before imputation"),
+                varSelectInput("histvar1", "Choose a variable to plot:", data = mice::boys),
+                varSelectInput("histvar2", "Conditional on missingness in:", data = mice::boys),
+                plotOutput("hist")
+            )
+            ),
+            
             
             tabPanel(
                 "Impute",

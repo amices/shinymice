@@ -22,7 +22,8 @@ lattice::histogram( ~ age | Rgen, data = boys)
 data %>%
   ggplot(aes(x = age)) +
   geom_histogram() +
-  facet_wrap( ~ Rgen) # optional: use argument "ncols = 1"
+  theme_classic() +
+  facet_wrap( ~ is.na(gen)) # optional: use argument "ncols = 1"
 # now with the right colors:
 colorspace::qualitative_hcl(1, 240, 100, 40) #observed
 ## #006CC2

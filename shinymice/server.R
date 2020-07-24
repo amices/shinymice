@@ -111,8 +111,28 @@ shinyServer(function(input, output, session) {
                      choices = names(rv$data))
     )
     
+    observe(
+        updateSelectInput(session, "histvar1",
+                          choices = names(rv$data)),
+    )
+    
+    observe(
+            updateSelectInput(session, "histvar2",
+                          choices = names(rv$data))
+    )
+    
     output$traceplot <- renderPlot({
         rv$trace[[input$varnr]]
+    })
+    
+    output$hist <- renderPlot({
+        if(is.numeric(rv$data[[input$histvar1]])){geom <- list(geom_histogram())} else {geom <- list(geom_bar())}
+            
+        rv$data %>%
+            ggplot(aes(x = !!input$histvar1)) +
+            geom +
+            theme_classic() +
+            facet_wrap( ~ is.na(rv$data[[input$histvar2]]))
     })
     
     output$savecsv <- downloadHandler(
