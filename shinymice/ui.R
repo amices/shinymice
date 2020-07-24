@@ -76,16 +76,16 @@ shinyUI(
                         h2("Select a dataset"),
                         fileInput(
                             "upload",
-                            label = h4("Upload a CSV or RData file..."),
+                            label = tags$b("Upload a CSV or RData file..."),
                             accept = c("text/csv",
                                        "text/comma-separated-values,text/plain",
                                        ".csv", 
                                        ".Rdata")
                         ),
-                        checkboxInput("header", label = "CSV file contains variable names", value = TRUE),
+                        div(style = "margin-top:-2em;", checkboxInput("header", label = "CSV file contains variable names", value = TRUE)),
                         selectInput(
                             "choice",
-                            label = h4("...or use `mice` data"),
+                            label = tags$b("...or use `mice` data"),
                             choices = data(package = "mice")$results[-c(5, 7, 17, 18), "Item"]
                         ),
                         actionButton("reset", "Reset", icon = icon("redo")),
@@ -140,6 +140,25 @@ shinyUI(
                 #icon("list-alt")
                 h2("Evaluate convergence"),
                 plotOutput("traceplot")
+            ),
+            
+            tabPanel(
+                "Save",
+                icon = icon("file-download"),
+                h2("Download the dataset or imputations"),
+                tags$b("Download the dataset:"),
+                br(),
+                br(),
+                downloadButton("savecsv", "Download dataset as CSV file"),
+                br(),
+                br(),
+                downloadButton("saverdata", "Download dataset as RData file"),
+                br(),
+                br(),
+                tags$b("Download the imputations:"),
+                br(),
+                br(),
+                downloadButton("savemids", "Download imputations as RData file")
             ),
             
             navbarMenu(

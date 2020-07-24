@@ -104,4 +104,33 @@ shinyServer(function(input, output, session) {
     output$traceplot <- renderPlot({
         rv$trace
     })
+    
+    output$savecsv <- downloadHandler(
+        filename = function() {
+            paste("dataset", ".csv", sep = "")
+        },
+        content = function(file) {
+            write.csv(rv$data, file, row.names = FALSE)
+        }
+    )
+    
+    output$saverdata <- downloadHandler(
+        filename = function() {
+            paste("dataset.Rdata")
+        },
+        content = function(file) {
+            dataset <- rv$data
+            save(dataset, file = file)
+        }
+    )
+    
+    output$savemids <- downloadHandler(
+        filename = function() {
+            paste("mids.Rdata")
+        },
+        content = function(file) {
+            mids <- rv$mids
+            save(mids, file = file)
+        }
+    )
 })
