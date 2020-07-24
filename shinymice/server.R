@@ -30,21 +30,21 @@ shinyServer(function(input, output, session) {
         rv$data <- get(input$choice, "package:mice")
     })
     
-    observe({
-        if (is.null(input$m)) {
-            rv$m <- NULL
-        } else {
-            rv$m <- input$m
-        }
-    })
-    
-    observe({
-        if (is.null(input$maxit)) {
-            rv$maxit <- NULL
-        } else {
-            rv$maxit <- input$maxit
-        }
-    })
+    # observe({
+    #     if (is.null(input$m)) {
+    #         rv$m <- NULL
+    #     } else {
+    #         rv$m <- input$m
+    #     }
+    # })
+    # 
+    # observe({
+    #     if (is.null(input$maxit)) {
+    #         rv$maxit <- NULL
+    #     } else {
+    #         rv$maxit <- input$maxit
+    #     }
+    # })
     
     output$table <-
         renderDT({
@@ -73,17 +73,19 @@ shinyServer(function(input, output, session) {
             mice(
                 rv$data,
                 m = input$m,
-                maxit = rv$maxit,
+                maxit = input$maxit,
                 printFlag = FALSE
             )
     })
     
+    #output$micecall <- renderPrint(rv$mids$call)
+    
     observe({
         if (is.null(rv$mids)) {
-            rv$done <- "not done yet..."
+            rv$done <- "Not done yet..."
         }
         else {
-            rv$done <- "done!"
+            rv$done <- "Done!"
         }
     })
     
@@ -101,8 +103,13 @@ shinyServer(function(input, output, session) {
         }
     })
     
+    observe(
+        updateSelectInput(session, "varnr",
+                     choices = names(rv$data))
+    )
+    
     output$traceplot <- renderPlot({
-        rv$trace
+        rv$trace[[input$varnr]]
     })
     
     output$savecsv <- downloadHandler(

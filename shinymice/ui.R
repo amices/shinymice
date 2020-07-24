@@ -129,6 +129,7 @@ shinyUI(
                     step = 1
                 ),
                 actionButton("mice", "Impute", icon = icon("hourglass-start")),
+                #verbatimTextOutput("micecall"),
                 helpText("This may take a minute."),
                 verbatimTextOutput("done") #%>% withSpinner(color="#0dc5c1")
                 #plotOutput("traceplot")
@@ -139,6 +140,7 @@ shinyUI(
                 icon = icon("chart-line"),
                 #icon("list-alt")
                 h2("Evaluate convergence"),
+                varSelectInput("varnr", "Choose a variable:", data = mice::boys),
                 plotOutput("traceplot")
             ),
             
