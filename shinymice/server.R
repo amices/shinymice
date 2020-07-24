@@ -1,4 +1,6 @@
 # shinymice server
+
+# set-up
 options(htmlwidgets.TOJSON_ARGS = list(na = 'string')) #to show NA values in dt, see https://github.com/rstudio/DT/issues/496
 
 shinyServer(function(input, output, session) {
@@ -56,12 +58,6 @@ shinyServer(function(input, output, session) {
         renderPlot({
             md.pattern(rv$data)
         })
-    
-    # output$summary <-
-    #     renderPrint({
-    #         #display a statistical summary of the data with fixed-width (verbatim) text
-    #         summary(rv$data)
-    #     })
     
     output$names <-
         renderPrint({

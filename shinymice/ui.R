@@ -5,6 +5,7 @@
 # data of csv of rdata file --> met verschillende mids objecten om te evalueren
 # nieuwe kleuren: blauw #006CC2, rood #B61A51
 # lighter blue #66a6da, lighter red #d37596
+# icons: "bar-chart-o", "table", "list-alt
 
 # set-up
 library("shiny")
@@ -27,29 +28,33 @@ shinyUI(
                 type="image/png" />')
         )),
         shinyjs::useShinyjs(),
+        # for right aligned navbar, see https://stackoverflow.com/questions/35584644/r-shiny-navbarpage-right-aligned-tabs
+        tags$head(
+            tags$style(HTML("
+          .navbar .navbar-nav {float: right}
+          .navbar .navbar-header {float: right}
+        "))
+        ),
         tags$head(tags$style(
             HTML(
                 "#themeToggle, .visually-hidden {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    clip: rect(0 0 0 0);
-    clip: rect(0, 0, 0, 0);
-    overflow: hidden;
-};
+                position: absolute;
+                width: 1px;
+                height: 1px;
+                clip: rect(0 0 0 0);
+                clip: rect(0, 0, 0, 0);
+                overflow: hidden;
+                };
     "
             )
         )),
         
         navbarPage(
             title = div(
-                img(src = "logo_wide.png", style = "width:11%;position:fixed;"),
-                ".............................."
+                img(src = "logo_wide.png", style = "width:155px;position:fixed;left:30px;")
             ),
-            #, style="float:right; padding-right:25px", width = "10%"), "shinymice"),
-            # for right aligned navbar, see https://stackoverflow.com/questions/35584644/r-shiny-navbarpage-right-aligned-tabs
-            collapsible = TRUE,
             #to make 'hamburger' menu on small screens
+            collapsible = TRUE,
             selected = "Data",
             # add theme toggle in header, for themes, see below, for placement see https://stackoverflow.com/questions/56873774/change-css-properties-of-shiny-checkbox
             header = div(
@@ -78,7 +83,6 @@ shinyUI(
                         ),
                         checkboxInput("header", label = "CSV file contains variable names", value = TRUE),
                         selectInput(
-                            #is the input of the app that the user interacts with
                             "choice",
                             label = h4("...or use `mice` data"),
                             choices = data(package = "mice")$results[-c(5, 7, 17, 18), "Item"]
@@ -96,7 +100,6 @@ shinyUI(
             tabPanel(
                 "Explore",
                 icon = icon("th"),
-                #icon("bar-chart-o") or table
                 h2("Observed missingness pattern per variable"),
                 helpText("Observed data is blue, missing data is red."),
                 plotOutput("md_pattern", height = "150%", width = "100%"),
@@ -106,7 +109,6 @@ shinyUI(
             tabPanel(
                 "Impute",
                 icon = icon("calculator"),
-                #icon("list-alt")
                 h2("Impute missing data using `mice`"),
                 tags$b("Dataset to impute"),
                 verbatimTextOutput("names"),
@@ -152,13 +154,6 @@ shinyUI(
             });"
                     )
                 ),
-                
-                # tabPanel(
-                #     "Summary",
-                #     h2("Descriptive statistics per variable"),
-                #     helpText("Check the number of NAs."),
-                #     verbatimTextOutput(#where to place the output code
-                #         "summary")),
                 
                 tabPanel(
                     "About",
