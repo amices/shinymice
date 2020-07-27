@@ -126,13 +126,19 @@ shinyServer(function(input, output, session) {
     })
     
     output$hist <- renderPlot({
-        if(is.numeric(rv$data[[input$histvar1]])){geom <- list(geom_histogram())} else {geom <- list(geom_bar())}
+        if(is.numeric(rv$data[[input$histvar1]])){
+            geom <- list(geom_histogram())} else {
+                geom <- list(geom_bar())}
             
-        rv$data %>%
-            ggplot(aes(x = !!input$histvar1)) +
+        rv$data %>% 
+            dplyr::mutate(R = is.na(!!input$histvar2)) %>%  #factor(is.na(!!input$histvar2), levels = c("Observed", "Missing"))) %>% 
+            ggplot(aes(x = !!input$histvar1, fill = is.na(!!input$histvar2))) +
             geom +
             theme_classic() +
-            facet_wrap( ~ is.na(rv$data[[input$histvar2]]))
+            scale_fill_manual(values = mice:::mdc(1:2)) + 
+            facet_wrap( ~ R, 
+                        ncol = 1, 
+                        labeller = labeller(R = c("Missing", "Observed") %>% setNames(c("TRUE", "FALSE"))))
     })
     
     output$savecsv <- downloadHandler(
