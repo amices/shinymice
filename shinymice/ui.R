@@ -28,6 +28,8 @@ shinyUI(
                 type="image/png" />')
         )),
         shinyjs::useShinyjs(),
+        shinyFeedback::useShinyFeedback(),
+        waiter::use_waiter(),
         # for right aligned navbar, see https://stackoverflow.com/questions/35584644/r-shiny-navbarpage-right-aligned-tabs
         tags$head(
             tags$style(HTML("
@@ -144,9 +146,13 @@ shinyUI(
                     min = 1,
                     step = 1
                 ),
+                tags$b("Mice call"),
+                verbatimTextOutput("micecall"),
+                # textInput("miceargs", label = "Add arguments", value = NULL),
+                waiter::use_waiter(),
                 actionButton("mice", "Impute", icon = icon("hourglass-start")),
-                #verbatimTextOutput("micecall"),
                 helpText("This may take a minute."),
+                br(),
                 verbatimTextOutput("done") #%>% withSpinner(color="#0dc5c1")
                 #plotOutput("traceplot")
             ),
@@ -157,7 +163,15 @@ shinyUI(
                 #icon("list-alt")
                 h2("Evaluate convergence"),
                 varSelectInput("varnr", "Choose a variable:", data = mice::boys),
-                plotOutput("traceplot")
+                plotOutput("traceplot"),
+                numericInput(
+                    "midsmaxit",
+                    label = "Add additional iterations",
+                    value = 5,
+                    min = 1,
+                    step = 1
+                ),
+                actionButton("mids", "Iterate", icon = icon("hourglass-start"))
             ),
             
             tabPanel(

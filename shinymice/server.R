@@ -71,19 +71,36 @@ shinyServer(function(input, output, session) {
             names(rv$data)[1:5]
         })
     
+    output$micecall <- renderText({ 
+        paste0("mice(data = rv$data, m = ", input$m, ", maxit = ", input$maxit, ", printFlag = FALSE)")
+    })
+    
     observeEvent(input$mice, {
+        # for spinner, see: https://shiny.john-coene.com/waiter/
+        waiter::waiter_show(
+            html = waiter::spin_throbber(),#spin_fading_circles(), 
+            color = waiter::transparent(.5)) 
+        
         rv$mids <-
             mice(
                 rv$data,
                 m = input$m,
                 maxit = input$maxit,
+                # method = input$micemeth,
+                # predictorMatrix = input$micepred,
+                # blocks = input$micebloc,
+                # visitSequence = input$micevisi,
+                # formulas = input$miceform,
+                # seed = input$miceseed,
                 printFlag = FALSE
             )
+        
+        waiter::waiter_hide()
     })
     
-    #output$micecall <- renderPrint(rv$mids$call)
-    
     observe({
+        #waiter::Waiter$new(id = "done")$show()
+        
         if (is.null(rv$mids)) {
             rv$done <- "Not done yet..."
         }
@@ -94,22 +111,32 @@ shinyServer(function(input, output, session) {
     
     output$done <- renderPrint(rv$done)
     
-    observe({
-        if (is.null(rv$mids)) {
-            rv$trace <-
-                ggplot(data.frame(x = NA, y = NA), aes(x, y))  + labs(x = "",
-                                                                      y = "",
-                                                                      title = "No imputations to evaluate.") + theme_classic()
-        }
-        else {
-            rv$trace <- gg.mids(rv$mids)
-        }
-    })
-    
     observe(
         updateSelectInput(session, "varnr",
-                     choices = names(rv$data))
+                          choices = names(rv$data))
     )
+    
+    observe({
+    shinyFeedback::feedbackWarning(
+        "varnr", 
+        all(!is.na(rv$mids$data[[input$varnr]])),
+        "This variable is completely observed, so no imputations can be shown"
+    )
+        req(!is.null(rv$mids))
+        
+        rv$trace <- gg.mids(rv$mids)
+        
+    })
+    
+    
+    observeEvent(input$mids, {
+        shinyFeedback::feedbackWarning(
+            "midsmaxit", 
+            is.null(rv$mids),
+            "Please run some initial iterations in the 'Impute' tab"
+        )  
+        if(!is.null(rv$mids)){rv$mids <- mice.mids(rv$mids, maxit = input$midsmaxit, printFlag = FALSE)
+    }})
     
     observe(
         updateSelectInput(session, "histvar1",
