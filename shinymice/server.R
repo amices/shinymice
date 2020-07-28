@@ -131,14 +131,14 @@ shinyServer(function(input, output, session) {
                 geom <- list(geom_bar())}
             
         rv$data %>% 
-            dplyr::mutate(R = is.na(!!input$histvar2)) %>%  #factor(is.na(!!input$histvar2), levels = c("Observed", "Missing"))) %>% 
-            ggplot(aes(x = !!input$histvar1, fill = is.na(!!input$histvar2))) +
+            dplyr::mutate(R = factor(is.na(!!input$histvar2), levels = c(FALSE, TRUE), labels = c("Observed", "Imputed"))) %>%  #factor(is.na(!!input$histvar2), levels = c("Observed", "Missing"))) %>% 
+            ggplot(aes(x = !!input$histvar1, fill = R)) +
             geom +
-            theme_classic() +
-            scale_fill_manual(values = mice:::mdc(1:2)) + 
+            mice:::theme_mice +
+            theme(legend.position = "none") +
             facet_wrap( ~ R, 
                         ncol = 1, 
-                        labeller = labeller(R = c("Missing", "Observed") %>% setNames(c("TRUE", "FALSE"))))
+                        labeller = labeller(R = c("Missing", "Observed") %>% setNames(c("Imputed", "Observed"))))
     })
     
     output$savecsv <- downloadHandler(

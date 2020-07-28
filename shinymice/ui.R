@@ -118,7 +118,7 @@ shinyUI(
                 h2("Inspect relations before imputation"),
                 varSelectInput("histvar1", "Choose a variable to plot:", data = mice::boys),
                 varSelectInput("histvar2", "Conditional on missingness in:", data = mice::boys),
-                plotOutput("hist", width = "auto", height = "720px")
+                plotOutput("hist", width = "auto", height = "460px")
             )
             ),
             
