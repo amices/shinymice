@@ -19,10 +19,12 @@ shinyServer(function(input, output, session) {
         } else if (grepl("\\.Rdata$", input$upload$datapath, ignore.case = TRUE)) {
             env <- attach(input$upload$datapath)
             nm <- ls(name = env)
-            if(is.mids(env[[nm]])){
+            if (is.mids(env[[nm]])) {
                 rv$mids <- env[[nm]]
                 rv$data <- env[[nm]][["data"]]
-            } else {rv$data <- env[[nm]]}
+            } else {
+                rv$data <- env[[nm]]
+            }
         } else if (grepl("\\.csv$", input$upload$datapath, ignore.case = TRUE)) {
             rv$data <- read.csv(input$upload$datapath, header = input$header)
         }
@@ -40,7 +42,7 @@ shinyServer(function(input, output, session) {
     #         rv$m <- input$m
     #     }
     # })
-    # 
+    #
     # observe({
     #     if (is.null(input$maxit)) {
     #         rv$maxit <- NULL
@@ -51,7 +53,7 @@ shinyServer(function(input, output, session) {
     
     output$table <-
         renderDT({
-            rv$data %>%  dplyr::mutate_if(is.numeric, round, 2) %>% 
+            rv$data %>%  dplyr::mutate_if(is.numeric, round, 2) %>%
                 datatable(options = list(pageLength = 5)) %>%
                 formatStyle(
                     names(rv$data),
@@ -59,7 +61,7 @@ shinyServer(function(input, output, session) {
                     color = styleEqual("NA", "#B61A51"),
                     fontWeight = styleEqual("NA", "bold")
                 )
-            }, server = F)
+        }, server = F)
     
     output$md_pattern <-
         renderPlot({
@@ -71,15 +73,21 @@ shinyServer(function(input, output, session) {
             names(rv$data)[1:5]
         })
     
-    output$micecall <- renderText({ 
-        paste0("mice(data = rv$data, m = ", input$m, ", maxit = ", input$maxit, ", printFlag = FALSE)")
+    output$micecall <- renderText({
+        paste0(
+            "mice(data = rv$data, m = ",
+            input$m,
+            ", maxit = ",
+            input$maxit,
+            ", printFlag = FALSE)"
+        )
     })
     
     observeEvent(input$mice, {
         # for spinner, see: https://shiny.john-coene.com/waiter/
-        waiter::waiter_show(
-            html = waiter::spin_throbber(),#spin_fading_circles(), 
-            color = waiter::transparent(.5)) 
+        waiter::waiter_show(html = waiter::spin_throbber(),
+                            #spin_fading_circles(),
+                            color = waiter::transparent(.5))
         
         rv$mids <-
             mice(
@@ -111,17 +119,15 @@ shinyServer(function(input, output, session) {
     
     output$done <- renderPrint(rv$done)
     
-    observe(
-        updateSelectInput(session, "varnr",
-                          choices = names(rv$data))
-    )
+    observe(updateSelectInput(session, "varnr",
+                              choices = names(rv$data)))
     
     observe({
-    shinyFeedback::feedbackWarning(
-        "varnr", 
-        all(!is.na(rv$mids$data[[input$varnr]])),
-        "This variable is completely observed, so no imputations can be shown"
-    )
+        shinyFeedback::feedbackWarning(
+            "varnr",
+            all(!is.na(rv$mids$data[[input$varnr]])),
+            "This variable is completely observed, so no imputations can be shown"
+        )
         req(!is.null(rv$mids))
         
         rv$trace <- gg.mids(rv$mids)
@@ -130,42 +136,56 @@ shinyServer(function(input, output, session) {
     
     
     observeEvent(input$mids, {
+        waiter::waiter_show(html = waiter::spin_throbber(),
+                            #spin_fading_circles(),
+                            color = waiter::transparent(.5))
+        
         shinyFeedback::feedbackWarning(
-            "midsmaxit", 
+            "midsmaxit",
             is.null(rv$mids),
             "Please run some initial iterations in the 'Impute' tab"
-        )  
-        if(!is.null(rv$mids)){rv$mids <- mice.mids(rv$mids, maxit = input$midsmaxit, printFlag = FALSE)
-    }})
+        )
+        if (!is.null(rv$mids)) {
+            rv$mids <-
+                mice.mids(rv$mids,
+                          maxit = input$midsmaxit,
+                          printFlag = FALSE)
+        }
+        waiter::waiter_hide()
+    })
     
-    observe(
-        updateSelectInput(session, "histvar1",
-                          choices = names(rv$data)),
-    )
+    observe(updateSelectInput(session, "histvar1",
+                              choices = names(rv$data)),)
     
-    observe(
-            updateSelectInput(session, "histvar2",
-                          choices = names(rv$data))
-    )
+    observe(updateSelectInput(session, "histvar2",
+                              choices = names(rv$data)))
     
     output$traceplot <- renderPlot({
         rv$trace[[input$varnr]]
     })
     
     output$hist <- renderPlot({
-        if(is.numeric(rv$data[[input$histvar1]])){
-            geom <- list(geom_histogram())} else {
-                geom <- list(geom_bar())}
-            
-        rv$data %>% 
-            dplyr::mutate(R = factor(is.na(!!input$histvar2), levels = c(FALSE, TRUE), labels = c("Observed", "Imputed"))) %>%  #factor(is.na(!!input$histvar2), levels = c("Observed", "Missing"))) %>% 
+        if (is.numeric(rv$data[[input$histvar1]])) {
+            geom <- list(geom_histogram())
+        } else {
+            geom <- list(geom_bar())
+        }
+        
+        rv$data %>%
+            dplyr::mutate(R = factor(
+                is.na(!!input$histvar2),
+                levels = c(FALSE, TRUE),
+                labels = c("Observed", "Imputed")
+            )) %>%  #factor(is.na(!!input$histvar2), levels = c("Observed", "Missing"))) %>%
             ggplot(aes(x = !!input$histvar1, fill = R)) +
             geom +
             mice:::theme_mice +
             theme(legend.position = "none") +
-            facet_wrap( ~ R, 
-                        ncol = 1, 
-                        labeller = labeller(R = c("Missing", "Observed") %>% setNames(c("Imputed", "Observed"))))
+            facet_wrap(~ R,
+                       ncol = 1,
+                       labeller = labeller(R = c("Missing", "Observed") %>% setNames(c(
+                           "Imputed", "Observed"
+                       ))))
     })
     
     output$savecsv <- downloadHandler(

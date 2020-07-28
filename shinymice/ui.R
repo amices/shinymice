@@ -31,12 +31,14 @@ shinyUI(
         shinyFeedback::useShinyFeedback(),
         waiter::use_waiter(),
         # for right aligned navbar, see https://stackoverflow.com/questions/35584644/r-shiny-navbarpage-right-aligned-tabs
-        tags$head(
-            tags$style(HTML("
+        tags$head(tags$style(
+            HTML(
+                "
           .navbar .navbar-nav {float: right}
           .navbar .navbar-header {float: right}
-        "))
-        ),
+        "
+            )
+        )),
         tags$head(tags$style(
             HTML(
                 "#themeToggle, .visually-hidden {
@@ -79,12 +81,17 @@ shinyUI(
                         fileInput(
                             "upload",
                             label = tags$b("Upload a CSV or RData file..."),
-                            accept = c("text/csv",
-                                       "text/comma-separated-values,text/plain",
-                                       ".csv", 
-                                       ".Rdata")
+                            accept = c(
+                                "text/csv",
+                                "text/comma-separated-values,text/plain",
+                                ".csv",
+                                ".Rdata"
+                            )
                         ),
-                        div(style = "margin-top:-1em;", checkboxInput("header", label = "CSV file contains variable names", value = TRUE)),
+                        div(
+                            style = "margin-top:-1em;",
+                            checkboxInput("header", label = "CSV file contains variable names", value = TRUE)
+                        ),
                         selectInput(
                             "choice",
                             label = tags$b("...or use `mice` data"),
@@ -103,25 +110,25 @@ shinyUI(
             navbarMenu(
                 "Explore",
                 icon = icon("search"),
-            
-            tabPanel(
-                "Pattern",
-                icon = icon("th"),
-                h2("Observed missingness pattern per variable"),
-                helpText("Observed data is blue, missing data is red."),
-                plotOutput("md_pattern", height = "150%", width = "100%"),
-                style = 'width:100%;height:85vh;overflow-y: scroll;'
-            ),
-            
-            tabPanel(
-                "Distributions",
-                icon = icon("chart-area"),
-                #icon("list-alt")
-                h2("Inspect relations before imputation"),
-                varSelectInput("histvar1", "Choose a variable to plot:", data = mice::boys),
-                varSelectInput("histvar2", "Conditional on missingness in:", data = mice::boys),
-                plotOutput("hist", width = "auto", height = "460px")
-            )
+                
+                tabPanel(
+                    "Pattern",
+                    icon = icon("th"),
+                    h2("Observed missingness pattern per variable"),
+                    helpText("Observed data is blue, missing data is red."),
+                    plotOutput("md_pattern", height = "150%", width = "100%"),
+                    style = 'width:100%;height:85vh;overflow-y: scroll;'
+                ),
+                
+                tabPanel(
+                    "Distributions",
+                    icon = icon("chart-area"),
+                    #icon("list-alt")
+                    h2("Inspect relations before imputation"),
+                    varSelectInput("histvar1", "Choose a variable to plot:", data = mice::boys),
+                    varSelectInput("histvar2", "Conditional on missingness in:", data = mice::boys),
+                    plotOutput("hist", width = "auto", height = "460px")
+                )
             ),
             
             
@@ -171,11 +178,13 @@ shinyUI(
                     min = 1,
                     step = 1
                 ),
-                actionButton("mids", "Iterate", icon = icon("hourglass-start"))
+                actionButton("mids", "Iterate", icon = icon("hourglass-start")),
+                helpText("This may take a minute.")
             ),
             
             tabPanel(
-                "Save", #add sav download
+                "Save",
+                #add sav download
                 icon = icon("file-download"),
                 h2("Download the dataset or imputations"),
                 tags$b("Download the dataset:"),
