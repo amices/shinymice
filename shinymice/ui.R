@@ -171,7 +171,9 @@ shinyUI(
                     "Model",
                     icon = icon("balance-scale-right"),
                     h2("Imputation model influx-outflux"),
-                    helpText("Variables that have more observed information ... Variables that ..."),
+                    helpText(
+                        "Variables that have more observed information ... Variables that ..."
+                    ),
                     plotOutput("fluxplot")
                 ),
                 tabPanel(
@@ -195,7 +197,11 @@ shinyUI(
                     "Imputations",
                     icon = icon("chart-area"),
                     h2("Visualize imputations to inspect"),
-                    selectInput("plottype", "Choose a visualization:", c("bwplot", "densityplot", "histogram", "stripplot", "xyplot")),
+                    selectInput(
+                        "plottype",
+                        "Choose a visualization:",
+                        c("bwplot", "densityplot", "histogram", "stripplot")
+                    ),
                     varSelectInput("plotvar", "Choose a variable:", data = mice::boys),
                     plotOutput("impplot")
                 )
