@@ -104,7 +104,7 @@ shinyServer(
         # print call
         output$micecall <- renderText({
             paste0(
-                "mice(data = rv$data, m = ",
+                "mice(data, m = ",
                 input$m,
                 ", maxit = ",
                 input$maxit,
@@ -131,18 +131,15 @@ shinyServer(
                 )
             waiter::waiter_hide()
         })
-        # indicate completion
-        observe({
-            if (is.null(rv$mids)) {
-                rv$done <- "Not done yet..."
-            }
-            else {
-                rv$done <- "Done!"
-            }
-        })
-        # print
-        output$done <- renderPrint(rv$done)
         
+        # indicate that data is imputed
+        output$done <- renderPrint({
+            if (is.null(rv$mids)) {
+            "Not done yet..."
+        }
+        else {
+            "Done!"}
+        })
         
         ## Evaluate tab
         ## Fluxplot subtab

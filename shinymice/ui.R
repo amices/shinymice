@@ -6,6 +6,7 @@
 # nieuwe kleuren: blauw #006CC2, rood #B61A51
 # lighter blue #66a6da, lighter red #d37596
 # icons: "bar-chart-o", "table", "list-alt", "sliders-h"
+# check use of observe where reactive would be better, see https://mastering-shiny.org/basic-reactivity.html#observers
 
 # set-up
 library("shiny")
