@@ -122,7 +122,7 @@ shinyUI(
                 
                 tabPanel(
                     "Distributions",
-                    icon = icon("chart-area"),
+                    icon = icon("chart-bar"),
                     #icon("list-alt")
                     h2("Inspect relations before imputation"),
                     varSelectInput("histvar1", "Choose a variable to plot:", data = mice::boys),
@@ -164,22 +164,33 @@ shinyUI(
                 #plotOutput("traceplot")
             ),
             
-            tabPanel(
+            navbarMenu(
                 "Evaluate",
-                icon = icon("chart-line"),
-                #icon("list-alt")
-                h2("Evaluate convergence"),
-                varSelectInput("varnr", "Choose a variable:", data = mice::boys),
-                plotOutput("traceplot"),
-                numericInput(
-                    "midsmaxit",
-                    label = "Add additional iterations",
-                    value = 5,
-                    min = 1,
-                    step = 1
+                icon = icon("check-square"),
+                tabPanel(
+                    "Convergence",
+                    icon = icon("chart-line"),
+                    #icon("list-alt")
+                    h2("Evaluate convergence"),
+                    varSelectInput("varnr", "Choose a variable:", data = mice::boys),
+                    plotOutput("traceplot"),
+                    numericInput(
+                        "midsmaxit",
+                        label = "Add additional iterations",
+                        value = 5,
+                        min = 1,
+                        step = 1
+                    ),
+                    actionButton("mids", "Iterate", icon = icon("hourglass-start")),
+                    helpText("This may take a minute.")
                 ),
-                actionButton("mids", "Iterate", icon = icon("hourglass-start")),
-                helpText("This may take a minute.")
+                tabPanel(
+                    "Imputations",
+                    icon = icon("chart-area"),
+                    h2("Visualize imputations to inspect"),
+                    varSelectInput("plotvar", "Choose a variable:", data = mice::boys),
+                    plotOutput("impplot")
+                )
             ),
             
             tabPanel(

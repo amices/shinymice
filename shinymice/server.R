@@ -28,6 +28,13 @@ shinyServer(function(input, output, session) {
         } else if (grepl("\\.csv$", input$upload$datapath, ignore.case = TRUE)) {
             rv$data <- read.csv(input$upload$datapath, header = input$header)
         }
+        shinyFeedback::feedbackWarning(
+            "upload",
+            !is.data.frame(rv$data),
+            "No imputations to visualize. Impute the missing data first and/or choose a different variable."
+        )
+        req(is.data.frame(rv$data))
+        
     })
     
     observeEvent(input$reset, {
@@ -107,8 +114,6 @@ shinyServer(function(input, output, session) {
     })
     
     observe({
-        #waiter::Waiter$new(id = "done")$show()
-        
         if (is.null(rv$mids)) {
             rv$done <- "Not done yet..."
         }
@@ -126,7 +131,7 @@ shinyServer(function(input, output, session) {
         shinyFeedback::feedbackWarning(
             "varnr",
             all(!is.na(rv$mids$data[[input$varnr]])),
-            "This variable is completely observed, so no imputations can be shown"
+            "No imputations to visualize. Impute the missing data first and/or choose a different variable."
         )
         req(!is.null(rv$mids))
         
@@ -134,6 +139,20 @@ shinyServer(function(input, output, session) {
         
     })
     
+    observe(updateSelectInput(session, "plotvar",
+                              choices = names(rv$data)))
+    
+    observe({
+        shinyFeedback::feedbackWarning(
+            "plotvar",
+            all(!is.na(rv$mids$data[[input$plotvar]])),
+            "No imputations to visualize. Impute the missing data first and/or choose a different variable."
+        )
+        req(!is.null(rv$mids))
+        
+        rv$geom <- purrr::map(names(rv$data) %>% setNames(.,names(rv$data)), function(x){gg.mids(rv$mids, x=x, geom = "stripplot")})
+        
+    })
     
     observeEvent(input$mids, {
         waiter::waiter_show(html = waiter::spin_throbber(),
@@ -162,6 +181,10 @@ shinyServer(function(input, output, session) {
     
     output$traceplot <- renderPlot({
         rv$trace[[input$varnr]]
+    })
+    
+    output$impplot <- renderPlot({
+        rv$geom[[input$plotvar]]
     })
     
     output$hist <- renderPlot({
