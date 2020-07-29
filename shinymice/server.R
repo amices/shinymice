@@ -5,6 +5,7 @@ options(htmlwidgets.TOJSON_ARGS = list(na = 'string')) #to show NA values in dt,
 
 shinyServer(
     function(input, output, session) {
+        # initial state reactive values
         rv <-
             reactiveValues(
                 data = NULL,
@@ -14,6 +15,8 @@ shinyServer(
                 done = NULL
             )
         
+        ## Data tab
+        # choose data
         observe({
             if (is.null(input$upload)) {
                 rv$data <- get(input$choice, "package:mice")
@@ -29,36 +32,19 @@ shinyServer(
             } else if (grepl("\\.csv$", input$upload$datapath, ignore.case = TRUE)) {
                 rv$data <- read.csv(input$upload$datapath, header = input$header)
             }
-            shinyFeedback::feedbackWarning(
-                "upload",
-                !is.data.frame(rv$data),
-                "No imputations to visualize. Impute the missing data first and/or choose a different variable."
-            )
-            req(is.data.frame(rv$data))
-            
+            # shinyFeedback::feedbackWarning(
+            #     "upload",
+            #     !is.data.frame(rv$data),
+            #     "No imputations to visualize. Impute the missing data first and/or choose a different variable."
+            # )
+            # req(is.data.frame(rv$data))
         })
-        
+        # reset data
         observeEvent(input$reset, {
             shinyjs::reset("sidebar")
             rv$data <- get(input$choice, "package:mice")
         })
-        
-        # observe({
-        #     if (is.null(input$m)) {
-        #         rv$m <- NULL
-        #     } else {
-        #         rv$m <- input$m
-        #     }
-        # })
-        #
-        # observe({
-        #     if (is.null(input$maxit)) {
-        #         rv$maxit <- NULL
-        #     } else {
-        #         rv$maxit <- input$maxit
-        #     }
-        # })
-        
+        # print table of data
         output$table <-
             renderDT({
                 rv$data %>%  dplyr::mutate_if(is.numeric, round, 2) %>%
@@ -71,16 +57,51 @@ shinyServer(
                     )
             }, server = F)
         
+        ## Explore tab
+        # plot pattern
         output$md_pattern <-
             renderPlot({
                 md.pattern(rv$data)
             })
+        # show correct variables
+        observe(updateSelectInput(session, "histvar1",
+                                  choices = names(rv$data)))
+        # show correct variables
+        observe(updateSelectInput(session, "histvar2",
+                                  choices = names(rv$data)))
+        # plot distributions
+        output$hist <- renderPlot({
+            # choose hist or bar depending of variable type
+            if (is.numeric(rv$data[[input$histvar1]])) {
+                geom <- list(geom_histogram())
+            } else {
+                geom <- list(geom_bar())
+            }
+            # plot
+            rv$data %>%
+                dplyr::mutate(R = factor(
+                    is.na(!!input$histvar2),
+                    levels = c(FALSE, TRUE),
+                    labels = c("Observed", "Imputed")
+                )) %>%  #factor(is.na(!!input$histvar2), levels = c("Observed", "Missing"))) %>%
+                ggplot(aes(x = !!input$histvar1, fill = R)) +
+                geom +
+                mice:::theme_mice +
+                theme(legend.position = "none") +
+                facet_wrap(~ R,
+                           ncol = 1,
+                           labeller = labeller(R = c("Missing", "Observed") %>% setNames(c(
+                               "Imputed", "Observed"
+                           ))))
+        })  
         
+        ## Impute tab
+        # show names data
         output$names <-
             renderPrint({
                 names(rv$data)[1:5]
             })
-        
+        # print call
         output$micecall <- renderText({
             paste0(
                 "mice(data = rv$data, m = ",
@@ -90,13 +111,12 @@ shinyServer(
                 ", printFlag = FALSE)"
             )
         })
-        
+        # impute
         observeEvent(input$mice, {
             # for spinner, see: https://shiny.john-coene.com/waiter/
             waiter::waiter_show(html = waiter::spin_throbber(),
                                 #spin_fading_circles(),
                                 color = waiter::transparent(.5))
-            
             rv$mids <-
                 mice(
                     rv$data,
@@ -110,10 +130,9 @@ shinyServer(
                     # seed = input$miceseed,
                     printFlag = FALSE
                 )
-            
             waiter::waiter_hide()
         })
-        
+        # indicate completion
         observe({
             if (is.null(rv$mids)) {
                 rv$done <- "Not done yet..."
@@ -122,12 +141,20 @@ shinyServer(
                 rv$done <- "Done!"
             }
         })
-        
+        # print
         output$done <- renderPrint(rv$done)
         
+        
+        ## Evaluate tab
+        ## Fluxplot subtab
+        output$fluxplot <-
+            renderPlot(gg.mids(rv$mids, geom = "fluxplot"))
+        
+        ## Traceplot subtab
+        # show correct variables
         observe(updateSelectInput(session, "varnr",
                                   choices = names(rv$data)))
-        
+        # select traceplot variable
         observe({
             shinyFeedback::feedbackWarning(
                 "varnr",
@@ -135,35 +162,18 @@ shinyServer(
                 "No imputations to visualize. Impute the missing data first and/or choose a different variable."
             )
             req(!is.null(rv$mids))
-            
+            # plot
             rv$trace <- gg.mids(rv$mids)
-            
         })
-        
-        observe(updateSelectInput(session, "plotvar",
-                                  choices = names(rv$data)))
-        
-        
-        observe({
-            shinyFeedback::feedbackWarning(
-                "plotvar",
-                all(!is.na(rv$mids$data[[input$plotvar]])),
-                "No imputations to visualize. Impute the missing data first and/or choose a different variable."
-            )
-            req(!is.null(rv$mids))
-            
-            rv$geom <-
-                purrr::map(names(rv$data) %>% setNames(., names(rv$data)), function(x) {
-                    gg.mids(rv$mids, x = x, geom = input$plottype)
-                })
-            
+        # plot traceplot
+        output$traceplot <- renderPlot({
+            rv$trace[[input$varnr]]
         })
-        
+        # add iterations
         observeEvent(input$mids, {
             waiter::waiter_show(html = waiter::spin_throbber(),
                                 #spin_fading_circles(),
                                 color = waiter::transparent(.5))
-            
             shinyFeedback::feedbackWarning(
                 "midsmaxit",
                 is.null(rv$mids),
@@ -178,49 +188,31 @@ shinyServer(
             waiter::waiter_hide()
         })
         
-        observe(updateSelectInput(session, "histvar1",
-                                  choices = names(rv$data)),)
-        
-        observe(updateSelectInput(session, "histvar2",
+        ## Imputations subtab
+        # show correct variables
+        observe(updateSelectInput(session, "plotvar",
                                   choices = names(rv$data)))
-        
-        output$traceplot <- renderPlot({
-            rv$trace[[input$varnr]]
+        # select plotting variable
+        observe({
+            shinyFeedback::feedbackWarning(
+                "plotvar",
+                all(!is.na(rv$mids$data[[input$plotvar]])),
+                "No imputations to visualize. Impute the missing data first and/or choose a different variable."
+            )
+            req(!is.null(rv$mids))
+            # plot
+            rv$geom <-
+                purrr::map(names(rv$data) %>% setNames(., names(rv$data)), function(x) {
+                    gg.mids(rv$mids, x = x, geom = input$plottype)
+                })
         })
-        
+        # plot imputations
         output$impplot <- renderPlot({
             rv$geom[[input$plotvar]]
         })
         
-        output$fluxplot <-
-            renderPlot(gg.mids(rv$mids, geom = "fluxplot"))
-    }
-    
-    
-    output$hist <- renderPlot({
-        if (is.numeric(rv$data[[input$histvar1]])) {
-            geom <- list(geom_histogram())
-        } else {
-            geom <- list(geom_bar())
-        }
-        
-        rv$data %>%
-            dplyr::mutate(R = factor(
-                is.na(!!input$histvar2),
-                levels = c(FALSE, TRUE),
-                labels = c("Observed", "Imputed")
-            )) %>%  #factor(is.na(!!input$histvar2), levels = c("Observed", "Missing"))) %>%
-            ggplot(aes(x = !!input$histvar1, fill = R)) +
-            geom +
-            mice:::theme_mice +
-            theme(legend.position = "none") +
-            facet_wrap(~ R,
-                       ncol = 1,
-                       labeller = labeller(R = c("Missing", "Observed") %>% setNames(c(
-                           "Imputed", "Observed"
-                       ))))
-    })
-    
+    ## Save tab
+    # as csv
     output$savecsv <- downloadHandler(
         filename = function() {
             paste("dataset", ".csv", sep = "")
@@ -229,7 +221,7 @@ shinyServer(
             write.csv(rv$data, file, row.names = FALSE)
         }
     )
-    
+    # as rdata
     output$saverdata <- downloadHandler(
         filename = function() {
             paste("dataset.Rdata")
@@ -239,7 +231,7 @@ shinyServer(
             save(dataset, file = file)
         }
     )
-    
+    # save imps
     output$savemids <- downloadHandler(
         filename = function() {
             paste("mids.Rdata")
