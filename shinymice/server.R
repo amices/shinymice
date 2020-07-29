@@ -60,9 +60,9 @@ shinyServer(
         ## Explore tab
         # plot pattern
         output$md_pattern <-
-            renderPlot({
-                md.pattern(rv$data)
-            })
+            renderPlot(
+                md.pattern(rv$data), res = 96
+            )
         # show correct variables
         observe(updateSelectInput(session, "histvar1",
                                   choices = names(rv$data)))
@@ -93,7 +93,7 @@ shinyServer(
                            labeller = labeller(R = c("Missing", "Observed") %>% setNames(c(
                                "Imputed", "Observed"
                            ))))
-        })  
+        }, res = 96)  
         
         ## Impute tab
         # show names data
@@ -115,7 +115,6 @@ shinyServer(
         observeEvent(input$mice, {
             # for spinner, see: https://shiny.john-coene.com/waiter/
             waiter::waiter_show(html = waiter::spin_throbber(),
-                                #spin_fading_circles(),
                                 color = waiter::transparent(.5))
             rv$mids <-
                 mice(
@@ -148,7 +147,7 @@ shinyServer(
         ## Evaluate tab
         ## Fluxplot subtab
         output$fluxplot <-
-            renderPlot(gg.mids(rv$mids, geom = "fluxplot"))
+            renderPlot({if(is.mids(rv$mids)){gg.mids(rv$mids, geom = "fluxplot")}}, res = 96)  
         
         ## Traceplot subtab
         # show correct variables
@@ -166,9 +165,8 @@ shinyServer(
             rv$trace <- gg.mids(rv$mids)
         })
         # plot traceplot
-        output$traceplot <- renderPlot({
-            rv$trace[[input$varnr]]
-        })
+        output$traceplot <- renderPlot(
+            rv$trace[[input$varnr]], res = 96)
         # add iterations
         observeEvent(input$mids, {
             waiter::waiter_show(html = waiter::spin_throbber(),
@@ -207,9 +205,9 @@ shinyServer(
                 })
         })
         # plot imputations
-        output$impplot <- renderPlot({
-            rv$geom[[input$plotvar]]
-        })
+        output$impplot <- renderPlot(
+            rv$geom[[input$plotvar]], res = 96
+        )
         
     ## Save tab
     # as csv
