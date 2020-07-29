@@ -142,6 +142,7 @@ shinyServer(function(input, output, session) {
     observe(updateSelectInput(session, "plotvar",
                               choices = names(rv$data)))
     
+ 
     observe({
         shinyFeedback::feedbackWarning(
             "plotvar",
@@ -186,6 +187,9 @@ shinyServer(function(input, output, session) {
     output$impplot <- renderPlot({
         rv$geom[[input$plotvar]]
     })
+    
+    output$fluxplot <- renderPlot(gg.mids(rv$mids, geom = "fluxplot"))
+    
     
     output$hist <- renderPlot({
         if (is.numeric(rv$data[[input$histvar1]])) {

@@ -5,7 +5,7 @@
 # data of csv of rdata file --> met verschillende mids objecten om te evalueren
 # nieuwe kleuren: blauw #006CC2, rood #B61A51
 # lighter blue #66a6da, lighter red #d37596
-# icons: "bar-chart-o", "table", "list-alt
+# icons: "bar-chart-o", "table", "list-alt", "sliders-h"
 
 # set-up
 library("shiny")
@@ -168,6 +168,13 @@ shinyUI(
                 "Evaluate",
                 icon = icon("check-square"),
                 tabPanel(
+                    "Model",
+                    icon = icon("balance-scale-right"),
+                    h2("Imputation model influx-outflux"),
+                    helpText("Variables that have more observed information ... Variables that ..."),
+                    plotOutput("fluxplot")
+                ),
+                tabPanel(
                     "Convergence",
                     icon = icon("chart-line"),
                     #icon("list-alt")
@@ -188,6 +195,7 @@ shinyUI(
                     "Imputations",
                     icon = icon("chart-area"),
                     h2("Visualize imputations to inspect"),
+                    selectInput("plottype", "Choose a visualization:", c("bwplot", "densityplot", "histogram", "stripplot", "xyplot")),
                     varSelectInput("plotvar", "Choose a variable:", data = mice::boys),
                     plotOutput("impplot")
                 )
