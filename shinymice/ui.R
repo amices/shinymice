@@ -7,17 +7,21 @@
 # lighter blue #66a6da, lighter red #d37596
 # icons: "bar-chart-o", "table", "list-alt", "sliders-h"
 # check use of observe where reactive would be better, see https://mastering-shiny.org/basic-reactivity.html#observers
+# make plots interactive with hoover and nearPoint, or Plotly, see https://plotly-r.com/
+# images: https://unsplash.com/
 
 # set-up
-library("shiny")
-library("shinythemes")
-library("mice")
-library("DT")
-library("data.table")
-#library("naniar")
-library("rmarkdown")
-library("ggplot2")
-#library("shinycssloaders")
+library(warn.conflicts = FALSE, "shiny")
+library(warn.conflicts = FALSE, "shinythemes")
+library(warn.conflicts = FALSE, "mice")
+library(warn.conflicts = FALSE, "DT")
+library(warn.conflicts = FALSE, "data.table")
+# library(warn.conflicts = FALSE, "naniar")
+library(warn.conflicts = FALSE, "rmarkdown")
+library(warn.conflicts = FALSE, "ggplot2")
+# library(warn.conflicts = FALSE, "shinycssloaders")
+# library(warn.conflicts = FALSE, "thematic") # thematic_on(font = "auto")
+
 
 shinyUI(
     fluidPage(

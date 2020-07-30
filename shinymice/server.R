@@ -20,7 +20,7 @@ shinyServer(
         observe({
             if (is.null(input$upload)) {
                 rv$data <- get(input$choice, "package:mice")
-            } else if (grepl("\\.Rdata$", input$upload$datapath, ignore.case = TRUE)) {
+            } else if (grepl("\\.Rdata$", input$upload$datapath, ignore.case = TRUE)) { # or use tools::file_ext(), see https://mastering-shiny.org/action-transfer.html
                 env <- attach(input$upload$datapath)
                 nm <- ls(name = env)
                 if (is.mids(env[[nm]])) {
@@ -78,6 +78,13 @@ shinyServer(
             } else {
                 geom <- list(geom_bar())
             }
+            # define facet labels
+            labs <- c(
+                paste0("Missing ", input$histvar2), 
+                paste0("Observed ", input$histvar2)) %>% 
+                setNames(c(
+                    "Imputed", "Observed"
+                ))
             # plot
             rv$data %>%
                 dplyr::mutate(R = factor(
@@ -92,13 +99,12 @@ shinyServer(
                 facet_wrap(~ R,
                            ncol = 1,
                            scales = rv$scalehist,
-                           labeller = labeller(R = c("Missing", "Observed") %>% setNames(c(
-                               "Imputed", "Observed"
-                           ))))
+                           labeller = labeller(R = labs))
+            
         }, res = 96)  
         
         ## Impute tab
-        # show names data
+        # show names data or name of df with input$file$name, see https://mastering-shiny.org/action-transfer.html
         output$names <-
             renderPrint({
                 names(rv$data)[1:5]
