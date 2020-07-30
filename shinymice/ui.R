@@ -126,9 +126,15 @@ shinyUI(
                     icon = icon("chart-bar"),
                     #icon("list-alt")
                     h2("Inspect relations before imputation"),
-                    varSelectInput("histvar1", "Choose a variable to plot:", data = mice::boys),
-                    varSelectInput("histvar2", "Conditional on missingness in:", data = mice::boys),
-                    plotOutput("hist", width = "auto", height = "460px")
+                    br(),
+                    fluidRow(column(3, 
+                                    varSelectInput("histvar1", "Choose a variable to plot:", data = mice::boys),
+                                    varSelectInput("histvar2", "Conditional on missingness in:", data = mice::boys),
+                                    checkboxInput("scalehist", "Fixed heigth y-axis", value = TRUE),
+                    ),
+                    column(9, 
+                           plotOutput("hist", width = "auto", height = "520px")
+))
                 )
             ),
             
@@ -198,13 +204,17 @@ shinyUI(
                     "Imputations",
                     icon = icon("chart-area"),
                     h2("Visualize imputations to inspect"),
-                    selectInput(
-                        "plottype",
-                        "Choose a visualization:",
-                        c("bwplot", "densityplot", "histogram", "stripplot")
-                    ),
-                    varSelectInput("plotvar", "Choose a variable:", data = mice::boys),
-                    plotOutput("impplot")
+                    br(),
+                    fluidRow(column(3,
+                                     selectInput(
+                                         "plottype",
+                                         "Choose a visualization:",
+                                         c("bwplot", "densityplot", "histogram", "stripplot")
+                                     ),
+                                     varSelectInput("plotvar", "Choose a variable:", data = mice::boys),
+                    ), column(9,
+                              plotOutput("impplot")
+                    ))
                 )
             ),
             
@@ -213,19 +223,18 @@ shinyUI(
                 #add sav download
                 icon = icon("file-download"),
                 h2("Download the dataset or imputations"),
+                br(),
                 tags$b("Download the dataset:"),
-                br(),
-                br(),
-                downloadButton("savecsv", "Download dataset as CSV file"),
-                br(),
-                br(),
-                downloadButton("saverdata", "Download dataset as RData file"),
-                br(),
+                fluidRow(column(6, 
+                                downloadButton("savecsv", "Download dataset as CSV file"),
+                ), column(6, 
+                           downloadButton("saverdata", "Download dataset as RData file"),
+                )),
                 br(),
                 tags$b("Download the imputations:"),
-                br(),
-                br(),
-                downloadButton("savemids", "Download imputations as RData file")
+                fluidRow(column(6, 
+                                downloadButton("savemids", "Download imputations as RData file")
+                ))
             ),
             
             navbarMenu(

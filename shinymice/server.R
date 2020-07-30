@@ -69,6 +69,7 @@ shinyServer(
         # show correct variables
         observe(updateSelectInput(session, "histvar2",
                                   choices = names(rv$data)))
+        observe({if(input$scalehist){rv$scalehist <- "fixed"} else {rv$scalehist <- "free_y"}})
         # plot distributions
         output$hist <- renderPlot({
             # choose hist or bar depending of variable type
@@ -90,6 +91,7 @@ shinyServer(
                 theme(legend.position = "none") +
                 facet_wrap(~ R,
                            ncol = 1,
+                           scales = rv$scalehist,
                            labeller = labeller(R = c("Missing", "Observed") %>% setNames(c(
                                "Imputed", "Observed"
                            ))))
