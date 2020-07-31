@@ -2,9 +2,9 @@
 conditional_hist <- function(dat = rv$data, x = input$histvar1, y = input$histvar2, scaler = rv$scalehist){
 # choose hist or bar depending of variable type
 if (is.numeric(dat[[x]])) {
-  geom <- list(geom_histogram(na.rm = TRUE, ...))
+  geom <- list(geom_histogram(na.rm = TRUE))
 } else {
-  geom <- list(geom_bar(na.rm = TRUE, ...))
+  geom <- list(geom_bar(na.rm = TRUE))
 }
 # define facet labels
 labs <- c(
