@@ -9,11 +9,10 @@ shinyServer(
         rv <-
             reactiveValues(
                 data = NULL,
-                mids = NULL,
-                m = NULL,
-                maxit = NULL,
-                done = NULL
-            )
+                mids = NULL
+                )
+        
+        vars <- reactive(names(rv$data))
         
         ## Data tab
         # choose data
@@ -50,7 +49,7 @@ shinyServer(
                 rv$data %>%  dplyr::mutate_if(is.numeric, round, 2) %>%
                     datatable(options = list(pageLength = 5)) %>%
                     formatStyle(
-                        names(rv$data),
+                        vars(),
                         target = "cell",
                         color = styleEqual("NA", "#B61A51"),
                         fontWeight = styleEqual("NA", "bold")
@@ -65,49 +64,49 @@ shinyServer(
             )
         # show correct variables
         observe(updateSelectInput(session, "histvar1",
-                                  choices = names(rv$data)))
+                                  choices = vars()))
         # show correct variables
         observe(updateSelectInput(session, "histvar2",
-                                  choices = names(rv$data)))
+                                  choices = vars()))
         observe({if(input$scalehist){rv$scalehist <- "fixed"} else {rv$scalehist <- "free_y"}})
         # plot distributions
         output$hist <- renderPlot({
-            # choose hist or bar depending of variable type
-            if (is.numeric(rv$data[[input$histvar1]])) {
-                geom <- list(geom_histogram())
-            } else {
-                geom <- list(geom_bar())
-            }
-            # define facet labels
-            labs <- c(
-                paste0("Missing ", input$histvar2), 
-                paste0("Observed ", input$histvar2)) %>% 
-                setNames(c(
-                    "Imputed", "Observed"
-                ))
-            # plot
-            rv$data %>%
-                dplyr::mutate(R = factor(
-                    is.na(!!input$histvar2),
-                    levels = c(FALSE, TRUE),
-                    labels = c("Observed", "Imputed")
-                )) %>%  #factor(is.na(!!input$histvar2), levels = c("Observed", "Missing"))) %>%
-                ggplot(aes(x = !!input$histvar1, fill = R)) +
-                geom +
-                mice:::theme_mice +
-                theme(legend.position = "none") +
-                facet_wrap(~ R,
-                           ncol = 1,
-                           scales = rv$scalehist,
-                           labeller = labeller(R = labs))
-            
+          # # choose hist or bar depending of variable type
+          # if (is.numeric(rv$data[[input$histvar1]])) {
+          #   geom <- list(geom_histogram())
+          # } else {
+          #   geom <- list(geom_bar())
+          # }
+          # # define facet labels
+          # labs <- c(
+          #   paste0("Missing ", input$histvar2), 
+          #   paste0("Observed ", input$histvar2)) %>% 
+          #   setNames(c(
+          #     "Imputed", "Observed"
+          #   ))
+          # # plot
+          # rv$data %>%
+          #   dplyr::mutate(R = factor(
+          #     is.na(!!input$histvar2),
+          #     levels = c(FALSE, TRUE),
+          #     labels = c("Observed", "Imputed")
+          #   )) %>%  #factor(is.na(!!input$histvar2), levels = c("Observed", "Missing"))) %>%
+          #   ggplot(aes(x = !!input$histvar1, fill = R)) +
+          #   geom +
+          #   mice:::theme_mice +
+          #   theme(legend.position = "none") +
+          #   facet_wrap(~ R,
+          #              ncol = 1,
+          #              scales = rv$scalehist,
+          #              labeller = labeller(R = labs))
+          conditional_hist(dat = rv$data, x = input$histvar1, y = input$histvar2, scaler = rv$scalehist)
         }, res = 96)  
         
         ## Impute tab
         # show names data or name of df with input$file$name, see https://mastering-shiny.org/action-transfer.html
         output$names <-
             renderPrint({
-                names(rv$data)[1:5]
+                vars() %>% .[1:5]
             })
         # print call
         output$micecall <- renderText({
@@ -157,7 +156,7 @@ shinyServer(
         ## Traceplot subtab
         # show correct variables
         observe(updateSelectInput(session, "varnr",
-                                  choices = names(rv$data)))
+                                  choices = vars()))
         # select traceplot variable
         observe({
             shinyFeedback::feedbackWarning(
@@ -193,25 +192,27 @@ shinyServer(
         
         ## Imputations subtab
         # show correct variables
-        observe(updateSelectInput(session, "plotvar",
-                                  choices = names(rv$data)))
+        observe(updateSelectInput(session, "midsvar1",
+                                  choices = vars()))
+        observe(updateSelectInput(session, "midsvar2",
+                                  choices = vars()))
         # select plotting variable
         observe({
             shinyFeedback::feedbackWarning(
-                "plotvar",
-                all(!is.na(rv$mids$data[[input$plotvar]])),
+                "midsvar1",
+                all(!is.na(rv$mids$data[[input$midsvar1]])),
                 "No imputations to visualize. Impute the missing data first and/or choose a different variable."
             )
             req(!is.null(rv$mids))
             # plot
             rv$geom <-
-                purrr::map(names(rv$data) %>% setNames(., names(rv$data)), function(x) {
-                    gg.mids(rv$mids, x = x, geom = input$plottype)
+                purrr::map(vars() %>% setNames(., vars()), function(x) {
+                    gg.mids(rv$mids, x = x, y = rv$mids[[input$midsvar2]], geom = input$plottype)
                 })
         })
         # plot imputations
         output$impplot <- renderPlot(
-            rv$geom[[input$plotvar]], res = 96
+            rv$geom[[input$midsvar1]], res = 96
         )
         
     ## Save tab

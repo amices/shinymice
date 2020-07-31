@@ -213,9 +213,11 @@ shinyUI(
                                      selectInput(
                                          "plottype",
                                          "Choose a visualization:",
-                                         c("bwplot", "densityplot", "histogram", "stripplot")
+                                         c("bwplot", "densityplot", "histogram", "stripplot", "xyplot")
                                      ),
-                                     varSelectInput("plotvar", "Choose a variable:", data = mice::boys),
+                                    varSelectInput("midsvar1", "Choose a variable:", data = mice::boys),
+                                    varSelectInput("midsvar2", "Choose a second variable (for `xyplot` only):", data = mice::boys),
+                                    
                     ), column(9,
                               plotOutput("impplot")
                     ))
