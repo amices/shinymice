@@ -1,0 +1,13 @@
+/* #for right aligned navbar, see https://stackoverflow.com/questions/35584644/r-shiny-navbarpage-right-aligned-tabs */
+
+.navbar .navbar-nav {float: right}
+.navbar .navbar-header {float: right}
+
+#themeToggle, .visually-hidden{
+position: absolute;
+width: 1px;
+height: 1px;
+clip: rect(0 0 0 0);
+clip: rect(0, 0, 0, 0);
+overflow: hidden;
+};

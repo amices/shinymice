@@ -1,63 +1,29 @@
 # shinymice UI
 
-# TO DO:
-# menu bar naar dropdown
-# data of csv of rdata file --> met verschillende mids objecten om te evalueren
-# nieuwe kleuren: blauw #006CC2, rood #B61A51
-# lighter blue #66a6da, lighter red #d37596
-# icons: "bar-chart-o", "table", "list-alt", "sliders-h"
-# check use of observe where reactive would be better, see https://mastering-shiny.org/basic-reactivity.html#observers
-# make plots interactive with hoover and nearPoint, or Plotly, see https://plotly-r.com/
-# images: https://unsplash.com/
-
 # set-up
 library(warn.conflicts = FALSE, "shiny")
 library(warn.conflicts = FALSE, "shinythemes")
 library(warn.conflicts = FALSE, "mice")
 library(warn.conflicts = FALSE, "DT")
 library(warn.conflicts = FALSE, "data.table")
-# library(warn.conflicts = FALSE, "naniar")
 library(warn.conflicts = FALSE, "rmarkdown")
 library(warn.conflicts = FALSE, "ggplot2")
-# library(warn.conflicts = FALSE, "shinycssloaders")
-# library(warn.conflicts = FALSE, "thematic") # thematic_on(font = "auto")
-
+# library(warn.conflicts = FALSE, "thematic") # for ggplot background that converts with the shiny theme, use thematic::thematic_on(font = "auto")
 
 shinyUI(
     fluidPage(
         title = "shinymice",
-        theme = shinythemes::shinytheme("flatly"),
         # for logo/name as browser icon, see https://stackoverflow.com/questions/51688463/shiny-page-title-and-image
         list(tags$head(
             HTML('<link rel="icon" href="logo_square.png"
                 type="image/png" />')
         )),
+        # load functions
         shinyjs::useShinyjs(),
         shinyFeedback::useShinyFeedback(),
         waiter::use_waiter(),
-        # for right aligned navbar, see https://stackoverflow.com/questions/35584644/r-shiny-navbarpage-right-aligned-tabs
-        tags$head(tags$style(
-            HTML(
-                "
-          .navbar .navbar-nav {float: right}
-          .navbar .navbar-header {float: right}
-        "
-            )
-        )),
-        tags$head(tags$style(
-            HTML(
-                "#themeToggle, .visually-hidden {
-                position: absolute;
-                width: 1px;
-                height: 1px;
-                clip: rect(0 0 0 0);
-                clip: rect(0, 0, 0, 0);
-                overflow: hidden;
-                };
-    "
-            )
-        )),
-        
+        includeCSS(path = "www/right_align_nav.CSS"),
+        theme = shinythemes::shinytheme("flatly"),
         navbarPage(
             title = div(
                 img(src = "logo_wide.png", style = "width:155px;position:fixed;left:30px;")
@@ -66,6 +32,7 @@ shinyUI(
             collapsible = TRUE,
             selected = "Data",
             # add theme toggle in header, for themes, see below, for placement see https://stackoverflow.com/questions/56873774/change-css-properties-of-shiny-checkbox
+            includeScript(path = "www/theme_switch.JS"),
             header = div(
                 checkboxInput(
                     inputId = "themeToggle",
@@ -131,14 +98,18 @@ shinyUI(
                     #icon("list-alt")
                     h2("Inspect relations before imputation"),
                     br(),
-                    fluidRow(column(3, 
-                                    varSelectInput("histvar1", "Choose a variable to plot:", data = mice::boys),
-                                    varSelectInput("histvar2", "Conditional on missingness in:", data = mice::boys),
-                                    checkboxInput("scalehist", "Fixed heigth y-axis", value = TRUE),
-                    ),
-                    column(9, 
-                           plotOutput("hist", width = "auto", height = "520px")
-))
+                    fluidRow(
+                        column(
+                            3,
+                            varSelectInput("histvar1", "Choose a variable to plot:", data = mice::boys),
+                            varSelectInput("histvar2", "Conditional on missingness in:", data = mice::boys),
+                            checkboxInput("scalehist", "Fixed heigth y-axis", value = TRUE),
+                        ),
+                        column(9,
+                               plotOutput(
+                                   "hist", width = "auto", height = "520px"
+                               ))
+                    )
                 )
             ),
             
@@ -209,18 +180,25 @@ shinyUI(
                     icon = icon("chart-area"),
                     h2("Visualize imputations to inspect"),
                     br(),
-                    fluidRow(column(3,
-                                     selectInput(
-                                         "plottype",
-                                         "Choose a visualization:",
-                                         c("bwplot", "densityplot", "histogram", "stripplot", "xyplot")
-                                     ),
-                                    varSelectInput("midsvar1", "Choose a variable:", data = mice::boys),
-                                    varSelectInput("midsvar2", "Choose a second variable (for `xyplot` only):", data = mice::boys),
-                                    
-                    ), column(9,
-                              plotOutput("impplot")
-                    ))
+                    fluidRow(
+                        column(
+                            3,
+                            selectInput(
+                                "plottype",
+                                "Choose a visualization:",
+                                c("bwplot", "densityplot", "histogram", "stripplot", "xyplot")
+                            ),
+                            varSelectInput("midsvar1", "Choose a variable:", data = mice::boys),
+                            varSelectInput(
+                                "midsvar2",
+                                "Choose a second variable (for `xyplot` only):",
+                                data = mice::boys
+                            ),
+                            
+                        ),
+                        column(9,
+                               plotOutput("impplot"))
+                    )
                 )
             ),
             
@@ -231,32 +209,24 @@ shinyUI(
                 h2("Download the dataset or imputations"),
                 br(),
                 tags$b("Download the dataset:"),
-                fluidRow(column(6, 
-                                downloadButton("savecsv", "Download dataset as CSV file"),
-                ), column(6, 
-                           downloadButton("saverdata", "Download dataset as RData file"),
+                fluidRow(column(
+                    6,
+                    downloadButton("savecsv", "Download dataset as CSV file"),
+                ), column(
+                    6,
+                    downloadButton("saverdata", "Download dataset as RData file"),
                 )),
                 br(),
                 tags$b("Download the imputations:"),
-                fluidRow(column(6, 
-                                downloadButton("savemids", "Download imputations as RData file")
+                fluidRow(column(
+                    6,
+                    downloadButton("savemids", "Download imputations as RData file")
                 ))
             ),
             
             navbarMenu(
                 "More",
                 icon = icon("ellipsis-h"),
-                # make options appear on hover, see https://stackoverflow.com/questions/34597421/dropdown-bootstrap-menu-with-unfold-effect
-                tags$script(
-                    HTML(
-                        "$('.navbar .dropdown').hover(function() {
-                $(this).find('.dropdown-menu').first().stop(true, true).slideDown();
-            }, function() {
-                $(this).find('.dropdown-menu').first().stop(true, true).slideUp()
-            });"
-                    )
-                ),
-                
                 tabPanel(
                     "About",
                     icon = icon("info-circle"),
@@ -279,9 +249,7 @@ shinyUI(
                                      a(href = "https://github.com/gerkovink/shinyMice")
                                  )
                              ))
-                ), 
-                includeScript(path = "www/theme_switch.JS")
-            )
+                )            )
         )
     )
 )

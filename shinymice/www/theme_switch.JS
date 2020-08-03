@@ -45,4 +45,12 @@ toggle.addEventListener('input', function(event) {
         head.removeChild(extraDarkThemeElement);
         head.appendChild(lightTheme);
     }
-})
+});
+
+//                 # make options appear on hover, see https://stackoverflow.com/questions/34597421/dropdown-bootstrap-menu-with-unfold-effect
+
+$('.navbar .dropdown').hover(function() {
+                $(this).find('.dropdown-menu').first().stop(true, true).slideDown();
+            }, function() {
+                $(this).find('.dropdown-menu').first().stop(true, true).slideUp()
+            });
