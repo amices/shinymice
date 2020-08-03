@@ -38,19 +38,13 @@ shinyServer(
         observeEvent(input$reset, {
             shinyjs::reset("sidebar")
             rv$data <- get(input$choice, "package:mice")
-            rv$nm <- "boys"
+            rv$nm <- input$choice
         })
+        
         # tablutate data
         output$table <-
             renderDT({
-                rv$data %>%  dplyr::mutate_if(is.numeric, round, 2) %>%
-                    datatable(options = list(pageLength = 5)) %>%
-                    formatStyle(
-                        vars(),
-                        target = "cell",
-                        color = styleEqual("NA", "#B61A51"),
-                        fontWeight = styleEqual("NA", "bold")
-                    )
+                DT_NA_highlight(rv$data, vars())                   
             }, server = F)
         
         ## Explore tab
@@ -59,12 +53,14 @@ shinyServer(
             renderPlot(
                 md.pattern(rv$data), res = 96
             )
+        
+        # update variable choices automatically
+        varsUpdate <- function(UI_name){updateSelectInput(session, UI_name, choices = vars())}
+        
         # show correct variables
-        observe(updateSelectInput(session, "histvar1",
-                                  choices = vars()))
-        # show correct variables
-        observe(updateSelectInput(session, "histvar2",
-                                  choices = vars()))
+        observe(varsUpdate("histvar1"))
+        observe(varsUpdate("histvar2"))
+        
         observe({if(input$scalehist){rv$scalehist <- "fixed"} else {rv$scalehist <- "free_y"}})
         # plot distributions
         output$hist <- renderPlot({
@@ -122,8 +118,7 @@ shinyServer(
         
         ## Traceplot subtab
         # show correct variables
-        observe(updateSelectInput(session, "varnr",
-                                  choices = vars()))
+        observe(varsUpdate("varnr"))
         # select traceplot variable
         observe({
             shinyFeedback::feedbackWarning(
@@ -159,10 +154,8 @@ shinyServer(
         
         ## Imputations subtab
         # show correct variables
-        observe(updateSelectInput(session, "midsvar1",
-                                  choices = vars()))
-        observe(updateSelectInput(session, "midsvar2",
-                                  choices = vars()))
+        observe(varsUpdate("midsvar1"))
+        observe(varsUpdate("midsvar2"))
         # select plotting variable
         observe({
             shinyFeedback::feedbackWarning(
@@ -178,12 +171,6 @@ shinyServer(
             )
             if(input$plottype == "xyplot"){
             req(input$midsvar1!=input$midsvar2)}
-            # plot
-            # rv$geom <-
-            #     purrr::map(vars() %>% setNames(., vars()), function(x) {
-            #         gg.mids(rv$imp, x = x, y = input$midsvar2, geom = input$plottype)
-            #     })
-            
         })
         # plot imputations
         output$impplot <- renderPlot(
