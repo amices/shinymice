@@ -11,7 +11,7 @@ shinyServer(
                 data = NULL,
                 imp = NULL
                 )
-        
+        # define reactives
         vars <- reactive(names(rv$data))
         
         ## Data tab
@@ -19,31 +19,28 @@ shinyServer(
         observe({
             if (is.null(input$upload)) {
                 rv$data <- get(input$choice, "package:mice")
+                rv$nm <- input$choice
             } else if (grepl("\\.Rdata$", input$upload$datapath, ignore.case = TRUE)) { # or use tools::file_ext(), see https://mastering-shiny.org/action-transfer.html
                 env <- attach(input$upload$datapath)
-                nm <- ls(name = env)
-                if (is.mids(env[[nm]])) {
-                    rv$imp <- env[[nm]]
-                    rv$data <- env[[nm]][["data"]]
+                rv$nm <- ls(name = env)
+                if (is.mids(env[[rv$nm]])) {
+                    rv$imp <- env[[rv$nm]]
+                    rv$data <- env[[rv$nm]][["data"]]
                 } else {
-                    rv$data <- env[[nm]]
+                    rv$data <- env[[rv$nm]]
                 }
             } else if (grepl("\\.csv$", input$upload$datapath, ignore.case = TRUE)) {
                 rv$data <- read.csv(input$upload$datapath, header = input$header)
+                rv$nm <- tools::file_path_sans_ext(input$upload$name)
             }
-            # shinyFeedback::feedbackWarning(
-            #     "upload",
-            #     !is.data.frame(rv$data),
-            #     "No imputations to visualize. Impute the missing data first and/or choose a different variable."
-            # )
-            # req(is.data.frame(rv$data))
         })
         # reset data
         observeEvent(input$reset, {
             shinyjs::reset("sidebar")
             rv$data <- get(input$choice, "package:mice")
+            rv$nm <- "boys"
         })
-        # print table of data
+        # tablutate data
         output$table <-
             renderDT({
                 rv$data %>%  dplyr::mutate_if(is.numeric, round, 2) %>%
@@ -76,10 +73,8 @@ shinyServer(
         
         ## Impute tab
         # show names data or name of df with input$file$name, see https://mastering-shiny.org/action-transfer.html
-        output$names <-
-            renderPrint({
-                vars() %>% .[1:5]
-            })
+        # print table of data
+        output$datname <- renderPrint(rv$nm)
         # print call
         output$micecall <- renderText({
             paste0(

@@ -119,8 +119,7 @@ shinyUI(
                 icon = icon("calculator"),
                 h2("Impute missing data using `mice`"),
                 tags$b("Dataset to impute"),
-                verbatimTextOutput("names"),
-                helpText("Showing only the first 5 variable names to check what data is used."),
+                verbatimTextOutput("datname"),
                 numericInput(
                     "m",
                     label = "Number of imputations",
@@ -142,7 +141,7 @@ shinyUI(
                 actionButton("mice", "Impute", icon = icon("hourglass-start")),
                 helpText("This may take a minute."),
                 br(),
-                verbatimTextOutput("done") #%>% withSpinner(color="#0dc5c1")
+                verbatimTextOutput("done") 
                 #plotOutput("traceplot")
             ),
             
@@ -161,7 +160,6 @@ shinyUI(
                 tabPanel(
                     "Convergence",
                     icon = icon("chart-line"),
-                    #icon("list-alt")
                     h2("Evaluate convergence"),
                     varSelectInput("varnr", "Choose a variable:", data = mice::boys),
                     plotOutput("traceplot"),
@@ -231,10 +229,10 @@ shinyUI(
                     "About",
                     icon = icon("info-circle"),
                     h2("About this app"),
-                    fluidRow(column(6,
+                    fluidRow(column(8,
                                     includeMarkdown("www/about.Rmd")),
                              column(
-                                 3,
+                                 4,
                                  img(
                                      class = "img-polaroid",
                                      src = paste0(
@@ -245,7 +243,7 @@ shinyUI(
                                  tags$small(
                                      "Impression of the hex sticker ",
                                      "for the interactive evaulation ",
-                                     "suite for multiple imputation 'ShinyMICE'",
+                                     "suite for multiple imputation `shinymice`",
                                      a(href = "https://github.com/gerkovink/shinyMice")
                                  )
                              ))
