@@ -16,13 +16,14 @@ mpat <- md.pattern(boys, plot = FALSE)
 Rgen <- is.na(boys$gen)
 levels(Rgen) <- c("Missing", "Observed")
 data <- boys %>% as_tibble %>% cbind(Rgen)
-histogram( ~ gen, data = boys)
-histogram( ~ age | Rgen, data = boys)
+lattice::histogram( ~ gen, data = boys)
+lattice::histogram( ~ age | Rgen, data = boys)
 # now with ggplot:
 data %>%
   ggplot(aes(x = age)) +
   geom_histogram() +
-  facet_wrap( ~ Rgen) # optional: use argument "ncols = 1"
+  theme_classic() +
+  facet_wrap( ~ is.na(gen)) # optional: use argument "ncols = 1"
 # now with the right colors:
 colorspace::qualitative_hcl(1, 240, 100, 40) #observed
 ## #006CC2
@@ -79,3 +80,4 @@ AIC(out_all, out_int)
 # or use anova
 anova(out_int, out_Rgen)
 anova(out_int_gen, out_gen)
+

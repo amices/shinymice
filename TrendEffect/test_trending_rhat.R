@@ -5,7 +5,8 @@
 library(dplyr)
 library(ggplot2)
 library(patchwork)
-source("Functions/ComputeDiagnostics.R")
+library(purrr)
+source("Thesis/Functions/ComputeDiagnostics.R")
 set.seed(11)
 n <- 1000
 
@@ -27,35 +28,39 @@ theme_update(
 
 # create data
 dat <- data.frame(
-  stat1 = rnorm(n, 0, 1),
-  stat2 = rnorm(n, 0, 1),
-  up1 = rnorm(n, 0, 1) + 1:n / (0.2 * n),
-  up2 = rnorm(n, 0, 1) + 1:n / (0.2 * n),
-  over1 = rnorm(n, 0, 1) + ((n - (1:n)) / (0.5 * n)) ^ 2,
-  over2 = rnorm(n, 0, 1) - ((n - (1:n)) / (0.5 * n)) ^ 2,
-  t = 1:n
+  t = rep(1:n,3),
+  chain1 = c(
+    rnorm(n, 0, 1),
+    rnorm(n, 0, 1) + 1:n / (0.2 * n),
+    rnorm(n, 0, 1) + ((n - (1:n)) / (0.5 * n)) ^ 2),
+  chain2 = c(
+    rnorm(n, 0, 1), 
+    rnorm(n, 0, 1) + 1:n / (0.2 * n),
+    rnorm(n, 0, 1) - ((n - (1:n)) / (0.5 * n)) ^ 2),
+  scenario = c(rep("stat", n), rep("trend", n), rep("overd", n)) 
 )
 
 # plot data
-chains <- dat %>%
+chains <- dat %>% 
   ggplot() +
-  geom_line(aes(x = t, y = stat1), color = paint3[1]) +
-  geom_line(aes(x = t, y = stat2), color = paint3[1]) +
-  geom_line(aes(x = t, y = up1), color = paint3[2]) +
-  geom_line(aes(x = t, y = up2), color = paint3[2]) +
-  geom_line(aes(x = t, y = over1), color = paint3[3]) +
-  geom_line(aes(x = t, y = over2), color = paint3[3]) +
+  geom_line(aes(x = t, y = chain1, color = scenario)) +
+  geom_line(aes(x = t, y = chain2, color = scenario)) +
   xlab("Iteration number") +
-  ylab("Chain value")
+  ylab("Chain value") +
+  labs(color = "Trending scenario")
+
 
 
 # check convergence
-stat <-
-  convergence(dat[, c("stat1", "stat2")]) %>% cbind(sim = "Stationary")
-trend <-
-  convergence(dat[, c("up1", "up2")]) %>% cbind(sim = "Upward trending")
-diver <-
-  convergence(dat[, c("over1", "over2")]) %>% cbind(sim = "Over-dispersion")
+stat <- dat %>% 
+  filter(scenario == "stat") %>% select(c("chain1", "chain2")) %>% 
+  convergence() %>% cbind(sim = "Stationary")
+trend <- dat %>% 
+  filter(scenario == "trend") %>% select(c("chain1", "chain2")) %>% 
+  convergence() %>% cbind(sim = "Upward trending")
+diver <- dat %>% 
+  filter(scenario == "overd") %>% select(c("chain1", "chain2")) %>% 
+  convergence() %>% cbind(sim = "Over-dispersion")
 # combine
 results_trend <- rbind(stat, trend, diver)
 
@@ -67,7 +72,6 @@ rhat <-
              lwd = 1) +
   geom_point(size = .25, na.rm = TRUE) +
   geom_line(size = .25, na.rm = TRUE) +
-  scale_colour_manual(values = paint3) +
   xlab("Iteration number") +
   ylab(bquote("Adapted" ~ widehat(R))) +
   labs(color = "Trending scenario")
@@ -79,7 +83,6 @@ old_rhat <-
              lwd = 1) +
   geom_point(size = .25, na.rm = TRUE) +
   geom_line(size = .25, na.rm = TRUE) +
-  scale_colour_manual(values = paint3) +
   xlab("Iteration number") +
   ylab(bquote("Original" ~ widehat(R))) +
   labs(color = "Trending scenario")
@@ -91,9 +94,9 @@ ac <-
              lwd = 1) +
   geom_point(size = .25, na.rm = TRUE) +
   geom_line(size = .25, na.rm = TRUE) +
-  scale_colour_manual(values = paint3) +
-  xlab("Iteration number") +
+
+    xlab("Iteration number") +
   ylab("Autocorrelation") +
   labs(color = "Trending scenario")
 
-chains + rhat + old_rhat + ac + plot_layout(guides = "collect", ncol = 1)
+chains + ac + old_rhat + rhat + plot_layout(ncol = 1)

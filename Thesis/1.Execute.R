@@ -23,9 +23,9 @@ library(tidyverse) #version 1.3.0
 # library(magrittr)
 
 # load simulation/evaluation functions
-source("Functions/CreateData.R")
-source("Functions/RunSimulationOnce.R")
-source("Functions/EvaluateResults.R")
+source("Thesis/Functions/CreateData.R")
+source("Thesis/Functions/RunSimulationOnce.R")
+source("Thesis/Functions/EvaluateResults.R")
 
 # simulation parameters
 populationsize <- 1000 #nr of observations in simulated dataset
