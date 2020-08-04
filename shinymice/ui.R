@@ -15,7 +15,7 @@ shinyUI(
         title = "shinymice",
         # for logo/name as browser icon, see https://stackoverflow.com/questions/51688463/shiny-page-title-and-image
         list(tags$head(
-            HTML('<link rel="icon" href="logo_square.png"
+            HTML('<link rel="icon" href="www/logo_square.png"
                 type="image/png" />')
         )),
         # load functions

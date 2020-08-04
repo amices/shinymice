@@ -29,3 +29,4 @@ dat %>%
              scales = scaler,
              labeller = labeller(R = labs))
 }
+
