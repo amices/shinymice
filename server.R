@@ -13,7 +13,7 @@ shinyServer(
             switch(ext,
                    csv = vroom::vroom(input$upload$datapath, delim = ","),
                    tsv = vroom::vroom(input$upload$datapath, delim = "\t"),
-                   Rdata = get_Rdata_file(path = input$upload$datapath),
+                   Rdata = get_rdata_file(path = input$upload$datapath),
                    validate("Invalid file; Please upload a .csv, .tsv or .Rdata file")
             )
         })
