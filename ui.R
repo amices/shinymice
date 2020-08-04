@@ -52,24 +52,25 @@ shinyUI(
                         h2("Select a dataset"),
                         fileInput(
                             "upload",
-                            label = tags$b("Upload a CSV or RData file..."),
+                            label = tags$b("Upload a dataset with missing values"),
                             accept = c(
                                 "text/csv",
                                 "text/comma-separated-values,text/plain",
                                 ".csv",
-                                ".Rdata"
+                                ".Rdata",
+                                ".tsv"
                             )
                         ),
                         div(
                             style = "margin-top:-1em;",
                             checkboxInput("header", label = "CSV file contains variable names", value = TRUE)
                         ),
-                        selectInput(
-                            "choice",
-                            label = tags$b("...or use `mice` data"),
-                            choices = data(package = "mice")$results[-c(5, 7, 17, 18), "Item"]
-                        ),
-                        actionButton("reset", "Reset", icon = icon("redo")),
+                        # selectInput(
+                        #     "choice",
+                        #     label = tags$b("...or use `mice` data"),
+                        #     choices = data(package = "mice")$results[-c(5, 7, 17, 18), "Item"]
+                        # ),
+                        #actionButton("reset", "Reset", icon = icon("redo")),
                     ),
                     mainPanel(
                         h2("Tabulated dataset"),

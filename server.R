@@ -5,6 +5,19 @@ options(htmlwidgets.TOJSON_ARGS = list(na = 'string')) #to show NA values in dt,
 
 shinyServer(
     function(input, output, session) {
+        
+        data <- reactive({
+            req(input$upload)
+            
+            ext <- tools::file_ext(input$upload$name)
+            switch(ext,
+                   csv = vroom::vroom(input$upload$datapath, delim = ","),
+                   tsv = vroom::vroom(input$upload$datapath, delim = "\t"),
+                   Rdata = get_Rdata_file(path = input$upload$datapath),
+                   validate("Invalid file; Please upload a .csv, .tsv or .Rdata file")
+            )
+        })
+        
         # initial state reactive values
         rv <-
             reactiveValues(
@@ -12,46 +25,46 @@ shinyServer(
                 imp = NULL
                 )
         # define reactives
-        vars <- reactive(names(rv$data))
+        vars <- reactive(names(data()))
         
         ## Data tab
         # choose data
-        observe({
-            if (is.null(input$upload)) {
-                rv$data <- get(input$choice, "package:mice")
-                rv$nm <- input$choice
-            } else if (grepl("\\.Rdata$", input$upload$datapath, ignore.case = TRUE)) { # or use tools::file_ext(), see https://mastering-shiny.org/action-transfer.html
-                env <- attach(input$upload$datapath)
-                rv$nm <- ls(name = env)
-                if (is.mids(env[[rv$nm]])) {
-                    rv$imp <- env[[rv$nm]]
-                    rv$data <- env[[rv$nm]][["data"]]
-                } else {
-                    rv$data <- env[[rv$nm]]
-                }
-            } else if (grepl("\\.csv$", input$upload$datapath, ignore.case = TRUE)) {
-                rv$data <- read.csv(input$upload$datapath, header = input$header)
-                rv$nm <- tools::file_path_sans_ext(input$upload$name)
-            }
-        })
+        # observe({
+        #     if (is.null(input$upload)) {
+        #         data() <- get(input$choice, "package:mice")
+        #         rv$nm <- input$choice
+        #     } else if (grepl("\\.Rdata$", input$upload$datapath, ignore.case = TRUE)) { # or use tools::file_ext(), see https://mastering-shiny.org/action-transfer.html
+        #         env <- attach(input$upload$datapath)
+        #         rv$nm <- ls(name = env)
+        #         if (is.mids(env[[rv$nm]])) {
+        #             rv$imp <- env[[rv$nm]]
+        #             data() <- env[[rv$nm]][["data"]]
+        #         } else {
+        #             data() <- env[[rv$nm]]
+        #         }
+        #     } else if (grepl("\\.csv$", input$upload$datapath, ignore.case = TRUE)) {
+        #         data() <- read.csv(input$upload$datapath, header = input$header)
+        #         rv$nm <- tools::file_path_sans_ext(input$upload$name)
+        #     }
+        # })
         # reset data
-        observeEvent(input$reset, {
-            shinyjs::reset("sidebar")
-            rv$data <- get(input$choice, "package:mice")
-            rv$nm <- input$choice
-        })
+        # observeEvent(input$reset, {
+        #     shinyjs::reset("sidebar")
+        #     data() <- get(input$choice, "package:mice")
+        #     rv$nm <- input$choice
+        # })
         
         # tablutate data
         output$table <-
             renderDT({
-                DT_NA_highlight(rv$data, vars())                   
+                DT_NA_highlight(data(), vars())                   
             }, server = F)
         
         ## Explore tab
         # plot pattern
         output$md_pattern <-
             renderPlot(
-                md.pattern(rv$data), res = 96
+                md.pattern(data()), res = 96
             )
         
         # update variable choices automatically
@@ -64,7 +77,7 @@ shinyServer(
         observe({if(input$scalehist){rv$scalehist <- "fixed"} else {rv$scalehist <- "free_y"}})
         # plot distributions
         output$hist <- renderPlot({
-          conditional_hist(dat = rv$data, x = input$histvar1, y = input$histvar2, scaler = rv$scalehist)
+          conditional_hist(dat = data(), x = input$histvar1, y = input$histvar2, scaler = rv$scalehist)
         }, res = 96)  
         
         ## Impute tab
@@ -88,7 +101,7 @@ shinyServer(
                                 color = waiter::transparent(.5))
             rv$imp <-
                 mice(
-                    rv$data,
+                    data(),
                     m = input$m,
                     maxit = input$maxit,
                     # method = input$micemeth,
@@ -185,7 +198,7 @@ shinyServer(
             paste("dataset", ".csv", sep = "")
         },
         content = function(file) {
-            write.csv(rv$data, file, row.names = FALSE)
+            write.csv(data(), file, row.names = FALSE)
         }
     )
     # as rdata
@@ -194,7 +207,7 @@ shinyServer(
             paste("dataset.Rdata")
         },
         content = function(file) {
-            dataset <- rv$data
+            dataset <- data()
             save(dataset, file = file)
         }
     )
