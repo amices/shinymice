@@ -22,7 +22,7 @@ dat %>%
   )) %>%  #factor(is.na(!!input$histvar2), levels = c("Observed", "Missing"))) %>%
   ggplot(aes(x = !!x, fill = R)) +
   geom +
-  theme_classic() + #mice:::theme_mice +
+  mice:::theme_mice +
   theme(legend.position = "none") +
   facet_wrap(~ R,
              ncol = 1,

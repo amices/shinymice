@@ -61,11 +61,15 @@ shinyUI(
                                 ".tsv"
                             )
                         ),
-                        helpText("Accepts `.Rdata`, `.csv`, `.tsv`, and `.txt` files."),
+                        div(
+                            style = "margin-top:-2em;", helpText("Accepts `.Rdata`, `.csv`, `.tsv`, and `.txt` files.")),
                         fileInput(
                             "midsobject",
                             tags$b("Or choose a multiply imputed dataset (`mids` object)"),
-                            accept = ".Rdata")
+                            accept = ".Rdata"),
+                        div(
+                            style = "margin-top:-2em;", helpText("Does not do anything anymore."))
+                        
                         #,
                         # div(
                         #     style = "margin-top:-1em;",

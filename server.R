@@ -7,7 +7,7 @@ shinyServer(
     function(input, output, session) {
         
         data <- reactive({
-            if(is.null(input$upload)){mice::boys[200:300,]}#vroom::vroom("data/mockdata.csv", delim = ",")}#get("boys", "package:mice")}
+            if(is.null(input$upload)){mice::boys[201:300,]}#vroom::vroom("data/mockdata.csv", delim = ",")}#get("boys", "package:mice")}
             
             else{
             ext <- tools::file_ext(input$upload$name)
@@ -98,6 +98,9 @@ shinyServer(
         })
         # impute
         mids <- eventReactive(input$mice, {
+            waiter::waiter_show(html = waiter::spin_throbber(),
+                                color = waiter::transparent(.5))
+            on.exit(waiter::waiter_hide())
             # for spinner, see: https://shiny.john-coene.com/waiter/
             # waiter::waiter_show(html = waiter::spin_throbber(),
             #                     color = waiter::transparent(.5))
