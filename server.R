@@ -7,15 +7,16 @@ shinyServer(
     function(input, output, session) {
         
         data <- reactive({
-            req(input$upload)
+            if(is.null(input$upload)){vroom::vroom("data/mockdata.csv", delim = ",")}#get("boys", "package:mice")}
             
+            else{
             ext <- tools::file_ext(input$upload$name)
             switch(ext,
                    csv = vroom::vroom(input$upload$datapath, delim = ","),
                    tsv = vroom::vroom(input$upload$datapath, delim = "\t"),
                    Rdata = get_rdata_file(path = input$upload$datapath),
                    validate("Invalid file; Please upload a .csv, .tsv or .Rdata file")
-            )
+            )}
         })
         
         # initial state reactive values
@@ -26,6 +27,8 @@ shinyServer(
                 )
         # define reactives
         vars <- reactive(names(data()))
+        # update variable choices automatically
+        varsUpdate <- function(UI_name){updateSelectInput(session, UI_name, choices = vars())}
         
         ## Data tab
         # choose data
@@ -67,23 +70,21 @@ shinyServer(
                 md.pattern(data()), res = 96
             )
         
-        # update variable choices automatically
-        varsUpdate <- function(UI_name){updateSelectInput(session, UI_name, choices = vars())}
-        
         # show correct variables
         observe(varsUpdate("histvar1"))
         observe(varsUpdate("histvar2"))
         
-        observe({if(input$scalehist){rv$scalehist <- "fixed"} else {rv$scalehist <- "free_y"}})
+        histscale <- reactive(ifelse(input$scalehist,"fixed","free_y"))
+        histbin <- reactive({if(input$binwidth==0){NULL} else {input$binwidth}})
         # plot distributions
         output$hist <- renderPlot({
-          conditional_hist(dat = data(), x = input$histvar1, y = input$histvar2, scaler = rv$scalehist)
+          conditional_hist(dat = data(), x = input$histvar1, y = input$histvar2, scaler = histscale(), binner = histbin())
         }, res = 96)  
         
         ## Impute tab
         # show names data or name of df with input$file$name, see https://mastering-shiny.org/action-transfer.html
         # print table of data
-        output$datname <- renderPrint(rv$nm)
+        output$datname <- renderPrint(tools::file_path_sans_ext(input$upload$name))
         # print call
         output$micecall <- renderText({
             paste0(

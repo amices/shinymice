@@ -60,11 +60,11 @@ shinyUI(
                                 ".Rdata",
                                 ".tsv"
                             )
-                        ),
-                        div(
-                            style = "margin-top:-1em;",
-                            checkboxInput("header", label = "CSV file contains variable names", value = TRUE)
-                        ),
+                        )#,
+                        # div(
+                        #     style = "margin-top:-1em;",
+                        #     checkboxInput("header", label = "CSV file contains variable names", value = TRUE)
+                        #),
                         # selectInput(
                         #     "choice",
                         #     label = tags$b("...or use `mice` data"),
@@ -105,6 +105,7 @@ shinyUI(
                             varSelectInput("histvar1", "Choose a variable to plot:", data = mice::boys),
                             varSelectInput("histvar2", "Conditional on missingness in:", data = mice::boys),
                             checkboxInput("scalehist", "Fixed heigth y-axis", value = TRUE),
+                            numericInput("binwidth", "Binwidth (optional)", min = 0, step = 0.5, value = 0)
                         ),
                         column(9,
                                plotOutput(
