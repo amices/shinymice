@@ -49,10 +49,10 @@ shinyUI(
                 sidebarLayout(
                     sidebarPanel(
                         id = "sidebar",
-                        h2("Select a dataset"),
+                        h2("Select data"),
                         fileInput(
                             "upload",
-                            label = tags$b("Upload a dataset with missing values"),
+                            tags$b("Choose a dataset with missing values"),
                             accept = c(
                                 "text/csv",
                                 "text/comma-separated-values,text/plain",
@@ -60,7 +60,13 @@ shinyUI(
                                 ".Rdata",
                                 ".tsv"
                             )
-                        )#,
+                        ),
+                        helpText("Accepts `.Rdata`, `.csv`, `.tsv`, and `.txt` files."),
+                        fileInput(
+                            "midsobject",
+                            tags$b("Or choose a multiply imputed dataset (`mids` object)"),
+                            accept = ".Rdata")
+                        #,
                         # div(
                         #     style = "margin-top:-1em;",
                         #     checkboxInput("header", label = "CSV file contains variable names", value = TRUE)

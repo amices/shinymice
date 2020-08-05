@@ -7,7 +7,7 @@ shinyServer(
     function(input, output, session) {
         
         data <- reactive({
-            if(is.null(input$upload)){vroom::vroom("data/mockdata.csv", delim = ",")}#get("boys", "package:mice")}
+            if(is.null(input$upload)){mice::boys[200:300,]}#vroom::vroom("data/mockdata.csv", delim = ",")}#get("boys", "package:mice")}
             
             else{
             ext <- tools::file_ext(input$upload$name)
@@ -40,7 +40,7 @@ shinyServer(
         #         env <- attach(input$upload$datapath)
         #         rv$nm <- ls(name = env)
         #         if (is.mids(env[[rv$nm]])) {
-        #             rv$imp <- env[[rv$nm]]
+        #             mids() <- env[[rv$nm]]
         #             data() <- env[[rv$nm]][["data"]]
         #         } else {
         #             data() <- env[[rv$nm]]
@@ -85,6 +85,7 @@ shinyServer(
         # show names data or name of df with input$file$name, see https://mastering-shiny.org/action-transfer.html
         # print table of data
         output$datname <- renderPrint(tools::file_path_sans_ext(input$upload$name))
+        
         # print call
         output$micecall <- renderText({
             paste0(
@@ -96,13 +97,11 @@ shinyServer(
             )
         })
         # impute
-        observeEvent(input$mice, {
+        mids <- eventReactive(input$mice, {
             # for spinner, see: https://shiny.john-coene.com/waiter/
-            waiter::waiter_show(html = waiter::spin_throbber(),
-                                color = waiter::transparent(.5))
-            rv$imp <-
-                mice(
-                    data(),
+            # waiter::waiter_show(html = waiter::spin_throbber(),
+            #                     color = waiter::transparent(.5))
+            mice(data(),
                     m = input$m,
                     maxit = input$maxit,
                     # method = input$micemeth,
@@ -113,22 +112,18 @@ shinyServer(
                     # seed = input$miceseed,
                     printFlag = FALSE
                 )
-            waiter::waiter_hide()
+           #waiter::waiter_hide()
         })
         
         # indicate that data is imputed
-        output$done <- renderPrint({
-            if (is.null(rv$imp)) {
-            "Not done yet..."
-        }
-        else {
-            "Done!"}
-        })
+        output$done <- renderPrint(#input$mice[[1]])
+            {if(is.mids(mids())){
+        "Done!"}})
         
         ## Evaluate tab
         ## Fluxplot subtab
         output$fluxplot <-
-            renderPlot({if(is.mids(rv$imp)){gg.mids(rv$imp, geom = "fluxplot")}}, res = 96)  
+            renderPlot({if(is.mids(mids())){gg.mids(mids(), geom = "fluxplot")}}, res = 96)  
         
         ## Traceplot subtab
         # show correct variables
@@ -137,12 +132,12 @@ shinyServer(
         observe({
             shinyFeedback::feedbackWarning(
                 "varnr",
-                all(!is.na(rv$imp$data[[input$varnr]])),
+                all(!is.na(mids()$data[[input$varnr]])),
                 "No imputations to visualize. Impute the missing data first and/or choose a different variable."
             )
-            req(!is.null(rv$imp))
+            req(!is.null(mids()))
             # plot
-            rv$trace <- gg.mids(rv$imp)
+            rv$trace <- gg.mids(mids())
         })
         # plot traceplot
         output$traceplot <- renderPlot(
@@ -154,12 +149,12 @@ shinyServer(
                                 color = waiter::transparent(.5))
             shinyFeedback::feedbackWarning(
                 "midsmaxit",
-                is.null(rv$imp),
+                is.null(mids()),
                 "Please run some initial iterations in the 'Impute' tab"
             )
-            if (!is.null(rv$imp)) {
-                rv$imp <-
-                    mice.mids(rv$imp,
+            if (!is.null(mids())) {
+                mids() <-
+                    mice.mids(mids(),
                               maxit = input$midsmaxit,
                               printFlag = FALSE)
             }
@@ -174,10 +169,10 @@ shinyServer(
         observe({
             shinyFeedback::feedbackWarning(
                 "midsvar1",
-                all(!is.na(rv$imp$data[[input$midsvar1]])),
+                all(!is.na(mids()$data[[input$midsvar1]])),
                 "No imputations to visualize. Impute the missing data first and/or choose a different variable."
             )
-            req(!is.null(rv$imp))
+            req(!is.null(mids()))
             shinyFeedback::feedbackWarning(
                 "midsvar2",
                 input$midsvar1==input$midsvar2 & input$plottype == "xyplot",
@@ -188,7 +183,7 @@ shinyServer(
         })
         # plot imputations
         output$impplot <- renderPlot(
-            gg.mids(rv$imp, x = as.character(input$midsvar1), y = as.character(input$midsvar2), geom = input$plottype),
+            gg.mids(mids(), x = as.character(input$midsvar1), y = as.character(input$midsvar2), geom = input$plottype),
             res = 96
         )
         
@@ -218,7 +213,7 @@ shinyServer(
             paste("mids.Rdata")
         },
         content = function(file) {
-            mids <- rv$imp
+            mids <- mids()
             save(mids, file = file)
         }
     )
