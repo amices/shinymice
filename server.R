@@ -172,7 +172,7 @@ shinyServer(function(input, output, session) {
         gg.mids(mids())
     })
     # plot traceplot
-    output$traceplot <- renderPlot(trace()[[input$varnr]], res = 96)
+    output$traceplot <- renderPlotly(trace()[[input$varnr]])#, res = 96)
     
     #mids <- eventReactive(input$mids, mice.mids(mids()))
     # add iterations

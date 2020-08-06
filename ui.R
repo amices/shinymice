@@ -203,7 +203,7 @@ shinyUI(
                             helpText("Does not work anymore.")
                         ),
                         column(9,
-                               plotOutput("traceplot"))
+                               plotlyOutput("traceplot"))
                     )
                 ),
                 tabPanel(
