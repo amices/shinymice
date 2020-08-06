@@ -27,6 +27,7 @@ dat %>%
   facet_wrap(~ R,
              ncol = 1,
              scales = scaler,
-             labeller = labeller(R = labs))
+             labeller = labeller(R = labs)) %>% 
+  plotly::ggplotly() #check tooltip argument
 }
 

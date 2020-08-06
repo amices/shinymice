@@ -8,6 +8,7 @@ library(warn.conflicts = FALSE, "DT")
 library(warn.conflicts = FALSE, "data.table")
 library(warn.conflicts = FALSE, "rmarkdown")
 library(warn.conflicts = FALSE, "ggplot2")
+library(warn.conflicts = FALSE, "plotly")
 # library(warn.conflicts = FALSE, "thematic") # for ggplot background that converts with the shiny theme, use thematic::thematic_on(font = "auto")
 
 shinyUI(
@@ -42,9 +43,11 @@ shinyUI(
                     value = FALSE,
                     width = "150%"
                 ),
-                verbatimTextOutput("datname"),
                 style = "text-align:right;"
-            ),
+            ), div(
+                verbatimTextOutput("datname"),
+                style = "text-align:right;width:102%;" 
+                ),
             
             tabPanel(
                 title = "Data",
@@ -129,7 +132,7 @@ shinyUI(
                             )
                         ),
                         column(9,
-                               plotOutput(
+                               plotlyOutput(
                                    "hist", width = "auto", height = "520px"
                                ))
                     )

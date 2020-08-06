@@ -1,8 +1,9 @@
 # shinymice server
 
 # set-up
-options(htmlwidgets.TOJSON_ARGS = list(na = 'string')) #to show NA values in dt, see https://github.com/rstudio/DT/issues/496
-
+# options(htmlwidgets.TOJSON_ARGS = list(na = 'string')) #to show NA values in dt, see https://github.com/rstudio/DT/issues/496
+options("DT.TOJSON_ARGS" = list(na = "string"))
+        
 shinyServer(function(input, output, session) {
     data <- reactive({
         if (is.null(input$upload)) {
@@ -86,15 +87,15 @@ shinyServer(function(input, output, session) {
             }
         })
     # plot distributions
-    output$hist <- renderPlot({
+    output$hist <- renderPlotly({
         conditional_hist(
             dat = data(),
             x = input$histvar1,
             y = input$histvar2,
             scaler = histscale(),
             binner = histbin()
-        )
-    }, res = 96)
+        ) #%>% plotly::ggplotly()
+    })#, res = 96)
     
     ## Impute tab
     # show names data or name of df with input$file$name, see https://mastering-shiny.org/action-transfer.html
