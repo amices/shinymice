@@ -15,8 +15,10 @@ shinyUI(
         title = "shinymice",
         # for logo/name as browser icon, see https://stackoverflow.com/questions/51688463/shiny-page-title-and-image
         list(tags$head(
-            HTML('<link rel="icon" href="www/logo_square.png"
-                type="image/png" />')
+            HTML(
+                '<link rel="icon" href="www/logo_square.png"
+                type="image/png" />'
+            )
         )),
         # load functions
         shinyjs::useShinyjs(),
@@ -40,6 +42,7 @@ shinyUI(
                     value = FALSE,
                     width = "150%"
                 ),
+                verbatimTextOutput("datname"),
                 style = "text-align:right;"
             ),
             
@@ -62,13 +65,15 @@ shinyUI(
                             )
                         ),
                         div(
-                            style = "margin-top:-2em;", helpText("Accepts `.Rdata`, `.csv`, `.tsv`, and `.txt` files.")),
+                            style = "margin-top:-1em;",
+                            helpText("Accepts `.Rdata`, `.csv`, `.tsv`, and `.txt` files.")
+                        ),
                         fileInput(
                             "midsobject",
                             tags$b("Or choose a multiply imputed dataset (`mids` object)"),
-                            accept = ".Rdata"),
-                        div(
-                            style = "margin-top:-2em;", helpText("Does not do anything anymore."))
+                            accept = ".Rdata"
+                        ),
+                        div(style = "margin-top:-2em;", helpText("Does not do anything anymore."))
                         
                         #,
                         # div(
@@ -115,7 +120,13 @@ shinyUI(
                             varSelectInput("histvar1", "Choose a variable to plot:", data = mice::boys),
                             varSelectInput("histvar2", "Conditional on missingness in:", data = mice::boys),
                             checkboxInput("scalehist", "Fixed heigth y-axis", value = TRUE),
-                            numericInput("binwidth", "Binwidth (optional)", min = 0, step = 0.5, value = 0)
+                            numericInput(
+                                "binwidth",
+                                "Binwidth (optional)",
+                                min = 0,
+                                step = 0.5,
+                                value = 0
+                            )
                         ),
                         column(9,
                                plotOutput(
@@ -131,7 +142,7 @@ shinyUI(
                 icon = icon("calculator"),
                 h2("Impute missing data using `mice`"),
                 tags$b("Dataset to impute"),
-                verbatimTextOutput("datname"),
+                #verbatimTextOutput("datname"),
                 numericInput(
                     "m",
                     label = "Number of imputations",
@@ -153,7 +164,7 @@ shinyUI(
                 actionButton("mice", "Impute", icon = icon("hourglass-start")),
                 helpText("This may take a minute."),
                 br(),
-                verbatimTextOutput("done") 
+                verbatimTextOutput("done")
                 #plotOutput("traceplot")
             ),
             
@@ -173,17 +184,24 @@ shinyUI(
                     "Convergence",
                     icon = icon("chart-line"),
                     h2("Evaluate convergence"),
-                    varSelectInput("varnr", "Choose a variable:", data = mice::boys),
-                    plotOutput("traceplot"),
-                    numericInput(
-                        "midsmaxit",
-                        label = "Add additional iterations",
-                        value = 5,
-                        min = 1,
-                        step = 1
-                    ),
-                    actionButton("mids", "Iterate", icon = icon("hourglass-start")),
-                    helpText("This may take a minute.")
+                    br(),
+                    fluidRow(
+                        column(
+                            3,
+                            varSelectInput("varnr", "Choose a variable:", data = mice::boys),
+                            numericInput(
+                                "midsmaxit",
+                                label = "Continue iterating (optional)",
+                                value = 5,
+                                min = 1,
+                                step = 1
+                            ),
+                            actionButton("mids", "Iterate", icon = icon("hourglass-start")),
+                            helpText("Does not work anymore.")
+                        ),
+                        column(9,
+                               plotOutput("traceplot"))
+                    )
                 ),
                 tabPanel(
                     "Imputations",
@@ -196,7 +214,8 @@ shinyUI(
                             selectInput(
                                 "plottype",
                                 "Choose a visualization:",
-                                c("bwplot", "densityplot", "histogram", "stripplot", "xyplot")
+                                c("bwplot", "densityplot", "histogram", "stripplot", "xyplot"),
+                                selected = "stripplot"
                             ),
                             varSelectInput("midsvar1", "Choose a variable:", data = mice::boys),
                             varSelectInput(
@@ -259,7 +278,8 @@ shinyUI(
                                      a(href = "https://github.com/gerkovink/shinyMice")
                                  )
                              ))
-                )            )
+                )
+            )
         )
     )
 )
