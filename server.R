@@ -151,11 +151,11 @@ shinyServer(function(input, output, session) {
     ## Evaluate tab
     ## Fluxplot subtab
     output$fluxplot <-
-        renderPlot({
+        renderPlotly({
             if (is.mids(mids())) {
-                gg.mids(mids(), geom = "fluxplot")
+                gg.mids(mids(), geom = "fluxplot", interactive = T)
             }
-        }, res = 96)
+        })#, res = 96)
     
     ## Traceplot subtab
     # show correct variables
@@ -217,13 +217,14 @@ shinyServer(function(input, output, session) {
         }
     })
     # plot imputations
-    output$impplot <- renderPlot(gg.mids(
+    output$impplot <- renderPlotly(gg.mids(
         mids(),
         x = as.character(input$midsvar1),
         y = as.character(input$midsvar2),
-        geom = input$plottype
-    ),
-    res = 96)
+        geom = input$plottype,
+        interactive = TRUE
+    ))#,
+    #res = 96)
     
     ## Save tab
     # as csv

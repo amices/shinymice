@@ -181,7 +181,7 @@ shinyUI(
                     helpText(
                         "Variables that have more observed information ... Variables that ..."
                     ),
-                    plotOutput("fluxplot")
+                    plotlyOutput("fluxplot")
                 ),
                 tabPanel(
                     "Convergence",
@@ -229,7 +229,7 @@ shinyUI(
                             
                         ),
                         column(9,
-                               plotOutput("impplot"))
+                               plotlyOutput("impplot"))
                     )
                 )
             ),
