@@ -94,7 +94,7 @@ shinyServer(function(input, output, session) {
             y = input$histvar2,
             scaler = histscale(),
             binner = histbin()
-        ) #%>% plotly::ggplotly()
+        ) %>% plotly::ggplotly()
     })#, res = 96)
     
     ## Impute tab
@@ -131,7 +131,7 @@ shinyServer(function(input, output, session) {
                 m = input$m,
                 maxit = input$maxit,
                 printFlag = FALSE
-            )
+            ) #%>% list()
         }
         # if (input$mids){
         #     mice.mids(mids(),
