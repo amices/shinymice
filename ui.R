@@ -46,8 +46,6 @@ shinyUI(
                 style = "text-align:right;"
             ),
             div(verbatimTextOutput("banner"),
-                # verbatimTextOutput("datname"),
-                # verbatimTextOutput("impname"),
                 style = "text-align:right;width:102%;"),
             
             tabPanel(
@@ -70,10 +68,10 @@ shinyUI(
                         ),
                         div(
                             style = "margin-top:-1em;",
-                            helpText("Accepts `.Rdata`, `.csv`, `.tsv`, and `.txt` files.")
+                            helpText("Accepts `.Rdata`, `.csv`, `.tsv`, and `.txt` files.") #add option to read from link, see https://cran.r-project.org/web/packages/vroom/vignettes/vroom.html
                         ),
                         fileInput(
-                            "midsobject",
+                            "midsupload",
                             tags$b("Or choose a multiply imputed dataset (`mids` object)"),
                             accept = ".Rdata"
                         ),
@@ -115,7 +113,6 @@ shinyUI(
                 tabPanel(
                     "Distributions",
                     icon = icon("chart-bar"),
-                    #icon("list-alt")
                     h2("Inspect relations before imputation"),
                     br(),
                     fluidRow(
@@ -162,12 +159,10 @@ shinyUI(
                 textInput("impname", "Name the imputation object", value = "imp"),
                 tags$b("Mice call"),
                 verbatimTextOutput("micecall"),
-                # textInput("miceargs", label = "Add arguments", value = NULL),
                 actionButton("mice", "Impute", icon = icon("hourglass-start")),
                 helpText("This may take a minute."),
                 br(),
                 verbatimTextOutput("done")
-                #plotOutput("traceplot")
             ),
             
             navbarMenu(
@@ -177,9 +172,8 @@ shinyUI(
                     "Model",
                     icon = icon("balance-scale-right"),
                     h2("Imputation model influx-outflux"),
-                    helpText(
-                        "Variables that have more observed information ... Variables that ..."
-                    ),
+                    "The influx of a variable quantifies how well its missing data connect to the observed data on other variables. The outflux of a variable quantifies how well its observed data connect to the missing data on other variables. In general, higher influx and outflux values are preferred.",
+                    tags$a(href= "https://stefvanbuuren.name/fimd/missing-data-pattern.html#sec:flux", "See van Buuren (2018)."),
                     plotlyOutput("fluxplot")
                 ),
                 tabPanel(

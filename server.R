@@ -9,9 +9,8 @@ shinyServer(function(input, output, session) {
     data <- reactive({
         if (is.null(input$upload)) {
             set.seed(123)
-            mice::boys[sample.int(748, 100),]
-        } #vroom::vroom("data/mockdata.csv", delim = ",")}#get("boys", "package:mice")}
-        
+            mice::boys[sample.int(748, 100), ]
+        } 
         else{
             ext <- tools::file_ext(input$upload$name)
             switch(
@@ -44,7 +43,11 @@ shinyServer(function(input, output, session) {
             ),
             "\n",
             "Imputation: ",
-            ifelse(input$mice < 1, "no imputations (yet)", input$impname)
+            ifelse(
+                input$mice < 1 & is.null(input$midsupload),
+                "no imputations (yet)",
+                input$impname
+            )
         )
     })
     
@@ -137,13 +140,8 @@ shinyServer(function(input, output, session) {
                 m = input$m,
                 maxit = input$maxit,
                 printFlag = FALSE
-            ) #%>% list()
+            ) 
         }
-        # if (input$mids){
-        #     mice.mids(mids(),
-        #               maxit = input$midsmaxit,
-        #               printFlag = FALSE)
-        # }
     })
     
     # indicate that data is imputed
@@ -161,7 +159,7 @@ shinyServer(function(input, output, session) {
             if (is.mids(mids())) {
                 gg.mids(mids(), geom = "fluxplot", interactive = T)
             }
-        })#, res = 96)
+        })
     
     ## Traceplot subtab
     # show correct variables
@@ -232,50 +230,28 @@ shinyServer(function(input, output, session) {
             geom = input$plottype,
             interactive = TRUE
         )
-    )#,
-    #res = 96)
+    )
     
     ## Save tab
     output$save <- downloadHandler(
-        filename = function(){
+        filename = function() {
             paste0(
-            ifelse(input$mids_or_data == "Just the data", "dataset", input$impname),
-            input$rdata_or_csv)},
+                ifelse(
+                    input$mids_or_data == "Just the data",
+                    "dataset",
+                    input$impname
+                ),
+                input$rdata_or_csv
+            )
+        },
         content = function(file) {
-            if(input$rdata_or_csv == ".Rdata"){
+            if (input$rdata_or_csv == ".Rdata") {
                 dataset <- data()
-                save(dataset, file = file)}
-            if(input$rdata_or_csv == ".csv"){
-                write.csv(data(), file, row.names = FALSE)}
+                save(dataset, file = file)
+            }
+            if (input$rdata_or_csv == ".csv") {
+                write.csv(data(), file, row.names = FALSE)
+            }
         }
     )
-    # # as csv
-    # output$savecsv <- downloadHandler(
-    #     filename = function() {
-    #         paste("dataset", ".csv", sep = "")
-    #     },
-    #     content = function(file) {
-    #         write.csv(data(), file, row.names = FALSE)
-    #     }
-    # )
-    # # as rdata
-    # output$saverdata <- downloadHandler(
-    #     filename = function() {
-    #         paste("dataset.Rdata")
-    #     },
-    #     content = function(file) {
-    #         dataset <- data()
-    #         save(dataset, file = file)
-    #     }
-    # )
-    # # save imps
-    # output$savemids <- downloadHandler(
-    #     filename = function() {
-    #         paste("mids.Rdata")
-    #     },
-    #     content = function(file) {
-    #         mids <- mids()
-    #         save(mids, file = file)
-    #     }
-    # )
 })
