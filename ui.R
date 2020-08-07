@@ -122,12 +122,13 @@ shinyUI(
                             varSelectInput("histvar2", "Conditional on missingness in:", data = mice::boys),
                             checkboxInput("scalehist", "Fixed heigth y-axis", value = TRUE),
                             numericInput(
-                                "binwidth",
+                                "bins",
                                 "Binwidth (optional)",
                                 min = 0,
                                 step = 0.5,
                                 value = 0
-                            )
+                            ),
+                            helpText("Automatic when 0 is selected.")
                         ),
                         column(9,
                                plotlyOutput(

@@ -1,10 +1,14 @@
 # plot histogram of one veriable depending on missingness in another
-conditional_hist <- function(dat, x, y, scaler, binner = NULL){
+conditional_hist <- function(dat, x, y, scaler = c(TRUE, FALSE), binner = 0){
+# parse inputs
+scl <- ifelse(scaler, "fixed", "free_y")
+if(binner == 0){bn <- NULL} else {bn <- binner}
+
 # choose hist or bar depending of variable type
 if (is.numeric(dat[[x]])) {
-  geom <- list(geom_histogram(binwidth = binner, na.rm = TRUE))
+  geom <- list(geom_histogram(binwidth = bn, na.rm = TRUE))
 } else {
-  geom <- list(geom_bar(binwidth = binner, na.rm = TRUE))
+  geom <- list(geom_bar(binwidth = bn, na.rm = TRUE))
 }
 # define facet labels
 labs <- c(
@@ -26,7 +30,7 @@ dat %>%
   theme(legend.position = "none") +
   facet_wrap(~ R,
              ncol = 1,
-             scales = scaler,
+             scales = scl,
              labeller = labeller(R = labs))
    #check tooltip argument
 }

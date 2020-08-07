@@ -1,7 +1,6 @@
 # shinymice server
 
-# set-up
-# options(htmlwidgets.TOJSON_ARGS = list(na = 'string')) #to show NA values in dt, see https://github.com/rstudio/DT/issues/496
+# show NA values in dt, see https://github.com/rstudio/DT/issues/496
 options("DT.TOJSON_ARGS" = list(na = "string"))
 
 shinyServer(function(input, output, session) {
@@ -93,24 +92,24 @@ shinyServer(function(input, output, session) {
     observe(varsUpdate("histvar1"))
     observe(varsUpdate("histvar2"))
     
-    histscale <-
-        reactive(ifelse(input$scalehist, "fixed", "free_y"))
-    histbin <-
-        reactive({
-            if (input$binwidth == 0) {
-                NULL
-            } else {
-                input$binwidth
-            }
-        })
+    # find a way to remove this
+    # histbin <-
+    #     reactive({
+    #         if (input$binwidth == 0) {
+    #             NULL
+    #         } else {
+    #             input$binwidth
+    #         }
+    #     })
+    
     # plot distributions
     output$hist <- renderPlotly({
         conditional_hist(
             dat = data(),
             x = input$histvar1,
             y = input$histvar2,
-            scaler = histscale(),
-            binner = histbin()
+            scaler = input$scalehist, 
+            binner = input$bins#histbin()
         ) %>% plotly::ggplotly()
     })#, res = 96)
     
