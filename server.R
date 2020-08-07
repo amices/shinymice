@@ -117,30 +117,62 @@ shinyServer(function(input, output, session) {
         )
     })
     # impute
-    mids <- eventReactive(input$mice, {
-        # for spinner, see: https://shiny.john-coene.com/waiter/
-        waiter::waiter_show(html = waiter::spin_throbber(),
-                            color = waiter::transparent(.5))
-        on.exit(waiter::waiter_hide())
-        
-        if (input$mice) {
-            mice(
-                data(),
-                m = input$m,
-                maxit = input$maxit,
-                printFlag = FALSE
-            ) 
-        }
-    })
+    # mids <- eventReactive(input$mice, {
+    #     # for spinner, see: https://shiny.john-coene.com/waiter/
+    #     waiter::waiter_show(html = waiter::spin_throbber(),
+    #                         color = waiter::transparent(.5))
+    #     on.exit(waiter::waiter_hide())
+    #     
+    #     if (input$mice) {
+    #         mice(
+    #             data(),
+    #             m = input$m,
+    #             maxit = input$maxit,
+    #             printFlag = FALSE
+    #         ) 
+    #     }
+    # })
     
     # rv <- reactiveValues(imp = NULL)
     # 
     # observe({if(is.null(rv$imp)) {rv$imp <- list(mids())} else {rv$imp <- c(rv$imp, list(mids()))}})
     
+    rv <- reactiveValues(imp = NULL)
+    
+    observeEvent(input$mice, {#c(input$mice,input$iterate), {
+        # for spinner, see: https://shiny.john-coene.com/waiter/
+        waiter::waiter_show(html = waiter::spin_throbber(),
+                            color = waiter::transparent(.5))
+        on.exit(waiter::waiter_hide())
+        
+        if(is.null(rv$imp)){
+            rv$imp <-
+            list(mice(
+                data(),
+                m = input$m,
+                maxit = input$maxit))
+            }  else {
+             rv$imp <-
+                 c(rv$imp,
+                 list(mice(
+                 data(),
+                 m = input$m,
+                 maxit = input$maxit)) 
+            )}
+    })
+    
+    observeEvent(input$iterate, {
+        waiter::waiter_show(html = waiter::spin_throbber(),
+                            color = waiter::transparent(.5))
+        on.exit(waiter::waiter_hide())
+        req(!is.null(rv$imp))
+        rv$imp[[input$mice]] <- mice.mids(rv$imp[[input$mice]], maxit = input$midsmaxit)
+    })
+    
     # indicate that data is imputed
-    output$done <- renderPrint(#input$mice[[1]])
+    output$done <- renderPrint(
         {
-            if (is.mids(mids())) {
+            if (is.mids(rv$imp[[input$mice]])) {
                 "Done!"
             }
         })
@@ -149,8 +181,8 @@ shinyServer(function(input, output, session) {
     ## Fluxplot subtab
     output$fluxplot <-
         renderPlotly({
-            if (is.mids(mids())) {
-                gg.mids(mids(), geom = "fluxplot", interactive = T)
+            if (is.mids(rv$imp[[input$mice]])) {
+                gg.mids(rv$imp[[input$mice]], geom = "fluxplot", interactive = T)
             }
         })
     
@@ -161,12 +193,12 @@ shinyServer(function(input, output, session) {
     trace <- reactive({
         shinyFeedback::feedbackWarning(
             "varnr",
-            all(!is.na(mids()$data[[input$varnr]])),
+            all(!is.na(rv$imp[[input$mice]]$data[[input$varnr]])),
             "No imputations to visualize. Impute the missing data first and/or choose a different variable."
         )
-        req(!is.null(mids()))
+        req(!is.null(rv$imp[[input$mice]]))
         # plot
-        gg.mids(mids())
+        gg.mids(rv$imp[[input$mice]])
     })
     # plot traceplot
     output$traceplot <-
@@ -200,10 +232,10 @@ shinyServer(function(input, output, session) {
     observe({
         shinyFeedback::feedbackWarning(
             "midsvar1",
-            all(!is.na(mids()$data[[input$midsvar1]])),
+            all(!is.na(rv$imp[[input$mice]]$data[[input$midsvar1]])),
             "No imputations to visualize. Impute the missing data first and/or choose a different variable."
         )
-        req(!is.null(mids()))
+        req(!is.null(rv$imp[[input$mice]]))
         shinyFeedback::feedbackWarning(
             "midsvar2",
             input$midsvar1 == input$midsvar2 &
@@ -217,7 +249,7 @@ shinyServer(function(input, output, session) {
     # plot imputations
     output$impplot <- renderPlotly(
         gg.mids(
-            mids(),
+            rv$imp[[input$mice]],
             x = as.character(input$midsvar1),
             y = as.character(input$midsvar2),
             geom = input$plottype,

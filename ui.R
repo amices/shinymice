@@ -155,7 +155,7 @@ shinyUI(
                     label = "Number of iterations",
                     value = 5,
                     min = 1,
-                    step = 1
+                    step = 5
                 ),
                 textInput("impname", "Name the imputation object", value = "imp"),
                 tags$b("Mice call"),
@@ -191,10 +191,10 @@ shinyUI(
                                 label = "Continue iterating (optional)",
                                 value = 5,
                                 min = 1,
-                                step = 1
+                                step = 5
                             ),
-                            actionButton("mids", "Iterate", icon = icon("hourglass-start")),
-                            helpText("Does not work anymore.")
+                            actionButton("iterate", "Iterate", icon = icon("hourglass-start")),
+                            helpText("This may take a minute.")
                         ),
                         column(9,
                                plotlyOutput("traceplot"))
