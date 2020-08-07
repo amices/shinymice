@@ -92,16 +92,6 @@ shinyServer(function(input, output, session) {
     observe(varsUpdate("histvar1"))
     observe(varsUpdate("histvar2"))
     
-    # find a way to remove this
-    # histbin <-
-    #     reactive({
-    #         if (input$binwidth == 0) {
-    #             NULL
-    #         } else {
-    #             input$binwidth
-    #         }
-    #     })
-    
     # plot distributions
     output$hist <- renderPlotly({
         conditional_hist(
@@ -142,6 +132,10 @@ shinyServer(function(input, output, session) {
             ) 
         }
     })
+    
+    # rv <- reactiveValues(imp = NULL)
+    # 
+    # observe({if(is.null(rv$imp)) {rv$imp <- list(mids())} else {rv$imp <- c(rv$imp, list(mids()))}})
     
     # indicate that data is imputed
     output$done <- renderPrint(#input$mice[[1]])
