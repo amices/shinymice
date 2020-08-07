@@ -3,12 +3,14 @@
 # set-up
 # options(htmlwidgets.TOJSON_ARGS = list(na = 'string')) #to show NA values in dt, see https://github.com/rstudio/DT/issues/496
 options("DT.TOJSON_ARGS" = list(na = "string"))
-        
+
 shinyServer(function(input, output, session) {
+    # reactives
     data <- reactive({
         if (is.null(input$upload)) {
-            mice::boys[sample.int(748, 100), ]
-        }#vroom::vroom("data/mockdata.csv", delim = ",")}#get("boys", "package:mice")}
+            set.seed(123)
+            mice::boys[sample.int(748, 100),]
+        } #vroom::vroom("data/mockdata.csv", delim = ",")}#get("boys", "package:mice")}
         
         else{
             ext <- tools::file_ext(input$upload$name)
@@ -23,16 +25,28 @@ shinyServer(function(input, output, session) {
             )
         }
     })
+    vars <- reactive(names(data()))
     
-    datname <-
-        
-        # define reactives
-        vars <- reactive(names(data()))
     # update variable choices automatically
     varsUpdate <-
         function(UI_name) {
             updateSelectInput(session, UI_name, choices = vars())
         }
+    
+    ## Banner
+    output$banner <- renderText({
+        paste0(
+            "Data: ",
+            ifelse(
+                is.null(input$upload),
+                "test dataset (sample of mice::boys)",
+                tools::file_path_sans_ext(input$upload$name)
+            ),
+            "\n",
+            "Imputation: ",
+            ifelse(input$mice < 1, "no imputations (yet)", input$impname)
+        )
+    })
     
     ## Data tab
     # choose data
@@ -99,24 +113,16 @@ shinyServer(function(input, output, session) {
     
     ## Impute tab
     # show names data or name of df with input$file$name, see https://mastering-shiny.org/action-transfer.html
-    # print table of data
-    output$datname <-
-        renderText(paste(
-            "Data:",
-            ifelse(
-                is.null(input$upload),
-                "test dataset (sample of mice::boys)",
-                tools::file_path_sans_ext(input$upload$name)
-            )
-        ))
-    
     # print call
     output$micecall <- renderText({
-        paste0("mice(data, m = ",
-               input$m,
-               ", maxit = ",
-               input$maxit,
-               ", printFlag = FALSE)")
+        paste0(
+            input$impname,
+            " <- mice(data, m = ",
+            input$m,
+            ", maxit = ",
+            input$maxit,
+            ", printFlag = FALSE)"
+        )
     })
     # impute
     mids <- eventReactive(input$mice, {
@@ -172,7 +178,8 @@ shinyServer(function(input, output, session) {
         gg.mids(mids())
     })
     # plot traceplot
-    output$traceplot <- renderPlotly(trace()[[input$varnr]])#, res = 96)
+    output$traceplot <-
+        renderPlotly(trace()[[input$varnr]])#, res = 96)
     
     #mids <- eventReactive(input$mids, mice.mids(mids()))
     # add iterations
@@ -217,43 +224,58 @@ shinyServer(function(input, output, session) {
         }
     })
     # plot imputations
-    output$impplot <- renderPlotly(gg.mids(
-        mids(),
-        x = as.character(input$midsvar1),
-        y = as.character(input$midsvar2),
-        geom = input$plottype,
-        interactive = TRUE
-    ))#,
+    output$impplot <- renderPlotly(
+        gg.mids(
+            mids(),
+            x = as.character(input$midsvar1),
+            y = as.character(input$midsvar2),
+            geom = input$plottype,
+            interactive = TRUE
+        )
+    )#,
     #res = 96)
     
     ## Save tab
-    # as csv
-    output$savecsv <- downloadHandler(
-        filename = function() {
-            paste("dataset", ".csv", sep = "")
-        },
+    output$save <- downloadHandler(
+        filename = function(){
+            paste0(
+            ifelse(input$mids_or_data == "Just the data", "dataset", input$impname),
+            input$rdata_or_csv)},
         content = function(file) {
-            write.csv(data(), file, row.names = FALSE)
+            if(input$rdata_or_csv == ".Rdata"){
+                dataset <- data()
+                save(dataset, file = file)}
+            if(input$rdata_or_csv == ".csv"){
+                write.csv(data(), file, row.names = FALSE)}
         }
     )
-    # as rdata
-    output$saverdata <- downloadHandler(
-        filename = function() {
-            paste("dataset.Rdata")
-        },
-        content = function(file) {
-            dataset <- data()
-            save(dataset, file = file)
-        }
-    )
-    # save imps
-    output$savemids <- downloadHandler(
-        filename = function() {
-            paste("mids.Rdata")
-        },
-        content = function(file) {
-            mids <- mids()
-            save(mids, file = file)
-        }
-    )
+    # # as csv
+    # output$savecsv <- downloadHandler(
+    #     filename = function() {
+    #         paste("dataset", ".csv", sep = "")
+    #     },
+    #     content = function(file) {
+    #         write.csv(data(), file, row.names = FALSE)
+    #     }
+    # )
+    # # as rdata
+    # output$saverdata <- downloadHandler(
+    #     filename = function() {
+    #         paste("dataset.Rdata")
+    #     },
+    #     content = function(file) {
+    #         dataset <- data()
+    #         save(dataset, file = file)
+    #     }
+    # )
+    # # save imps
+    # output$savemids <- downloadHandler(
+    #     filename = function() {
+    #         paste("mids.Rdata")
+    #     },
+    #     content = function(file) {
+    #         mids <- mids()
+    #         save(mids, file = file)
+    #     }
+    # )
 })

@@ -44,10 +44,11 @@ shinyUI(
                     width = "150%"
                 ),
                 style = "text-align:right;"
-            ), div(
-                verbatimTextOutput("datname"),
-                style = "text-align:right;width:102%;" 
-                ),
+            ),
+            div(verbatimTextOutput("banner"),
+                # verbatimTextOutput("datname"),
+                # verbatimTextOutput("impname"),
+                style = "text-align:right;width:102%;"),
             
             tabPanel(
                 title = "Data",
@@ -144,8 +145,6 @@ shinyUI(
                 "Impute",
                 icon = icon("calculator"),
                 h2("Impute missing data using `mice`"),
-                tags$b("Dataset to impute"),
-                #verbatimTextOutput("datname"),
                 numericInput(
                     "m",
                     label = "Number of imputations",
@@ -160,10 +159,10 @@ shinyUI(
                     min = 1,
                     step = 1
                 ),
+                textInput("impname", "Name the imputation object", value = "imp"),
                 tags$b("Mice call"),
                 verbatimTextOutput("micecall"),
                 # textInput("miceargs", label = "Add arguments", value = NULL),
-                waiter::use_waiter(),
                 actionButton("mice", "Impute", icon = icon("hourglass-start")),
                 helpText("This may take a minute."),
                 br(),
@@ -240,20 +239,24 @@ shinyUI(
                 icon = icon("file-download"),
                 h2("Download the dataset or imputations"),
                 br(),
-                tags$b("Download the dataset:"),
-                fluidRow(column(
-                    6,
-                    downloadButton("savecsv", "Download dataset as CSV file"),
-                ), column(
-                    6,
-                    downloadButton("saverdata", "Download dataset as RData file"),
-                )),
-                br(),
-                tags$b("Download the imputations:"),
-                fluidRow(column(
-                    6,
-                    downloadButton("savemids", "Download imputations as RData file")
-                ))
+                selectInput("mids_or_data", "Save the imputations, or just the data", choices = c("Imputations (incl. the data)", "Just the data")),
+                selectInput("rdata_or_csv", "Save as ...", choices = c(".Rdata", ".csv")),
+                downloadButton("save", "Save"),
+                helpText("Add warning/disable downloading mids as csv! Add downloas as .sav option.")
+                #tags$b("Download the dataset:"),
+                # fluidRow(column(
+                #     6,
+                #     downloadButton("savecsv", "Download dataset as CSV file"),
+                # ), column(
+                #     6,
+                #     downloadButton("saverdata", "Download dataset as RData file"),
+                # )),
+                # br(),
+                # tags$b("Download the imputations:"),
+                # fluidRow(column(
+                #     6,
+                #     downloadButton("savemids", "Download imputations as RData file")
+                # ))
             ),
             
             navbarMenu(
