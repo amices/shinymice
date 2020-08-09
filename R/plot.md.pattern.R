@@ -3,7 +3,7 @@
 # library(mice)
 # library(tidyverse)
 plot_md_pattern <- function(data){
-  md <- mice::md.pattern(boys, plot = FALSE)
+  md <- mice::md.pattern(data, plot = FALSE)
   vars <- colnames(md)[-ncol(md)]
   mice_cols = c("1" = mice:::mdc(1), "0" = mice:::mdc(2))
   md[1:nrow(md)-1,1:ncol(md)-1] %>%
