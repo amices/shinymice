@@ -86,7 +86,10 @@ shinyServer(function(input, output, session) {
     ## Explore tab
     # plot pattern
     output$md_pattern <-
-        renderPlot(md.pattern(data()), res = 96)
+        renderPlotly({plot_md_pattern(data = data()) %>% plotly::ggplotly()
+            # height = function() {
+            # 1.5 * as.numeric(session$clientData$output_md_pattern_width)})
+            })
     
     # show correct variables
     observe(varsUpdate("histvar1"))
