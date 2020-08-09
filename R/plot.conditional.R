@@ -6,9 +6,9 @@ if(binner == 0){bn <- NULL} else {bn <- binner}
 
 # choose hist or bar depending of variable type
 if (is.numeric(dat[[x]])) {
-  geom <- list(geom_histogram(binwidth = bn, na.rm = TRUE))
+  geom <- list(ggplot2::geom_histogram(binwidth = bn, na.rm = TRUE))
 } else {
-  geom <- list(geom_bar(binwidth = bn, na.rm = TRUE))
+  geom <- list(ggplot2::geom_bar(binwidth = bn, na.rm = TRUE))
 }
 # define facet labels
 labs <- c(
@@ -24,14 +24,14 @@ dat %>%
     levels = c(FALSE, TRUE),
     labels = c("Observed", "Imputed")
   )) %>%  #factor(is.na(!!input$histvar2), levels = c("Observed", "Missing"))) %>%
-  ggplot(aes(x = !!x, fill = R)) +
+  ggplot2::ggplot(ggplot2::aes(x = !!x, fill = R)) +
   geom +
   mice:::theme_mice +
-  theme(legend.position = "none") +
-  facet_wrap(~ R,
+  ggplot2::theme(legend.position = "none") +
+  ggplot2::facet_wrap(~ R,
              ncol = 1,
              scales = scl,
-             labeller = labeller(R = labs))
+             labeller = ggplot2::labeller(R = labs))
    #check tooltip argument
 }
 

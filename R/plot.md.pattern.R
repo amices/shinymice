@@ -3,20 +3,20 @@
 # library(mice)
 # library(tidyverse)
 plot_md_pattern <- function(data){
-  md <- md.pattern(boys, plot = FALSE)
+  md <- mice::md.pattern(boys, plot = FALSE)
   vars <- colnames(md)[-ncol(md)]
   mice_cols = c("1" = mice:::mdc(1), "0" = mice:::mdc(2))
   md[1:nrow(md)-1,1:ncol(md)-1] %>%
     cbind(id = 1:nrow(.)) %>% 
     as.data.frame() %>%
     tidyr::pivot_longer(cols = -id) %>% 
-    ggplot(aes(x = name, y = rev(id), fill = factor(value))) + 
-    geom_raster() +
-    scale_x_discrete(limits = vars, expand = c(0,0)) +
-    scale_y_continuous(expand = c(0,0)) +
-    theme_classic() +
-    scale_fill_manual(values = mice_cols) +
-    theme(legend.position = "bottom")
+    ggplot2::ggplot(ggplot2::aes(x = name, y = rev(id), fill = factor(value))) + 
+    ggplot2::geom_raster() +
+    ggplot2::scale_x_discrete(limits = vars, expand = c(0,0)) +
+    ggplot2::scale_y_continuous(expand = c(0,0)) +
+    ggplot2::theme_classic() +
+    ggplot2::scale_fill_manual(values = mice_cols) +
+    ggplot2::theme(legend.position = "bottom")
 }
 
 #colnames(md) <- c(colnames(md)[-dim(md)[2]], "nmis") 
