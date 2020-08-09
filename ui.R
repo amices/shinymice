@@ -174,7 +174,7 @@ shinyUI(
                     icon = icon("balance-scale-right"),
                     h2("Imputation model influx-outflux"),
                     "The influx of a variable quantifies how well its missing data connect to the observed data on other variables. The outflux of a variable quantifies how well its observed data connect to the missing data on other variables. In general, higher influx and outflux values are preferred.",
-                    tags$a(href= "https://stefvanbuuren.name/fimd/missing-data-pattern.html#sec:flux", "See van Buuren (2018)."),
+                    tags$a(href = "https://stefvanbuuren.name/fimd/missing-data-pattern.html#sec:flux", "See van Buuren (2018)."),
                     plotlyOutput("fluxplot")
                 ),
                 tabPanel(
@@ -234,10 +234,16 @@ shinyUI(
                 icon = icon("file-download"),
                 h2("Download the dataset or imputations"),
                 br(),
-                selectInput("mids_or_data", "Save the imputations, or just the data", choices = c("Imputations (incl. the data)", "Just the data")),
+                selectInput(
+                    "mids_or_data",
+                    "Save the imputations, or just the data",
+                    choices = c("Imputations (incl. the data)", "Just the data")
+                ),
                 selectInput("rdata_or_csv", "Save as ...", choices = c(".Rdata", ".csv")),
                 downloadButton("save", "Save"),
-                helpText("Add warning/disable downloading mids as csv! Add downloas as .sav option.")
+                helpText(
+                    "Add warning/disable downloading mids as csv! Add downloas as .sav option."
+                )
                 #tags$b("Download the dataset:"),
                 # fluidRow(column(
                 #     6,

@@ -8,8 +8,8 @@ shinyServer(function(input, output, session) {
     data <- reactive({
         if (is.null(input$upload)) {
             set.seed(123)
-            mice::boys[sample.int(748, 100), ]
-        } 
+            mice::boys[sample.int(748, 100),]
+        }
         else{
             ext <- tools::file_ext(input$upload$name)
             switch(
@@ -87,9 +87,9 @@ shinyServer(function(input, output, session) {
     # plot pattern
     output$md_pattern <-
         renderPlotly({
-            p <- plot_md_pattern(data = data()) %>% 
-                plotly::ggplotly() 
-            })
+            p <- plot_md_pattern(data = data()) %>%
+                plotly::ggplotly()
+        })
     
     # show correct variables
     observe(varsUpdate("histvar1"))
@@ -101,7 +101,7 @@ shinyServer(function(input, output, session) {
             dat = data(),
             x = input$histvar1,
             y = input$histvar2,
-            scaler = input$scalehist, 
+            scaler = input$scalehist,
             binner = input$bins#histbin()
         ) %>% plotly::ggplotly()
     })#, res = 96)
@@ -125,43 +125,44 @@ shinyServer(function(input, output, session) {
     #     waiter::waiter_show(html = waiter::spin_throbber(),
     #                         color = waiter::transparent(.5))
     #     on.exit(waiter::waiter_hide())
-    #     
+    #
     #     if (input$mice) {
     #         mice(
     #             data(),
     #             m = input$m,
     #             maxit = input$maxit,
     #             printFlag = FALSE
-    #         ) 
+    #         )
     #     }
     # })
     
     # rv <- reactiveValues(imp = NULL)
-    # 
+    #
     # observe({if(is.null(rv$imp)) {rv$imp <- list(mids())} else {rv$imp <- c(rv$imp, list(mids()))}})
     
     rv <- reactiveValues(imp = NULL)
     
-    observeEvent(input$mice, {#c(input$mice,input$iterate), {
+    observeEvent(input$mice, {
+        #c(input$mice,input$iterate), {
         # for spinner, see: https://shiny.john-coene.com/waiter/
         waiter::waiter_show(html = waiter::spin_throbber(),
                             color = waiter::transparent(.5))
         on.exit(waiter::waiter_hide())
         
-        if(is.null(rv$imp)){
+        if (is.null(rv$imp)) {
             rv$imp <-
-            list(mice(
-                data(),
-                m = input$m,
-                maxit = input$maxit))
-            }  else {
-             rv$imp <-
-                 c(rv$imp,
-                 list(mice(
-                 data(),
-                 m = input$m,
-                 maxit = input$maxit)) 
-            )}
+                list(mice(data(),
+                          m = input$m,
+                          maxit = input$maxit))
+        }  else {
+            rv$imp <-
+                c(rv$imp,
+                  list(mice(
+                      data(),
+                      m = input$m,
+                      maxit = input$maxit
+                  )))
+        }
     })
     
     observeEvent(input$iterate, {
@@ -169,16 +170,16 @@ shinyServer(function(input, output, session) {
                             color = waiter::transparent(.5))
         on.exit(waiter::waiter_hide())
         req(!is.null(rv$imp))
-        rv$imp[[input$mice]] <- mice.mids(rv$imp[[input$mice]], maxit = input$midsmaxit)
+        rv$imp[[input$mice]] <-
+            mice.mids(rv$imp[[input$mice]], maxit = input$midsmaxit)
     })
     
     # indicate that data is imputed
-    output$done <- renderPrint(
-        {
-            if (is.mids(rv$imp[[input$mice]])) {
-                "Done!"
-            }
-        })
+    output$done <- renderPrint({
+        if (is.mids(rv$imp[[input$mice]])) {
+            "Done!"
+        }
+    })
     
     ## Evaluate tab
     ## Fluxplot subtab
