@@ -8,11 +8,11 @@ shinyServer(function(input, output, session) {
     data <- reactive({
         if (is.null(input$upload)) {
             set.seed(123)
-            mice::boys[sample.int(748, 100),]
+            d <- mice::boys[sample.int(748, 100),]
         }
         else{
             ext <- tools::file_ext(input$upload$name)
-            switch(
+            d <- switch(
                 ext,
                 csv = vroom::vroom(input$upload$datapath, delim = ","),
                 tsv = vroom::vroom(input$upload$datapath, delim = "\t"),
@@ -22,6 +22,12 @@ shinyServer(function(input, output, session) {
                 )
             )
         }
+        if(is.mids(d)){
+            #rv$imp <- d
+            d <- d$data
+            # add message: "Please use the upload below to load a `mids` object, and not just the data"
+        }
+        return(d)
     })
     vars <- reactive(names(data()))
     
@@ -104,7 +110,7 @@ shinyServer(function(input, output, session) {
             scaler = input$scalehist,
             binner = input$bins#histbin()
         ) %>% plotly::ggplotly()
-    })#, res = 96)
+    })
     
     ## Impute tab
     # show names data or name of df with input$file$name, see https://mastering-shiny.org/action-transfer.html
@@ -136,10 +142,6 @@ shinyServer(function(input, output, session) {
     #     }
     # })
     
-    # rv <- reactiveValues(imp = NULL)
-    #
-    # observe({if(is.null(rv$imp)) {rv$imp <- list(mids())} else {rv$imp <- c(rv$imp, list(mids()))}})
-    
     rv <- reactiveValues(imp = NULL)
     
     observeEvent(input$mice, {
@@ -151,13 +153,15 @@ shinyServer(function(input, output, session) {
         
         if (is.null(rv$imp)) {
             rv$imp <-
-                list(mice(data(),
+                list(
+                         mice(data(),
                           m = input$m,
                           maxit = input$maxit))
         }  else {
             rv$imp <-
                 c(rv$imp,
-                  list(mice(
+                  list(
+                      mice(
                       data(),
                       m = input$m,
                       maxit = input$maxit
