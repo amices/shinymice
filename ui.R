@@ -9,6 +9,7 @@ library(warn.conflicts = FALSE, "data.table")
 library(warn.conflicts = FALSE, "rmarkdown")
 library(warn.conflicts = FALSE, "ggplot2")
 library(warn.conflicts = FALSE, "plotly")
+library(warn.conflicts = FALSE, "dplyr")
 # library(warn.conflicts = FALSE, "thematic") # for ggplot background that converts with the shiny theme, use thematic::thematic_on(font = "auto")
 
 shinyUI(
@@ -118,9 +119,11 @@ shinyUI(
                     fluidRow(
                         column(
                             3,
-                            varSelectInput("histvar1", "Choose a variable to plot:", data = mice::boys),
+                            varSelectInput("histvar1", "Choose a variable to inspect:", data = mice::boys),
                             varSelectInput("histvar2", "Conditional on missingness in:", data = mice::boys),
-                            checkboxInput("scalehist", "Fixed heigth y-axis", value = TRUE),
+                            helpText("Hint: the strongest relations are with missingness in"),
+                            div(textOutput("relations"), style = "margin-top:-1em;"), 
+                            br(),
                             numericInput(
                                 "bins",
                                 "Binwidth (optional)",
@@ -128,7 +131,8 @@ shinyUI(
                                 step = 0.5,
                                 value = 0
                             ),
-                            helpText("Automatic when 0 is selected.")
+                            helpText("Automatic when 0 is selected."),
+                            checkboxInput("scalehist", "Fixed heigth y-axis", value = TRUE)
                         ),
                         column(9,
                                plotlyOutput(

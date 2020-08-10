@@ -18,7 +18,7 @@ labs <- c(
     "Imputed", "Observed"
   ))
 # plot
-dat %>%
+dat[!is.na(dat[[x]]), ] %>% 
   dplyr::mutate(R = factor(
     is.na(!!y),
     levels = c(FALSE, TRUE),

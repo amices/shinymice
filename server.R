@@ -101,6 +101,8 @@ shinyServer(function(input, output, session) {
     observe(varsUpdate("histvar1"))
     observe(varsUpdate("histvar2"))
     
+    # show best predictors
+    output$relations <- renderText(test_relations(data(), x = input$histvar1))
     # plot distributions
     output$hist <- renderPlotly({
         conditional_hist(
