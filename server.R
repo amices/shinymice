@@ -102,7 +102,7 @@ shinyServer(function(input, output, session) {
     observe(varsUpdate("histvar2"))
     
     # show best predictors
-    output$relations <- renderText(test_relations(data(), x = input$histvar1))
+    output$relations <- renderText(test_NA_y(data(), x = input$histvar1)$top3)
     # plot distributions
     output$hist <- renderPlotly({
         conditional_hist(
