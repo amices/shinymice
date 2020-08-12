@@ -26,15 +26,16 @@ test_NA_y <- function(data, x) {
 
 #purrr::map(names(boys) %>% setNames(., .), ~ test_relations(boys, x = .x))
 
-test_NA_x <- function(data, x){
-# chisq.test(is.na(boys$hgt), boys$gen)
-glm(as.formula(paste0("is.na(", x, ") ~ .")) , data, family = "binomial", maxit = 100) %>% 
-  broom::tidy() %>% 
-  .[-1,] %>% 
-  dplyr::arrange(desc(estimate)) %>% 
-  mutate(estimate = exp(estimate))
-}
+# test_NA_x <- function(data, x){
+# # chisq.test(is.na(boys$hgt), boys$gen)
+# glm(as.formula(paste0("is.na(", x, ") ~ .")) , data, family = "binomial", maxit = 100) %>% 
+#   broom::tidy() %>% 
+#   .[-1,] %>% 
+#   dplyr::arrange(desc(estimate)) %>% 
+#   mutate(estimate = exp(estimate))
+# }
+# 
+# 
+# boys %>% test_NA_x(x = "tv")
 
-
-boys %>% test_NA_x(x = "tv")
-
+# for plotting of logistic regression results, see https://rkabacoff.github.io/datavis/Models.html#logistic-regression

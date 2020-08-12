@@ -15,7 +15,7 @@ plot_md_pattern <- function(data) {
       y = rev(id),
       fill = factor(value)
     )) +
-    ggplot2::geom_raster() +
+    ggplot2::geom_tile(colour = "black") +
     ggplot2::scale_x_discrete(limits = vars, expand = c(0, 0)) +
     ggplot2::scale_y_continuous(expand = c(0, 0)) +
     ggplot2::theme_classic() +

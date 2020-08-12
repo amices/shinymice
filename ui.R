@@ -73,7 +73,7 @@ shinyUI(
                         ),
                         fileInput(
                             "midsupload",
-                            tags$b("Or choose a multiply imputed dataset (`mids` object)"),
+                            div(HTML("<strong> Or choose a multiply imputed dataset (<code>mids</code> object) </strong>")),
                             accept = ".Rdata"
                         ),
                         div(style = "margin-top:-2em;", helpText("Does not do anything anymore."))
@@ -146,7 +146,8 @@ shinyUI(
             tabPanel(
                 "Impute",
                 icon = icon("calculator"),
-                h2("Impute missing data using `mice`"),
+                div(HTML("<h2> Impute missing data using <code>mice</code></h2>")),
+                #h2("`mice`"),
                 numericInput(
                     "m",
                     label = "Number of imputations",
