@@ -91,11 +91,10 @@ shinyServer(function(input, output, session) {
     
     ## Explore tab
     # plot pattern
+    # make it interactive with two axes? see https://stackoverflow.com/questions/52833214/adding-second-y-axis-on-ggplotly
     output$md_pattern <-
-        renderPlotly({
-            p <- plot_md_pattern(data = data()) %>%
-                plotly::ggplotly()
-        })
+        renderPlot({plot_md_pattern(data = data())}, res = 96
+        ) 
     
     # show correct variables
     observe(varsUpdate("histvar1"))

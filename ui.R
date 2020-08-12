@@ -107,8 +107,8 @@ shinyUI(
                     icon = icon("th"),
                     h2("Observed missingness pattern per variable"),
                     helpText("Observed data is blue, missing data is red."),
-                    plotlyOutput("md_pattern", width = "100%"),
-                    style = 'overflow-y: scroll;'
+                    plotOutput("md_pattern")#, width = "100%"),
+                    #style = 'overflow-y: scroll;'
                 ),
                 
                 tabPanel(
