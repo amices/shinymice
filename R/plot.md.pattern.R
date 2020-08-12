@@ -41,14 +41,14 @@ plot_md_pattern <- function(data) {
     )) +
     ggplot2::geom_tile(colour = "black") +
     ggplot2::scale_x_discrete(limits = vars, expand = c(0, 0), position = "bottom", labels = second_y) +
-    ggplot2::scale_y_continuous(breaks = seq_len(nrow(md)-1), labels = rev(rownames(md)[-nrow(md)]), sec.axis = second_x) +
+    ggplot2::scale_y_continuous(breaks = seq_len(nrow(md)-1), labels = rev(rownames(md)[-nrow(md)]), sec.axis = second_x, expand = expansion(mult = c(0, .05))) +
     ggplot2::theme_classic() +
     ggplot2::scale_fill_manual(values = mice_cols) +
     labs(
-      x = "Total number of missing values per variable", 
+      x = paste0("Number of missing cells per variable (total = ",  md[nrow(md), ncol(md)], ")"), 
       y = "Number of rows with this pattern",
       title = " ") +
-    geom_text(aes(x = name, y = Inf, label = label), data = var_lab, vjust = 0) +
+    geom_text(aes(x = name, y = Inf, label = label), data = var_lab, vjust = 1) +
     #guides(x.sec = guide_axis_label_trans()) +
     theme(legend.position = "none")
     #geom_text(aes(name, y = -Inf, label = label), data = data.frame(name = vars, label = as.character(md[nrow(md), -ncol(md)])), vjust = -0.5) 
