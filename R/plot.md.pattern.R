@@ -16,12 +16,17 @@ plot_md_pattern <- function(data) {
       fill = factor(value)
     )) +
     ggplot2::geom_tile(colour = "black") +
-    ggplot2::scale_x_discrete(limits = vars, expand = c(0, 0)) +
-    ggplot2::scale_y_continuous(expand = c(0, 0)) +
+    ggplot2::scale_x_discrete(limits = vars, expand = c(0, 0), position = "top") +
+    ggplot2::scale_y_continuous(expand = c(0, 0), sec.axis = sec_axis(~.+0, breaks = seq_len(nrow(md)-1), labels = rev(rownames(md)[-nrow(md)]))) +
     ggplot2::theme_classic() +
     ggplot2::scale_fill_manual(values = mice_cols) +
-    ggplot2::theme(legend.position = "bottom")
+    ggplot2::theme(legend.position = "bottom") + 
+    labs(x = "")
 }
 
 #colnames(md) <- c(colnames(md)[-dim(md)[2]], "nmis")
 #md <- md %>% cbind(freq = as.numeric(row.names(.)))
+
+boys %>% plot_md_pattern()
+
+boys %>% md.pattern()
