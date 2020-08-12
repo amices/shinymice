@@ -281,7 +281,7 @@ shinyServer(function(input, output, session) {
         },
         content = function(file) {
             if (input$rdata_or_csv == ".Rdata") {
-                dataset <- data()
+                dataset <- data() #add if()/switch() statement to add rv$imp object instead
                 save(dataset, file = file)
             }
             if (input$rdata_or_csv == ".csv") {
