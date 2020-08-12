@@ -71,11 +71,13 @@ shinyUI(
                             style = "margin-top:-1em;",
                             helpText("Accepts `.Rdata`, `.csv`, `.tsv`, and `.txt` files.") #add option to read from link, see https://cran.r-project.org/web/packages/vroom/vignettes/vroom.html
                         ),
-                        fileInput(
-                            "midsupload",
-                            div(HTML("<strong> Or choose a multiply imputed dataset (<code>mids</code> object) </strong>")),
-                            accept = ".Rdata"
-                        ),
+                        fileInput("midsupload",
+                                  div(
+                                      HTML(
+                                          "<strong> Or choose a multiply imputed dataset (<code>mids</code> object) </strong>"
+                                      )
+                                  ),
+                                  accept = ".Rdata"),
                         div(style = "margin-top:-2em;", helpText("Does not do anything anymore."))
                         
                         #,
@@ -122,7 +124,7 @@ shinyUI(
                             varSelectInput("histvar1", "Choose a variable to inspect:", data = mice::boys),
                             varSelectInput("histvar2", "Conditional on missingness in:", data = mice::boys),
                             helpText("Hint: the strongest relations are with missingness in"),
-                            div(textOutput("relations"), style = "margin-top:-1em;"), 
+                            div(textOutput("relations"), style = "margin-top:-1em;"),
                             br(),
                             numericInput(
                                 "bins",
@@ -146,7 +148,9 @@ shinyUI(
             tabPanel(
                 "Impute",
                 icon = icon("calculator"),
-                div(HTML("<h2> Impute missing data using <code>mice</code></h2>")),
+                div(HTML(
+                    "<h2> Impute missing data using <code>mice</code></h2>"
+                )),
                 #h2("`mice`"),
                 numericInput(
                     "m",

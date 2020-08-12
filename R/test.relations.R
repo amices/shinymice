@@ -7,10 +7,10 @@ test_NA_y <- function(data, x) {
     fam <- "binomial"
   }
   #empty_model <- glm(as.formula(paste(x, "~ 1")), d, family = fam)
-  coef <- glm(as.formula(paste(x, "~ .")), d, family = fam) %>% 
-    broom::tidy() %>% 
+  coef <- glm(as.formula(paste(x, "~ .")), d, family = fam) %>%
+    broom::tidy() %>%
     # drop intercept
-    .[-1,]
+    .[-1, ]
   #model <- broom::tidy(anova(empty_model, full_model))
   if (is.numeric(d[[x]])) {
     ordered <- coef %>% dplyr::arrange(desc(abs(estimate)))
@@ -28,14 +28,14 @@ test_NA_y <- function(data, x) {
 
 # test_NA_x <- function(data, x){
 # # chisq.test(is.na(boys$hgt), boys$gen)
-# glm(as.formula(paste0("is.na(", x, ") ~ .")) , data, family = "binomial", maxit = 100) %>% 
-#   broom::tidy() %>% 
-#   .[-1,] %>% 
-#   dplyr::arrange(desc(estimate)) %>% 
+# glm(as.formula(paste0("is.na(", x, ") ~ .")) , data, family = "binomial", maxit = 100) %>%
+#   broom::tidy() %>%
+#   .[-1,] %>%
+#   dplyr::arrange(desc(estimate)) %>%
 #   mutate(estimate = exp(estimate))
 # }
-# 
-# 
+#
+#
 # boys %>% test_NA_x(x = "tv")
 
 # for plotting of logistic regression results, see https://rkabacoff.github.io/datavis/Models.html#logistic-regression

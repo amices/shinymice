@@ -22,7 +22,7 @@ shinyServer(function(input, output, session) {
                 )
             )
         }
-        if(is.mids(d)){
+        if (is.mids(d)) {
             #rv$imp <- d
             d <- d$data
             # add message: "Please use the upload below to load a `mids` object, and not just the data"
@@ -56,33 +56,6 @@ shinyServer(function(input, output, session) {
         )
     })
     
-    ## Data tab
-    # choose data
-    # observe({
-    #     if (is.null(input$upload)) {
-    #         data() <- get(input$choice, "package:mice")
-    #         rv$nm <- input$choice
-    #     } else if (grepl("\\.Rdata$", input$upload$datapath, ignore.case = TRUE)) { # or use tools::file_ext(), see https://mastering-shiny.org/action-transfer.html
-    #         env <- attach(input$upload$datapath)
-    #         rv$nm <- ls(name = env)
-    #         if (is.mids(env[[rv$nm]])) {
-    #             mids() <- env[[rv$nm]]
-    #             data() <- env[[rv$nm]][["data"]]
-    #         } else {
-    #             data() <- env[[rv$nm]]
-    #         }
-    #     } else if (grepl("\\.csv$", input$upload$datapath, ignore.case = TRUE)) {
-    #         data() <- read.csv(input$upload$datapath, header = input$header)
-    #         rv$nm <- tools::file_path_sans_ext(input$upload$name)
-    #     }
-    # })
-    # reset data
-    # observeEvent(input$reset, {
-    #     shinyjs::reset("sidebar")
-    #     data() <- get(input$choice, "package:mice")
-    #     rv$nm <- input$choice
-    # })
-    
     # tablutate data
     output$table <-
         renderDT({
@@ -93,16 +66,18 @@ shinyServer(function(input, output, session) {
     # plot pattern
     # make it interactive with two axes? see https://stackoverflow.com/questions/52833214/adding-second-y-axis-on-ggplotly
     output$md_pattern <-
-        renderPlot({plot_md_pattern(data = data())}, res = 72
-        )
-    #renderPlotly({plot_md_pattern(data = data()) %>% plotly::ggplotly(.)}) 
+        renderPlot({
+            plot_md_pattern(data = data())
+        }, res = 72)
+    #renderPlotly({plot_md_pattern(data = data()) %>% plotly::ggplotly(.)})
     
     # show correct variables
     observe(varsUpdate("histvar1"))
     observe(varsUpdate("histvar2"))
     
     # show best predictors
-    output$relations <- renderText(test_NA_y(data(), x = input$histvar1)$top3)
+    output$relations <-
+        renderText(test_NA_y(data(), x = input$histvar1)$top3)
     # plot distributions
     output$hist <- renderPlotly({
         conditional_hist(
@@ -127,27 +102,10 @@ shinyServer(function(input, output, session) {
             ", printFlag = FALSE)"
         )
     })
-    # impute
-    # mids <- eventReactive(input$mice, {
-    #     # for spinner, see: https://shiny.john-coene.com/waiter/
-    #     waiter::waiter_show(html = waiter::spin_throbber(),
-    #                         color = waiter::transparent(.5))
-    #     on.exit(waiter::waiter_hide())
-    #
-    #     if (input$mice) {
-    #         mice(
-    #             data(),
-    #             m = input$m,
-    #             maxit = input$maxit,
-    #             printFlag = FALSE
-    #         )
-    #     }
-    # })
     
     rv <- reactiveValues(imp = NULL)
     
     observeEvent(input$mice, {
-        #c(input$mice,input$iterate), {
         # for spinner, see: https://shiny.john-coene.com/waiter/
         waiter::waiter_show(html = waiter::spin_throbber(),
                             color = waiter::transparent(.5))
@@ -155,15 +113,13 @@ shinyServer(function(input, output, session) {
         
         if (is.null(rv$imp)) {
             rv$imp <-
-                list(
-                         mice(data(),
+                list(mice(data(),
                           m = input$m,
                           maxit = input$maxit))
         }  else {
             rv$imp <-
                 c(rv$imp,
-                  list(
-                      mice(
+                  list(mice(
                       data(),
                       m = input$m,
                       maxit = input$maxit
@@ -281,7 +237,8 @@ shinyServer(function(input, output, session) {
         },
         content = function(file) {
             if (input$rdata_or_csv == ".Rdata") {
-                dataset <- data() #add if()/switch() statement to add rv$imp object instead
+                dataset <-
+                    data() #add if()/switch() statement to add rv$imp object instead
                 save(dataset, file = file)
             }
             if (input$rdata_or_csv == ".csv") {
