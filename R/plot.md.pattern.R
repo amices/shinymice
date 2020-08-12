@@ -48,9 +48,11 @@ plot_md_pattern <- function(data) {
       x = paste0("Number of missing cells per variable (total = ",  md[nrow(md), ncol(md)], ")"), 
       y = "Number of rows with this pattern",
       title = " ") +
-    geom_text(aes(x = name, y = Inf, label = label), data = var_lab, vjust = 1) +
+    geom_text(aes(x = name, y = Inf, label = label), data = var_lab, vjust = 1.5) +
     #guides(x.sec = guide_axis_label_trans()) +
-    theme(legend.position = "none")
+    theme(legend.position = "none", 
+          axis.title.y.right = element_text(vjust=2),
+          axis.line.y = element_blank())
     #geom_text(aes(name, y = -Inf, label = label), data = data.frame(name = vars, label = as.character(md[nrow(md), -ncol(md)])), vjust = -0.5) 
 }
 
