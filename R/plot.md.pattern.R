@@ -42,13 +42,14 @@ plot_md_pattern <- function(data) {
     ggplot2::geom_tile(colour = "black") +
     ggplot2::scale_x_discrete(limits = vars, expand = c(0, 0), position = "bottom", labels = second_y) +
     ggplot2::scale_y_continuous(breaks = seq_len(nrow(md)-1), labels = rev(rownames(md)[-nrow(md)]), sec.axis = second_x, expand = expansion(mult = c(0, .05))) +
+    geom_text(aes(x = name, y = Inf, label = label), data = var_lab, vjust = 1.5) +
     ggplot2::theme_classic() +
     ggplot2::scale_fill_manual(values = mice_cols) +
+    coord_equal() +
     labs(
       x = paste0("Number of missing cells per variable (total = ",  md[nrow(md), ncol(md)], ")"), 
       y = "Number of rows with this pattern",
       title = " ") +
-    geom_text(aes(x = name, y = Inf, label = label), data = var_lab, vjust = 1.5) +
     #guides(x.sec = guide_axis_label_trans()) +
     theme(legend.position = "none", 
           axis.title.y.right = element_text(vjust=2),
@@ -59,6 +60,6 @@ plot_md_pattern <- function(data) {
 #colnames(md) <- c(colnames(md)[-dim(md)[2]], "nmis")
 #md <- md %>% cbind(freq = as.numeric(row.names(.)))
 
-boys %>% plot_md_pattern()
-
-boys %>% md.pattern()
+# boys %>% plot_md_pattern()
+# 
+# boys %>% md.pattern()
