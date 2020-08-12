@@ -6,7 +6,7 @@ plot_md_pattern <- function(data) {
   md <- mice::md.pattern(data, plot = FALSE)
   vars <- colnames(md)[-ncol(md)]
   mice_cols <- c("1" = mice:::mdc(1), "0" = mice:::mdc(2))
-  second_x <- sec_axis(~.+0, breaks = seq_len(nrow(md)-1), labels = rev(as.character(md[-nrow(md),ncol(md)])))
+  second_x <- sec_axis(~.+0, breaks = seq_len(nrow(md)-1), labels = rev(as.character(md[-nrow(md),ncol(md)])), name = "Number of missing values per pattern")
   # process and plot
   md[1:nrow(md) - 1, 1:ncol(md) - 1] %>%
     cbind(id = 1:nrow(.)) %>%
@@ -23,7 +23,9 @@ plot_md_pattern <- function(data) {
     ggplot2::theme_classic() +
     ggplot2::scale_fill_manual(values = mice_cols) +
     ggplot2::theme(legend.position = "bottom") + 
-    labs(x = "", y = "")
+    labs(x = "Variable", y = "Number of rows with this pattern") +
+    theme(legend.position = "none")
+    #geom_text(aes(name, y = -Inf, label = label), data = data.frame(name = vars, label = as.character(md[nrow(md), -ncol(md)])), vjust = -0.5) 
 }
 
 #colnames(md) <- c(colnames(md)[-dim(md)[2]], "nmis")
