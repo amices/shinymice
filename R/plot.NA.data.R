@@ -7,6 +7,21 @@ plot_NA_margins <- function(data, x, y = NULL) {
     x = "id"
   }
   
+  # preprocessing
+  geom_list <- scale_list <- list(NULL)
+  if(any(is.na(data[[x]]))){
+    geom_list <- list(geom_point(aes(x = R_x, y = .data[[y]]),
+                      color = mice:::mdc(2),
+                      na.rm = TRUE))
+    if(is.numeric(data[[x]])){
+      data <- data %>% mutate(R_x = ifelse(is.na(.data[[x]]), NA_level_x, NA))
+      scale_list <- list(scale_x_continuous(expand = expansion(mult = c(0.01, .05))))
+    } else {
+      data <- data %>% mutate(R_x = ifelse(is.na(.data[[x]]), "   ", NA))
+      scale_list <- list(scale_x_discrete(expand = expansion(mult = c(0.01, .05))))
+    }
+  }
+  
   # do not do any further processing if there are no NAs
   if (all(!is.na(data[[x]])) & all(!is.na(data[[y]]))) {
     return(ggplot(data, aes(x = .data[[x]], y = .data[[y]])) +
