@@ -3,7 +3,7 @@
 set.seed(123)
 data <- mice::boys[sample.int(748, 100),]
 
-v = "gen"
+v = "phb"
 
 # data %>% mutate(R = !is.na(.data[[v]]), hc = factor(.data[[v]], exclude = NULL)) %>% 
 #   ggplot() +
@@ -18,11 +18,11 @@ data %>% mutate(R = ifelse(is.na(.data[[v]]), NA_level, NA), id = 1:nrow(data)) 
   geom_point(aes(x = id, y = R), color = mice:::mdc(2), na.rm = TRUE) + 
   scale_y_continuous(expand = expansion(mult = c(0.01, .05))) +
   theme_classic()
-} else {print("Nope")}
-
-data %>% mutate(R = ifelse(is.na(.data[[v]]), "!!!", NA), id = 1:nrow(data)) %>% 
+} else {
+data %>% mutate(R = ifelse(is.na(.data[[v]]), " (NA)", NA), id = 1:nrow(data)) %>% 
   ggplot() +
   geom_point(aes(x = id, y = .data[[v]]), color = mice:::mdc(1), na.rm = TRUE) +
   geom_point(aes(x = id, y = R), color = mice:::mdc(2), na.rm = TRUE) + 
   scale_y_discrete(expand = expansion(mult = c(0.01, .05))) +
   theme_classic()
+}
