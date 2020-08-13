@@ -9,7 +9,8 @@ plot_NA_margins <- function(data, x, y = NULL) {
   
   # preprocessing
   geom_x_list <-
-    geom_y_list <- scale_x_list <- scale_y_list <- list(NULL)
+    geom_y_list <-
+    scale_x_list <- geom_x_y_list <- scale_y_list <- list(NULL)
   if (any(is.na(data[[x]]))) {
     geom_x_list <- list(geom_point(
       aes(x = R_x, y = .data[[y]]),
@@ -50,59 +51,23 @@ plot_NA_margins <- function(data, x, y = NULL) {
     }
   }
   
+  if(any(is.na(data[[x]])) & any(is.na(data[[y]]))){
+    geom_x_y_list <- list(geom_point(aes(x = R_x, y = R_y), color = mice:::mdc(2), na.rm = TRUE))
+  }
   
-  # do not do any further processing if there are no NAs
-  # if (all(!is.na(data[[x]])) & all(!is.na(data[[y]]))) {
-  #   return(ggplot(data, aes(x = .data[[x]], y = .data[[y]])) +
-  #            geom_point(color = mice:::mdc(1)) +
-  #            theme_classic())
-  # }
-  
-  # for continuous variables
-  # if (is.numeric(data[[y]])) {
-  #   NA_level_x <-
-  #     min(data[[x]], na.rm = TRUE) - sd(data[[x]], na.rm = TRUE)
-  #   NA_level_y <-
-  #     min(data[[y]], na.rm = TRUE) - sd(data[[y]], na.rm = TRUE)
-  #   p <-
-  #     data %>% mutate(R_x = ifelse(is.na(.data[[x]]), NA_level_x, NA),
-  #                     R_y = ifelse(is.na(.data[[y]]), NA_level_y, NA)) %>%
-  #     ggplot() +
-  #     geom_point(aes(x = .data[[x]], y = .data[[y]]),
-  #                color = mice:::mdc(1),
-  #                na.rm = TRUE) +
-  #     geom_point(aes(x = .data[[x]], y = R_y),
-  #                color = mice:::mdc(2),
-  #                na.rm = TRUE) +
-  #     geom_point(aes(x = R_x, y = .data[[y]]),
-  #                color = mice:::mdc(2),
-  #                na.rm = TRUE) +
-  #     scale_x_continuous(expand = expansion(mult = c(0.01, .05))) +
-  #     scale_y_continuous(expand = expansion(mult = c(0.01, .05))) +
-  #     theme_classic()
-  #   return(p)
-  # } else {
-  #   # for (ordered) factors and logical variables
   p <-
-    data %>% #mutate(R_x = ifelse(is.na(.data[[x]]), "   ", NA),
-    #      R_y = ifelse(is.na(.data[[y]]), "   ", NA)) %>%
+    data %>% 
     ggplot() +
     geom_point(aes(x = .data[[x]], y = .data[[y]]),
                color = mice:::mdc(1),
                na.rm = TRUE) +
-    # geom_point(aes(x = R_x, y = .data[[y]]),
-    #            color = mice:::mdc(2),
-    #            na.rm = TRUE) +
-    # geom_point(aes(x = .data[[x]], y = R_y),
-    #            color = mice:::mdc(2),
-    #            na.rm = TRUE) +
-    #scale_x_discrete(expand = expansion(mult = c(0.01, .05))) +
-    #scale_y_discrete(expand = expansion(mult = c(0.01, .05))) +
     geom_x_list +
     geom_y_list +
+    geom_x_y_list +
     scale_x_list +
     scale_y_list +
     theme_classic()
+  
   return(p)
   
   
@@ -115,3 +80,6 @@ plot_NA_margins(data, x = "phb")
 plot_NA_margins(data, x = "age")
 plot_NA_margins(data, x = "age", y = "hc")
 plot_NA_margins(data, x = "hgt", y = "hc")
+plot_NA_margins(data, x = "gen", y = "phb")
+# add some jitter to make plots of categocial variables more informative?
+plot_NA_margins(data, x = "gen", y = "hc")
