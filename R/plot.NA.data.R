@@ -21,7 +21,8 @@ plot_NA_margins <- function(data, x, y = NULL) {
     NA_level_y <-
       min(data[[y]], na.rm = TRUE) - sd(data[[y]], na.rm = TRUE)
     p <-
-      data %>% mutate(R_x = ifelse(is.na(.data[[x]]), NA_level_x, NA), R_y = ifelse(is.na(.data[[y]]), NA_level_y, NA)) %>%
+      data %>% mutate(R_x = ifelse(is.na(.data[[x]]), NA_level_x, NA),
+                      R_y = ifelse(is.na(.data[[y]]), NA_level_y, NA)) %>%
       ggplot() +
       geom_point(aes(x = .data[[x]], y = .data[[y]]),
                  color = mice:::mdc(1),
@@ -39,7 +40,8 @@ plot_NA_margins <- function(data, x, y = NULL) {
   } else {
     # for (ordered) factors and logical variables
     p <-
-      data %>% mutate(R_x = ifelse(is.na(.data[[x]]), "   ", NA), R_y = ifelse(is.na(.data[[y]]), "   ", NA)) %>%
+      data %>% mutate(R_x = ifelse(is.na(.data[[x]]), "   ", NA),
+                      R_y = ifelse(is.na(.data[[y]]), "   ", NA)) %>%
       ggplot() +
       geom_point(aes(x = .data[[x]], y = .data[[y]]),
                  color = mice:::mdc(1),
@@ -64,3 +66,4 @@ plot_NA_margins(data, x = "hc")
 plot_NA_margins(data, x = "phb")
 plot_NA_margins(data, x = "age")
 plot_NA_margins(data, x = "age", y = "hc")
+plot_NA_margins(data, x = "hgt", y = "hc")
