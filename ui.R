@@ -112,7 +112,8 @@ shinyUI(
                     plotOutput("md_pattern")#,
                     #style = 'overflow-y: scroll; overflow-x: scroll;')
                 ),
-                
+                tabPanel("Scatterplots", 
+                         plotOutput("NA_plot")),
                 tabPanel(
                     "Distributions",
                     icon = icon("chart-bar"),

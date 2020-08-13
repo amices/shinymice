@@ -62,6 +62,9 @@ shinyServer(function(input, output, session) {
             DT_NA_highlight(data(), vars())
         }, server = F)
     
+    output$NA_plot <- 
+        renderPlot(plot_NA_margins(data(), x = vars()[1], y = vars()[2]))
+    
     ## Explore tab
     # plot pattern
     # make it interactive with two axes? see https://stackoverflow.com/questions/52833214/adding-second-y-axis-on-ggplotly
