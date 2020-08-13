@@ -7,7 +7,7 @@ plot_md_pattern <- function(data) {
   vars <- colnames(md)[-ncol(md)]
   mice_cols <- c("1" = mice:::mdc(1), "0" = mice:::mdc(2))
   second_x <-
-    sec_axis(
+    ggplot2::sec_axis(
       ~ . + 0,
       breaks = seq_len(nrow(md) - 1),
       labels = rev(as.character(md[-nrow(md), ncol(md)])),
@@ -41,22 +41,22 @@ plot_md_pattern <- function(data) {
       breaks = seq_len(nrow(md) - 1),
       labels = rev(rownames(md)[-nrow(md)]),
       sec.axis = second_x,
-      expand = expansion(mult = c(0, .05))
+      expand = ggplot2::expansion(mult = c(0, .05))
     ) +
-    geom_text(aes(x = name, y = Inf, label = label),
+    ggplot2::geom_text(aes(x = name, y = Inf, label = label),
               data = var_lab,
               vjust = 1.5) +
     ggplot2::theme_classic() +
     ggplot2::scale_fill_manual(values = mice_cols) +
-    coord_equal() +
-    labs(
+    ggplot2::coord_equal() +
+    ggplot2::labs(
       x = paste0("Number of missing cells per variable (total = ",  md[nrow(md), ncol(md)], ")"),
       y = "Number of rows with this pattern",
       title = " "
     ) +
-    theme(
+    ggplot2::theme(
       legend.position = "none",
-      axis.title.y.right = element_text(vjust = 2),
-      axis.line.y = element_blank()
+      axis.title.y.right = ggplot2::element_text(vjust = 2),
+      axis.line.y = ggplot2::element_blank()
     )
 }
