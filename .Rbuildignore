@@ -1,2 +1,5 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
+^shinyMice\.Rcheck$
+^shinyMice.*\.tar\.gz$
+^shinyMice.*\.tgz$

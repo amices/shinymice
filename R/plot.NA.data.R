@@ -9,7 +9,7 @@ v = "phb"
 #   ggplot() +
 #   geom_point(aes(x = rownames(data), y = .data[[v]], color = R))  +
 #   scale_x_discrete(limits = c(levels(.data[[v]])))
-
+plot_NA_margins <- function(data, x){
 if (is.numeric(data[[v]])){
 NA_level <- min(data[[v]], na.rm = TRUE) - sd(data[[v]], na.rm = TRUE)
 data %>% mutate(R = ifelse(is.na(.data[[v]]), NA_level, NA), id = 1:nrow(data)) %>% 
@@ -25,4 +25,5 @@ data %>% mutate(R = ifelse(is.na(.data[[v]]), " (NA)", NA), id = 1:nrow(data)) %
   geom_point(aes(x = id, y = R), color = mice:::mdc(2), na.rm = TRUE) + 
   scale_y_discrete(expand = expansion(mult = c(0.01, .05))) +
   theme_classic()
+}
 }
