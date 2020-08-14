@@ -12,8 +12,10 @@ plot_NA_margins <- function(data, x, y = NULL) {
     geom_y_list <-
     scale_x_list <- geom_x_y_list <- scale_y_list <- list(NULL)
   if (any(is.na(data[[x]]))) {
-    geom_x_list <- list(ggplot2::geom_point(
+    geom_x_list <- list(ggplot2::geom_jitter(
       ggplot2::aes(x = R_x, y = .data[[y]]),
+      width = 0.1,
+      height = 0.1,
       color = mice:::mdc(2),
       na.rm = TRUE
     ))
@@ -33,8 +35,10 @@ plot_NA_margins <- function(data, x, y = NULL) {
   }
   
   if (any(is.na(data[[y]]))) {
-    geom_y_list <- list(ggplot2::geom_point(
+    geom_y_list <- list(ggplot2::geom_jitter(
       ggplot2::aes(x = .data[[x]], y = R_y),
+      width = 0.1,
+      height = 0.1,
       color = mice:::mdc(2),
       na.rm = TRUE
     ))
@@ -55,8 +59,10 @@ plot_NA_margins <- function(data, x, y = NULL) {
   
   if (any(is.na(data[[x]])) & any(is.na(data[[y]]))) {
     geom_x_y_list <-
-      list(ggplot2::geom_point(
+      list(ggplot2::geom_jitter(
         ggplot2::aes(x = R_x, y = R_y),
+        width = 0.1,
+        height = 0.1,
         color = mice:::mdc(2),
         na.rm = TRUE
       ))
@@ -65,7 +71,9 @@ plot_NA_margins <- function(data, x, y = NULL) {
   p <-
     data %>%
     ggplot2::ggplot() +
-    ggplot2::geom_point(ggplot2::aes(x = .data[[x]], y = .data[[y]]),
+    ggplot2::geom_jitter(ggplot2::aes(x = .data[[x]], y = .data[[y]]),
+                         width = 0.1,
+                         height = 0.1,
                         color = mice:::mdc(1),
                         na.rm = TRUE) +
     geom_x_list +
@@ -79,9 +87,9 @@ plot_NA_margins <- function(data, x, y = NULL) {
   
   
 }
-set.seed(123)
-data <- mice::boys[sample.int(748, 100), ]
-
+# set.seed(123)
+# data <- mice::boys[sample.int(748, 100), ]
+# 
 plot_NA_margins(data, x = "hc")
 plot_NA_margins(data, x = "phb")
 plot_NA_margins(data, x = "age")
