@@ -62,8 +62,8 @@ shinyServer(function(input, output, session) {
             DT_NA_highlight(data(), vars())
         }, server = F)
     
-    output$NA_plot <- 
-        renderPlot(plot_NA_margins(data(), x = vars()[1], y = vars()[2]))
+    # output$NA_plot <-
+    #     renderPlot(plot_NA_margins(data(), x = vars()[1], y = vars()[2]))
     
     ## Explore tab
     # plot pattern
@@ -83,13 +83,22 @@ shinyServer(function(input, output, session) {
         renderText(test_NA_y(data(), x = input$histvar1)$top3)
     # plot distributions
     output$hist <- renderPlotly({
-        conditional_hist(
-            dat = data(),
-            x = input$histvar1,
-            y = input$histvar2,
-            scaler = input$scalehist,
-            binner = input$bins#histbin()
-        ) %>% plotly::ggplotly()
+        p <- switch(
+            input$hist_or_point,
+            histogram = conditional_hist(
+                dat = data(),
+                x = input$histvar1,
+                y = input$histvar2,
+                scaler = input$scalehist,
+                binner = input$bins#histbin()
+            ),
+            scatterplot = plot_NA_margins(
+                data = data(),
+                x = input$histvar1,
+                y = input$histvar2
+            )
+        )
+        p %>% plotly::ggplotly()
     })
     
     ## Impute tab

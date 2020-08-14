@@ -1,12 +1,12 @@
 # plot distributions before imputation
 plot_NA_margins <- function(data, x, y = NULL) {
   # parse inputs
-  if (is.null(y)) {
+  if (is.null(y)||x==y) {
     data <- data %>% dplyr::mutate(id = 1:nrow(data))
     y = x
     x = "id"
   }
-  
+
   # preprocessing
   geom_x_list <-
     geom_y_list <-
@@ -23,12 +23,12 @@ plot_NA_margins <- function(data, x, y = NULL) {
       data <-
         data %>% dplyr::mutate(R_x = ifelse(is.na(.data[[x]]), NA_level_x, NA))
       scale_x_list <-
-        list(ggplot2::scale_x_continuous(expand = ggplot2::expansion(mult = c(0.01, .05))))
+        list(ggplot2::scale_x_continuous(expand = ggplot2::expansion(mult = c(0.005, .05))))
     } else {
       data <-
         data %>% dplyr::mutate(R_x = ifelse(is.na(.data[[x]]), "   ", NA))
       scale_x_list <-
-        list(ggplot2::scale_x_discrete(expand = ggplot2::expansion(mult = c(0.01, .05))))
+        list(ggplot2::scale_x_discrete(expand = ggplot2::expansion(mult = c(0.005, .05))))
     }
   }
   

@@ -112,8 +112,8 @@ shinyUI(
                     plotOutput("md_pattern")#,
                     #style = 'overflow-y: scroll; overflow-x: scroll;')
                 ),
-                tabPanel("Scatterplots", 
-                         plotOutput("NA_plot")),
+                # tabPanel("Scatterplots", 
+                #          plotOutput("NA_plot")),
                 tabPanel(
                     "Distributions",
                     icon = icon("chart-bar"),
@@ -122,6 +122,7 @@ shinyUI(
                     fluidRow(
                         column(
                             3,
+                            selectInput("hist_or_point", "What to plot?", choices = c("scatterplot", "histogram")),
                             varSelectInput("histvar1", "Choose a variable to inspect:", data = mice::boys),
                             varSelectInput("histvar2", "Conditional on missingness in:", data = mice::boys),
                             helpText("Hint: the strongest relations are with missingness in"),
