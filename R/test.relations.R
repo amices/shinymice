@@ -46,6 +46,8 @@ test_NA_y <- function(data, x) {
 #
 #
 # boys %>% test_NA_x(x = "tv")
+library(mice)
+library(tidyverse)
 data = boys
 x = "hgt"
 fam <- ifelse(is.numeric(data[[x]]), "gaussian", "binomial")
@@ -56,6 +58,14 @@ test <- data %>%
   .[-1,] %>% 
   dplyr::arrange(desc(abs(estimate)))
 
-purrr::map_dfr(names(data) %>% setNames(names(data) %>% .[! . %in% x]), function(x){grep(x, test$term)} %>% data.frame(ord = .)) #%>% base::cbind(var = x))#%>% c(x, .))
+test$term
+
+(out <- purrr::map_df(names(data) %>% 
+          setNames(names(data)), function(x){grep(x, test$term)} %>% 
+          cbind(x) %>% 
+            as.data.frame()) %>% 
+    setNames(c("ord", "var")) %>% 
+    dplyr::arrange(as.numeric(ord)) 
+)
 
 # for plotting of logistic regression results, see https://rkabacoff.github.io/datavis/Models.html#logistic-regression
