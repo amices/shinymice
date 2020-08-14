@@ -49,11 +49,13 @@ test_NA_y <- function(data, x) {
 data = boys
 x = "hgt"
 fam <- ifelse(is.numeric(data[[x]]), "gaussian", "binomial")
-data %>% 
+test <- data %>% 
   mutate(across(where(is.numeric), scale)) %>% 
   glm(as.formula(paste(x, "~ .")), data = ., family = fam) %>% 
   broom::tidy() %>% 
   .[-1,] %>% 
   dplyr::arrange(desc(abs(estimate)))
+
+purrr::map_dfr(names(data) %>% setNames(names(data) %>% .[! . %in% x]), function(x){grep(x, test$term)} %>% data.frame(ord = .)) #%>% base::cbind(var = x))#%>% c(x, .))
 
 # for plotting of logistic regression results, see https://rkabacoff.github.io/datavis/Models.html#logistic-regression
