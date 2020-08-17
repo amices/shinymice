@@ -109,7 +109,7 @@ shinyUI(
                     icon = icon("th"),
                     h2("Observed missingness pattern per variable"),
                     helpText("Observed data is blue, missing data is red."),
-                    plotOutput("md_pattern")#,
+                    plotlyOutput("md_pattern")#,
                     #style = 'overflow-y: scroll; overflow-x: scroll;')
                 ),
                 # tabPanel("Scatterplots", 

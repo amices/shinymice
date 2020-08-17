@@ -21,7 +21,7 @@ plot_md_pattern <- function(data) {
                         value = 1)
   
   # process and plot
-  md[1:nrow(md) - 1, 1:ncol(md) - 1] %>%
+  p <- md[1:nrow(md) - 1, 1:ncol(md) - 1] %>%
     cbind(id = 1:nrow(.)) %>%
     as.data.frame() %>%
     tidyr::pivot_longer(cols = -id) %>%
@@ -59,4 +59,6 @@ plot_md_pattern <- function(data) {
       axis.title.y.right = ggplot2::element_text(vjust = 2),
       axis.line.y = ggplot2::element_blank()
     )
+  
+  return(list(p = p, second_y = rev(as.character(md[-nrow(md), ncol(md)]))))
 }
