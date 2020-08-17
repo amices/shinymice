@@ -46,26 +46,35 @@ test_NA_y <- function(data, x) {
 #
 #
 # boys %>% test_NA_x(x = "tv")
-library(mice)
-library(tidyverse)
-data = boys
-x = "hgt"
+# library(mice)
+# library(tidyverse)
+# data = boys
+# x = "age"
+
+# function to select variables for the imputation model
+test_predictors <- function(data, x){
+  #if(all(!is.na(data[[x]]))){return("")}
 fam <- ifelse(is.numeric(data[[x]]), "gaussian", "binomial")
+# run glm
 test <- data %>% 
   mutate(across(where(is.numeric), scale)) %>% 
   glm(as.formula(paste(x, "~ .")), data = ., family = fam) %>% 
   broom::tidy() %>% 
   .[-1,] %>% 
   dplyr::arrange(desc(abs(estimate)))
-
-test$term
-
-(out <- purrr::map_df(names(data) %>% 
-          setNames(names(data)), function(x){grep(x, test$term)} %>% 
-          cbind(x) %>% 
-            as.data.frame()) %>% 
-    setNames(c("ord", "var")) %>% 
+# tidy up output
+out <- purrr::map_df(names(data) %>% 
+          setNames(names(data)), function(x){grep(x, test$term) %>% 
+          cbind(ord = ., var = x) %>% 
+            as.data.frame()}) %>% 
+    #setNames(c("ord", "var")) %>% 
     dplyr::arrange(as.numeric(ord)) 
-)
-
+# extract best predictors
+out <- unique(out$var) 
+is.na(out) <- length(out)
+return(out[1:3])
+}
+# test_predictors(boys, "hc")
+# test_predictors(boys, "gen")
+# test_predictors(boys, "age")
 # for plotting of logistic regression results, see https://rkabacoff.github.io/datavis/Models.html#logistic-regression

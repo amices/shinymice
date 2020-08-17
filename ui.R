@@ -122,20 +122,23 @@ shinyUI(
                     fluidRow(
                         column(
                             3,
-                            selectInput("hist_or_point", "What to plot?", choices = c("scatterplot", "histogram")),
-                            varSelectInput("histvar1", "Choose a variable to inspect:", data = mice::boys),
-                            varSelectInput("histvar2", "Conditional on missingness in:", data = mice::boys),
-                            helpText("Hint: the strongest relations are with missingness in"),
+                            selectInput("hist_or_point", "Choose a type of visualization", choices = c("scatterplot", "histogram")),
+                            varSelectInput("histvar1", "Choose a variable to inspect", data = mice::boys),
+                            varSelectInput("histvar2", "Choose a second variable", data = mice::boys),
+                            helpText("Hint: the strongest relations are with"),
                             div(textOutput("relations"), style = "margin-top:-1em;"),
+                            helpText("Hint: the strongest relations are with missingness in"),
+                            div(textOutput("NA_relations"), style = "margin-top:-1em;"),
                             br(),
-                            numericInput(
+                            tags$b("Additional options for histograms"),
+                            splitLayout(numericInput(
                                 "bins",
-                                "Binwidth (optional)",
+                                "",
                                 min = 0,
                                 step = 0.5,
-                                value = 0
-                            ),
-                            helpText("Automatic when 0 is selected."),
+                                value = 0,
+                                width = 80
+                            ), div(br(), "Binwidth"), div(br(), "(default when 0)")),
                             checkboxInput("scalehist", "Fixed heigth y-axis", value = TRUE)
                         ),
                         column(9,

@@ -81,7 +81,10 @@ shinyServer(function(input, output, session) {
     # show best predictors
     output$relations <-
         renderText(test_NA_y(data(), x = input$histvar1)$top3)
+    output$NA_relations <-
+        renderText(test_predictors(data(), x = input$histvar1))
     # plot distributions
+    # make plots the correct heigth every time, see https://stackoverflow.com/questions/34792998/shiny-variable-height-of-renderplot
     output$hist <- renderPlotly({
         p <- switch(
             input$hist_or_point,
@@ -94,8 +97,8 @@ shinyServer(function(input, output, session) {
             ),
             scatterplot = plot_NA_margins(
                 data = data(),
-                x = input$histvar1,
-                y = input$histvar2
+                x = input$histvar2,
+                y = input$histvar1
             )
         )
         p %>% plotly::ggplotly()
