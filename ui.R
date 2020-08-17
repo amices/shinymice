@@ -131,14 +131,15 @@ shinyUI(
                             div(textOutput("NA_relations"), style = "margin-top:-1em;"),
                             br(),
                             tags$b("Additional options for histograms"),
-                            splitLayout(numericInput(
+                            splitLayout(cellWidths = c("25%", "75%"), 
+                            numericInput(
                                 "bins",
                                 "",
                                 min = 0,
                                 step = 0.5,
                                 value = 0,
-                                width = 80
-                            ), div(br(), "Binwidth"), div(br(), "(default when 0)")),
+                                width = 70
+                            ), div(br(),br(), "Binwidth (default when 0)")),
                             checkboxInput("scalehist", "Fixed heigth y-axis", value = TRUE)
                         ),
                         column(9,
