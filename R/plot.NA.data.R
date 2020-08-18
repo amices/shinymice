@@ -90,11 +90,11 @@ plot_NA_margins <- function(data, x, y = NULL) {
 # set.seed(123)
 # data <- mice::boys[sample.int(748, 100), ]
 # 
-plot_NA_margins(data, x = "hc")
-plot_NA_margins(data, x = "phb")
-plot_NA_margins(data, x = "age")
-plot_NA_margins(data, x = "age", y = "hc")
-plot_NA_margins(data, x = "hgt", y = "hc")
-plot_NA_margins(data, x = "gen", y = "phb")
-# add some jitter to make plots of categocial variables more informative?
-plot_NA_margins(data, x = "gen", y = "hc")
+# plot_NA_margins(data, x = "hc")
+# plot_NA_margins(data, x = "phb")
+# plot_NA_margins(data, x = "age")
+# plot_NA_margins(data, x = "age", y = "hc")
+# plot_NA_margins(data, x = "hgt", y = "hc")
+# plot_NA_margins(data, x = "gen", y = "phb")
+# # add some jitter to make plots of categocial variables more informative?
+# plot_NA_margins(data, x = "gen", y = "hc")

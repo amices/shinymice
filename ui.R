@@ -27,6 +27,7 @@ shinyUI(
         shinyFeedback::useShinyFeedback(),
         waiter::use_waiter(),
         includeCSS(path = "www/right_align_nav.CSS"),
+        includeScript(path = "www/link_to_tab.JS"),
         theme = shinythemes::shinytheme("flatly"),
         navbarPage(
             title = div(
@@ -34,7 +35,7 @@ shinyUI(
             ),
             #to make 'hamburger' menu on small screens
             collapsible = TRUE,
-            selected = "Data",
+            selected = "shinymice",
             # add theme toggle in header, for themes, see below, for placement see https://stackoverflow.com/questions/56873774/change-css-properties-of-shiny-checkbox
             includeScript(path = "www/theme_switch.JS"),
             header = div(
@@ -48,9 +49,20 @@ shinyUI(
             ),
             div(verbatimTextOutput("banner"),
                 style = "text-align:right;width:102%;"),
+            ## Landing page
             
+            tabPanel(title = "shinymice",
+                     "Overview of the app",
+                    # tags$a("Go back to the 'Home' page.", onclick="customHref('data-tab')"))),#a("onclick"="customHref('data-tab')","data-tab")),
+        
+                     tags$p(
+                         "You are currently on the home page. Go to the",
+                         shinyLink(to = "data-tab", label = "Data page"), ",", 
+                         shinyLink(to = "about-tab", label = "About page"), ".")),
+            ## Data tab
             tabPanel(
                 title = "Data",
+                value = "data-tab",
                 icon = icon("file-upload"),
                 sidebarLayout(
                     sidebarPanel(
@@ -131,7 +143,7 @@ shinyUI(
                             div(textOutput("NA_relations"), style = "margin-top:-1em;"),
                             br(),
                             tags$b("Additional options for histograms"),
-                            splitLayout(cellWidths = c("25%", "75%"), 
+                            splitLayout(cellWidths = c("30%", "70%"), 
                             numericInput(
                                 "bins",
                                 "",

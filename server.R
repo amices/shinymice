@@ -23,7 +23,7 @@ shinyServer(function(input, output, session) {
             )
         }
         if (is.mids(d)) {
-            #rv$imp <- d
+            #rv$imp <- isolate(d)
             d <- d$data
             # add message: "Please use the upload below to load a `mids` object, and not just the data"
         }
