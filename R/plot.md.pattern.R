@@ -1,5 +1,8 @@
 # md pattern plot, see https://stackoverflow.com/questions/32220446/how-to-plot-a-matrix-in-a-fixed-grid-pattern-in-r
-# The columns are either 0 (missing) or 1 (observed). The first column provides the frequency of each pattern. The last column lists the number of missing entries per pattern. The bottom row provides the number of missing entries per variable, and the total number of missing cells.
+# The columns are either 0 (missing) or 1 (observed).
+# The first column provides the frequency of each pattern.
+# The last column lists the number of missing entries per pattern.
+# The bottom row provides the number of missing entries per variable, and the total number of missing cells.
 
 plot_md_pattern <- function(data) {
   # parse inputs
@@ -11,7 +14,7 @@ plot_md_pattern <- function(data) {
       ~ . + 0,
       breaks = seq_len(nrow(md) - 1),
       labels = rev(as.character(md[-nrow(md), ncol(md)])),
-      name = "Number of missing values per pattern"
+      name = "Number of missing entries per pattern"
     )
   second_y <- as.character(md[nrow(md), -ncol(md)])
   
@@ -44,14 +47,14 @@ plot_md_pattern <- function(data) {
       expand = ggplot2::expansion(mult = c(0, .05))
     ) +
     ggplot2::geom_text(aes(x = name, y = Inf, label = label),
-              data = var_lab,
-              vjust = 1.5) +
+                       data = var_lab,
+                       vjust = 1.5) +
     ggplot2::theme_classic() +
     ggplot2::scale_fill_manual(values = mice_cols) +
     ggplot2::coord_equal() +
     ggplot2::labs(
-      x = paste0("Number of missing cells per variable (total = ",  md[nrow(md), ncol(md)], ")"),
-      y = "Number of rows with this pattern",
+      x = paste0("Number of missing entries per variable (total = ",  md[nrow(md), ncol(md)], ")"),
+      y = "Frequency of each pattern",
       title = " "
     ) +
     ggplot2::theme(

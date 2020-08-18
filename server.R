@@ -8,7 +8,7 @@ shinyServer(function(input, output, session) {
     data <- reactive({
         if (is.null(input$upload)) {
             set.seed(123)
-            d <- mice::boys[sample.int(748, 100),]
+            d <- mice::boys[sample.int(748, 100), ]
         }
         else{
             ext <- tools::file_ext(input$upload$name)
@@ -70,7 +70,7 @@ shinyServer(function(input, output, session) {
     # make it interactive with two axes? see https://stackoverflow.com/questions/52833214/adding-second-y-axis-on-ggplotly
     output$md_pattern <-
         renderPlotly({
-            md_plot <- plot_md_pattern(data = data()) 
+            md_plot <- plot_md_pattern(data = data())
             ay <- list(
                 #tickfont = list(size=11.7),
                 #titlefont=list(size=14.6),
@@ -83,8 +83,15 @@ shinyServer(function(input, output, session) {
             ax <- unique(md_plot$p$data$name)
             
             ggplotly(md_plot$p) %>%
-                add_lines(x=~name, y=~id, colors=NULL, yaxis="y2", 
-                          data=md_plot$p$data, showlegend=FALSE, inherit=FALSE) %>%
+                add_lines(
+                    x =  ~ name,
+                    y =  ~ id,
+                    colors = NULL,
+                    yaxis = "y2",
+                    data = md_plot$p$data,
+                    showlegend = FALSE,
+                    inherit = FALSE
+                ) %>%
                 layout(yaxis2 = ay)
             #ggplotly(p) %>% layout(yaxis2 = list(overlaying = "y", side = "right"))
         })#, res = 72)

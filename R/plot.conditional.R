@@ -29,7 +29,7 @@ conditional_hist <-
         is.na(!!y),
         levels = c(FALSE, TRUE),
         labels = c("Observed", "Imputed")
-      )) %>%  #factor(is.na(!!input$histvar2), levels = c("Observed", "Missing"))) %>%
+      )) %>%
       ggplot2::ggplot(ggplot2::aes(x = !!x, fill = R)) +
       geom +
       mice:::theme_mice +

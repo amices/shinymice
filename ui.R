@@ -51,14 +51,18 @@ shinyUI(
                 style = "text-align:right;width:102%;"),
             ## Landing page
             
-            tabPanel(title = "shinymice",
-                     "Overview of the app",
-                    # tags$a("Go back to the 'Home' page.", onclick="customHref('data-tab')"))),#a("onclick"="customHref('data-tab')","data-tab")),
-        
-                     tags$p(
-                         "You are currently on the home page. Go to the",
-                         shinyLink(to = "data-tab", label = "Data page"), ",", 
-                         shinyLink(to = "about-tab", label = "About page"), ".")),
+            tabPanel(
+                title = "shinymice",
+                "Overview of the app",
+                # link to tabs, see https://davidruvolo51.github.io/shinytutorials/tutorials/shiny-link/
+                tags$p(
+                    "You are currently on the home page. Go to the",
+                    shinyLink(to = "data-tab", label = "Data page"),
+                    ",",
+                    shinyLink(to = "about-tab", label = "About page"),
+                    "."
+                )
+            ),
             ## Data tab
             tabPanel(
                 title = "Data",
@@ -124,7 +128,7 @@ shinyUI(
                     plotlyOutput("md_pattern")#,
                     #style = 'overflow-y: scroll; overflow-x: scroll;')
                 ),
-                # tabPanel("Scatterplots", 
+                # tabPanel("Scatterplots",
                 #          plotOutput("NA_plot")),
                 tabPanel(
                     "Distributions",
@@ -134,7 +138,11 @@ shinyUI(
                     fluidRow(
                         column(
                             3,
-                            selectInput("hist_or_point", "Choose a type of visualization", choices = c("scatterplot", "histogram")),
+                            selectInput(
+                                "hist_or_point",
+                                "Choose a type of visualization",
+                                choices = c("scatterplot", "histogram")
+                            ),
                             varSelectInput("histvar1", "Choose a variable to inspect", data = mice::boys),
                             varSelectInput("histvar2", "Choose a second variable", data = mice::boys),
                             helpText("Hint: the strongest relations are with"),
@@ -143,15 +151,18 @@ shinyUI(
                             div(textOutput("NA_relations"), style = "margin-top:-1em;"),
                             br(),
                             tags$b("Additional options for histograms"),
-                            splitLayout(cellWidths = c("30%", "70%"), 
-                            numericInput(
-                                "bins",
-                                "",
-                                min = 0,
-                                step = 0.5,
-                                value = 0,
-                                width = 70
-                            ), div(br(),br(), "Binwidth (default when 0)")),
+                            splitLayout(
+                                cellWidths = c("30%", "70%"),
+                                numericInput(
+                                    "bins",
+                                    "",
+                                    min = 0,
+                                    step = 0.5,
+                                    value = 0,
+                                    width = 70
+                                ),
+                                div(br(), br(), "Binwidth (default when 0)")
+                            ),
                             checkboxInput("scalehist", "Fixed heigth y-axis", value = TRUE)
                         ),
                         column(9,
