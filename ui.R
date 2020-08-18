@@ -18,7 +18,7 @@ shinyUI(
         # for logo/name as browser icon, see https://stackoverflow.com/questions/51688463/shiny-page-title-and-image
         list(tags$head(
             HTML(
-                '<link rel="icon" href="www/logo_square.png"
+                '<link rel="icon" href="logo_square.png"
                 type="image/png" />'
             )
         )),
@@ -49,20 +49,26 @@ shinyUI(
             ),
             div(verbatimTextOutput("banner"),
                 style = "text-align:right;width:102%;"),
-            ## Landing page
             
+            ## Landing page
             tabPanel(
                 title = "shinymice",
-                "Overview of the app",
+                "Overview of the app (not finished yet!!)",
                 # link to tabs, see https://davidruvolo51.github.io/shinytutorials/tutorials/shiny-link/
                 tags$p(
                     "You are currently on the home page. Go to the",
                     shinyLink(to = "data-tab", label = "Data page"),
-                    ",",
+                    ", the ",
                     shinyLink(to = "about-tab", label = "About page"),
+                    ", the Explore page to view the ",
+                    shinyLink(to = "expl-patt-tab", label = "missing data pattern"),
+                    "or the ", 
+                    shinyLink(to = "expl-dist-tab", label = "distribution of the "),
+                    
                     "."
                 )
             ),
+            
             ## Data tab
             tabPanel(
                 title = "Data",
@@ -95,18 +101,6 @@ shinyUI(
                                   ),
                                   accept = ".Rdata"),
                         div(style = "margin-top:-2em;", helpText("Does not do anything anymore."))
-                        
-                        #,
-                        # div(
-                        #     style = "margin-top:-1em;",
-                        #     checkboxInput("header", label = "CSV file contains variable names", value = TRUE)
-                        #),
-                        # selectInput(
-                        #     "choice",
-                        #     label = tags$b("...or use `mice` data"),
-                        #     choices = data(package = "mice")$results[-c(5, 7, 17, 18), "Item"]
-                        # ),
-                        #actionButton("reset", "Reset", icon = icon("redo")),
                     ),
                     mainPanel(
                         h2("Tabulated dataset"),
@@ -122,6 +116,7 @@ shinyUI(
                 
                 tabPanel(
                     "Pattern",
+                    value = "expl-patt-tab",
                     icon = icon("th"),
                     h2("Observed missingness pattern per variable"),
                     helpText("Observed data is blue, missing data is red."),
@@ -132,6 +127,7 @@ shinyUI(
                 #          plotOutput("NA_plot")),
                 tabPanel(
                     "Distributions",
+                    value = "expl-dist-tab",
                     icon = icon("chart-bar"),
                     h2("Inspect relations before imputation"),
                     br(),
@@ -195,6 +191,7 @@ shinyUI(
                     min = 1,
                     step = 5
                 ),
+                # set seed
                 textInput("impname", "Name the imputation object", value = "imp"),
                 tags$b("Mice call"),
                 verbatimTextOutput("micecall"),

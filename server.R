@@ -62,37 +62,14 @@ shinyServer(function(input, output, session) {
             DT_NA_highlight(data(), vars())
         }, server = F)
     
-    # output$NA_plot <-
-    #     renderPlot(plot_NA_margins(data(), x = vars()[1], y = vars()[2]))
-    
     ## Explore tab
     # plot pattern
     # make it interactive with two axes? see https://stackoverflow.com/questions/52833214/adding-second-y-axis-on-ggplotly
     output$md_pattern <-
         renderPlotly({
             md_plot <- plot_md_pattern(data = data())
-            ay <- list(
-                #tickfont = list(size=11.7),
-                #titlefont=list(size=14.6),
-                overlaying = "y",
-                ticktext = list(md_plot$second_y),
-                nticks = list(length(md_plot$second_y)),
-                side = "right",
-                title = " "
-            )
-            ax <- unique(md_plot$p$data$name)
             
-            ggplotly(md_plot$p) %>%
-                add_lines(
-                    x =  ~ name,
-                    y =  ~ id,
-                    colors = NULL,
-                    yaxis = "y2",
-                    data = md_plot$p$data,
-                    showlegend = FALSE,
-                    inherit = FALSE
-                ) %>%
-                layout(yaxis2 = ay)
+            interactive_md_plot(md_plot)
             #ggplotly(p) %>% layout(yaxis2 = list(overlaying = "y", side = "right"))
         })#, res = 72)
     #renderPlotly({plot_md_pattern(data = data()) %>% plotly::ggplotly(.)})
