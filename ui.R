@@ -93,7 +93,7 @@ shinyUI(
                             style = "margin-top:-1em;",
                             helpText("Accepts `.Rdata`, `.csv`, `.tsv`, and `.txt` files.") #add option to read from link, see https://cran.r-project.org/web/packages/vroom/vignettes/vroom.html
                         ),
-                        fileInput("midsupload",
+                        fileInput("upload_mids",
                                   div(
                                       HTML(
                                           "<strong> Or choose a multiply imputed dataset (<code>mids</code> object) </strong>"
@@ -103,6 +103,7 @@ shinyUI(
                         div(style = "margin-top:-2em;", helpText("Does not do anything anymore."))
                     ),
                     mainPanel(
+                        textOutput("test"),
                         h2("Tabulated dataset"),
                         helpText("Sort variables descending to view missing values."),
                         DT::DTOutput("table")
@@ -120,7 +121,7 @@ shinyUI(
                     icon = icon("th"),
                     h2("Observed missingness pattern per variable"),
                     helpText("Observed data is blue, missing data is red."),
-                    plotlyOutput("md_pattern")#,
+                    plotOutput("md_pattern")#,
                     #style = 'overflow-y: scroll; overflow-x: scroll;')
                 ),
                 # tabPanel("Scatterplots",
@@ -191,7 +192,7 @@ shinyUI(
                     min = 1,
                     step = 5
                 ),
-                # set seed
+                textInput("seed", "Set random number generator seed", value = "123"),
                 textInput("impname", "Name the imputation object", value = "imp"),
                 tags$b("Mice call"),
                 verbatimTextOutput("micecall"),

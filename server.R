@@ -29,6 +29,17 @@ shinyServer(function(input, output, session) {
         }
         return(d)
     })
+    
+    rv <- reactiveValues(imp = NULL)
+    
+    output$test <- renderPrint({if ( is.null(input$upload_mids)) return(NULL)
+        d <- get_rdata_file(path = isolate(input$upload_mids)$datapath)
+        names(d$data)})
+    
+    # observe({if(is.null(input$upload_mids)){
+    #     rv$imp <- NULL} else {
+    #     rv$imp <- get_rdata_file(path = isolate(input$upload_mids)$datapath)}})
+    
     vars <- reactive(names(data()))
     
     # update variable choices automatically
@@ -66,14 +77,13 @@ shinyServer(function(input, output, session) {
     # plot pattern
     # make it interactive with two axes? see https://stackoverflow.com/questions/52833214/adding-second-y-axis-on-ggplotly
     output$md_pattern <-
-        renderPlotly({
-            md_plot <- plot_md_pattern(data = data())
+        renderPlot({
+            #md_plot <- 
+                plot_md_pattern(data = data())
             
-            interactive_md_plot(md_plot)
-            #ggplotly(p) %>% layout(yaxis2 = list(overlaying = "y", side = "right"))
-        })#, res = 72)
-    #renderPlotly({plot_md_pattern(data = data()) %>% plotly::ggplotly(.)})
-    
+            #interactive_md_plot(md_plot)
+            }, res = 72)
+
     # show correct variables
     observe(varsUpdate("histvar1"))
     observe(varsUpdate("histvar2"))
@@ -114,11 +124,11 @@ shinyServer(function(input, output, session) {
             input$m,
             ", maxit = ",
             input$maxit,
+            ", seed = ",
+            input$seed,
             ", printFlag = FALSE)"
         )
     })
-    
-    rv <- reactiveValues(imp = NULL)
     
     observeEvent(input$mice, {
         # for spinner, see: https://shiny.john-coene.com/waiter/
@@ -130,7 +140,8 @@ shinyServer(function(input, output, session) {
             rv$imp <-
                 list(mice(data(),
                           m = input$m,
-                          maxit = input$maxit))
+                          maxit = input$maxit,
+                          seed = as.numeric(input$seed)))
         }  else {
             rv$imp <-
                 c(rv$imp,

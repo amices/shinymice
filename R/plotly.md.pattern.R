@@ -6,10 +6,10 @@ interactive_md_plot <- function(mdp){
     titlefont=list(size=14.6),
     overlaying = "x",
     ticktext = unique(mdp$p$data$name),
-    tickvals = (0:length(unique(mdp$p$data$name))) + .5,
-    #nticks = length(mdp$second_y),
+    tickvals = 1:length(unique(mdp$p$data$name)),
     side = "top",
-    title = ""#Number of missing entries per pattern"
+    title = "",
+    showgrid = FALSE
   )
   
   ay <- list(
@@ -17,10 +17,10 @@ interactive_md_plot <- function(mdp){
     titlefont=list(size=14.6),
     overlaying = "y",
     ticktext = mdp$second_y,
-    tickvals = (1:length(mdp$second_y)) - .5,
-    #nticks = length(mdp$second_y),
+    tickvals = 1:length(mdp$second_y),
     side = "right",
-    title = ""#Number of missing entries per pattern"
+    title = "Number of missing entries per pattern",
+    showgrid = FALSE
   )
   
   ggplotly(mdp$p) %>%
@@ -31,17 +31,10 @@ interactive_md_plot <- function(mdp){
       alpha = 0,
       yaxis = "y2",
       xaxis = "x2",
-      data = mdp$p$data,
-      mode = "markers",
-      type = "scatter",
+      #data = mdp$p$data,
       showlegend = FALSE,
       inherit = FALSE
     ) %>%
-    layout(yaxis2 = ay, xaxis2 = ax)# %>% 
-  # fig.update_xaxes(
-  #   showgrid=True,
-  #   ticks="outside",
-  #   tickson="boundaries",
-  #   ticklen=20
-  # )
+    layout(yaxis2 = ay, xaxis2 = ax, margin = list(r = 45))# %>% 
+  
 }
