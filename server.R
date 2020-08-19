@@ -39,12 +39,13 @@ shinyServer(function(input, output, session) {
     observe({if(is.null(input$upload_mids)) {
        rv$mids <- NULL
         } else {
-       rv$mids <- get_rdata_file(path = input$upload_mids$datapath)
+       rv$mids <- c(rv$mids, list(get_rdata_file(path = input$upload_mids$datapath)))
+       names(rv$mids) <- c(names(rv$mids), tools::file_path_sans_ext(input$upload_mids$name))
         }})
-    
-    # observe({if(is.null(input$upload_mids)){
-    #    rv$mids <- NULL} else {
-    #    rv$mids <- get_rdata_file(path = isolate(input$upload_mids)$datapath)}})
+    # name list items, see https://stackoverflow.com/questions/35379590/r-how-to-access-the-name-of-an-element-of-a-list
+    # makeNamedList <- function(...) {
+    #     structure(list(...), names = as.list(substitute(list(...)))[-1L])
+    # }
     
     vars <- reactive(names(data()))
     
@@ -72,6 +73,8 @@ shinyServer(function(input, output, session) {
             )
         )
     })
+    
+    #output$banner2 <- updateSelectInput("impselect", choices = names(rv$mids))
     
     # tablutate data
     output$table <-
@@ -148,6 +151,7 @@ shinyServer(function(input, output, session) {
                           m = input$m,
                           maxit = input$maxit,
                           seed = as.numeric(input$seed)))
+           names(rv$mids) <- input$impname
         }  else {
            rv$mids <-
                 c(rv$imp,
@@ -156,6 +160,7 @@ shinyServer(function(input, output, session) {
                       m = input$m,
                       maxit = input$maxit
                   )))
+           names(rv$mids) <- c(names(rv$mids), input$impname)
         }
     })
     
@@ -179,28 +184,34 @@ shinyServer(function(input, output, session) {
     ## Fluxplot subtab
     output$fluxplot <-
         renderPlotly({
-            if (is.mids(rv$imp[[input$mice]])) {
-                gg.mids(rv$imp[[input$mice]], geom = "fluxplot", interactive = T)
-            }
+            # if (is.mids(rv$imp[[input$mice]])) {
+                gg.mids(rv$mids[[input$mice]], geom = "fluxplot")
+            # }
         })
     
     ## Traceplot subtab
     # show correct variables
     #observe(varsUpdate("varnr"))
     # select traceplot variable
-    trace <- reactive({
-        shinyFeedback::feedbackWarning(
-            "varnr",
-            all(!is.na(rv$imp[[input$mice]]$data[[input$midsvar1]])),
-            "No imputations to visualize. Impute the missing data first and/or choose a different variable."
-        )
-        req(!is.null(rv$imp[[input$mice]]))
-        # plot
-        gg.mids(rv$imp[[input$mice]])
-    })
+    
     # plot traceplot
     output$traceplot <-
-        renderPlotly(trace()[[input$midsvar1]])#, res = 96)
+        renderPlotly({p <- gg.mids(rv$mids[[input$mice]])
+                     p[[input$midsvar1]]})#, res = 96)
+    
+    # trace <- reactive({
+    #     shinyFeedback::feedbackWarning(
+    #         "varnr",
+    #         all(!is.na(rv$imp[[input$mice]]$data[[input$midsvar1]])),
+    #         "No imputations to visualize. Impute the missing data first and/or choose a different variable."
+    #     )
+    #     req(!is.null(rv$imp[[input$mice]]))
+    #     # plot
+    #     gg.mids(rv$imp[[input$mice]])
+    # })
+    # # plot traceplot
+    # output$traceplot <-
+    #     renderPlotly(trace()[[input$midsvar1]])
     
     #mids <- eventReactive(input$mids, mice.mids(mids()))
     # add iterations

@@ -49,6 +49,7 @@ shinyUI(
             div(verbatimTextOutput("banner"),
                 style = "text-align:right;width:102%;"),
             
+            
             ## Landing page
             tabPanel(
                 title = "shinymice",
@@ -114,6 +115,7 @@ shinyUI(
             ),
             tabPanel("Explore",
                      icon = icon("search"),
+                     value = "expl-tab",
                      fluidRow(
                          column(
                              3,
@@ -158,6 +160,7 @@ shinyUI(
             
             tabPanel(
                 "Impute",
+                value = "impu-tab",
                 icon = icon("calculator"),
                 div(HTML(
                     "<h2> Impute missing data using <code>mice</code></h2>"
@@ -201,6 +204,7 @@ shinyUI(
             
             
             tabPanel("Evaluate",
+                     value = "eval-tab",
                      icon = icon("check-square"),
                      fluidRow(
                          column(
@@ -239,6 +243,7 @@ shinyUI(
                 "Save",
                 #add sav download
                 icon = icon("file-download"),
+                value = "save-tab",
                 h2("Download the dataset or imputations"),
                 br(),
                 selectInput(
