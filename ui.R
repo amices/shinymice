@@ -17,10 +17,8 @@ shinyUI(
         title = "shinymice",
         # for logo/name as browser icon, see https://stackoverflow.com/questions/51688463/shiny-page-title-and-image
         list(tags$head(
-            HTML(
-                '<link rel="icon" href="logo_square.png"
-                type="image/png" />'
-            )
+            HTML('<link rel="icon" href="logo_square.png"
+                type="image/png" />')
         )),
         # load functions
         shinyjs::useShinyjs(),
@@ -62,7 +60,7 @@ shinyUI(
                     shinyLink(to = "about-tab", label = "About page"),
                     ", the Explore page to view the ",
                     shinyLink(to = "expl-patt-tab", label = "missing data pattern"),
-                    "or the ", 
+                    "or the ",
                     shinyLink(to = "expl-dist-tab", label = "distribution of the "),
                     
                     "."
@@ -111,66 +109,161 @@ shinyUI(
                 )
             ),
             
-            navbarMenu(
-                "Explore",
-                icon = icon("search"),
-                
-                tabPanel(
-                    "Pattern",
-                    value = "expl-patt-tab",
-                    icon = icon("th"),
-                    h2("Observed missingness pattern per variable"),
-                    helpText("Observed data is blue, missing data is red."),
-                    plotOutput("md_pattern")#,
-                    #style = 'overflow-y: scroll; overflow-x: scroll;')
-                ),
-                # tabPanel("Scatterplots",
-                #          plotOutput("NA_plot")),
-                tabPanel(
-                    "Distributions",
-                    value = "expl-dist-tab",
-                    icon = icon("chart-bar"),
-                    h2("Inspect relations before imputation"),
-                    br(),
-                    fluidRow(
-                        column(
-                            3,
-                            selectInput(
-                                "hist_or_point",
-                                "Choose a type of visualization",
-                                choices = c("scatterplot", "histogram")
-                            ),
-                            varSelectInput("histvar1", "Choose a variable to inspect", data = mice::boys),
-                            varSelectInput("histvar2", "Choose a second variable", data = mice::boys),
-                            helpText("Hint: the strongest relations are with"),
-                            div(textOutput("relations"), style = "margin-top:-1em;"),
-                            helpText("Hint: the strongest relations are with missingness in"),
-                            div(textOutput("NA_relations"), style = "margin-top:-1em;"),
-                            br(),
-                            tags$b("Additional options for histograms"),
-                            splitLayout(
-                                cellWidths = c("30%", "70%"),
-                                numericInput(
-                                    "bins",
-                                    "",
-                                    min = 0,
-                                    step = 0.5,
-                                    value = 0,
-                                    width = 70
+            # navbarMenu(
+            #     "Explore",
+            #     icon = icon("search"),
+            #
+            #     tabPanel(
+            #         "Pattern",
+            #         value = "expl-patt-tab",
+            #         icon = icon("th"),
+            #         h2("Observed missingness pattern per variable"),
+            #         helpText("Observed data is blue, missing data is red."),
+            #         plotOutput("md_pattern")#,
+            #         #style = 'overflow-y: scroll; overflow-x: scroll;')
+            #     ),
+            #     # tabPanel("Scatterplots",
+            #     #          plotOutput("NA_plot")),
+            #     tabPanel(
+            #         "Distributions",
+            #         value = "expl-dist-tab",
+            #         icon = icon("chart-bar"),
+            #         h2("Inspect relations before imputation"),
+            #         br(),
+            #         fluidRow(
+            #             column(
+            #                 3,
+            #                 selectInput(
+            #                     "hist_or_point",
+            #                     "Choose a type of visualization",
+            #                     choices = c("scatterplot", "histogram")
+            #                 ),
+            #                 varSelectInput("histvar1", "Choose a variable to inspect", data = mice::boys),
+            #                 varSelectInput("histvar2", "Choose a second variable", data = mice::boys),
+            #                 helpText("Hint: the strongest relations are with"),
+            #                 div(textOutput("relations"), style = "margin-top:-1em;"),
+            #                 helpText("Hint: the strongest relations are with missingness in"),
+            #                 div(textOutput("NA_relations"), style = "margin-top:-1em;"),
+            #                 br(),
+            #                 tags$b("Additional options for histograms"),
+            #                 splitLayout(
+            #                     cellWidths = c("30%", "70%"),
+            #                     numericInput(
+            #                         "bins",
+            #                         "",
+            #                         min = 0,
+            #                         step = 0.5,
+            #                         value = 0,
+            #                         width = 70
+            #                     ),
+            #                     div(br(), br(), "Binwidth (default when 0)")
+            #                 ),
+            #                 checkboxInput("scalehist", "Fixed heigth y-axis", value = TRUE)
+            #             ),
+            #             column(9,
+            #                    plotlyOutput(
+            #                        "hist", width = "auto", height = "520px"
+            #                    ))
+            #         )
+            #     )
+            # ),
+            tabPanel("Explore",
+                     icon = icon("search"),
+                     fluidRow(
+                         column(
+                             3,
+                             h2("Explore missingness"),
+                             br(),
+                             varSelectInput("NA_var1", "Distribution of", data = mice::boys),
+                             varSelectInput("NA_var2", "given", data = mice::boys),
+                             helpText("Hint: the strongest relations are with observed data in"),
+                             div(textOutput("relations"), style = "margin-top:-1em;"),
+                             helpText("Hint: the strongest relations are with missingness in"),
+                             div(textOutput("NA_relations"), style = "margin-top:-1em;"),
+                             
+                         ),
+                         column(9,
+                                tabsetPanel(
+                                    tabPanel("Pattern", 
+                                             plotOutput("md_pattern", height = "520px")),
+                                    tabPanel("Scatterplot",
+                                             plotlyOutput("NA_scat", height = "520px")),
+                                    tabPanel("Histogram",
+                                             plotlyOutput(
+                                                 "NA_hist", height = "520px"
+                                             ))
+                                ), br(),
+                                tags$b("Additional options for histograms"),
+                                splitLayout(
+                                    cellWidths = c("30%", "70%"),
+                                    numericInput(
+                                        "bins",
+                                        "",
+                                        min = 0,
+                                        step = 0.5,
+                                        value = 0,
+                                        width = 70
+                                    ),
+                                    div(br(), br(), "Binwidth (default when 0)")
                                 ),
-                                div(br(), br(), "Binwidth (default when 0)")
-                            ),
-                            checkboxInput("scalehist", "Fixed heigth y-axis", value = TRUE)
-                        ),
-                        column(9,
-                               plotlyOutput(
-                                   "hist", width = "auto", height = "520px"
-                               ))
-                    )
-                )
-            ),
+                                checkboxInput("scalehist", "Fixed heigth y-axis", value = TRUE))
+                     )),
             
-            
+            #     tabPanel(
+            #         "Pattern",
+            #         value = "expl-patt-tab",
+            #         icon = icon("th"),
+            #         h2("Observed missingness pattern per variable"),
+            #         helpText("Observed data is blue, missing data is red."),
+            #         plotOutput("md_pattern")#,
+            #         #style = 'overflow-y: scroll; overflow-x: scroll;')
+            #     ),
+            #     # tabPanel("Scatterplots",
+            #     #          plotOutput("NA_plot")),
+            #     tabPanel(
+            #         "Distributions",
+            #         value = "expl-dist-tab",
+            #         icon = icon("chart-bar"),
+            #         h2("Inspect relations before imputation"),
+            #         br(),
+            #         fluidRow(
+            #             column(
+            #                 3,
+            #                 selectInput(
+            #                     "hist_or_point",
+            #                     "Choose a type of visualization",
+            #                     choices = c("scatterplot", "histogram")
+            #                 ),
+            #                 varSelectInput("histvar1", "Choose a variable to inspect", data = mice::boys),
+            #                 varSelectInput("histvar2", "Choose a second variable", data = mice::boys),
+            #                 helpText("Hint: the strongest relations are with"),
+            #                 div(textOutput("relations"), style = "margin-top:-1em;"),
+            #                 helpText("Hint: the strongest relations are with missingness in"),
+            #                 div(textOutput("NA_relations"), style = "margin-top:-1em;"),
+            #                 br(),
+            #                 tags$b("Additional options for histograms"),
+            #                 splitLayout(
+            #                     cellWidths = c("30%", "70%"),
+            #                     numericInput(
+            #                         "bins",
+            #                         "",
+            #                         min = 0,
+            #                         step = 0.5,
+            #                         value = 0,
+            #                         width = 70
+            #                     ),
+            #                     div(br(), br(), "Binwidth (default when 0)")
+            #                 ),
+            #                 checkboxInput("scalehist", "Fixed heigth y-axis", value = TRUE)
+            #             ),
+            #             column(9,
+            #                    plotlyOutput(
+            #                        "hist", width = "auto", height = "520px"
+            #                    ))
+            #         )
+            #     )
+            # ),
+            #
             tabPanel(
                 "Impute",
                 icon = icon("calculator"),

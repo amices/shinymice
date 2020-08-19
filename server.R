@@ -85,33 +85,30 @@ shinyServer(function(input, output, session) {
             }, res = 72)
 
     # show correct variables
-    observe(varsUpdate("histvar1"))
-    observe(varsUpdate("histvar2"))
+    observe(varsUpdate("NA_var1"))
+    observe(varsUpdate("NA_var2"))
     
     # show best predictors
     output$relations <-
-        renderText(test_NA_y(data(), x = input$histvar1)$top3)
+        renderText(test_NA_y(data(), x = input$NA_var1)$top3)
     output$NA_relations <-
-        renderText(test_predictors(data(), x = input$histvar1))
+        renderText(test_predictors(data(), x = input$NA_var1))
     # plot distributions
     # make plots the correct heigth every time, see https://stackoverflow.com/questions/34792998/shiny-variable-height-of-renderplot
-    output$hist <- renderPlotly({
-        p <- switch(
-            input$hist_or_point,
-            histogram = conditional_hist(
+    output$NA_hist <- renderPlotly({
+        conditional_hist(
                 dat = data(),
-                x = input$histvar1,
-                y = input$histvar2,
+                x = input$NA_var1,
+                y = input$NA_var2,
                 scaler = input$scalehist,
-                binner = input$bins#histbin()
-            ),
-            scatterplot = plot_NA_margins(
+                binner = input$bins
+            )})
+    output$NA_scat <- renderPlotly({
+            plot_NA_margins(
                 data = data(),
-                x = input$histvar2,
-                y = input$histvar1
+                x = input$NA_var2,
+                y = input$NA_var1
             )
-        )
-        p %>% plotly::ggplotly()
     })
     
     ## Impute tab
