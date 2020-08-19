@@ -30,15 +30,21 @@ shinyServer(function(input, output, session) {
         return(d)
     })
     
-    rv <- reactiveValues(imp = NULL)
+    rv <- reactiveValues(mids = NULL)
     
-    output$test <- renderPrint({if ( is.null(input$upload_mids)) return(NULL)
-        d <- get_rdata_file(path = isolate(input$upload_mids)$datapath)
-        names(d$data)})
+    # output$test <- renderPrint({if ( is.null(input$upload_mids)) return(NULL)
+    #     d <- get_rdata_file(path = isolate(input$upload_mids)$datapath)
+    #     names(d$data)})
+    
+    observe({if(is.null(input$upload_mids)) {
+       rv$mids <- NULL
+        } else {
+       rv$mids <- get_rdata_file(path = input$upload_mids$datapath)
+        }})
     
     # observe({if(is.null(input$upload_mids)){
-    #     rv$imp <- NULL} else {
-    #     rv$imp <- get_rdata_file(path = isolate(input$upload_mids)$datapath)}})
+    #    rv$mids <- NULL} else {
+    #    rv$mids <- get_rdata_file(path = isolate(input$upload_mids)$datapath)}})
     
     vars <- reactive(names(data()))
     
@@ -70,9 +76,9 @@ shinyServer(function(input, output, session) {
     # tablutate data
     output$table <-
         renderDT({
-            if(is.null(rv$imp)) {DT_NA_highlight(data(), vars())
+            if(is.null(rv$mids)) {DT_NA_highlight(data(), vars())
                 } else {
-            DT_NA_highlight(rv$imp$data, names(rv$imp$data))
+            DT_NA_highlight(isolate(rv$mids)$data, names(isolate(rv$mids)$data))
                 }
         }, server = F)
     
@@ -137,13 +143,13 @@ shinyServer(function(input, output, session) {
         on.exit(waiter::waiter_hide())
         
         if (is.null(rv$imp)) {
-            rv$imp <-
+           rv$mids <-
                 list(mice(data(),
                           m = input$m,
                           maxit = input$maxit,
                           seed = as.numeric(input$seed)))
         }  else {
-            rv$imp <-
+           rv$mids <-
                 c(rv$imp,
                   list(mice(
                       data(),
@@ -158,7 +164,7 @@ shinyServer(function(input, output, session) {
                             color = waiter::transparent(.5))
         on.exit(waiter::waiter_hide())
         req(!is.null(rv$imp))
-        rv$imp[[input$mice]] <-
+       rv$mids[[input$mice]] <-
             mice.mids(rv$imp[[input$mice]], maxit = input$midsmaxit)
     })
     
@@ -241,7 +247,7 @@ shinyServer(function(input, output, session) {
     # plot imputations
     output$impplot <- renderPlotly(
         gg.mids(
-            rv$imp[[input$mice]],
+           rv$mids[[input$mice]],
             x = as.character(input$midsvar1),
             y = as.character(input$midsvar2),
             geom = input$plottype,
@@ -264,7 +270,7 @@ shinyServer(function(input, output, session) {
         content = function(file) {
             if (input$rdata_or_csv == ".Rdata") {
                 dataset <-
-                    data() #add if()/switch() statement to add rv$imp object instead
+                    data() #add if()/switch() statement to addrv$mids object instead
                 save(dataset, file = file)
             }
             if (input$rdata_or_csv == ".csv") {

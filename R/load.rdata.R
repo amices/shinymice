@@ -14,3 +14,5 @@ get_rdata_file <- function(path) {
     return(dat)
   # }
 }
+ 
+# a <- get_rdata_file("./data/testmids.Rdata")

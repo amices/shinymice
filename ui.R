@@ -57,12 +57,15 @@ shinyUI(
                 tags$p(
                     "You are currently on the home page. Go to the",
                     shinyLink(to = "data-tab", label = "Data page"),
-                    ", the ",
-                    shinyLink(to = "about-tab", label = "About page"),
-                    ", the Explore page to view the ",
-                    shinyLink(to = "expl-patt-tab", label = "missing data pattern"),
-                    "or the ",
-                    shinyLink(to = "expl-dist-tab", label = "distribution of the "),
+                    " to select some data. Then explore the missingness on the ",
+                    shinyLink(to = "expl-tab", label = "Explore page"),
+                    ", impute the missingness on the ",
+                    shinyLink(to = "impu-tab", label = "Impute page"),
+                    ", and evaluate the imputations on the ",
+                    shinyLink(to = "eval-tab", label = "Evaluate page"),
+                    
+                    ". Finally, save the imputations on the ",
+                    shinyLink(to = "save-tab", label = "Save page"),
                     
                     "."
                 )
@@ -97,8 +100,8 @@ shinyUI(
                                       HTML(
                                           "<strong> Or choose a multiply imputed dataset (<code>mids</code> object) </strong>"
                                       )
-                                  ),
-                                  accept = ".Rdata"),
+                                  )),#,
+                                  #accept = ".Rdata"),
                         div(style = "margin-top:-2em;", helpText("Does not do anything anymore."))
                     ),
                     mainPanel(
