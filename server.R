@@ -177,12 +177,12 @@ shinyServer(function(input, output, session) {
     
     ## Traceplot subtab
     # show correct variables
-    observe(varsUpdate("varnr"))
+    #observe(varsUpdate("varnr"))
     # select traceplot variable
     trace <- reactive({
         shinyFeedback::feedbackWarning(
             "varnr",
-            all(!is.na(rv$imp[[input$mice]]$data[[input$varnr]])),
+            all(!is.na(rv$imp[[input$mice]]$data[[input$midsvar1]])),
             "No imputations to visualize. Impute the missing data first and/or choose a different variable."
         )
         req(!is.null(rv$imp[[input$mice]]))
@@ -191,7 +191,7 @@ shinyServer(function(input, output, session) {
     })
     # plot traceplot
     output$traceplot <-
-        renderPlotly(trace()[[input$varnr]])#, res = 96)
+        renderPlotly(trace()[[input$midsvar1]])#, res = 96)
     
     #mids <- eventReactive(input$mids, mice.mids(mids()))
     # add iterations

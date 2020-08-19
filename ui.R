@@ -175,7 +175,7 @@ shinyUI(
                              h2("Explore missingness"),
                              br(),
                              varSelectInput("NA_var1", "Distribution of", data = mice::boys),
-                             varSelectInput("NA_var2", "given", data = mice::boys),
+                             varSelectInput("NA_var2", "given (missingness in)", data = mice::boys),
                              helpText("Hint: the strongest relations are with observed data in"),
                              div(textOutput("relations"), style = "margin-top:-1em;"),
                              helpText("Hint: the strongest relations are with missingness in"),
@@ -209,61 +209,7 @@ shinyUI(
                                 checkboxInput("scalehist", "Fixed heigth y-axis", value = TRUE))
                      )),
             
-            #     tabPanel(
-            #         "Pattern",
-            #         value = "expl-patt-tab",
-            #         icon = icon("th"),
-            #         h2("Observed missingness pattern per variable"),
-            #         helpText("Observed data is blue, missing data is red."),
-            #         plotOutput("md_pattern")#,
-            #         #style = 'overflow-y: scroll; overflow-x: scroll;')
-            #     ),
-            #     # tabPanel("Scatterplots",
-            #     #          plotOutput("NA_plot")),
-            #     tabPanel(
-            #         "Distributions",
-            #         value = "expl-dist-tab",
-            #         icon = icon("chart-bar"),
-            #         h2("Inspect relations before imputation"),
-            #         br(),
-            #         fluidRow(
-            #             column(
-            #                 3,
-            #                 selectInput(
-            #                     "hist_or_point",
-            #                     "Choose a type of visualization",
-            #                     choices = c("scatterplot", "histogram")
-            #                 ),
-            #                 varSelectInput("histvar1", "Choose a variable to inspect", data = mice::boys),
-            #                 varSelectInput("histvar2", "Choose a second variable", data = mice::boys),
-            #                 helpText("Hint: the strongest relations are with"),
-            #                 div(textOutput("relations"), style = "margin-top:-1em;"),
-            #                 helpText("Hint: the strongest relations are with missingness in"),
-            #                 div(textOutput("NA_relations"), style = "margin-top:-1em;"),
-            #                 br(),
-            #                 tags$b("Additional options for histograms"),
-            #                 splitLayout(
-            #                     cellWidths = c("30%", "70%"),
-            #                     numericInput(
-            #                         "bins",
-            #                         "",
-            #                         min = 0,
-            #                         step = 0.5,
-            #                         value = 0,
-            #                         width = 70
-            #                     ),
-            #                     div(br(), br(), "Binwidth (default when 0)")
-            #                 ),
-            #                 checkboxInput("scalehist", "Fixed heigth y-axis", value = TRUE)
-            #             ),
-            #             column(9,
-            #                    plotlyOutput(
-            #                        "hist", width = "auto", height = "520px"
-            #                    ))
-            #         )
-            #     )
-            # ),
-            #
+            
             tabPanel(
                 "Impute",
                 icon = icon("calculator"),
@@ -295,68 +241,159 @@ shinyUI(
                 verbatimTextOutput("done")
             ),
             
-            navbarMenu(
+            # navbarMenu(
+            #     "Evaluate",
+            #     icon = icon("check-square"),
+            #     tabPanel(
+            #         "Model",
+            #         icon = icon("balance-scale-right"),
+            #         h2("Imputation model influx-outflux"),
+            #         "The influx of a variable quantifies how well its missing data connect to the observed data on other variables. The outflux of a variable quantifies how well its observed data connect to the missing data on other variables. In general, higher influx and outflux values are preferred.",
+            #         tags$a(href = "https://stefvanbuuren.name/fimd/missing-data-pattern.html#sec:flux", "See van Buuren (2018)."),
+            #         plotlyOutput("fluxplot")
+            #     ),
+            #     tabPanel(
+            #         "Convergence",
+            #         icon = icon("chart-line"),
+            #         h2("Evaluate convergence"),
+            #         br(),
+            #         fluidRow(
+            #             column(
+            #                 3,
+            #                 varSelectInput("varnr", "Choose a variable:", data = mice::boys),
+            #                 numericInput(
+            #                     "midsmaxit",
+            #                     label = "Continue iterating (optional)",
+            #                     value = 5,
+            #                     min = 1,
+            #                     step = 5
+            #                 ),
+            #                 actionButton("iterate", "Iterate", icon = icon("hourglass-start")),
+            #                 helpText("This may take a minute.")
+            #             ),
+            #             column(9,
+            #                    plotlyOutput("traceplot"))
+            #         )
+            #     ),
+            #     tabPanel(
+            #         "Imputations",
+            #         icon = icon("chart-area"),
+            #         h2("Visualize imputations to inspect"),
+            #         br(),
+            #         fluidRow(
+            #             column(
+            #                 3,
+            #                 selectInput(
+            #                     "plottype",
+            #                     "Choose a visualization:",
+            #                     c("bwplot", "densityplot", "histogram", "stripplot", "xyplot"),
+            #                     selected = "stripplot"
+            #                 ),
+            #                 varSelectInput("midsvar1", "Choose a variable:", data = mice::boys),
+            #                 varSelectInput(
+            #                     "midsvar2",
+            #                     "Choose a second variable (for `xyplot` only):",
+            #                     data = mice::boys
+            #                 ),
+            #                 
+            #             ),
+            #             column(9,
+            #                    plotlyOutput("impplot"))
+            #         )
+            #     )
+            # ),
+            
+            tabPanel(
                 "Evaluate",
                 icon = icon("check-square"),
-                tabPanel(
-                    "Model",
-                    icon = icon("balance-scale-right"),
-                    h2("Imputation model influx-outflux"),
-                    "The influx of a variable quantifies how well its missing data connect to the observed data on other variables. The outflux of a variable quantifies how well its observed data connect to the missing data on other variables. In general, higher influx and outflux values are preferred.",
-                    tags$a(href = "https://stefvanbuuren.name/fimd/missing-data-pattern.html#sec:flux", "See van Buuren (2018)."),
-                    plotlyOutput("fluxplot")
-                ),
-                tabPanel(
-                    "Convergence",
-                    icon = icon("chart-line"),
-                    h2("Evaluate convergence"),
-                    br(),
-                    fluidRow(
-                        column(
-                            3,
-                            varSelectInput("varnr", "Choose a variable:", data = mice::boys),
-                            numericInput(
-                                "midsmaxit",
-                                label = "Continue iterating (optional)",
-                                value = 5,
-                                min = 1,
-                                step = 5
-                            ),
-                            actionButton("iterate", "Iterate", icon = icon("hourglass-start")),
-                            helpText("This may take a minute.")
-                        ),
-                        column(9,
-                               plotlyOutput("traceplot"))
-                    )
-                ),
-                tabPanel(
-                    "Imputations",
-                    icon = icon("chart-area"),
-                    h2("Visualize imputations to inspect"),
-                    br(),
-                    fluidRow(
-                        column(
-                            3,
-                            selectInput(
-                                "plottype",
-                                "Choose a visualization:",
-                                c("bwplot", "densityplot", "histogram", "stripplot", "xyplot"),
-                                selected = "stripplot"
-                            ),
-                            varSelectInput("midsvar1", "Choose a variable:", data = mice::boys),
-                            varSelectInput(
-                                "midsvar2",
-                                "Choose a second variable (for `xyplot` only):",
-                                data = mice::boys
-                            ),
-                            
-                        ),
-                        column(9,
-                               plotlyOutput("impplot"))
-                    )
+                fluidRow(
+                    column(3,
+                           h2("Evaluate imputations"),
+                           selectInput(
+                               "plottype",
+                               "Choose a visualization:",
+                               c("bwplot", "densityplot", "histogram", "stripplot", "xyplot"),
+                               selected = "stripplot"
+                           ),
+                           varSelectInput("midsvar1", "Choose a variable:", data = mice::boys),
+                           varSelectInput(
+                               "midsvar2",
+                               "Choose a second variable (for `xyplot` only):",
+                               data = mice::boys
+                           )
+                           
+                    ),
+                    column(9,
+                           tabsetPanel(
+                               tabPanel("Model",
+                                        plotlyOutput("fluxplot")),
+                               tabPanel("Convergence",
+                                        plotlyOutput("traceplot")),
+                               tabPanel("Imputations", plotlyOutput("impplot"))
+                           )
+                    )   
                 )
             ),
-            
+
+            #     )
+            #     tabPanel(
+            #         "Model",
+            #         icon = icon("balance-scale-right"),
+            #         h2("Imputation model influx-outflux"),
+            #         "The influx of a variable quantifies how well its missing data connect to the observed data on other variables. The outflux of a variable quantifies how well its observed data connect to the missing data on other variables. In general, higher influx and outflux values are preferred.",
+            #         tags$a(href = "https://stefvanbuuren.name/fimd/missing-data-pattern.html#sec:flux", "See van Buuren (2018)."),
+            #         plotlyOutput("fluxplot")
+            #     ),
+            #     tabPanel(
+            #         "Convergence",
+            #         icon = icon("chart-line"),
+            #         h2("Evaluate convergence"),
+            #         br(),
+            #         fluidRow(
+            #             column(
+            #                 3,
+            #                 varSelectInput("varnr", "Choose a variable:", data = mice::boys),
+            #                 numericInput(
+            #                     "midsmaxit",
+            #                     label = "Continue iterating (optional)",
+            #                     value = 5,
+            #                     min = 1,
+            #                     step = 5
+            #                 ),
+            #                 actionButton("iterate", "Iterate", icon = icon("hourglass-start")),
+            #                 helpText("This may take a minute.")
+            #             ),
+            #             column(9,
+            #                    plotlyOutput("traceplot"))
+            #         )
+            #     ),
+            #     tabPanel(
+            #         "Imputations",
+            #         icon = icon("chart-area"),
+            #         h2("Visualize imputations to inspect"),
+            #         br(),
+            #         fluidRow(
+            #             column(
+            #                 3,
+            #                 selectInput(
+            #                     "plottype",
+            #                     "Choose a visualization:",
+            #                     c("bwplot", "densityplot", "histogram", "stripplot", "xyplot"),
+            #                     selected = "stripplot"
+            #                 ),
+            #                 varSelectInput("midsvar1", "Choose a variable:", data = mice::boys),
+            #                 varSelectInput(
+            #                     "midsvar2",
+            #                     "Choose a second variable (for `xyplot` only):",
+            #                     data = mice::boys
+            #                 ),
+            #                 
+            #             ),
+            #             column(9,
+            #                    plotlyOutput("impplot"))
+            #         )
+            #     )
+            # ),
             tabPanel(
                 "Save",
                 #add sav download
