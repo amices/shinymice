@@ -70,7 +70,10 @@ shinyServer(function(input, output, session) {
     # tablutate data
     output$table <-
         renderDT({
-            DT_NA_highlight(data(), vars())
+            if(is.null(rv$imp)) {DT_NA_highlight(data(), vars())
+                } else {
+            DT_NA_highlight(rv$imp$data, names(rv$imp$data))
+                }
         }, server = F)
     
     ## Explore tab
