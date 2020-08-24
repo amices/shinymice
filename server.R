@@ -177,63 +177,28 @@ shinyServer(function(input, output, session) {
     })
     
     # indicate that data is imputed
-    output$done <- renderPrint({
-        if (is.mids(rv$mids[[input$mice]])) {
-            "Done!"
-        }
-    })
+    # replace with loader and checkmark combo, see https://github.com/daattali/advanced-shiny/tree/master/busy-indicator
+    # output$done <- renderPrint({
+    #     if (is.mids(rv$mids[[input$mice]])) {
+    #         "Done!"
+    #     }
+    # })
     
     ## Evaluate tab
     ## Fluxplot subtab
     output$fluxplot <-
         renderPlotly({
-            # if (is.mids(rv$imp[[input$mice]])) {
+            req(!is.null(rv$mids[[input$mice]]))
             gg.mids(rv$mids[[input$mice]], geom = "fluxplot")
-            # }
         })
     
     # plot traceplot
     output$traceplot <-
         renderPlotly({
+            req(!is.null(rv$mids[[input$mice]]))
             p <- gg.mids(rv$mids[[input$mice]])
             p[[input$midsvar1]]
-        })#, res = 96)
-    
-    # trace <- reactive({
-    #     shinyFeedback::feedbackWarning(
-    #         "varnr",
-    #         all(!is.na(rv$imp[[input$mice]]$data[[input$midsvar1]])),
-    #         "No imputations to visualize. Impute the missing data first and/or choose a different variable."
-    #     )
-    
-    
-    #     req(!is.null(rv$imp[[input$mice]]))
-    #     # plot
-    #     gg.mids(rv$imp[[input$mice]])
-    # })
-    # # plot traceplot
-    # output$traceplot <-
-    #     renderPlotly(trace()[[input$midsvar1]])
-    
-    #mids <- eventReactive(input$mids, mice.mids(mids()))
-    # add iterations
-    # observeEvent(input$mids, {
-    #     waiter::waiter_show(html = waiter::spin_throbber(),
-    #                         #spin_fading_circles(),
-    #                         color = waiter::transparent(.5))
-    #     shinyFeedback::feedbackWarning(
-    #         "midsmaxit",
-    #         is.null(mids()),
-    #         "Please run some initial iterations in the 'Impute' tab"
-    #     )
-    #     if (!is.null(mids())) {
-    #         mids() <-
-    #             mice.mids(mids(),
-    #                       maxit = input$midsmaxit,
-    #                       printFlag = FALSE)
-    #     }
-    #     waiter::waiter_hide()
-    # })
+        })
     
     ## Imputations subtab
     # show correct variables
@@ -243,10 +208,10 @@ shinyServer(function(input, output, session) {
     observe({
         shinyFeedback::feedbackWarning(
             "midsvar1",
-            all(!is.na(rv$imp[[input$mice]]$data[[input$midsvar1]])),
+            all(!is.na(rv$mids[[input$mice]]$data[[input$midsvar1]])),
             "No imputations to visualize. Impute the missing data first and/or choose a different variable."
         )
-        req(!is.null(rv$imp[[input$mice]]))
+        req(!is.null(rv$mids[[input$mice]]))
         shinyFeedback::feedbackWarning(
             "midsvar2",
             input$midsvar1 == input$midsvar2 &

@@ -69,7 +69,8 @@ shinyUI(
                     shinyLink(to = "save-tab", label = "Save page"),
                     
                     "."
-                )
+                )#,
+                #actionButton("Next", "Next", onclick = 'location.href=shinyLink(to = "save-tab", label = "Save page");')
             ),
             
             ## Data tab
