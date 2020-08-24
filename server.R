@@ -23,7 +23,6 @@ shinyServer(function(input, output, session) {
             )
         }
         if (is.mids(d)) {
-            #rv$imp <- isolate(d)
             d <- d$data
             # add message: "Please use the upload below to load a `mids` object, and not just the data"
         }
@@ -32,16 +31,19 @@ shinyServer(function(input, output, session) {
     
     rv <- reactiveValues(mids = NULL)
     
-    # output$test <- renderPrint({if ( is.null(input$upload_mids)) return(NULL)
-    #     d <- get_rdata_file(path = isolate(input$upload_mids)$datapath)
-    #     names(d$data)})
-    
-    observe({if(is.null(input$upload_mids)) {
-       rv$mids <- NULL
+    observe({
+        if (is.null(input$upload_mids)) {
+            rv$mids <- NULL
         } else {
-       rv$mids <- c(rv$mids, list(get_rdata_file(path = input$upload_mids$datapath)))
-       names(rv$mids) <- c(names(rv$mids), tools::file_path_sans_ext(input$upload_mids$name))
-        }})
+            rv$mids <-
+                c(rv$mids, list(
+                    get_rdata_file(path = input$upload_mids$datapath)
+                ))
+            names(rv$mids) <-
+                c(names(rv$mids),
+                  tools::file_path_sans_ext(input$upload_mids$name))
+        }
+    })
     # name list items, see https://stackoverflow.com/questions/35379590/r-how-to-access-the-name-of-an-element-of-a-list
     # makeNamedList <- function(...) {
     #     structure(list(...), names = as.list(substitute(list(...)))[-1L])
@@ -74,15 +76,15 @@ shinyServer(function(input, output, session) {
         )
     })
     
-    #output$banner2 <- updateSelectInput("impselect", choices = names(rv$mids))
     
     # tablutate data
     output$table <-
         renderDT({
-            if(is.null(rv$mids)) {DT_NA_highlight(data(), vars())
-                } else {
-            DT_NA_highlight(isolate(rv$mids)$data, names(isolate(rv$mids)$data))
-                }
+            if (is.null(rv$mids)) {
+                DT_NA_highlight(data(), vars())
+            } else {
+                DT_NA_highlight(isolate(rv$mids)$data, names(isolate(rv$mids)$data))
+            }
         }, server = F)
     
     ## Explore tab
@@ -90,12 +92,12 @@ shinyServer(function(input, output, session) {
     # make it interactive with two axes? see https://stackoverflow.com/questions/52833214/adding-second-y-axis-on-ggplotly
     output$md_pattern <-
         renderPlot({
-            #md_plot <- 
-                plot_md_pattern(data = data())
+            #md_plot <-
+            plot_md_pattern(data = data())
             
             #interactive_md_plot(md_plot)
-            }, res = 72)
-
+        }, res = 72)
+    
     # show correct variables
     observe(varsUpdate("NA_var1"))
     observe(varsUpdate("NA_var2"))
@@ -109,18 +111,17 @@ shinyServer(function(input, output, session) {
     # make plots the correct heigth every time, see https://stackoverflow.com/questions/34792998/shiny-variable-height-of-renderplot
     output$NA_hist <- renderPlotly({
         conditional_hist(
-                dat = data(),
-                x = input$NA_var1,
-                y = input$NA_var2,
-                scaler = input$scalehist,
-                binner = input$bins
-            )})
+            dat = data(),
+            x = input$NA_var1,
+            y = input$NA_var2,
+            scaler = input$scalehist,
+            binner = input$bins
+        )
+    })
     output$NA_scat <- renderPlotly({
-            plot_NA_margins(
-                data = data(),
-                x = input$NA_var2,
-                y = input$NA_var1
-            )
+        plot_NA_margins(data = data(),
+                        x = input$NA_var2,
+                        y = input$NA_var1)
     })
     
     ## Impute tab
@@ -146,21 +147,23 @@ shinyServer(function(input, output, session) {
         on.exit(waiter::waiter_hide())
         
         if (is.null(rv$imp)) {
-           rv$mids <-
-                list(mice(data(),
-                          m = input$m,
-                          maxit = input$maxit,
-                          seed = as.numeric(input$seed)))
-           names(rv$mids) <- input$impname
+            rv$mids <-
+                list(mice(
+                    data(),
+                    m = input$m,
+                    maxit = input$maxit,
+                    seed = as.numeric(input$seed)
+                ))
+            names(rv$mids) <- input$impname
         }  else {
-           rv$mids <-
+            rv$mids <-
                 c(rv$imp,
                   list(mice(
                       data(),
                       m = input$m,
                       maxit = input$maxit
                   )))
-           names(rv$mids) <- c(names(rv$mids), input$impname)
+            names(rv$mids) <- c(names(rv$mids), input$impname)
         }
     })
     
@@ -169,7 +172,7 @@ shinyServer(function(input, output, session) {
                             color = waiter::transparent(.5))
         on.exit(waiter::waiter_hide())
         req(!is.null(rv$mids))
-       rv$mids[[input$mice]] <-
+        rv$mids[[input$mice]] <-
             mice.mids(rv$mids[[input$mice]], maxit = input$midsmaxit)
     })
     
@@ -185,19 +188,16 @@ shinyServer(function(input, output, session) {
     output$fluxplot <-
         renderPlotly({
             # if (is.mids(rv$imp[[input$mice]])) {
-                gg.mids(rv$mids[[input$mice]], geom = "fluxplot")
+            gg.mids(rv$mids[[input$mice]], geom = "fluxplot")
             # }
         })
     
-    ## Traceplot subtab
-    # show correct variables
-    #observe(varsUpdate("varnr"))
-    # select traceplot variable
-    
     # plot traceplot
     output$traceplot <-
-        renderPlotly({p <- gg.mids(rv$mids[[input$mice]])
-                     p[[input$midsvar1]]})#, res = 96)
+        renderPlotly({
+            p <- gg.mids(rv$mids[[input$mice]])
+            p[[input$midsvar1]]
+        })#, res = 96)
     
     # trace <- reactive({
     #     shinyFeedback::feedbackWarning(
@@ -205,6 +205,8 @@ shinyServer(function(input, output, session) {
     #         all(!is.na(rv$imp[[input$mice]]$data[[input$midsvar1]])),
     #         "No imputations to visualize. Impute the missing data first and/or choose a different variable."
     #     )
+    
+    
     #     req(!is.null(rv$imp[[input$mice]]))
     #     # plot
     #     gg.mids(rv$imp[[input$mice]])
@@ -258,7 +260,7 @@ shinyServer(function(input, output, session) {
     # plot imputations
     output$impplot <- renderPlotly(
         gg.mids(
-           rv$mids[[input$mice]],
+            rv$mids[[input$mice]],
             x = as.character(input$midsvar1),
             y = as.character(input$midsvar2),
             geom = input$plottype,
