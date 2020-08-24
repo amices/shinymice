@@ -190,20 +190,7 @@ shinyUI(
             ),
             
             
-            #                 numericInput(
-            #                     "midsmaxit",
-            #                     label = "Continue iterating (optional)",
-            #                     value = 5,
-            #                     min = 1,
-            #                     step = 5
-            #                 ),
-            #                 actionButton("iterate", "Iterate", icon = icon("hourglass-start")),
-            #                 helpText("This may take a minute.")
-            #             ),
-            #
-            
-            
-            tabPanel("Evaluate",
+        tabPanel("Evaluate",
                      value = "eval-tab",
                      icon = icon("check-square"),
                      fluidRow(
@@ -235,7 +222,20 @@ shinyUI(
                                     tabPanel("Convergence",
                                              plotlyOutput("traceplot")),
                                     tabPanel("Imputations", plotlyOutput("impplot"))
-                                ))
+                                ),
+                                h3("Add iterations"),
+                                numericInput(
+                                    "midsmaxit",
+                                    label = "Continue iterating (optional)",
+                                    value = 5,
+                                    min = 1,
+                                    step = 5
+                                ),
+                                actionButton("iterate", "Iterate", icon = icon("hourglass-start")),
+                                helpText("This may take a minute.")
+                         
+                         
+                     )
                      )),
             
             

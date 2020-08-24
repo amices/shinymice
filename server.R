@@ -168,14 +168,14 @@ shinyServer(function(input, output, session) {
         waiter::waiter_show(html = waiter::spin_throbber(),
                             color = waiter::transparent(.5))
         on.exit(waiter::waiter_hide())
-        req(!is.null(rv$imp))
+        req(!is.null(rv$mids))
        rv$mids[[input$mice]] <-
-            mice.mids(rv$imp[[input$mice]], maxit = input$midsmaxit)
+            mice.mids(rv$mids[[input$mice]], maxit = input$midsmaxit)
     })
     
     # indicate that data is imputed
     output$done <- renderPrint({
-        if (is.mids(rv$imp[[input$mice]])) {
+        if (is.mids(rv$mids[[input$mice]])) {
             "Done!"
         }
     })
