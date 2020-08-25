@@ -127,17 +127,30 @@ shinyServer(function(input, output, session) {
     ## Impute tab
     # show names data or name of df with input$file$name, see https://mastering-shiny.org/action-transfer.html
     # print call
-    output$micecall <- renderText({
+    micecall <- reactive({
         paste0(
-            input$impname,
-            " <- mice(data, m = ",
-            input$m,
-            ", maxit = ",
-            input$maxit,
-            ", seed = ",
-            input$seed,
-            ", printFlag = FALSE)"
-        )
+        input$impname,
+        " <- mice(data, m = ",
+        input$m,
+        ", maxit = ",
+        input$maxit,
+        ", seed = ",
+        input$seed,
+        ", printFlag = FALSE)"
+    )})
+    
+    output$micecall <- renderText({
+        # paste0(
+        #     input$impname,
+        #     " <- mice(data, m = ",
+        #     input$m,
+        #     ", maxit = ",
+        #     input$maxit,
+        #     ", seed = ",
+        #     input$seed,
+        #     ", printFlag = FALSE)"
+        # )
+        micecall()
     })
     
     observeEvent(input$mice, {
@@ -148,12 +161,24 @@ shinyServer(function(input, output, session) {
         
         if (is.null(rv$imp)) {
             rv$mids <-
-                list(mice(
-                    data(),
-                    m = input$m,
-                    maxit = input$maxit,
-                    seed = as.numeric(input$seed)
-                ))
+                list( 
+                    eval(
+                    parse(
+                        text = paste0(
+                    "mice(data(), m = ",
+                    input$m,
+                    ", maxit = ",
+                    input$maxit,
+                    ", seed = ",
+                    input$seed,
+                    ")"
+                )))
+                    # mice(
+                    # data(),
+                    # m = input$m,
+                    # maxit = input$maxit,
+                    # seed = as.numeric(input$seed))
+                )
             names(rv$mids) <- input$impname
         }  else {
             rv$mids <-
