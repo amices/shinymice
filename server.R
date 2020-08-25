@@ -11,15 +11,15 @@ shinyServer(function(input, output, session) {
         # if (is.null(input$upload_mids)) {
         #     rv$mids <- NULL
         # } 
-        if (!is.null(input$upload_mids) & is.null(input$mice)) {
-            rv$mids <-
-                list(get_rdata_file(path = input$upload_mids$datapath)
-                )
-            #names(rv$mids) <- "test"
-                #c(NULL, tools::file_path_sans_ext(input$upload_mids$name))
+        if (!is.null(input$upload_mids) & is.null(rv$mids)) {
+            imp <-
+                get_rdata_file(path = input$upload_mids$datapath)
+                
+            rv$mids <- list(imp)
+            names(rv$mids) <- tools::file_path_sans_ext(input$upload_mids$name)
         }
     })
-    output$test <-  renderText(names(rv$mids))#tools::file_path_sans_ext(input$upload_mids$name))
+    #output$test <-  renderText(names(rv$mids))#tools::file_path_sans_ext(input$upload_mids$name))
     
     data <- reactive({
         if (is.null(input$upload)) {
@@ -188,14 +188,14 @@ shinyServer(function(input, output, session) {
                                     color = waiter::transparent(.5))
                 on.exit(waiter::waiter_hide())
                 req(!is.null(rv$mids))
-                rv$mids[[input$mice]] <-
-                    mice.mids(rv$mids[[input$mice]], maxit = input$midsmaxit)
+                rv$mids[[1]] <-
+                    mice.mids(rv$mids[[1]], maxit = input$midsmaxit)
             })
             
             # indicate that data is imputed
             # replace with loader and checkmark combo, see https://github.com/daattali/advanced-shiny/tree/master/busy-indicator
             # output$done <- renderPrint({
-            #     if (is.mids(rv$mids[[input$mice]])) {
+            #     if (is.mids(rv$mids[[1]])) {
             #         "Done!"
             #     }
             # })
@@ -204,15 +204,15 @@ shinyServer(function(input, output, session) {
             ## Fluxplot subtab
             output$fluxplot <-
                 renderPlotly({
-                    req(!is.null(rv$mids[[input$mice]]))
-                    gg.mids(rv$mids[[input$mice]], geom = "fluxplot")
+                    req(!is.null(rv$mids[[1]]))
+                    gg.mids(rv$mids[[1]], geom = "fluxplot")
                 })
             
             # plot traceplot
             output$traceplot <-
                 renderPlotly({
-                    req(!is.null(rv$mids[[input$mice]]))
-                    p <- gg.mids(rv$mids[[input$mice]])
+                    req(!is.null(rv$mids[[1]]))
+                    p <- gg.mids(rv$mids[[1]])
                     p[[input$midsvar1]]
                 })
             
@@ -224,10 +224,10 @@ shinyServer(function(input, output, session) {
             observe({
                 shinyFeedback::feedbackWarning(
                     "midsvar1",
-                    all(!is.na(rv$mids[[input$mice]]$data[[input$midsvar1]])),
+                    all(!is.na(rv$mids[[1]]$data[[input$midsvar1]])),
                     "No imputations to visualize. Impute the missing data first and/or choose a different variable."
                 )
-                req(!is.null(rv$mids[[input$mice]]))
+                req(!is.null(rv$mids[[1]]))
                 shinyFeedback::feedbackWarning(
                     "midsvar2",
                     input$midsvar1 == input$midsvar2 &
@@ -240,10 +240,10 @@ shinyServer(function(input, output, session) {
             })
             # plot imputations
             output$impplot <- renderPlotly({
-                req(!is.null(rv$mids[[input$mice]]))
+                req(!is.null(rv$mids[[1]]))
                 
                 gg.mids(
-                    rv$mids[[input$mice]],
+                    rv$mids[[1]],
                     x = as.character(input$midsvar1),
                     y = as.character(input$midsvar2),
                     geom = input$plottype,
