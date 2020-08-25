@@ -8,9 +8,6 @@ shinyServer(function(input, output, session) {
     rv <- reactiveValues(mids = NULL)
     
     observe({
-        # if (is.null(input$upload_mids)) {
-        #     rv$mids <- NULL
-        # } 
         if (!is.null(input$upload_mids) & is.null(rv$mids)) {
             imp <-
                 get_rdata_file(path = input$upload_mids$datapath)
@@ -18,6 +15,13 @@ shinyServer(function(input, output, session) {
             rv$mids <- list(imp)
             names(rv$mids) <- tools::file_path_sans_ext(input$upload_mids$name)
         }
+        # if (!is.null(input$upload_mids) & !is.null(rv$mids)) {
+        #     imp <-
+        #         get_rdata_file(path = input$upload_mids$datapath)
+        # 
+        #     rv$mids[[length(rv$mids)+1]] <- imp
+        #     names(rv$mids) <- c(names(rv$mids)[-length(rv$mids)], tools::file_path_sans_ext(input$upload_mids$name))
+        # }
     })
     #output$test <-  renderText(names(rv$mids))#tools::file_path_sans_ext(input$upload_mids$name))
     
