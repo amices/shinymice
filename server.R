@@ -5,6 +5,21 @@ options("DT.TOJSON_ARGS" = list(na = "string"))
 
 shinyServer(function(input, output, session) {
     # reactives
+    rv <- reactiveValues(mids = NULL)
+    observe({
+        if (is.null(input$upload_mids)) {
+            rv$mids <- NULL
+        } 
+        if (!is.null(input$upload_mids) & is.null(input$mice)) {
+            rv$mids <-
+                list(
+                    get_rdata_file(path = input$upload_mids$datapath)
+                )
+            names(rv$mids) <-
+                tools::file_path_sans_ext(input$upload_mids$name)
+        }
+    })
+    
     data <- reactive({
         if (is.null(input$upload)) {
             set.seed(123)
@@ -26,24 +41,13 @@ shinyServer(function(input, output, session) {
             d <- d$data
             # add message: "Please use the upload below to load a `mids` object, and not just the data"
         }
+        if (!is.null(input$upload_mids)){
+            d <- get_rdata_file(path = input$upload_mids$datapath) %>% .$data
+        }
         return(d)
     })
     
-    rv <- reactiveValues(mids = NULL)
     
-    observe({
-        if (is.null(input$upload_mids)) {
-            rv$mids <- NULL
-        } else {
-            rv$mids <-
-                c(rv$mids, list(
-                    get_rdata_file(path = input$upload_mids$datapath)
-                ))
-            names(rv$mids) <-
-                c(names(rv$mids),
-                  tools::file_path_sans_ext(input$upload_mids$name))
-        }
-    })
     # name list items, see https://stackoverflow.com/questions/35379590/r-how-to-access-the-name-of-an-element-of-a-list
     # makeNamedList <- function(...) {
     #     structure(list(...), names = as.list(substitute(list(...)))[-1L])

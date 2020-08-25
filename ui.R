@@ -102,10 +102,10 @@ shinyUI(
                                       HTML(
                                           "<strong> Or choose a multiply imputed dataset (<code>mids</code> object) </strong>"
                                       )
-                                  )),
+                                  ))#,
                         #,
                         #accept = ".Rdata"),
-                        div(style = "margin-top:-2em;", helpText("Does not do anything anymore."))
+                        #div(style = "margin-top:-2em;", helpText("Does not do anything anymore."))
                     ),
                     mainPanel(
                         textOutput("test"),
