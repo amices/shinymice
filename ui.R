@@ -48,6 +48,7 @@ shinyUI(
             ),
             div(verbatimTextOutput("banner"),
                 style = "text-align:right;width:102%;"),
+            selectInput("banner2", "", choices = "No imputations yet"),
             
             
             ## Landing page

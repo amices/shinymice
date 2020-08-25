@@ -66,6 +66,8 @@ shinyServer(function(input, output, session) {
             updateSelectInput(session, UI_name, choices = vars())
         }
     
+    observe(updateSelectInput(session, "banner2", choices = names(rv$mids)))
+    
     ## Banner
     output$banner <- renderText({
         paste0(
@@ -208,15 +210,15 @@ shinyServer(function(input, output, session) {
             ## Fluxplot subtab
             output$fluxplot <-
                 renderPlotly({
-                    req(!is.null(rv$mids[[1]]))
-                    gg.mids(rv$mids[[1]], geom = "fluxplot")
+                    req(!is.null(rv$mids[[input$banner2]]))
+                    gg.mids(rv$mids[[input$banner2]], geom = "fluxplot")
                 })
             
             # plot traceplot
             output$traceplot <-
                 renderPlotly({
-                    req(!is.null(rv$mids[[1]]))
-                    p <- gg.mids(rv$mids[[1]])
+                    req(!is.null(rv$mids[[input$banner2]]))
+                    p <- gg.mids(rv$mids[[input$banner2]])
                     p[[input$midsvar1]]
                 })
             
@@ -228,10 +230,10 @@ shinyServer(function(input, output, session) {
             observe({
                 shinyFeedback::feedbackWarning(
                     "midsvar1",
-                    all(!is.na(rv$mids[[1]]$data[[input$midsvar1]])),
+                    all(!is.na(rv$mids[[input$banner2]]$data[[input$midsvar1]])),
                     "No imputations to visualize. Impute the missing data first and/or choose a different variable."
                 )
-                req(!is.null(rv$mids[[1]]))
+                req(!is.null(rv$mids[[input$banner2]]))
                 shinyFeedback::feedbackWarning(
                     "midsvar2",
                     input$midsvar1 == input$midsvar2 &
@@ -244,10 +246,10 @@ shinyServer(function(input, output, session) {
             })
             # plot imputations
             output$impplot <- renderPlotly({
-                req(!is.null(rv$mids[[1]]))
+                req(!is.null(rv$mids[[input$banner2]]))
                 
                 gg.mids(
-                    rv$mids[[1]],
+                    rv$mids[[input$banner2]],
                     x = as.character(input$midsvar1),
                     y = as.character(input$midsvar2),
                     geom = input$plottype,
