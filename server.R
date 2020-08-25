@@ -6,19 +6,20 @@ options("DT.TOJSON_ARGS" = list(na = "string"))
 shinyServer(function(input, output, session) {
     # reactives
     rv <- reactiveValues(mids = NULL)
+    
     observe({
-        if (is.null(input$upload_mids)) {
-            rv$mids <- NULL
-        } 
+        # if (is.null(input$upload_mids)) {
+        #     rv$mids <- NULL
+        # } 
         if (!is.null(input$upload_mids) & is.null(input$mice)) {
             rv$mids <-
-                list(
-                    get_rdata_file(path = input$upload_mids$datapath)
+                list(get_rdata_file(path = input$upload_mids$datapath)
                 )
-            names(rv$mids) <-
-                tools::file_path_sans_ext(input$upload_mids$name)
+            #names(rv$mids) <- "test"
+                #c(NULL, tools::file_path_sans_ext(input$upload_mids$name))
         }
     })
+    output$test <-  renderText(names(rv$mids))#tools::file_path_sans_ext(input$upload_mids$name))
     
     data <- reactive({
         if (is.null(input$upload)) {
@@ -73,9 +74,9 @@ shinyServer(function(input, output, session) {
             "\n",
             "Imputation: ",
             ifelse(
-                input$mice < 1 & is.null(input$midsupload),
+                input$mice < 1 & is.null(input$upload_mids),
                 "no imputations (yet)",
-                input$impname
+                paste(names(rv$mids))#input$impname
             )
         )
     })
@@ -84,11 +85,11 @@ shinyServer(function(input, output, session) {
     # tablutate data
     output$table <-
         renderDT({
-            if (is.null(rv$mids)) {
+            #if (is.null(rv$mids)) {
                 DT_NA_highlight(data(), vars())
-            } else {
-                DT_NA_highlight(isolate(rv$mids)$data, names(isolate(rv$mids)$data))
-            }
+            # } else {
+            #     DT_NA_highlight(isolate(rv$mids)$data, names(isolate(rv$mids)$data))
+            # }
         }, server = F)
     
     ## Explore tab
@@ -238,7 +239,9 @@ shinyServer(function(input, output, session) {
                 }
             })
             # plot imputations
-            output$impplot <- renderPlotly(
+            output$impplot <- renderPlotly({
+                req(!is.null(rv$mids[[input$mice]]))
+                
                 gg.mids(
                     rv$mids[[input$mice]],
                     x = as.character(input$midsvar1),
@@ -246,7 +249,7 @@ shinyServer(function(input, output, session) {
                     geom = input$plottype,
                     interactive = TRUE
                 )
-            )
+            })
             
             ## Save tab
             output$save <- downloadHandler(
