@@ -180,12 +180,11 @@ shinyServer(function(input, output, session) {
                 # seed = as.numeric(input$seed)))
                 names(rv$mids) <- input$impname
         }  else {
-            rv$mids <-
-                c(rv$imp,
-                  list(eval(parse(
+            rv$mids[[length(rv$mids)+1]] <-
+                list(eval(parse(
                       text = runmice
-                  ))))
-            names(rv$mids) <- c(names(rv$mids), input$impname)
+                  )))
+            names(rv$mids) <- c(names(rv$mids)[-length(rv$mids)], input$impname)
         }
     })
             
