@@ -187,7 +187,6 @@ shinyUI(
                 textInput("impname", "Name the imputation object", value = "imp"),
                 tags$b("Mice call"),
                 verbatimTextOutput("micecall"),
-                textInput("args", "Add arguments", value = NULL),
                 actionButton("mice", "Impute", icon = icon("hourglass-start")),
                 helpText("This may take a minute."),
                 br(),
