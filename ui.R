@@ -30,11 +30,11 @@ shinyUI(
         #"./theme/css/flatly.min.css", #
         navbarPage(
             title = div(
-                img(src = "logo_wide.png", style = "width:155px;position:fixed;left:30px;")
+                img(src = "logo_wide.png", style = "width:155px;position:absolute;left:30px;")
             ),
             #to make 'hamburger' menu on small screens
             collapsible = TRUE,
-            selected = "shinymice",
+            selected = "Home",
             # add theme toggle in header, for themes, see below, for placement see https://stackoverflow.com/questions/56873774/change-css-properties-of-shiny-checkbox
             includeScript(path = "www/theme_switch.JS"),
             header = div(
@@ -56,25 +56,43 @@ shinyUI(
             
             ## Landing page
             tabPanel(
-                title = "shinymice",
-                "Overview of the app (not finished yet!!)",
-                # link to tabs, see https://davidruvolo51.github.io/shinytutorials/tutorials/shiny-link/
-                tags$p(
-                    "You are currently on the home page. Go to the",
-                    shinyLink(to = "data-tab", label = "Data page"),
-                    " to select some data. Then explore the missingness on the ",
-                    shinyLink(to = "expl-tab", label = "Explore page"),
-                    ", impute the missingness on the ",
-                    shinyLink(to = "impu-tab", label = "Impute page"),
-                    ", and evaluate the imputations on the ",
-                    shinyLink(to = "eval-tab", label = "Evaluate page"),
-                    
-                    ". Finally, save the imputations on the ",
-                    shinyLink(to = "save-tab", label = "Save page"),
-                    
-                    "."
-                )#,
+                title = "Home",
+                icon = icon("home"),
+                fluidRow(
+                    column(
+                        12,
+                        align = "center",
+                        img(class = "img-polaroid",
+                            src = "logo_wide.png",
+                            style = "width:50%;"),
+                        br(),
+                        br(),
+                        br(),
+                        # link to tabs, see https://davidruvolo51.github.io/shinytutorials/tutorials/shiny-link/
+                        tags$p(
+                            "You are currently on the home page. Go to the",
+                            shinyLink(to = "data-tab", label = "Data page"),
+                            " to select some data. Then explore the missingness on the ",
+                            shinyLink(to = "expl-tab", label = "Explore page"),
+                            ", impute the missingness on the ",
+                            shinyLink(to = "impu-tab", label = "Impute page"),
+                            ", and evaluate the imputations on the ",
+                            shinyLink(to = "eval-tab", label = "Evaluate page"),
+                            
+                            ". Finally, save the imputations on the ",
+                            shinyLink(to = "save-tab", label = "Save page"),
+                            
+                            "."
+                        ),
+                        "For the most recent version of this app or to report an issue, see ",
+                        tags$a(href = "https://github.com/amices/shinyMice", "github.com/amices/shinyMice")
+                    )
+                ),
+                #,
                 #actionButton("Next", "Next", onclick = 'location.href=shinyLink(to = "save-tab", label = "Save page");')
+                br(),
+                br(),
+                div(tags$a(actionButton("next-home", "Next"), href = "data-tab", class = "shiny__link"), style = "text-align:right;")
             ),
             
             ## Data tab
@@ -82,9 +100,10 @@ shinyUI(
                 title = "Data",
                 value = "data-tab",
                 icon = icon("file-upload"),
-                sidebarLayout(
-                    sidebarPanel(
-                        id = "sidebar",
+                fluidRow(
+                    column(
+                        4,
+                        #id = "sidebar",
                         h2("Select data"),
                         fileInput(
                             "upload",
@@ -98,7 +117,7 @@ shinyUI(
                             )
                         ),
                         div(
-                            style = "margin-top:-1em;",
+                            style = "margin-top:-2em;",
                             helpText("Accepts `.Rdata`, `.csv`, `.tsv`, and `.txt` files.") #add option to read from link, see https://cran.r-project.org/web/packages/vroom/vignettes/vroom.html
                         ),
                         fileInput("upload_mids",
@@ -106,16 +125,28 @@ shinyUI(
                                       HTML(
                                           "<strong> Or choose a multiply imputed dataset (<code>mids</code> object) </strong>"
                                       )
-                                  ))#,
+                                  )),
+                        div(style = "margin-top:-2em;",
+                            helpText("Only accepts `.Rdata` files.")) #add option to read from link, see https://cran.r-project.org/web/packages/vroom/vignettes/vroom.html
+                        #,
                         #,
                         #accept = ".Rdata"),
                     ),
-                    mainPanel(
-                        h2("Tabulated dataset"),
-                        helpText("Sort variables descending to view missing values."),
-                        DT::DTOutput("table")
-                    )
-                )
+                    column(8,
+                           tabsetPanel(
+                               tabPanel(
+                                   "Table",
+                                   br(),
+                                   helpText("Hint: Sort variables descending to view missing values."),
+                                   DT::DTOutput("table")
+                               ),
+                               tabPanel("Descriptives",
+                                        "Another table")
+                           ))
+                ),
+                br(),
+                br(),
+                div(tags$a(actionButton("next-data", "Next"), href = "expl-tab", class = "shiny__link"), style = "text-align:right;")
             ),
             tabPanel(
                 "Explore",
@@ -123,7 +154,7 @@ shinyUI(
                 value = "expl-tab",
                 fluidRow(
                     column(
-                        3,
+                        4,
                         h2("Explore missingness"),
                         br(),
                         varSelectInput("NA_var1", "Distribution of", data = mice::boys),
@@ -135,7 +166,7 @@ shinyUI(
                         
                     ),
                     column(
-                        9,
+                        8,
                         tabsetPanel(
                             tabPanel("Pattern",
                                      plotOutput("md_pattern", height = "520px")),
@@ -160,7 +191,10 @@ shinyUI(
                         ),
                         checkboxInput("scalehist", "Fixed heigth y-axis", value = TRUE)
                     )
-                )
+                ),
+                br(),
+                br(),
+                div(tags$a(actionButton("next-expl", "Next"), href = "impu-tab", class = "shiny__link"), style = "text-align:right;")
             ),
             
             
@@ -168,32 +202,48 @@ shinyUI(
                 "Impute",
                 value = "impu-tab",
                 icon = icon("calculator"),
-                div(HTML(
-                    "<h2> Impute missing data using <code>mice</code></h2>"
-                )),
-                numericInput(
-                    "m",
-                    label = "Number of imputations",
-                    value = 5,
-                    min = 1,
-                    step = 1
+                fluidRow(
+                    column(
+                        4,
+                        #        div(HTML(
+                        # "<h2> Impute missing data using <code>mice</code></h2>"
+                        #)),
+                        h2("Impute missingness"),
+                        numericInput(
+                            "m",
+                            label = "Number of imputations",
+                            value = 5,
+                            min = 1,
+                            step = 1
+                        ),
+                        numericInput(
+                            "maxit",
+                            label = "Number of iterations",
+                            value = 5,
+                            min = 1,
+                            step = 5
+                        ),
+                        textInput("seed", "Set random number generator seed", value = "123"),
+                        textInput("impname", "Name the imputation object", value = "imp"),
+                        #tags$b("Mice call"),
+                        textInput("args", "Additional arguments (optional)", value = NULL)
+                    ),
+                    column(8,
+                           tabsetPanel(
+                               tabPanel(
+                                   "Mice call",
+                                   br(),
+                                   verbatimTextOutput("micecall"),
+                                   actionButton("mice", "Impute", icon = icon("hourglass-start")),
+                                   helpText("This may take a minute.")
+                               )
+                           ))
                 ),
-                numericInput(
-                    "maxit",
-                    label = "Number of iterations",
-                    value = 5,
-                    min = 1,
-                    step = 5
-                ),
-                textInput("seed", "Set random number generator seed", value = "123"),
-                textInput("impname", "Name the imputation object", value = "imp"),
-                tags$b("Mice call"),
-                verbatimTextOutput("micecall"),
-                textInput("args", "Add arguments", value = NULL),
-                actionButton("mice", "Impute", icon = icon("hourglass-start")),
-                helpText("This may take a minute."),
+                #br(),
+                #verbatimTextOutput("done"),
                 br(),
-                verbatimTextOutput("done")
+                br(),
+                div(tags$a(actionButton("next-impu", "Next"), href = "eval-tab", class = "shiny__link"), style = "text-align:right;")
             ),
             
             
@@ -203,7 +253,7 @@ shinyUI(
                 icon = icon("check-square"),
                 fluidRow(
                     column(
-                        3,
+                        4,
                         h2("Evaluate imputations"),
                         selectInput(
                             "plottype",
@@ -220,7 +270,7 @@ shinyUI(
                         
                     ),
                     column(
-                        9,
+                        8,
                         tabsetPanel(
                             tabPanel("Model",
                                      plotlyOutput("fluxplot")),
@@ -245,7 +295,10 @@ shinyUI(
                         
                         
                     )
-                )
+                ),
+                br(),
+                br(),
+                div(tags$a(actionButton("next-eval", "Next"), href = "save-tab", class = "shiny__link"), style = "text-align:right;")
             ),
             
             
@@ -254,19 +307,23 @@ shinyUI(
                 #add sav download
                 icon = icon("file-download"),
                 value = "save-tab",
-                h2("Download the dataset or imputations"),
-                br(),
-                selectInput(
-                    "mids_or_data",
-                    "Save the imputations, or just the data",
-                    choices = c("Imputations (incl. the data)", "Just the data")
-                ),
-                selectInput("rdata_or_csv", "Save as ...", choices = c(".Rdata", ".csv")),
-                downloadButton("save", "Save"),
-                helpText(
-                    "Add warning/disable downloading mids as csv! Add downloas as .sav option."
+                fluidRow(
+                    column(
+                        4,
+                        h2("Save results"),
+                        br(),
+                        selectInput(
+                            "mids_or_data",
+                            "Save the imputations, or just the data",
+                            choices = c("Imputations (incl. the data)", "Just the data")
+                        ),
+                        selectInput("rdata_or_csv", "Save as ...", choices = c(".Rdata", ".csv")),
+                        downloadButton("save", "Save"),
+                        # helpText(
+                        #     "Add warning/disable downloading mids as csv! Add downloas as .sav option."
+                        # )
+                    )
                 )
-                
             ),
             
             navbarMenu(
@@ -282,16 +339,16 @@ shinyUI(
                                  4,
                                  img(
                                      class = "img-polaroid",
-                                     src = paste0(
-                                         "https://raw.githubusercontent.com/gerkovink/shinyMice/edits/ICML/shinymicehex.png"
-                                     ),
-                                     style = paste0("width:100%;")
+                                     src = #paste0(
+                                         "logo_square.png"#"https://raw.githubusercontent.com/gerkovink/shinyMice/edits/ICML/shinymicehex.png"
+                                     ,
+                                     style = "width:100%;"
                                  ),
                                  tags$small(
                                      "Impression of the hex sticker ",
                                      "for the interactive evaulation ",
                                      "suite for multiple imputation `shinymice`",
-                                     a(href = "https://github.com/gerkovink/shinyMice")
+                                     a(href = "https://github.com/amices/shinyMice")
                                  )
                              ))
                 )

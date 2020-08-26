@@ -21,7 +21,7 @@ shinyServer(function(input, output, session) {
     data <- reactive({
         if (is.null(input$upload)) {
             set.seed(123)
-            d <- mice::boys[sample.int(748, 100),]
+            d <- mice::boys[sample.int(748, 100), ]
         }
         else{
             ext <- tools::file_ext(input$upload$name)
