@@ -11,12 +11,13 @@ shinyServer(function(input, output, session) {
         if (!is.null(input$upload_mids) & is.null(rv$mids)) {
             imp <-
                 get_rdata_file(path = input$upload_mids$datapath)
-                
+            
             rv$mids <- list(imp)
-            names(rv$mids) <- tools::file_path_sans_ext(input$upload_mids$name)
+            names(rv$mids) <-
+                tools::file_path_sans_ext(input$upload_mids$name)
         }
     })
-
+    
     data <- reactive({
         if (is.null(input$upload)) {
             set.seed(123)
@@ -38,7 +39,7 @@ shinyServer(function(input, output, session) {
             d <- d$data
             # add message: "Please use the upload below to load a `mids` object, and not just the data"
         }
-        if (!is.null(input$upload_mids)){
+        if (!is.null(input$upload_mids)) {
             d <- get_rdata_file(path = input$upload_mids$datapath) %>% .$data
         }
         return(d)
@@ -77,7 +78,7 @@ shinyServer(function(input, output, session) {
     # tablutate data
     output$table <-
         renderDT({
-                DT_NA_highlight(data(), vars())
+            DT_NA_highlight(data(), vars())
         }, server = F)
     
     ## Explore tab
@@ -128,7 +129,7 @@ shinyServer(function(input, output, session) {
             ", seed = ",
             input$seed,
             ", ...)"
-        ) 
+        )
     })
     
     observeEvent(input$mice, {
@@ -137,122 +138,122 @@ shinyServer(function(input, output, session) {
                             color = waiter::transparent(.5))
         on.exit(waiter::waiter_hide())
         
-        runmice <- paste0(
-            "mice(data(), m = ",
-            input$m,
-            ", maxit = ",
-            input$maxit,
-            ", seed = ",
-            input$seed
-        )
-         
-        runmice <- ifelse(is.null(input$args), paste0(runmice, ")"), paste0(runmice, ",", input$args, ")"))
-            
+        runmice <- paste0("mice(data(), m = ",
+                          input$m,
+                          ", maxit = ",
+                          input$maxit,
+                          ", seed = ",
+                          input$seed)
+        
+        runmice <-
+            ifelse(
+                is.null(input$args),
+                paste0(runmice, ")"),
+                paste0(runmice, ",", input$args, ")")
+            )
+        
         if (is.null(rv$mids)) {
             rv$mids <-
-                list(eval(parse(
-                    text = runmice
-                )))
-                names(rv$mids) <- input$impname
+                list(eval(parse(text = runmice)))
+            names(rv$mids) <- input$impname
         }  else {
-            rv$mids[[length(rv$mids)+1]] <-
-                eval(parse(
-                      text = runmice
-                  ))
-            names(rv$mids) <- c(names(rv$mids)[-length(rv$mids)], input$impname)
+            rv$mids[[length(rv$mids) + 1]] <-
+                eval(parse(text = runmice))
+            names(rv$mids) <-
+                c(names(rv$mids)[-length(rv$mids)], input$impname)
         }
     })
-            
-            observeEvent(input$iterate, {
-                waiter::waiter_show(html = waiter::spin_throbber(),
-                                    color = waiter::transparent(.5))
-                on.exit(waiter::waiter_hide())
-                req(!is.null(rv$mids))
-                rv$mids[[input$banner2]] <-
-                    mice.mids(rv$mids[[input$banner2]], maxit = input$midsmaxit)
-            })
-            
-            # indicate that data is imputed
-            # replace with loader and checkmark combo, see https://github.com/daattali/advanced-shiny/tree/master/busy-indicator
-            # output$done <- renderPrint({
-            #     if (is.mids(rv$mids[[1]])) {
-            #         "Done!"
-            #     }
-            # })
-            
-            ## Evaluate tab
-            ## Fluxplot subtab
-            output$fluxplot <-
-                renderPlotly({
-                    req(!is.null(rv$mids[[input$banner2]]))
-                    gg.mids(rv$mids[[input$banner2]], geom = "fluxplot")
-                })
-            
-            # plot traceplot
-            output$traceplot <-
-                renderPlotly({
-                    req(!is.null(rv$mids[[input$banner2]]))
-                    p <- gg.mids(rv$mids[[input$banner2]])
-                    p[[input$midsvar1]]
-                })
-            
-            ## Imputations subtab
-            # show correct variables
-            observe(varsUpdate("midsvar1"))
-            observe(varsUpdate("midsvar2"))
-            # select plotting variable
-            observe({
-                shinyFeedback::feedbackWarning(
-                    "midsvar1",
-                    all(!is.na(rv$mids[[input$banner2]]$data[[input$midsvar1]])),
-                    "No imputations to visualize. Impute the missing data first and/or choose a different variable."
-                )
-                req(!is.null(rv$mids[[input$banner2]]))
-                shinyFeedback::feedbackWarning(
-                    "midsvar2",
-                    input$midsvar1 == input$midsvar2 &
-                        input$plottype == "xyplot",
-                    "The two variables should be different"
-                )
-                if (input$plottype == "xyplot") {
-                    req(input$midsvar1 != input$midsvar2)
-                }
-            })
-            # plot imputations
-            output$impplot <- renderPlotly({
-                req(!is.null(rv$mids[[input$banner2]]))
-                
-                gg.mids(
-                    rv$mids[[input$banner2]],
-                    x = as.character(input$midsvar1),
-                    y = as.character(input$midsvar2),
-                    geom = input$plottype,
-                    interactive = TRUE
-                )
-            })
-            
-            ## Save tab
-            output$save <- downloadHandler(
-                filename = function() {
-                    paste0(
-                        ifelse(
-                            input$mids_or_data == "Just the data",
-                            "dataset",
-                            input$banner2
-                        ),
-                        input$rdata_or_csv
-                    )
-                },
-                content = function(file) {
-                    if (input$rdata_or_csv == ".Rdata") {
-                        dataset <- ifelse(input$mids_or_data == "Just the data", 
-                            data(),
-                            rv$mids[[input$banner2]])
-                            save(dataset, file = file)
-                    }
-                    if (input$rdata_or_csv == ".csv") {
-                        write.csv(data(), file, row.names = FALSE)
-                    }
-                }
+    
+    observeEvent(input$iterate, {
+        waiter::waiter_show(html = waiter::spin_throbber(),
+                            color = waiter::transparent(.5))
+        on.exit(waiter::waiter_hide())
+        req(!is.null(rv$mids))
+        rv$mids[[input$banner2]] <-
+            mice.mids(rv$mids[[input$banner2]], maxit = input$midsmaxit)
+    })
+    
+    # indicate that data is imputed
+    # replace with loader and checkmark combo, see https://github.com/daattali/advanced-shiny/tree/master/busy-indicator
+    # output$done <- renderPrint({
+    #     if (is.mids(rv$mids[[1]])) {
+    #         "Done!"
+    #     }
+    # })
+    
+    ## Evaluate tab
+    ## Fluxplot subtab
+    output$fluxplot <-
+        renderPlotly({
+            req(!is.null(rv$mids[[input$banner2]]))
+            gg.mids(rv$mids[[input$banner2]], geom = "fluxplot")
+        })
+    
+    # plot traceplot
+    output$traceplot <-
+        renderPlotly({
+            req(!is.null(rv$mids[[input$banner2]]))
+            p <- gg.mids(rv$mids[[input$banner2]])
+            p[[input$midsvar1]]
+        })
+    
+    ## Imputations subtab
+    # show correct variables
+    observe(varsUpdate("midsvar1"))
+    observe(varsUpdate("midsvar2"))
+    # select plotting variable
+    observe({
+        shinyFeedback::feedbackWarning(
+            "midsvar1",
+            all(!is.na(rv$mids[[input$banner2]]$data[[input$midsvar1]])),
+            "No imputations to visualize. Impute the missing data first and/or choose a different variable."
+        )
+        req(!is.null(rv$mids[[input$banner2]]))
+        shinyFeedback::feedbackWarning(
+            "midsvar2",
+            input$midsvar1 == input$midsvar2 &
+                input$plottype == "xyplot",
+            "The two variables should be different"
+        )
+        if (input$plottype == "xyplot") {
+            req(input$midsvar1 != input$midsvar2)
+        }
+    })
+    # plot imputations
+    output$impplot <- renderPlotly({
+        req(!is.null(rv$mids[[input$banner2]]))
+        
+        gg.mids(
+            rv$mids[[input$banner2]],
+            x = as.character(input$midsvar1),
+            y = as.character(input$midsvar2),
+            geom = input$plottype,
+            interactive = TRUE
+        )
+    })
+    
+    ## Save tab
+    output$save <- downloadHandler(
+        filename = function() {
+            paste0(
+                ifelse(
+                    input$mids_or_data == "Just the data",
+                    "dataset",
+                    input$banner2
+                ),
+                input$rdata_or_csv
             )
+        },
+        content = function(file) {
+            if (input$rdata_or_csv == ".Rdata") {
+                dataset <- ifelse(input$mids_or_data == "Just the data",
+                                  data(),
+                                  rv$mids[[input$banner2]])
+                save(dataset, file = file)
+            }
+            if (input$rdata_or_csv == ".csv") {
+                write.csv(data(), file, row.names = FALSE)
+            }
+        }
+    )
 })
