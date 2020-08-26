@@ -30,11 +30,11 @@ shinyUI(
         #"./theme/css/flatly.min.css", #
         navbarPage(
             title = div(
-                img(src = "logo_wide.png", style = "width:155px;position:fixed;left:30px;")
+                img(src = "logo_wide.png", style = "width:155px;position:absolute;left:30px;")
             ),
             #to make 'hamburger' menu on small screens
             collapsible = TRUE,
-            selected = "shinymice",
+            selected = "Home",
             # add theme toggle in header, for themes, see below, for placement see https://stackoverflow.com/questions/56873774/change-css-properties-of-shiny-checkbox
             includeScript(path = "www/theme_switch.JS"),
             header = div(
@@ -56,8 +56,20 @@ shinyUI(
             
             ## Landing page
             tabPanel(
-                title = "shinymice",
-                "Overview of the app (not finished yet!!)",
+                title = "Home",
+                icon = icon("home"),
+                fluidRow(
+                    
+                    column(12,
+                           align = "center",
+                img(
+                    class = "img-polaroid",
+                    src = "logo_wide.png",
+                    style = "width:50%;"
+                    ),
+                br(),
+                br(),
+                br(),
                 # link to tabs, see https://davidruvolo51.github.io/shinytutorials/tutorials/shiny-link/
                 tags$p(
                     "You are currently on the home page. Go to the",
@@ -73,7 +85,8 @@ shinyUI(
                     shinyLink(to = "save-tab", label = "Save page"),
                     
                     "."
-                )#,
+                ),
+                "For the most recent version of this app or to report an issue, see ", tags$a(href= "https://github.com/amices/shinyMice", "github.com/amices/shinyMice")))#,
                 #actionButton("Next", "Next", onclick = 'location.href=shinyLink(to = "save-tab", label = "Save page");')
             ),
             
@@ -282,16 +295,16 @@ shinyUI(
                                  4,
                                  img(
                                      class = "img-polaroid",
-                                     src = paste0(
-                                         "https://raw.githubusercontent.com/gerkovink/shinyMice/edits/ICML/shinymicehex.png"
-                                     ),
-                                     style = paste0("width:100%;")
+                                     src = #paste0(
+                                         "logo_square.png"#"https://raw.githubusercontent.com/gerkovink/shinyMice/edits/ICML/shinymicehex.png"
+                                     ,
+                                     style = "width:100%;"
                                  ),
                                  tags$small(
                                      "Impression of the hex sticker ",
                                      "for the interactive evaulation ",
                                      "suite for multiple imputation `shinymice`",
-                                     a(href = "https://github.com/gerkovink/shinyMice")
+                                     a(href = "https://github.com/amices/shinyMice")
                                  )
                              ))
                 )
