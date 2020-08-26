@@ -5,10 +5,23 @@ options("DT.TOJSON_ARGS" = list(na = "string"))
 
 shinyServer(function(input, output, session) {
     # reactives
+    rv <- reactiveValues(mids = NULL)
+    
+    observe({
+        if (!is.null(input$upload_mids) & is.null(rv$mids)) {
+            imp <-
+                get_rdata_file(path = input$upload_mids$datapath)
+            
+            rv$mids <- list(imp)
+            names(rv$mids) <-
+                tools::file_path_sans_ext(input$upload_mids$name)
+        }
+    })
+    
     data <- reactive({
         if (is.null(input$upload)) {
             set.seed(123)
-            d <- mice::boys[sample.int(748, 100), ]
+            d <- mice::boys[sample.int(748, 100),]
         }
         else{
             ext <- tools::file_ext(input$upload$name)
@@ -26,28 +39,11 @@ shinyServer(function(input, output, session) {
             d <- d$data
             # add message: "Please use the upload below to load a `mids` object, and not just the data"
         }
+        if (!is.null(input$upload_mids)) {
+            d <- get_rdata_file(path = input$upload_mids$datapath) %>% .$data
+        }
         return(d)
     })
-    
-    rv <- reactiveValues(mids = NULL)
-    
-    observe({
-        if (is.null(input$upload_mids)) {
-            rv$mids <- NULL
-        } else {
-            rv$mids <-
-                c(rv$mids, list(
-                    get_rdata_file(path = input$upload_mids$datapath)
-                ))
-            names(rv$mids) <-
-                c(names(rv$mids),
-                  tools::file_path_sans_ext(input$upload_mids$name))
-        }
-    })
-    # name list items, see https://stackoverflow.com/questions/35379590/r-how-to-access-the-name-of-an-element-of-a-list
-    # makeNamedList <- function(...) {
-    #     structure(list(...), names = as.list(substitute(list(...)))[-1L])
-    # }
     
     vars <- reactive(names(data()))
     
@@ -57,34 +53,32 @@ shinyServer(function(input, output, session) {
             updateSelectInput(session, UI_name, choices = vars())
         }
     
-    ## Banner
-    output$banner <- renderText({
-        paste0(
-            "Data: ",
-            ifelse(
-                is.null(input$upload),
-                "test dataset (sample of mice::boys)",
-                tools::file_path_sans_ext(input$upload$name)
-            ),
-            "\n",
-            "Imputation: ",
-            ifelse(
-                input$mice < 1 & is.null(input$midsupload),
-                "no imputations (yet)",
-                input$impname
-            )
-        )
-    })
+    observe(updateSelectInput(session, "banner2", choices = names(rv$mids)))
+    
+    # ## Banner
+    # output$banner <- renderText({
+    #     paste0(
+    #         "Data: ",
+    #         ifelse(
+    #             is.null(input$upload),
+    #             "test dataset (sample of mice::boys)",
+    #             tools::file_path_sans_ext(input$upload$name)
+    #         ),
+    #         "\n",
+    #         "Imputation: ",
+    #         ifelse(
+    #             input$mice < 1 & is.null(input$upload_mids),
+    #             "no imputations (yet)",
+    #             paste(names(rv$mids))#input$impname
+    #         )
+    #     )
+    # })
     
     
     # tablutate data
     output$table <-
         renderDT({
-            if (is.null(rv$mids)) {
-                DT_NA_highlight(data(), vars())
-            } else {
-                DT_NA_highlight(isolate(rv$mids)$data, names(isolate(rv$mids)$data))
-            }
+            DT_NA_highlight(data(), vars())
         }, server = F)
     
     ## Explore tab
@@ -94,8 +88,6 @@ shinyServer(function(input, output, session) {
         renderPlot({
             #md_plot <-
             plot_md_pattern(data = data())
-            
-            #interactive_md_plot(md_plot)
         }, res = 72)
     
     # show correct variables
@@ -136,7 +128,7 @@ shinyServer(function(input, output, session) {
             input$maxit,
             ", seed = ",
             input$seed,
-            ", printFlag = FALSE)"
+            ", ...)"
         )
     })
     
@@ -146,24 +138,29 @@ shinyServer(function(input, output, session) {
                             color = waiter::transparent(.5))
         on.exit(waiter::waiter_hide())
         
-        if (is.null(rv$imp)) {
+        runmice <- paste0("mice(data(), m = ",
+                          input$m,
+                          ", maxit = ",
+                          input$maxit,
+                          ", seed = ",
+                          input$seed)
+        
+        runmice <-
+            ifelse(
+                is.null(input$args),
+                paste0(runmice, ")"),
+                paste0(runmice, ",", input$args, ")")
+            )
+        
+        if (is.null(rv$mids)) {
             rv$mids <-
-                list(mice(
-                    data(),
-                    m = input$m,
-                    maxit = input$maxit,
-                    seed = as.numeric(input$seed)
-                ))
+                list(eval(parse(text = runmice)))
             names(rv$mids) <- input$impname
         }  else {
-            rv$mids <-
-                c(rv$imp,
-                  list(mice(
-                      data(),
-                      m = input$m,
-                      maxit = input$maxit
-                  )))
-            names(rv$mids) <- c(names(rv$mids), input$impname)
+            rv$mids[[length(rv$mids) + 1]] <-
+                eval(parse(text = runmice))
+            names(rv$mids) <-
+                c(names(rv$mids)[-length(rv$mids)], input$impname)
         }
     })
     
@@ -172,14 +169,14 @@ shinyServer(function(input, output, session) {
                             color = waiter::transparent(.5))
         on.exit(waiter::waiter_hide())
         req(!is.null(rv$mids))
-        rv$mids[[input$mice]] <-
-            mice.mids(rv$mids[[input$mice]], maxit = input$midsmaxit)
+        rv$mids[[input$banner2]] <-
+            mice.mids(rv$mids[[input$banner2]], maxit = input$midsmaxit)
     })
     
     # indicate that data is imputed
     # replace with loader and checkmark combo, see https://github.com/daattali/advanced-shiny/tree/master/busy-indicator
     # output$done <- renderPrint({
-    #     if (is.mids(rv$mids[[input$mice]])) {
+    #     if (is.mids(rv$mids[[1]])) {
     #         "Done!"
     #     }
     # })
@@ -188,15 +185,15 @@ shinyServer(function(input, output, session) {
     ## Fluxplot subtab
     output$fluxplot <-
         renderPlotly({
-            req(!is.null(rv$mids[[input$mice]]))
-            gg.mids(rv$mids[[input$mice]], geom = "fluxplot")
+            req(!is.null(rv$mids[[input$banner2]]))
+            gg.mids(rv$mids[[input$banner2]], geom = "fluxplot")
         })
     
     # plot traceplot
     output$traceplot <-
         renderPlotly({
-            req(!is.null(rv$mids[[input$mice]]))
-            p <- gg.mids(rv$mids[[input$mice]])
+            req(!is.null(rv$mids[[input$banner2]]))
+            p <- gg.mids(rv$mids[[input$banner2]])
             p[[input$midsvar1]]
         })
     
@@ -208,10 +205,10 @@ shinyServer(function(input, output, session) {
     observe({
         shinyFeedback::feedbackWarning(
             "midsvar1",
-            all(!is.na(rv$mids[[input$mice]]$data[[input$midsvar1]])),
+            all(!is.na(rv$mids[[input$banner2]]$data[[input$midsvar1]])),
             "No imputations to visualize. Impute the missing data first and/or choose a different variable."
         )
-        req(!is.null(rv$mids[[input$mice]]))
+        req(!is.null(rv$mids[[input$banner2]]))
         shinyFeedback::feedbackWarning(
             "midsvar2",
             input$midsvar1 == input$midsvar2 &
@@ -223,15 +220,17 @@ shinyServer(function(input, output, session) {
         }
     })
     # plot imputations
-    output$impplot <- renderPlotly(
+    output$impplot <- renderPlotly({
+        req(!is.null(rv$mids[[input$banner2]]))
+        
         gg.mids(
-            rv$mids[[input$mice]],
+            rv$mids[[input$banner2]],
             x = as.character(input$midsvar1),
             y = as.character(input$midsvar2),
             geom = input$plottype,
             interactive = TRUE
         )
-    )
+    })
     
     ## Save tab
     output$save <- downloadHandler(
@@ -240,15 +239,16 @@ shinyServer(function(input, output, session) {
                 ifelse(
                     input$mids_or_data == "Just the data",
                     "dataset",
-                    input$impname
+                    input$banner2
                 ),
                 input$rdata_or_csv
             )
         },
         content = function(file) {
             if (input$rdata_or_csv == ".Rdata") {
-                dataset <-
-                    data() #add if()/switch() statement to addrv$mids object instead
+                dataset <- ifelse(input$mids_or_data == "Just the data",
+                                  data(),
+                                  rv$mids[[input$banner2]])
                 save(dataset, file = file)
             }
             if (input$rdata_or_csv == ".csv") {

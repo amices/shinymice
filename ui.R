@@ -46,8 +46,12 @@ shinyUI(
                 ),
                 style = "text-align:right;"
             ),
-            div(verbatimTextOutput("banner"),
-                style = "text-align:right;width:102%;"),
+            # div(verbatimTextOutput("banner"),
+            #     style = "text-align:right;width:102%;"),
+            div(
+                selectInput("banner2", "", width = 200, choices = "Imputations (none yet)"),
+                style = "margin-top:-2em;margin-bottom:-2em;margin-right:-1em;float:right;"
+            ),
             
             
             ## Landing page
@@ -102,13 +106,11 @@ shinyUI(
                                       HTML(
                                           "<strong> Or choose a multiply imputed dataset (<code>mids</code> object) </strong>"
                                       )
-                                  )),
+                                  ))#,
                         #,
                         #accept = ".Rdata"),
-                        div(style = "margin-top:-2em;", helpText("Does not do anything anymore."))
                     ),
                     mainPanel(
-                        textOutput("test"),
                         h2("Tabulated dataset"),
                         helpText("Sort variables descending to view missing values."),
                         DT::DTOutput("table")
@@ -187,6 +189,7 @@ shinyUI(
                 textInput("impname", "Name the imputation object", value = "imp"),
                 tags$b("Mice call"),
                 verbatimTextOutput("micecall"),
+                textInput("args", "Add arguments", value = NULL),
                 actionButton("mice", "Impute", icon = icon("hourglass-start")),
                 helpText("This may take a minute."),
                 br(),
