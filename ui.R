@@ -46,9 +46,12 @@ shinyUI(
                 ),
                 style = "text-align:right;"
             ),
-            div(verbatimTextOutput("banner"),
-                style = "text-align:right;width:102%;"),
-            selectInput("banner2", "", choices = "No imputations yet"),
+            # div(verbatimTextOutput("banner"),
+            #     style = "text-align:right;width:102%;"),
+            div(
+                selectInput("banner2", "", width = 200, choices = "Imputations (none yet)"),
+                style = "margin-top:-2em;margin-bottom:-2em;margin-right:-1em;float:right;"
+            ),
             
             
             ## Landing page
@@ -106,10 +109,8 @@ shinyUI(
                                   ))#,
                         #,
                         #accept = ".Rdata"),
-                        #div(style = "margin-top:-2em;", helpText("Does not do anything anymore."))
                     ),
                     mainPanel(
-                        textOutput("test"),
                         h2("Tabulated dataset"),
                         helpText("Sort variables descending to view missing values."),
                         DT::DTOutput("table")

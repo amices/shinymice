@@ -15,16 +15,8 @@ shinyServer(function(input, output, session) {
             rv$mids <- list(imp)
             names(rv$mids) <- tools::file_path_sans_ext(input$upload_mids$name)
         }
-        # if (!is.null(input$upload_mids) & !is.null(rv$mids)) {
-        #     imp <-
-        #         get_rdata_file(path = input$upload_mids$datapath)
-        # 
-        #     rv$mids[[length(rv$mids)+1]] <- imp
-        #     names(rv$mids) <- c(names(rv$mids)[-length(rv$mids)], tools::file_path_sans_ext(input$upload_mids$name))
-        # }
     })
-    #output$test <-  renderText(names(rv$mids))#tools::file_path_sans_ext(input$upload_mids$name))
-    
+
     data <- reactive({
         if (is.null(input$upload)) {
             set.seed(123)
@@ -52,12 +44,6 @@ shinyServer(function(input, output, session) {
         return(d)
     })
     
-    
-    # name list items, see https://stackoverflow.com/questions/35379590/r-how-to-access-the-name-of-an-element-of-a-list
-    # makeNamedList <- function(...) {
-    #     structure(list(...), names = as.list(substitute(list(...)))[-1L])
-    # }
-    
     vars <- reactive(names(data()))
     
     # update variable choices automatically
@@ -68,34 +54,30 @@ shinyServer(function(input, output, session) {
     
     observe(updateSelectInput(session, "banner2", choices = names(rv$mids)))
     
-    ## Banner
-    output$banner <- renderText({
-        paste0(
-            "Data: ",
-            ifelse(
-                is.null(input$upload),
-                "test dataset (sample of mice::boys)",
-                tools::file_path_sans_ext(input$upload$name)
-            ),
-            "\n",
-            "Imputation: ",
-            ifelse(
-                input$mice < 1 & is.null(input$upload_mids),
-                "no imputations (yet)",
-                paste(names(rv$mids))#input$impname
-            )
-        )
-    })
+    # ## Banner
+    # output$banner <- renderText({
+    #     paste0(
+    #         "Data: ",
+    #         ifelse(
+    #             is.null(input$upload),
+    #             "test dataset (sample of mice::boys)",
+    #             tools::file_path_sans_ext(input$upload$name)
+    #         ),
+    #         "\n",
+    #         "Imputation: ",
+    #         ifelse(
+    #             input$mice < 1 & is.null(input$upload_mids),
+    #             "no imputations (yet)",
+    #             paste(names(rv$mids))#input$impname
+    #         )
+    #     )
+    # })
     
     
     # tablutate data
     output$table <-
         renderDT({
-            #if (is.null(rv$mids)) {
                 DT_NA_highlight(data(), vars())
-            # } else {
-            #     DT_NA_highlight(isolate(rv$mids)$data, names(isolate(rv$mids)$data))
-            # }
         }, server = F)
     
     ## Explore tab
@@ -105,8 +87,6 @@ shinyServer(function(input, output, session) {
         renderPlot({
             #md_plot <-
             plot_md_pattern(data = data())
-            
-            #interactive_md_plot(md_plot)
         }, res = 72)
     
     # show correct variables
@@ -148,7 +128,7 @@ shinyServer(function(input, output, session) {
             ", seed = ",
             input$seed,
             ", ...)"
-        ) #paste0("a", "b") %>% paste0(., "c")
+        ) 
     })
     
     observeEvent(input$mice, {
@@ -173,11 +153,6 @@ shinyServer(function(input, output, session) {
                 list(eval(parse(
                     text = runmice
                 )))
-                # mice(
-                # data(),
-                # m = input$m,
-                # maxit = input$maxit,
-                # seed = as.numeric(input$seed)))
                 names(rv$mids) <- input$impname
         }  else {
             rv$mids[[length(rv$mids)+1]] <-
@@ -271,7 +246,7 @@ shinyServer(function(input, output, session) {
                 content = function(file) {
                     if (input$rdata_or_csv == ".Rdata") {
                         dataset <- ifelse(input$mids_or_data == "Just the data", 
-                            data(), #add if()/switch() statement to addrv$mids object instead
+                            data(),
                             rv$mids[[input$banner2]])
                             save(dataset, file = file)
                     }
