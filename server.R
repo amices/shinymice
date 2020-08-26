@@ -168,7 +168,7 @@ shinyServer(function(input, output, session) {
          
         runmice <- ifelse(is.null(input$args), paste0(runmice, ")"), paste0(runmice, ",", input$args, ")"))
             
-        if (is.null(rv$imp)) {
+        if (is.null(rv$mids)) {
             rv$mids <-
                 list(eval(parse(
                     text = runmice
@@ -181,9 +181,9 @@ shinyServer(function(input, output, session) {
                 names(rv$mids) <- input$impname
         }  else {
             rv$mids[[length(rv$mids)+1]] <-
-                list(eval(parse(
+                eval(parse(
                       text = runmice
-                  )))
+                  ))
             names(rv$mids) <- c(names(rv$mids)[-length(rv$mids)], input$impname)
         }
     })
@@ -263,16 +263,17 @@ shinyServer(function(input, output, session) {
                         ifelse(
                             input$mids_or_data == "Just the data",
                             "dataset",
-                            input$impname
+                            input$banner2
                         ),
                         input$rdata_or_csv
                     )
                 },
                 content = function(file) {
                     if (input$rdata_or_csv == ".Rdata") {
-                        dataset <-
-                            data() #add if()/switch() statement to addrv$mids object instead
-                        save(dataset, file = file)
+                        dataset <- ifelse(input$mids_or_data == "Just the data", 
+                            data(), #add if()/switch() statement to addrv$mids object instead
+                            rv$mids[[input$banner2]])
+                            save(dataset, file = file)
                     }
                     if (input$rdata_or_csv == ".csv") {
                         write.csv(data(), file, row.names = FALSE)
