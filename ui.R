@@ -92,7 +92,7 @@ shinyUI(
                 #actionButton("Next", "Next", onclick = 'location.href=shinyLink(to = "save-tab", label = "Save page");')
                 br(),
                 br(),
-                tags$p(shinyLink(to = "data-tab", label = "Next"), style = "text-align:right;")
+                div(tags$a(actionButton("next-home", "Next"), href = "data-tab", class = "shiny__link"), style = "text-align:right;")
             ),
             
             ## Data tab
@@ -146,7 +146,7 @@ shinyUI(
                 ),
                 br(),
                 br(),
-                tags$p(shinyLink(to = "expl-tab", label = "Next"), style = "text-align:right;")
+                div(tags$a(actionButton("next-data", "Next"), href = "expl-tab", class = "shiny__link"), style = "text-align:right;")
             ),
             tabPanel(
                 "Explore",
@@ -194,7 +194,7 @@ shinyUI(
                 ),
                 br(),
                 br(),
-                tags$p(shinyLink(to = "impu-tab", label = "Next"), style = "text-align:right;")
+                div(tags$a(actionButton("next-expl", "Next"), href = "impu-tab", class = "shiny__link"), style = "text-align:right;")
             ),
             
             
@@ -243,7 +243,7 @@ shinyUI(
                 #verbatimTextOutput("done"),
                 br(),
                 br(),
-                tags$p(shinyLink(to = "eval-tab", label = "Next"), style = "text-align:right;")
+                div(tags$a(actionButton("next-impu", "Next"), href = "eval-tab", class = "shiny__link"), style = "text-align:right;")
             ),
             
             
@@ -298,7 +298,7 @@ shinyUI(
                 ),
                 br(),
                 br(),
-                tags$p(shinyLink(to = "save-tab", label = "Next"), style = "text-align:right;")
+                div(tags$a(actionButton("next-eval", "Next"), href = "save-tab", class = "shiny__link"), style = "text-align:right;")
             ),
             
             
