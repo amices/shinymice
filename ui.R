@@ -86,9 +86,13 @@ shinyUI(
                     
                     "."
                 ),
-                "For the most recent version of this app or to report an issue, see ", tags$a(href= "https://github.com/amices/shinyMice", "github.com/amices/shinyMice")))#,
+                "For the most recent version of this app or to report an issue, see ", 
+                tags$a(href= "https://github.com/amices/shinyMice", "github.com/amices/shinyMice"))),#,
                 #actionButton("Next", "Next", onclick = 'location.href=shinyLink(to = "save-tab", label = "Save page");')
-            ),
+                br(),
+                br(),
+                tags$p(shinyLink(to = "data-tab", label = "Next"), style = "text-align:right;")
+                ),
             
             ## Data tab
             tabPanel(
@@ -128,7 +132,10 @@ shinyUI(
                         helpText("Sort variables descending to view missing values."),
                         DT::DTOutput("table")
                     )
-                )
+                ),
+                br(),
+                br(),
+                tags$p(shinyLink(to = "expl-tab", label = "Next"), style = "text-align:right;")
             ),
             tabPanel(
                 "Explore",
@@ -173,7 +180,10 @@ shinyUI(
                         ),
                         checkboxInput("scalehist", "Fixed heigth y-axis", value = TRUE)
                     )
-                )
+                ), 
+                br(),
+                br(),
+                tags$p(shinyLink(to = "impu-tab", label = "Next"), style = "text-align:right;")
             ),
             
             
@@ -206,7 +216,10 @@ shinyUI(
                 actionButton("mice", "Impute", icon = icon("hourglass-start")),
                 helpText("This may take a minute."),
                 br(),
-                verbatimTextOutput("done")
+                verbatimTextOutput("done"),
+                br(),
+                br(),
+                tags$p(shinyLink(to = "eval-tab", label = "Next"), style = "text-align:right;")
             ),
             
             
@@ -258,7 +271,10 @@ shinyUI(
                         
                         
                     )
-                )
+                ),
+                br(),
+                br(),
+                tags$p(shinyLink(to = "save-tab", label = "Next"), style = "text-align:right;")
             ),
             
             
