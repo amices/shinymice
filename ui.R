@@ -137,10 +137,13 @@ shinyUI(
                                tabPanel(
                                    "Table",
                                    br(),
+                                   # add that it's a subset
                                    helpText("Hint: Sort variables descending to view missing values."),
                                    DT::DTOutput("table")
                                ),
                                tabPanel("Descriptives",
+                                        br(),
+                                        tags$b(textOutput("n")),
                                         br(),
                                         DT::DTOutput("descr")
                                         )

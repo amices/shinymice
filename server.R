@@ -81,8 +81,15 @@ shinyServer(function(input, output, session) {
             DT_NA_highlight(data(), vars())
         }, server = F)
     
+    output$n <- renderText(paste0("Descriptive statistics (n = ", nrow(data()), ")"))
     output$descr <- renderDT(
-        descriptives(data())
+        descriptives(data()) %>% DT::datatable() #%>% 
+        #     DT::formatStyle(
+        #     varnames,
+        #     target = "column",
+        #     color = DT::styleEqual("nmiss", "#B61A51"),
+        #     fontWeight = DT::styleEqual("NA", "bold")
+        # )
     )
     
     ## Explore tab
