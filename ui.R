@@ -92,7 +92,14 @@ shinyUI(
                 #actionButton("Next", "Next", onclick = 'location.href=shinyLink(to = "save-tab", label = "Save page");')
                 br(),
                 br(),
-                div(tags$a(actionButton("next-home", "Next"), href = "data-tab", class = "shiny__link"), style = "text-align:right;")
+                div(
+                    tags$a(
+                        actionButton("next-home", "Next"),
+                        href = "data-tab",
+                        class = "shiny__link"
+                    ),
+                    style = "text-align:right;"
+                )
             ),
             
             ## Data tab
@@ -141,17 +148,25 @@ shinyUI(
                                    helpText("Hint: Sort variables descending to view missing values."),
                                    DT::DTOutput("table")
                                ),
-                               tabPanel("Descriptives",
-                                        br(),
-                                        tags$b(textOutput("n")),
-                                        br(),
-                                        DT::DTOutput("descr")
-                                        )
+                               tabPanel(
+                                   "Descriptives",
+                                   br(),
+                                   tags$b(textOutput("n")),
+                                   br(),
+                                   DT::DTOutput("descr")
+                               )
                            ))
                 ),
                 br(),
                 br(),
-                div(tags$a(actionButton("next-data", "Next"), href = "expl-tab", class = "shiny__link"), style = "text-align:right;")
+                div(
+                    tags$a(
+                        actionButton("next-data", "Next"),
+                        href = "expl-tab",
+                        class = "shiny__link"
+                    ),
+                    style = "text-align:right;"
+                )
             ),
             tabPanel(
                 "Explore",
@@ -199,7 +214,14 @@ shinyUI(
                 ),
                 br(),
                 br(),
-                div(tags$a(actionButton("next-expl", "Next"), href = "impu-tab", class = "shiny__link"), style = "text-align:right;")
+                div(
+                    tags$a(
+                        actionButton("next-expl", "Next"),
+                        href = "impu-tab",
+                        class = "shiny__link"
+                    ),
+                    style = "text-align:right;"
+                )
             ),
             
             
@@ -248,7 +270,14 @@ shinyUI(
                 #verbatimTextOutput("done"),
                 br(),
                 br(),
-                div(tags$a(actionButton("next-impu", "Next"), href = "eval-tab", class = "shiny__link"), style = "text-align:right;")
+                div(
+                    tags$a(
+                        actionButton("next-impu", "Next"),
+                        href = "eval-tab",
+                        class = "shiny__link"
+                    ),
+                    style = "text-align:right;"
+                )
             ),
             
             
@@ -303,7 +332,14 @@ shinyUI(
                 ),
                 br(),
                 br(),
-                div(tags$a(actionButton("next-eval", "Next"), href = "save-tab", class = "shiny__link"), style = "text-align:right;")
+                div(
+                    tags$a(
+                        actionButton("next-eval", "Next"),
+                        href = "save-tab",
+                        class = "shiny__link"
+                    ),
+                    style = "text-align:right;"
+                )
             ),
             
             
