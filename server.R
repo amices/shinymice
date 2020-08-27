@@ -81,6 +81,10 @@ shinyServer(function(input, output, session) {
             DT_NA_highlight(data(), vars())
         }, server = F)
     
+    output$descr <- renderDT(
+        descriptives(data())
+    )
+    
     ## Explore tab
     # plot pattern
     # make it interactive with two axes? see https://stackoverflow.com/questions/52833214/adding-second-y-axis-on-ggplotly

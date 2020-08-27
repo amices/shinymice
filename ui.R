@@ -141,7 +141,9 @@ shinyUI(
                                    DT::DTOutput("table")
                                ),
                                tabPanel("Descriptives",
-                                        "Another table")
+                                        br(),
+                                        DT::DTOutput("descr")
+                                        )
                            ))
                 ),
                 br(),
