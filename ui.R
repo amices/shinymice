@@ -156,7 +156,9 @@ shinyUI(
                                    br(),
                                    DT::DTOutput("descr"),
                                    DT::DTOutput("categ")
-                               )
+                               ),
+                               tabPanel("Test",
+                                        plotUI("hist1", dat = mice::boys))
                            ))
                 ),
                 br(),

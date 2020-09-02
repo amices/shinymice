@@ -47,6 +47,8 @@ shinyServer(function(input, output, session) {
     
     vars <- reactive(names(data()))
     
+    plotServer("hist1", dat = data())
+    
     # update variable choices automatically
     varsUpdate <-
         function(UI_name) {

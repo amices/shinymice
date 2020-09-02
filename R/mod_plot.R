@@ -1,14 +1,15 @@
-plotUI <- function(id) {
+source("R/fnc_plot.NA.data.R")
+plotUI <- function(id, dat) {
   fluidRow(column(3,
-    varSelectInput(NS(id, "var1"), "Variable", data = mice::boys),
-    varSelectInput(NS(id, "var2"), "Variable", data = mice::boys)),
+    varSelectInput(NS(id, "var1"), "Variable", data = dat),
+    varSelectInput(NS(id, "var2"), "Variable", data = dat)),
   column(9,
     plotlyOutput(NS(id, "plot")))
   )
 }
 
-plotServer <- function(id) {
-  moduleServer(id, function(input, output, session, data = boys, vars = names(boys), plottype = "NAplot") {
+plotServer <- function(id, dat) {
+  moduleServer(id, function(input, output, session, data = dat, vars = names(dat), plottype = "NAplot") {
     varsUpdate <-
       function(UI_name) {
         updateSelectInput(session, UI_name, choices = vars)
@@ -31,12 +32,13 @@ plotServer <- function(id) {
   })
 }
 
+# test the module
 histogramApp <- function() {
   ui <- fluidPage(
-    plotUI("hist1")
+    plotUI("hist1", dat = mice::boys)
   )
   server <- function(input, output, session) {
-    plotServer("hist1")
+    plotServer("hist1", dat = mice::boys)
   }
   shinyApp(ui, server)  
 }
