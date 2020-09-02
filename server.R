@@ -81,6 +81,22 @@ shinyServer(function(input, output, session) {
             DT_NA_highlight(data(), vars())
         }, server = F)
     
+    #output$n <- renderText(paste0("Descriptive statistics (n = ", nrow(data()), ")"))
+    output$descr <- renderDT(
+        descr(data()) %>% 
+            dplyr::mutate_if(is.numeric, round, 2) %>%
+            DT::datatable(options = list(pageLength = 5)) %>%
+            DT::formatStyle(
+                "n",
+                target = "cell",
+                color = DT::styleInterval(c(nrow(data())-1), c("#B61A51", "black")),
+                fontWeight = DT::styleInterval(c(nrow(data())-1), c("bold", "")),
+            )
+        
+    )
+    
+    output$categ <- renderDT(least_perc(data()))
+    
     ## Explore tab
     # plot pattern
     # make it interactive with two axes? see https://stackoverflow.com/questions/52833214/adding-second-y-axis-on-ggplotly
