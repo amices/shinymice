@@ -95,6 +95,8 @@ shinyServer(function(input, output, session) {
         
     )
     
+    output$categ <- renderDT(least_perc(data()))
+    
     ## Explore tab
     # plot pattern
     # make it interactive with two axes? see https://stackoverflow.com/questions/52833214/adding-second-y-axis-on-ggplotly

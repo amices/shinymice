@@ -75,28 +75,36 @@ descr <- function(dat) {
 # diff <- b[, -1] - a[, -1]  #%>% setNames(., paste0("diff", names(.)))# difference between imputed and incomplete data
 # names(diff) <- paste0(names(diff), "_diff")
 # 
-# # add extra info about categories
-# v = "phb"
-# 
-# most <- forcats::fct_lump(dat[[v]], n = 3) %>%
-#   table() %>%
+# add extra info about categories
+#v = "phb"
+least_perc <- function(dat){
+  dat %>% select(!(where(is.numeric))) %>%
+    names() %>% 
+    purrr::map_dfr(~{
+      # most <- forcats::fct_lump(dat[[v]], n = 3) %>%
+      #   table() %>%
+      #   t() %>%
+      #   as.data.frame() %>%
+      #   .[, -1] %>%
+      #   setNames(., c("level", "freq")) %>%
+      #   cbind(column = v, .)
+      
+      #least <- min(table(dat[[v]]))
+      #nmis <- sum(is.na(dat[[v]]))
+      #p <- least / nrow(dat) * 100
+      min(table(dat[[.x]]))/nrow(dat)*100 %>% 
+        data.frame(perc = .)
+    } %>% cbind(vars = .x, .))
+
+}
+# least_perc(dat)
+# table(mice::boys$reg) %>% #, useNA = "always") %>%
 #   t() %>%
 #   as.data.frame() %>%
-#   .[, -1] %>%
+#   .[,-1] %>%
 #   setNames(., c("level", "freq")) %>%
-#   cbind(column = v, .)
-# 
-# least <- min(table(dat[[v]]))
-# nmis <- sum(is.na(dat[[v]]))
-# p <- least / (sum(most$freq) + nmis) * 100
-# 
-# # table(mice::boys$reg) %>% #, useNA = "always") %>%
-# #   t() %>%
-# #   as.data.frame() %>%
-# #   .[,-1] %>%
-# #   setNames(., c("level", "freq")) %>%
-# #   mutate(freq = sort(freq, decreasing = TRUE))
-# 
-# 
-# # top 4 and NA + perc cases in least populated cat
-# # and use psych::describe()
+#   mutate(freq = sort(freq, decreasing = TRUE))
+
+
+# top 4 and NA + perc cases in least populated cat
+# and use psych::describe()

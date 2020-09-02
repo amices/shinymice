@@ -154,7 +154,8 @@ shinyUI(
                                    #tags$b(textOutput("n")),
                                    helpText("Categorical variables denoted with '*'"),
                                    br(),
-                                   DT::DTOutput("descr")
+                                   DT::DTOutput("descr"),
+                                   DT::DTOutput("categ")
                                )
                            ))
                 ),
