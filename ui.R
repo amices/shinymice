@@ -112,7 +112,6 @@ shinyUI(
                 fluidRow(
                     column(
                         4,
-                        #id = "sidebar",
                         h2("Select data"),
                         fileInput(
                             "upload",
@@ -137,32 +136,37 @@ shinyUI(
                                   )),
                         div(style = "margin-top:-2em;",
                             helpText("Only accepts `.Rdata` files.")) #add option to read from link, see https://cran.r-project.org/web/packages/vroom/vignettes/vroom.html
-                        #,
-                        #,
-                        #accept = ".Rdata"),
-                    ),
-                    column(8,
-                           tabsetPanel(
-                               tabPanel(
-                                   "Table",
-                                   br(),
-                                   # add that it's a subset
-                                   helpText("Hint: Sort variables descending to view missing values."),
-                                   DT::DTOutput("table")
-                               ),
-                               tabPanel(
-                                   "Descriptives",
-                                   br(),
-                                   #tags$b(textOutput("n")),
-                                   helpText("Categorical variables denoted with '*'"),
-                                   br(),
-                                   DT::DTOutput("descr"),
-                                   DT::DTOutput("categ")
-                               ),
-                               tabPanel("Test",
-                                        plotUI("hist1", dat = mice::boys))
-                           ))
                 ),
+                column(8, 
+                       dataUI("table")
+                )),
+                #         #,
+                #         #,
+                #         #accept = ".Rdata"),
+                #     ),
+                #     column(8,
+                #            tabsetPanel(
+                #                tabPanel(
+                #                    "Table",
+                #                    br(),
+                #                    # add that it's a subset
+                #                    helpText("Hint: Sort variables descending to view missing values."),
+                #                    DT::DTOutput("table")
+                #                ),
+                #                tabPanel(
+                #                    "Descriptives",
+                #                    br(),
+                #                    #tags$b(textOutput("n")),
+                #                    helpText("Categorical variables denoted with '*'"),
+                #                    br(),
+                #                    DT::DTOutput("descr"),
+                #                    DT::DTOutput("categ")
+                #                ),
+                #                tabPanel("Test",
+                #                         plotUI("hist1", dat = mice::boys))
+                #            ))
+                # ),
+                fluidRow(column(12,
                 br(),
                 br(),
                 div(
@@ -172,7 +176,7 @@ shinyUI(
                         class = "shiny__link"
                     ),
                     style = "text-align:right;"
-                )
+                )))
             ),
             tabPanel(
                 "Explore",
