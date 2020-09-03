@@ -233,45 +233,48 @@ shinyUI(
                 "Impute",
                 value = "impu-tab",
                 icon = icon("calculator"),
-                fluidRow(
-                    column(
-                        4,
-                        #        div(HTML(
-                        # "<h2> Impute missing data using <code>mice</code></h2>"
-                        #)),
-                        h2("Impute missingness"),
-                        numericInput(
-                            "m",
-                            label = "Number of imputations",
-                            value = 5,
-                            min = 1,
-                            step = 1
-                        ),
-                        numericInput(
-                            "maxit",
-                            label = "Number of iterations",
-                            value = 5,
-                            min = 1,
-                            step = 5
-                        ),
-                        textInput("seed", "Set random number generator seed", value = "123"),
-                        textInput("impname", "Name the imputation object", value = "imp"),
-                        #tags$b("Mice call"),
-                        textInput("args", "Additional arguments (optional)", value = NULL)
-                    ),
-                    column(8,
-                           tabsetPanel(
-                               tabPanel(
-                                   "Mice call",
-                                   br(),
-                                   verbatimTextOutput("micecall"),
-                                   actionButton("mice", "Impute", icon = icon("hourglass-start")),
-                                   helpText("This may take a minute.")
-                               )
-                           ))
-                ),
+                imputeUI("impute"),
+                # fluidRow(
+                #     column(
+                #         4,
+                #         #        div(HTML(
+                #         # "<h2> Impute missing data using <code>mice</code></h2>"
+                #         #)),
+                #         h2("Impute missingness"),
+                #         numericInput(
+                #             "m",
+                #             label = "Number of imputations",
+                #             value = 5,
+                #             min = 1,
+                #             step = 1
+                #         ),
+                #         numericInput(
+                #             "maxit",
+                #             label = "Number of iterations",
+                #             value = 5,
+                #             min = 1,
+                #             step = 5
+                #         ),
+                #         textInput("seed", "Set random number generator seed", value = "123"),
+                #         textInput("impname", "Name the imputation object", value = "imp"),
+                #         #tags$b("Mice call"),
+                #         textInput("args", "Additional arguments (optional)", value = NULL)
+                #     ),
+                #     column(8,
+                #            tabsetPanel(
+                #                tabPanel(
+                #                    "Mice call",
+                #                    br(),
+                #                    verbatimTextOutput("micecall"),
+                #                    actionButton("mice", "Impute", icon = icon("hourglass-start")),
+                #                    helpText("This may take a minute.")
+                #                )
+                #            ))
+                #),
                 #br(),
                 #verbatimTextOutput("done"),
+                fluidRow(
+                    column(12,
                 br(),
                 br(),
                 div(
@@ -282,7 +285,7 @@ shinyUI(
                     ),
                     style = "text-align:right;"
                 )
-            ),
+            ))),
             
             
             tabPanel(

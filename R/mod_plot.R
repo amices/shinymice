@@ -1,4 +1,3 @@
-source("R/fnc_plot.NA.data.R")
 plotUI <- function(id, dat) {
   fluidRow(column(3,
     varSelectInput(NS(id, "var1"), "Variable", data = dat),
@@ -27,18 +26,18 @@ plotServer <- function(id, dat) {
           y = input$var1)
       } 
       p
-      #ggplot(data) + geom_histogram(aes(x = .data[[input$var1]]))
     })
   })
 }
 
-# test the module
-histogramApp <- function() {
-  ui <- fluidPage(
-    plotUI("hist1", dat = mice::boys)
-  )
-  server <- function(input, output, session) {
-    plotServer("hist1", dat = mice::boys)
-  }
-  shinyApp(ui, server)  
-}
+# # test the module
+# source("R/fnc_plot.NA.data.R")
+# histogramApp <- function() {
+#   ui <- fluidPage(
+#     plotUI("hist1", dat = mice::boys)
+#   )
+#   server <- function(input, output, session) {
+#     plotServer("hist1", dat = mice::boys)
+#   }
+#   shinyApp(ui, server)  
+# }

@@ -135,62 +135,63 @@ shinyServer(function(input, output, session) {
     })
     
     ## Impute tab
-    # show names data or name of df with input$file$name, see https://mastering-shiny.org/action-transfer.html
-    # print call
-    output$micecall <- renderText({
-        paste0(
-            input$impname,
-            " <- mice(data, m = ",
-            input$m,
-            ", maxit = ",
-            input$maxit,
-            ", seed = ",
-            input$seed,
-            ", ...)"
-        )
-    })
-    
-    observeEvent(input$mice, {
-        # for spinner, see: https://shiny.john-coene.com/waiter/
-        waiter::waiter_show(html = waiter::spin_throbber(),
-                            color = waiter::transparent(.5))
-        on.exit(waiter::waiter_hide())
-        
-        runmice <- paste0("mice(data(), m = ",
-                          input$m,
-                          ", maxit = ",
-                          input$maxit,
-                          ", seed = ",
-                          input$seed)
-        
-        runmice <-
-            ifelse(
-                is.null(input$args),
-                paste0(runmice, ")"),
-                paste0(runmice, ",", input$args, ")")
-            )
-        
-        if (is.null(rv$mids)) {
-            rv$mids <-
-                list(eval(parse(text = runmice)))
-            names(rv$mids) <- input$impname
-        }  else {
-            rv$mids[[length(rv$mids) + 1]] <-
-                eval(parse(text = runmice))
-            names(rv$mids) <-
-                c(names(rv$mids)[-length(rv$mids)], input$impname)
-        }
-    })
-    
-    observeEvent(input$iterate, {
-        waiter::waiter_show(html = waiter::spin_throbber(),
-                            color = waiter::transparent(.5))
-        on.exit(waiter::waiter_hide())
-        req(!is.null(rv$mids))
-        rv$mids[[input$banner2]] <-
-            mice.mids(rv$mids[[input$banner2]], maxit = input$midsmaxit)
-    })
-    
+    imputeServer("impute", dat = data(), r = rv)
+    # # show names data or name of df with input$file$name, see https://mastering-shiny.org/action-transfer.html
+    # # print call
+    # output$micecall <- renderText({
+    #     paste0(
+    #         input$impname,
+    #         " <- mice(data, m = ",
+    #         input$m,
+    #         ", maxit = ",
+    #         input$maxit,
+    #         ", seed = ",
+    #         input$seed,
+    #         ", ...)"
+    #     )
+    # })
+    # 
+    # observeEvent(input$mice, {
+    #     # for spinner, see: https://shiny.john-coene.com/waiter/
+    #     waiter::waiter_show(html = waiter::spin_throbber(),
+    #                         color = waiter::transparent(.5))
+    #     on.exit(waiter::waiter_hide())
+    #     
+    #     runmice <- paste0("mice(data(), m = ",
+    #                       input$m,
+    #                       ", maxit = ",
+    #                       input$maxit,
+    #                       ", seed = ",
+    #                       input$seed)
+    #     
+    #     runmice <-
+    #         ifelse(
+    #             is.null(input$args),
+    #             paste0(runmice, ")"),
+    #             paste0(runmice, ",", input$args, ")")
+    #         )
+    #     
+    #     if (is.null(rv$mids)) {
+    #         rv$mids <-
+    #             list(eval(parse(text = runmice)))
+    #         names(rv$mids) <- input$impname
+    #     }  else {
+    #         rv$mids[[length(rv$mids) + 1]] <-
+    #             eval(parse(text = runmice))
+    #         names(rv$mids) <-
+    #             c(names(rv$mids)[-length(rv$mids)], input$impname)
+    #     }
+    # })
+    # 
+    # observeEvent(input$iterate, {
+    #     waiter::waiter_show(html = waiter::spin_throbber(),
+    #                         color = waiter::transparent(.5))
+    #     on.exit(waiter::waiter_hide())
+    #     req(!is.null(rv$mids))
+    #     rv$mids[[input$banner2]] <-
+    #         mice.mids(rv$mids[[input$banner2]], maxit = input$midsmaxit)
+    # })
+    # 
     # indicate that data is imputed
     # replace with loader and checkmark combo, see https://github.com/daattali/advanced-shiny/tree/master/busy-indicator
     # output$done <- renderPrint({
