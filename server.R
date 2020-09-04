@@ -78,7 +78,7 @@ shinyServer(function(input, output, session) {
     
     
     # tablutate data
-    dataServer("datatabs", dat = data)
+    dataServer("datatabs", dat = reactive(data))
     # output$table <-
     #     renderDT({
     #         DT_NA_highlight(data(), vars())
@@ -101,39 +101,39 @@ shinyServer(function(input, output, session) {
     # output$categ <- renderDT(least_perc(data()))
     
     ## Explore tab
-    # plot pattern
-    # make it interactive with two axes? see https://stackoverflow.com/questions/52833214/adding-second-y-axis-on-ggplotly
-    output$md_pattern <-
-        renderPlot({
-            #md_plot <-
-            plot_md_pattern(data = data())
-        }, res = 72)
-    
-    # show correct variables
-    observe(varsUpdate("NA_var1"))
-    observe(varsUpdate("NA_var2"))
-    
-    # show best predictors
-    output$relations <-
-        renderText(test_NA_y(data(), x = input$NA_var1)$top3)
-    output$NA_relations <-
-        renderText(test_predictors(data(), x = input$NA_var1))
-    # plot distributions
-    # make plots the correct heigth every time, see https://stackoverflow.com/questions/34792998/shiny-variable-height-of-renderplot
-    output$NA_hist <- renderPlotly({
-        conditional_hist(
-            dat = data(),
-            x = input$NA_var1,
-            y = input$NA_var2,
-            scaler = input$scalehist,
-            binner = input$bins
-        )
-    })
-    output$NA_scat <- renderPlotly({
-        plot_NA_margins(data = data(),
-                        x = input$NA_var2,
-                        y = input$NA_var1)
-    })
+    # # plot pattern
+    # # make it interactive with two axes? see https://stackoverflow.com/questions/52833214/adding-second-y-axis-on-ggplotly
+    # output$md_pattern <-
+    #     renderPlot({
+    #         #md_plot <-
+    #         plot_md_pattern(data = data())
+    #     }, res = 72)
+    # 
+    # # show correct variables
+    # observe(varsUpdate("NA_var1"))
+    # observe(varsUpdate("NA_var2"))
+    # 
+    # # show best predictors
+    # output$relations <-
+    #     renderText(test_NA_y(data(), x = input$NA_var1)$top3)
+    # output$NA_relations <-
+    #     renderText(test_predictors(data(), x = input$NA_var1))
+    # # plot distributions
+    # # make plots the correct heigth every time, see https://stackoverflow.com/questions/34792998/shiny-variable-height-of-renderplot
+    # output$NA_hist <- renderPlotly({
+    #     conditional_hist(
+    #         dat = data(),
+    #         x = input$NA_var1,
+    #         y = input$NA_var2,
+    #         scaler = input$scalehist,
+    #         binner = input$bins
+    #     )
+    # })
+    # output$NA_scat <- renderPlotly({
+    #     plot_NA_margins(data = data(),
+    #                     x = input$NA_var2,
+    #                     y = input$NA_var1)
+    # })
     
     ## Impute tab
     imputeServer("impute", dat = data(), r = rv)

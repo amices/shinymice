@@ -182,46 +182,47 @@ shinyUI(
                 "Explore",
                 icon = icon("search"),
                 value = "expl-tab",
-                fluidRow(
-                    column(
-                        4,
-                        h2("Explore missingness"),
-                        br(),
-                        varSelectInput("NA_var1", "Distribution of", data = mice::boys),
-                        varSelectInput("NA_var2", "given (missingness in)", data = mice::boys),
-                        helpText("Hint: the strongest relations are with observed data in"),
-                        div(textOutput("relations"), style = "margin-top:-1em;"),
-                        helpText("Hint: the strongest relations are with missingness in"),
-                        div(textOutput("NA_relations"), style = "margin-top:-1em;"),
-                        
-                    ),
-                    column(
-                        8,
-                        tabsetPanel(
-                            tabPanel("Pattern",
-                                     plotOutput("md_pattern", height = "520px")),
-                            tabPanel("Scatterplot",
-                                     plotlyOutput("NA_scat", height = "520px")),
-                            tabPanel("Histogram",
-                                     plotlyOutput("NA_hist", height = "520px"))
-                        ),
-                        br(),
-                        tags$b("Additional options for histograms"),
-                        splitLayout(
-                            cellWidths = c("30%", "70%"),
-                            numericInput(
-                                "bins",
-                                "",
-                                min = 0,
-                                step = 0.5,
-                                value = 0,
-                                width = 70
-                            ),
-                            div(br(), br(), "Binwidth (default when 0)")
-                        ),
-                        checkboxInput("scalehist", "Fixed heigth y-axis", value = TRUE)
-                    )
-                ),
+                # fluidRow(
+                #     column(
+                #         4,
+                #         h2("Explore missingness"),
+                #         br(),
+                #         varSelectInput("NA_var1", "Distribution of", data = mice::boys),
+                #         varSelectInput("NA_var2", "given (missingness in)", data = mice::boys),
+                #         helpText("Hint: the strongest relations are with observed data in"),
+                #         div(textOutput("relations"), style = "margin-top:-1em;"),
+                #         helpText("Hint: the strongest relations are with missingness in"),
+                #         div(textOutput("NA_relations"), style = "margin-top:-1em;"),
+                #         
+                #     ),
+                #     column(
+                #         8,
+                #         tabsetPanel(
+                #             tabPanel("Pattern",
+                #                      plotOutput("md_pattern", height = "520px")),
+                #             tabPanel("Scatterplot",
+                #                      plotlyOutput("NA_scat", height = "520px")),
+                #             tabPanel("Histogram",
+                #                      plotlyOutput("NA_hist", height = "520px"))
+                #         ),
+                #         br(),
+                #         tags$b("Additional options for histograms"),
+                #         splitLayout(
+                #             cellWidths = c("30%", "70%"),
+                #             numericInput(
+                #                 "bins",
+                #                 "",
+                #                 min = 0,
+                #                 step = 0.5,
+                #                 value = 0,
+                #                 width = 70
+                #             ),
+                #             div(br(), br(), "Binwidth (default when 0)")
+                #         ),
+                #         checkboxInput("scalehist", "Fixed heigth y-axis", value = TRUE)
+                #     )
+                # ),
+                fluidRow(column(12,
                 br(),
                 br(),
                 div(
@@ -231,7 +232,7 @@ shinyUI(
                         class = "shiny__link"
                     ),
                     style = "text-align:right;"
-                )
+                )))
             ),
             
             
@@ -343,7 +344,8 @@ shinyUI(
                         
                     )
                 ),
-                br(),
+                fluidRow(column(12,
+                                br(),
                 br(),
                 div(
                     tags$a(
@@ -352,7 +354,7 @@ shinyUI(
                         class = "shiny__link"
                     ),
                     style = "text-align:right;"
-                )
+                )))
             ),
             
             

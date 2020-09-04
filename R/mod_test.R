@@ -32,7 +32,7 @@ plotServer <- function(id, dat) {
 
 # # test the module
 # source("R/fnc_plot.NA.data.R")
-# histogramApp <- function() {
+# testApp <- function() {
 #   ui <- fluidPage(
 #     plotUI("hist1", dat = mice::boys)
 #   )
