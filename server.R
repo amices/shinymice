@@ -78,7 +78,7 @@ shinyServer(function(input, output, session) {
     
     
     # tablutate data
-    dataServer("table", dat = data())
+    dataServer("datatabs", dat = data())
     # output$table <-
     #     renderDT({
     #         DT_NA_highlight(data(), vars())

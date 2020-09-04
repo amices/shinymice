@@ -138,7 +138,7 @@ shinyUI(
                             helpText("Only accepts `.Rdata` files.")) #add option to read from link, see https://cran.r-project.org/web/packages/vroom/vignettes/vroom.html
                 ),
                 column(8, 
-                       dataUI("table")
+                       dataUI("datatabs")
                 )),
                 #         #,
                 #         #,

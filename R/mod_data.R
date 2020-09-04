@@ -23,16 +23,16 @@ dataUI <- function(id, dat) {
   
 }
 
-dataServer <- function(id, data) {
-  moduleServer(id, function(input, output, session) {
+dataServer <- function(id, dat) {
+  moduleServer(id, function(input, output, session, data = dat) {
   
-  stopifnot(is.reactive(data))
+  # stopifnot(is.reactive(data))
     
-    vars = names(data())
+    vars = names(data)
     
   output$table <-
   renderDT({
-    DT_NA_highlight(data(), vars())
+    DT_NA_highlight(data, vars)
   }, server = F)
 
 #output$n <- renderText(paste0("Descriptive statistics (n = ", nrow(data()), ")"))
