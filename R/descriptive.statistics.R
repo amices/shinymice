@@ -92,9 +92,18 @@ least_perc <- function(dat){
       #least <- min(table(dat[[v]]))
       #nmis <- sum(is.na(dat[[v]]))
       #p <- least / nrow(dat) * 100
-      min(table(dat[[.x]]))/nrow(dat)*100 %>% 
-        data.frame(perc = .)
-    } %>% cbind(vars = .x, .))
+      tab <- table(dat[[.x]]) %>% sort(decreasing = TRUE)
+      cat <- names(tab)
+      
+      data.frame(most = cat[1], 
+                 perc_most = tab[1]/nrow(dat)*100,
+                 least = cat[length(cat)],
+                 perc_least = tab[length(tab)]/nrow(dat)*100)
+#                   least <- tab[tab == min(tab)]
+#      
+#        min(tab)/nrow(dat)*100 %>% 
+#        data.frame(least = .)
+    } %>% cbind(vars = .x, .)) 
 
 }
 # least_perc(dat)
