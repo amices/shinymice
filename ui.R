@@ -70,8 +70,10 @@ shinyUI(
                         br(),
                         # link to tabs, see https://davidruvolo51.github.io/shinytutorials/tutorials/shiny-link/
                         "You are currently on the home page.",
+                        br(),
+                        br(),
                         tags$p(
-                            "First, select some",
+                            "To get started, please select some",
                             tags$a(
                                 actionButton("next-home", "Data", icon = icon("file-upload")),
                                 href = "data-tab",
@@ -86,17 +88,13 @@ shinyUI(
                                 href = "expl-tab",
                                 class = "shiny__link"
                             ),#shinyLink(to = "expl-tab", label = "Explore page"),
-                            "the missingness,"),
-                        tags$p(
-                            "",
+                            "the missingness,",
                             tags$a(
                                 actionButton("next-home", "Impute", icon = icon("calculator")),
                                 href = "impu-tab",
                                 class = "shiny__link"
                             ),#shinyLink(to = "impu-tab", label = "Impute page"),
-                            "the missingness,"),
-                        tags$p(
-                            "and",
+                            "the missingness, and",
                             tags$a(
                                 actionButton("next-home", "Evaluate", icon = icon("check-square")),
                                 href = "eval-tab",
@@ -105,7 +103,7 @@ shinyUI(
                             
                             "the imputations."),
                         tags$p(
-                            "Finally, ",
+                            "Finally, you can ",
                             tags$a(
                                 actionButton("save-home", "Save", icon = icon("file-download")),
                                 href = "data-tab",
