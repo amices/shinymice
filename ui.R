@@ -69,35 +69,36 @@ shinyUI(
                         br(),
                         br(),
                         # link to tabs, see https://davidruvolo51.github.io/shinytutorials/tutorials/shiny-link/
+                        "You are currently on the home page.",
                         tags$p(
-                            "You are currently on the home page. Go to the",
+                            "Go to the",
                             tags$a(
-                                actionButton("next-home", "Data page"),
+                                actionButton("next-home", "Data", icon = icon("file-upload")),
                                 href = "data-tab",
                                 class = "shiny__link"
                             ),
-                            " to select some data. Then explore the missingness on the ",
+                            " page to select some data. Then explore the missingness on the ",
                             tags$a(
-                                actionButton("next-home", "Explore page"),
+                                actionButton("next-home", "Explore", icon = icon("search")),
                                 href = "expl-tab",
                                 class = "shiny__link"
                             ),#shinyLink(to = "expl-tab", label = "Explore page"),
                             ", impute the missingness on the ",
                             tags$a(
-                                actionButton("next-home", "Impute page"),
+                                actionButton("next-home", "Impute", icon = icon("calculator")),
                                 href = "impu-tab",
                                 class = "shiny__link"
                             ),#shinyLink(to = "impu-tab", label = "Impute page"),
                             ", and evaluate the imputations on the ",
                             tags$a(
-                                actionButton("next-home", "Evaluate page"),
+                                actionButton("next-home", "Evaluate", icon = icon("check-square")),
                                 href = "eval-tab",
                                 class = "shiny__link"
                             ),#shinyLink(to = "eval-tab", label = "Evaluate page"),
                             
                             ". Finally, save the imputations on the ",
                             tags$a(
-                                actionButton("save-home", "Save page"),
+                                actionButton("save-home", "Save", icon = icon("file-download")),
                                 href = "data-tab",
                                 class = "shiny__link"
                             ),#shinyLink(to = "save-tab", label = "Save page"),
