@@ -71,16 +71,36 @@ shinyUI(
                         # link to tabs, see https://davidruvolo51.github.io/shinytutorials/tutorials/shiny-link/
                         tags$p(
                             "You are currently on the home page. Go to the",
-                            shinyLink(to = "data-tab", label = "Data page"),
+                            tags$a(
+                                actionButton("next-home", "Data page"),
+                                href = "data-tab",
+                                class = "shiny__link"
+                            ),
                             " to select some data. Then explore the missingness on the ",
-                            shinyLink(to = "expl-tab", label = "Explore page"),
+                            tags$a(
+                                actionButton("next-home", "Explore page"),
+                                href = "expl-tab",
+                                class = "shiny__link"
+                            ),#shinyLink(to = "expl-tab", label = "Explore page"),
                             ", impute the missingness on the ",
-                            shinyLink(to = "impu-tab", label = "Impute page"),
+                            tags$a(
+                                actionButton("next-home", "Impute page"),
+                                href = "impu-tab",
+                                class = "shiny__link"
+                            ),#shinyLink(to = "impu-tab", label = "Impute page"),
                             ", and evaluate the imputations on the ",
-                            shinyLink(to = "eval-tab", label = "Evaluate page"),
+                            tags$a(
+                                actionButton("next-home", "Evaluate page"),
+                                href = "eval-tab",
+                                class = "shiny__link"
+                            ),#shinyLink(to = "eval-tab", label = "Evaluate page"),
                             
                             ". Finally, save the imputations on the ",
-                            shinyLink(to = "save-tab", label = "Save page"),
+                            tags$a(
+                                actionButton("save-home", "Save page"),
+                                href = "data-tab",
+                                class = "shiny__link"
+                            ),#shinyLink(to = "save-tab", label = "Save page"),
                             
                             "."
                         ),
