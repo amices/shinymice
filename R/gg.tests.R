@@ -86,7 +86,7 @@
 # 
 # gg.mids(x = "age", dat = mids, geom = "bwplot") #add empty columns for imps back in, add option to skip completely obs var
 # # also, leave option to plot completely obs variable, because the data may have been imputed by someone else using mean imp! (see What Interpretable Machine Learning Can Tell Us About Missing Values
-# # by Rich Caruana · Jul 17, 2020 ) around min 27:00
+# # by Rich Caruana Jul 17, 2020 ) around min 27:00
 # 
 # gg.mids(x = "reg", dat = mids, geom = "bwplot")
 # 
