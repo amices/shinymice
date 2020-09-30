@@ -183,6 +183,9 @@ shinyUI(
                                    helpText("Categorical variables denoted with '*'"),
                                    br(),
                                    DT::DTOutput("descr"),
+                                   br(),
+                                   br(),
+                                   tags$b("Additional descriptives for categorical variables"),
                                    DT::DTOutput("categ")
                                )
                            ))

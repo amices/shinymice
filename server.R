@@ -95,7 +95,10 @@ shinyServer(function(input, output, session) {
         
     )
     
-    output$categ <- renderDT(least_perc(data()))
+    output$categ <- renderDT({
+        tab <- least_perc(data()) 
+        row.names(tab) <- NULL
+        tab})
     
     ## Explore tab
     # plot pattern
