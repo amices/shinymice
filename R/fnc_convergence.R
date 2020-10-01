@@ -26,33 +26,41 @@ rhat <- function(d, v) {
     select(rhat) 
 }
 
-purrr::map_dfc(names(out)[-c(1:2)], function(vrb){
-OG <- out %>%
-  # get rhat
-  rhat(d = ., v = vrb)
 
-bulk <- out %>%
-  mutate(# split chains
-    m = m +
-      c(rep(0, ceiling(nit / 2)), rep(ceiling(nit / 2), floor(nit / 2))),
-    # rank-normalize
-    vrb = qnorm((rank(.data[[vrb]]) - 3 / 8) / (nrow(out) - 1 / 4))) %>%
-  # get rhat
-  rhat(d = ., v = vrb)
+purrr::map_dfr(1:max(out$it)+1, function(itr){
+  out <- filter(out, it < itr)
+  purrr::map_dfc(names(out)[-c(1:2)], function(vrb){
+    nit <- max(out$it)
+    OG <- out %>%
+      # get rhat
+      rhat(d = ., v = vrb)
+    
+    bulk <- out %>%
+      mutate(# split chains
+        m = m +
+          c(rep(0, ceiling(nit / 2)), rep(ceiling(nit / 2), floor(nit / 2))),
+        # rank-normalize
+        vrb = qnorm((rank(.data[[vrb]]) - 3 / 8) / (nrow(out) - 1 / 4))) %>%
+      # get rhat
+      rhat(d = ., v = vrb)
+    
+    tails <- out %>%
+      mutate(
+        # fold chains
+        vrb = abs(.data[[vrb]] - median(.data[[vrb]])),
+        # split chains
+        m = m +
+          c(rep(0, ceiling(nit / 2)), rep(ceiling(nit / 2), floor(nit / 2))),
+        # rank-normalize
+        vrb = qnorm((rank(.data[[vrb]]) - 3 / 8) / (nrow(out) - 1 / 4))
+      ) %>%
+      # get rhat
+      rhat(d = ., v = vrb)
+    
+    data.frame(max(OG, bulk, tails)) %>% 
+      setNames(paste0("rhat.", vrb))
+  }) %>% cbind(it = max(out$it), .)
+  
+})
 
-tails <- out %>%
-  mutate(
-    # fold chains
-    vrb = abs(.data[[vrb]] - median(.data[[vrb]])),
-    # split chains
-    m = m +
-      c(rep(0, ceiling(nit / 2)), rep(ceiling(nit / 2), floor(nit / 2))),
-    # rank-normalize
-    vrb = qnorm((rank(.data[[vrb]]) - 3 / 8) / (nrow(out) - 1 / 4))
-  ) %>%
-  # get rhat
-  rhat(d = ., v = vrb)
 
-data.frame(max(OG, bulk, tails)) %>% 
-  setNames(paste0("rhat.", vrb))
-}) %>% cbind(it = nit, .)
