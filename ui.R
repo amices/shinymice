@@ -151,6 +151,7 @@ shinyUI(
                                tabPanel(
                                    "Descriptives",
                                    br(),
+                                   tags$b("Descriptive statistics"),
                                    #tags$b(textOutput("n")),
                                    helpText("Categorical variables denoted with '*'"),
                                    br(),
@@ -158,6 +159,7 @@ shinyUI(
                                    br(),
                                    br(),
                                    tags$b("Additional descriptives for categorical variables"),
+                                   br(),
                                    DT::DTOutput("categ")
                                )
                            ))

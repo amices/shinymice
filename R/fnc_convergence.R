@@ -11,15 +11,15 @@ rhat <- function(d, v) {
     summarise(B = var(mean) * nit, W = mean(var)) %>%
     mutate(varplus = (((nit - 1) / nit) * W) + B / nit,
            rhat = sqrt(varplus / W)) %>%
-    select(rhat) 
+    select(rhat)
 }
 
 # complete function incl preprocessing
-max_rhat <- function(mids, param = "means"){
-  if(param == "means"){
+max_rhat <- function(mids, param = "means") {
+  if (param == "means") {
     dat <- mids$chainMean
   }
-  if (param == "vars"){
+  if (param == "vars") {
     dat <- mids$chainVar
   }
   nit <- mids$iteration
@@ -35,17 +35,16 @@ max_rhat <- function(mids, param = "means"){
   out
   
   # compute rhat for each variable
-  purrr::map_dfr(1:max(out$it)+1, function(itr){
+  purrr::map_dfr(1:max(out$it) + 1, function(itr) {
     out <- filter(out, it < itr)
-    purrr::map_dfc(names(out)[-c(1:2)], function(vrb){
+    purrr::map_dfc(names(out)[-c(1:2)], function(vrb) {
       nit <- max(out$it)
       OG <- out %>%
         # get rhat
         rhat(d = ., v = vrb)
       
       bulk <- out %>%
-        mutate(
-          # split chains
+        mutate(# split chains
           m = m +
             c(rep(0, ceiling(nit / 2)), rep(ceiling(nit / 2), floor(nit / 2))),
           # rank-normalize
@@ -66,13 +65,11 @@ max_rhat <- function(mids, param = "means"){
         # get rhat
         rhat(d = ., v = vrb)
       
-      data.frame(max(OG, bulk, tails)) %>% 
+      data.frame(max(OG, bulk, tails)) %>%
         setNames(paste0("rhat.", vrb))
     }) %>% cbind(it = max(out$it), .)
     
   })
 }
 
-max_rhat(mids) %>% full_join(
-max_rhat(mids, param = "vars")
-)
+#max_rhat(mids) %>% full_join(max_rhat(mids, param = "vars"))
