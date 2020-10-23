@@ -5,19 +5,18 @@
 #' @import shiny
 #' @noRd
 app_ui <- function(request) {
-  tagList(
-    # Leave this function for adding external resources
+  tagList(# Leave this function for adding external resources
     golem_add_external_resources(),
-    # List the first level UI elements here 
-    fluidPage(
-      navbarPage(
+    # List the first level UI elements here
+    fluidPage(navbarPage(
       "shinymice",
       tabPanel("Home",
-      mod_home_ui("home_ui_1")),
+               mod_home_ui("home_ui_1")),
       tabPanel("Missingness",
-      mod_missingness_ui("missingness_ui_1"))
-    ))
-  )
+               mod_missingness_ui("missingness_ui_1")),
+      tabPanel("Imputation model",
+               "Test")
+    )))
 }
 
 #' Add external Resources to the Application
@@ -29,11 +28,9 @@ app_ui <- function(request) {
 #' @importFrom golem add_resource_path activate_js favicon bundle_resources
 #' @noRd
 golem_add_external_resources <- function(){
-  
   add_resource_path(
     'www', app_sys('app/www')
   )
- 
   tags$head(
     favicon(),
     bundle_resources(
