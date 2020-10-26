@@ -13,6 +13,7 @@ mod_scientificmodel_ui <- function(id){
     column(3,
            tags$b("Analyze the imputed data"),
            br(),
+           br(),
            "1. Some steps here."
     ),
     column(9,

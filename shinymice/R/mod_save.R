@@ -11,7 +11,8 @@ mod_save_ui <- function(id){
   ns <- NS(id)
   fluidPage(fluidRow(
     column(3,
-           tags$b("Scientific analysis"),
+           tags$b("Save the data/results"),
+           br(),
            br(),
            "1. Some steps here."
     ),

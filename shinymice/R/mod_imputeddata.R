@@ -13,6 +13,7 @@ mod_imputeddata_ui <- function(id){
     column(3,
            tags$b("Inspect the imputations"),
            br(),
+           br(),
            "1. Some steps here."
     ),
     column(9,

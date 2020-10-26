@@ -11,10 +11,10 @@ app_ui <- function(request) {
     fluidPage(navbarPage(
       windowTitle = "shinymice",
       title = div(img(src="www/logo.png", width = 120)),
-      header = br(),
+      header = div(br(),br()),
       tabPanel("Home",
                mod_home_ui("home_ui_1")),
-      tabPanel("Missing data",
+      tabPanel("Incomplete data",
                mod_missingness_ui("missingness_ui_1")),
       tabPanel("Imputation model",
                mod_imputationmodel_ui("imputationmodel_ui_1")),

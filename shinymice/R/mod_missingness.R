@@ -15,13 +15,17 @@ mod_missingness_ui <- function(id) {
       tags$b("Explore the missingness"),
       br(),
       br(),
-      "1. Check how much missingness there is in each variable.",
+      "1. Load the incomplete data",
+      div(style = "margin-top: -12px"),
+      fileInput(ns("dat"), "", placeholder = ".csv/.Rdata/.txt"),
+      div(style = "margin-top: -12px"),
+      "2. Check how much missingness there is in each variable.",
       br(),
-      "2. Browse the dataset to view missing data points.",
+      "3. Browse the dataset to view missing data points.",
       br(),
-      "3. Look at the missing data pattern for an overview of the missingness.",
+      "4. Look at the missing data pattern for an overview of the missingness.",
       br(),
-      "4. Plot missingness in bivariate relations."
+      "5. Plot missingness in bivariate relations."
     ),
     column(9,
            tabsetPanel(
