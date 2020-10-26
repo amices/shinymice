@@ -48,9 +48,10 @@ mod_imputationmodel_ui <- function(id){
 mod_imputationmodel_server <- function(id){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
-    output$pred_plot <- renderPlot(ggplot2::ggplot(data = data.frame(x = 1:3, y = 4:6)) + ggplot2::geom_point(ggplot2::aes(x=x,y=y)))
-    output$flux_plot <- renderPlot(ggplot2::ggplot(data = data.frame(x = 1:3, y = 4:6)) + ggplot2::geom_point(ggplot2::aes(x=x,y=y)))
-    output$trace_plot <- renderPlot(ggplot2::ggplot(data = data.frame(x = 1:3, y = 4:6)) + ggplot2::geom_point(ggplot2::aes(x=x,y=y)))
+    dummy_plot <- ggplot2::ggplot(data = data.frame(x = c("dummy", "plot"), y = c(0,0))) + ggplot2::geom_point(ggplot2::aes(x=x,y=y))
+    output$pred_plot <- renderPlot(dummy_plot)
+    output$flux_plot <- renderPlot(dummy_plot)
+    output$trace_plot <- renderPlot(dummy_plot)
   })
 }
     

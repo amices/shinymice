@@ -23,6 +23,9 @@ usethis::use_package( "ggplot2" )
 golem::add_module( name = "home" ) # Name of the module
 golem::add_module( name = "missingness") # Name of the module
 golem::add_module( name = "imputationmodel") # Name of the module
+golem::add_module( name = "imputeddata") # Name of the module
+golem::add_module( name = "scientificmodel") # Name of the module
+golem::add_module( name = "save") # Name of the module
 
 ## Add helper functions ----
 ## Creates ftc_* and utils_*

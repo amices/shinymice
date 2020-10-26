@@ -28,7 +28,7 @@ mod_home_ui <- function(id){
 mod_home_server <- function(id){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
-    output$name <- renderText("[print name of dataset here]")
+    output$name <- renderText("[print name of dataset here?]")
   })
 }
     
