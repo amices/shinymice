@@ -12,9 +12,16 @@ mod_missingness_ui <- function(id) {
   #tagList(
   fluidPage(fluidRow(
     column(3,
-      h2("Select variable(s)"),
-      selectInput("var1", "Variable", choices = names(mice::boys)),
-      selectInput("var2", "Variable", choices = names(mice::boys))
+      tags$b("Explore the missingness"),
+      br(),
+      br(),
+      "1. Check how much missingness there is in each variable.",
+      br(),
+      "2. Browse the dataset to view missing data points.",
+      br(),
+      "3. Look at the missing data pattern for an overview of the missingness.",
+      br(),
+      "4. Plot missingness in bivariate relations."
     ),
     column(9,
            tabsetPanel(
@@ -25,6 +32,8 @@ mod_missingness_ui <- function(id) {
              tabPanel("Pattern",
                       plotOutput(ns("md_pat"))),
              tabPanel("Distribution",
+                      selectInput("var1", "Select a variable", choices = names(mice::boys)),
+                      selectInput("var2", "Select a second variable", choices = names(mice::boys)),
                       plotOutput(ns("na_plot")))
            ))
   ))

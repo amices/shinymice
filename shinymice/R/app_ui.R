@@ -15,7 +15,7 @@ app_ui <- function(request) {
       tabPanel("Missingness",
                mod_missingness_ui("missingness_ui_1")),
       tabPanel("Imputation model",
-               "Test")
+               mod_imputationmodel_ui("imputationmodel_ui_1"))
     )))
 }
 
