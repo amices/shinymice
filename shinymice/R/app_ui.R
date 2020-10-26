@@ -9,7 +9,9 @@ app_ui <- function(request) {
     golem_add_external_resources(),
     # List the first level UI elements here
     fluidPage(navbarPage(
-      title = "shinymice",
+      windowTitle = "shinymice",
+      title = div(img(src="www/logo.png", width = 120)),
+      header = br(),
       tabPanel("Home",
                mod_home_ui("home_ui_1")),
       tabPanel("Missing data",
@@ -18,7 +20,7 @@ app_ui <- function(request) {
                mod_imputationmodel_ui("imputationmodel_ui_1")),
       tabPanel("Imputed data",
                mod_imputeddata_ui("imputeddata_ui_1")),
-      tabPanel("Analyze the imputed data",
+      tabPanel("Scientific model",
                mod_scientificmodel_ui("scientificmodel_ui_1")),
       tabPanel("Exit",
                mod_save_ui("save_ui_1"))
@@ -38,7 +40,7 @@ golem_add_external_resources <- function(){
     'www', app_sys('app/www')
   )
   tags$head(
-    favicon(),
+    favicon(ext = 'png'),
     bundle_resources(
       path = app_sys('app/www'),
       app_title = 'shinymice'

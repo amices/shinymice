@@ -11,7 +11,7 @@ mod_scientificmodel_ui <- function(id){
   ns <- NS(id)
   fluidPage(fluidRow(
     column(3,
-           tags$b("Scientific analysis"),
+           tags$b("Analyze the imputed data"),
            br(),
            "1. Some steps here."
     ),

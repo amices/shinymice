@@ -11,7 +11,7 @@ mod_home_ui <- function(id){
   ns <- NS(id)
   fluidPage(
     fluidRow(
-      h2("[shinymice logo here]", align = "center"),
+      div(img(src = "www/favicon.png", width = 400), align = "center"),#h2("[shinymice logo here]", align = "center"),
       br(),
       h2("[navigation buttons here]", align = "center"),
       br(),

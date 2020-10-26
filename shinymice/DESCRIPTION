@@ -2,8 +2,8 @@ Package: shinymice
 Title: shinymice
 Version: 0.0.0.9000
 Authors@R: person('Hanne', 'Oberman', email = 'h.i.oberman@uu.nl', role = c('cre', 'aut'))
-Description: Interactive evaluation device for multiple imputation. Under development.
-License: What license is it under?
+Description: Interactive evaluation suite for missing data.
+License: GPL-3
 Imports: 
     config,
     golem,
