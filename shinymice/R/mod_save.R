@@ -14,7 +14,7 @@ mod_save_ui <- function(id){
            tags$b("Save the data/results"),
            br(),
            br(),
-           "1. Some steps here."
+           "[This tab is under construction.]"
     ),
     column(9,
            tabsetPanel(

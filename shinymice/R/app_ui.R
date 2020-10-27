@@ -11,6 +11,7 @@ app_ui <- function(request) {
     fluidPage(navbarPage(
       windowTitle = "shinymice",
       title = div(img(src="www/logo.png", width = 120)),
+      collapsible = TRUE,
       header = div(br(),br()),
       tabPanel("Home",
                mod_home_ui("home_ui_1")),

@@ -23,7 +23,9 @@ mod_imputationmodel_ui <- function(id){
              "4. Check (and modify??) the predictor matrix.",
              br(),
              "5. Run `mice()`.",
-             br(),
+            br(),
+             actionButton(ns("run_mice"), label = "Impute", width = 100),
+            br(),
              "6. Evaluate the in and outflux of the model.",
              br(),
              "6. Monitor potential non-convergence through visual inspection.",
@@ -36,7 +38,7 @@ mod_imputationmodel_ui <- function(id){
                tabPanel("Fluxplot",
                         plotOutput(ns("flux_plot"))),
                tabPanel("Traceplot",
-                        selectInput("var", "Select a variable", choices = names(mice::boys)),
+                        div(style="display:inline-block; margin-left: 15px", selectInput("var", label = NULL, choices = c("Select a variable", names(mice::boys)), width = 200)),
                         plotOutput(ns("trace_plot")))
              ))
   ))

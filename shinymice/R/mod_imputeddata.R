@@ -14,25 +14,29 @@ mod_imputeddata_ui <- function(id){
            tags$b("Inspect the imputations"),
            br(),
            br(),
-           "1. Some steps here."
+           "1. Check the descriptive statistics of the imputed data.",
+           br(),
+           "2. Inspect the distribution of the imputed data per variable.",
+           br(),
+           "3. Evaluate the bivariate relations post-imputation."
     ),
     column(9,
            tabsetPanel(
              tabPanel("Descriptives",
                       verbatimTextOutput(ns("imp_desc"))),
              tabPanel("Stripplot",
-                      selectInput("var1", "Select a variable", choices = names(mice::boys)),
+                      div(style="display:inline-block; margin-left: 15px", selectInput("var", label = NULL, choices = c("Select a variable", names(mice::boys)), width = 200)),
                       plotOutput(ns("strip_plot"))),
              tabPanel("Boxplot",
-                      selectInput("var1", "Select a variable", choices = names(mice::boys)),
+                      div(style="display:inline-block; margin-left: 15px", selectInput("var", label = NULL, choices = c("Select a variable", names(mice::boys)), width = 200)),
                       plotOutput(ns("bw_plot"))),
              tabPanel("Densityplot",
-                      selectInput("var1", "Select a variable", choices = names(mice::boys)),
+                      div(style="display:inline-block; margin-left: 15px", selectInput("var", label = NULL, choices = c("Select a variable", names(mice::boys)), width = 200)),
                       plotOutput(ns("dens_plot"))),
              tabPanel("Scatterplot",
-                      selectInput("var1", "Select a variable", choices = names(mice::boys)),
-                      selectInput("var2", "Select a second variable", choices = names(mice::boys)),
-             plotOutput(ns("xy_plot")))
+                      div(style="display:inline-block; margin-left: 15px", selectInput("var1", label = NULL, choices = c("Select a variable", names(mice::boys)), width = 200)),
+                      div(style="display:inline-block; margin-left: 15px", selectInput("var2", label = NULL, choices = c("Select a second variable", names(mice::boys)), width = 200)),
+                      plotOutput(ns("xy_plot")))
            ))
   ))
 }

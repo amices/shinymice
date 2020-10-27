@@ -14,11 +14,11 @@ mod_scientificmodel_ui <- function(id){
            tags$b("Analyze the imputed data"),
            br(),
            br(),
-           "1. Some steps here."
+           "[This tab is under construction.]"
     ),
     column(9,
            tabsetPanel(
-             tabPanel("Some plot",
+             tabPanel("Some plot?",
                       plotOutput(ns("sci_plot")))
            ))
   ))

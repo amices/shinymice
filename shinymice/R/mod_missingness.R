@@ -23,7 +23,7 @@ mod_missingness_ui <- function(id) {
       br(),
       "4. Look at the missing data pattern for an overview of the missingness.",
       br(),
-      "5. Plot missingness in bivariate relations."
+      "5. Evaluate the bivariate relations in the incomplete data."
     ),
     column(9,
            tabsetPanel(
@@ -34,8 +34,8 @@ mod_missingness_ui <- function(id) {
              tabPanel("Pattern",
                       plotOutput(ns("md_pat"))),
              tabPanel("Distribution",
-                      selectInput("var1", "Select a variable", choices = names(mice::boys)),
-                      selectInput("var2", "Select a second variable", choices = names(mice::boys)),
+                      div(style="display:inline-block; margin-left: 15px", selectInput("var1", label = NULL, choices = c("Select a variable", names(mice::boys)), width = 200)),
+                      div(style="display:inline-block; margin-left: 15px", selectInput("var2", label = NULL, choices = c("Select a second variable", names(mice::boys)), width = 200)),
                       plotOutput(ns("na_plot")))
            ))
   ))
