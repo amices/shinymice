@@ -16,7 +16,7 @@ mod_missingness_ui <- function(id) {
       br(),
       br(),
       "1. Load the incomplete data",
-      div(fileInput(ns("dat"), NULL, placeholder = ".csv/.Rdata/.txt"), style = "margin-bottom: -15px"),
+      div(fileInput(ns("dat"), NULL, placeholder = ".csv/.Rdata/.txt", buttonLabel = icon("search")), style = "margin-bottom: -15px"),
       "2. Check how much missingness there is in each variable.",
       br(),
       "3. Browse the dataset to view missing data points.",
@@ -34,8 +34,8 @@ mod_missingness_ui <- function(id) {
              tabPanel("Pattern",
                       plotOutput(ns("md_pat"))),
              tabPanel("Distribution",
-                      div(style="display:inline-block; margin-left: 15px", selectInput("var1", label = NULL, choices = c("Select a variable", names(mice::boys)), width = 200)),
-                      div(style="display:inline-block; margin-left: 15px", selectInput("var2", label = NULL, choices = c("Select a second variable", names(mice::boys)), width = 200)),
+                      div(style="display:inline-block; margin-left: 20px", selectInput("var1", label = NULL, choices = c("Select a variable", names(mice::boys)), width = 200)),
+                      div(style="display:inline-block; margin-left: 20px", selectInput("var2", label = NULL, choices = c("Select a second variable", names(mice::boys)), width = 200)),
                       plotOutput(ns("na_plot")))
            ))
   ))

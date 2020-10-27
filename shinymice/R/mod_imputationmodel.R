@@ -38,7 +38,7 @@ mod_imputationmodel_ui <- function(id){
                tabPanel("Fluxplot",
                         plotOutput(ns("flux_plot"))),
                tabPanel("Traceplot",
-                        div(style="display:inline-block; margin-left: 15px", selectInput("var", label = NULL, choices = c("Select a variable", names(mice::boys)), width = 200)),
+                        div(style="display:inline-block; margin-left:20px", selectInput("var", label = NULL, choices = c("Select a variable", names(mice::boys)), width = 200)),
                         plotOutput(ns("trace_plot")))
              ))
   ))

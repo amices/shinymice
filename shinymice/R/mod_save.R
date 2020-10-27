@@ -14,12 +14,17 @@ mod_save_ui <- function(id){
            tags$b("Save the data/results"),
            br(),
            br(),
-           "[This tab is under construction.]"
+           "1. Select the file type to save the imputations.",
+           div(radioButtons("file_type", label = NULL, choices = c(".Rdata", ".spv"), inline = TRUE), style = "margin-bottom: -15px"),
+           "2. Save the imputations.",
+           downloadButton("save_file", label = NULL)
     ),
     column(9,
            tabsetPanel(
-             tabPanel("Some plot?",
-                      plotOutput(ns("save_plot")))
+             tabPanel("Some plot/image?",
+                      plotOutput(ns("save_plot"))),
+             tabPanel("About",
+                      "[Some info about the `amices` universe.]")
            ))
   ))
 }
