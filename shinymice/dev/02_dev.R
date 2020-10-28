@@ -32,6 +32,7 @@ golem::add_module(name = "save") # Name of the module
 ## Creates ftc_* and utils_*
 #golem::add_fct("helpers")
 golem::add_utils("descr", module = "missingness")
+golem::add_utils("descr", module = "imputeddata")
 
 ## External resources
 ## Creates .js and .css files at inst/app/www

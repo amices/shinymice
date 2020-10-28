@@ -25,7 +25,7 @@ mod_imputeddata_ui <- function(id) {
       9,
       tabsetPanel(
         tabPanel("Descriptives",
-                 verbatimTextOutput(ns("imp_desc"))),
+                 tableOutput(ns("imp_desc"))),
         tabPanel(
           "Stripplot",
           div(
@@ -101,7 +101,7 @@ mod_imputeddata_server <- function(id) {
     dummy_plot <-
       ggplot2::ggplot(data = data.frame(x = c("dummy", "plot"), y = c(0, 0))) +
       ggplot2::geom_point(ggplot2::aes(x = x, y = y))
-    output$imp_desc <- renderPrint(summary(mice::boys))
+    output$imp_desc <- renderTable(imp_descr(mice::mice(mice::boys, maxit = 2)))
     output$strip_plot <- renderPlot(dummy_plot)
     output$bw_plot <- renderPlot(dummy_plot)
     output$dens_plot <- renderPlot(dummy_plot)

@@ -1,7 +1,7 @@
 # descriptive statistics for incomplete data
 library(dplyr)
-descr <- function(d){
+mis_descr <- function(d){
   tab <- psych::describe(d)[,c("n", "mean", "sd", "min", "max", "median")] %>% 
-    cbind(., missing = nrow(d) - .$n)
+    cbind(variable = rownames(.), ., n_missing = nrow(d) - .$n)
   return(tab)
 }
