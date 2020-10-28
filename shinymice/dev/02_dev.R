@@ -17,6 +17,7 @@
 ## Add one line by package you want to add as dependency
 usethis::use_package("mice")
 usethis::use_package("ggplot2")
+usethis::use_package("dplyr")
 
 ## Add modules ----
 ## Create a module infrastructure in R/
@@ -29,8 +30,8 @@ golem::add_module(name = "save") # Name of the module
 
 ## Add helper functions ----
 ## Creates ftc_* and utils_*
-golem::add_fct("helpers")
-golem::add_utils("helpers")
+#golem::add_fct("helpers")
+golem::add_utils("descr", module = "missingness")
 
 ## External resources
 ## Creates .js and .css files at inst/app/www

@@ -14,7 +14,8 @@ Imports:
     DT,
     glue,
     htmltools,
-    ggplot2
+    ggplot2,
+    dplyr
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.1.1.9000

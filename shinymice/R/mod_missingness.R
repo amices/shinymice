@@ -39,7 +39,7 @@ mod_missingness_ui <- function(id) {
     column(9,
            tabsetPanel(
              tabPanel("Descriptives",
-                      verbatimTextOutput(ns("na_desc"))),
+                      tableOutput(ns("na_desc"))),
              tabPanel("Browse",
                       DT::DTOutput(ns("na_tab"))),
              tabPanel("Pattern",
@@ -79,7 +79,7 @@ mod_missingness_server <- function(id) {
       ggplot2::ggplot(data = data.frame(x = c("dummy", "plot"), y = c(0, 0))) +
       ggplot2::geom_point(ggplot2::aes(x = x, y = y))
     output$na_tab <- DT::renderDT(mice::boys)
-    output$na_desc <- renderPrint(summary(mice::boys))
+    output$na_desc <- renderTable(descr(mice::boys), rownames = TRUE)
     output$md_pat <- renderPlot(dummy_plot)
     output$na_plot <- renderPlot(dummy_plot)
   })
