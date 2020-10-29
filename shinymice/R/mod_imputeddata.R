@@ -58,11 +58,12 @@ mod_imputeddata_ui <- function(id) {
 mod_imputeddata_server <- function(id) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
+    p <- dummy_plot()
     output$imp_desc <- renderTable(imp_descr(mice::mice(mice::boys, maxit = 2)))
-    output$strip_plot <- renderPlot(dummy_plot())
-    output$bw_plot <- renderPlot(dummy_plot())
-    output$dens_plot <- renderPlot(dummy_plot())
-    output$xy_plot <- renderPlot(dummy_plot())
+    output$strip_plot <- renderPlot(p)
+    output$bw_plot <- renderPlot(p)
+    output$dens_plot <- renderPlot(p)
+    output$xy_plot <- renderPlot(p)
   })
 }
 

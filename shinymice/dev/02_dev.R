@@ -34,12 +34,12 @@ golem::add_module(name = "save") # Name of the module
 #golem::add_fct("helpers")
 golem::add_utils("ui")
 golem::add_utils("server")
-golem::add_utils("ui", module = "missingness")
+#golem::add_utils("ui", module = "missingness")
 golem::add_utils("server", module = "missingness")
-golem::add_utils("ui", module = "imputeddata")
+# golem::add_utils("ui", module = "imputationmodel")
+# golem::add_utils("server", module = "imputationmodel")
+#golem::add_utils("ui", module = "imputeddata")
 golem::add_utils("server", module = "imputeddata")
-golem::add_utils("ui", module = "imputationmodel")
-golem::add_utils("server", module = "imputationmodel")
 
 ## External resources
 ## Creates .js and .css files at inst/app/www
@@ -59,6 +59,7 @@ usethis::use_test("app")
 
 ## Vignette ----
 usethis::use_vignette("shinymice")
+usethis::use_vignette("ggmice")
 devtools::build_vignettes()
 
 ## Code coverage ----

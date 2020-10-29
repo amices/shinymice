@@ -1,0 +1,39 @@
+---
+title: "ggmice"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{ggmice}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+# set-up environment
+library(shinymice)
+# example dataset
+dat <- mice::boys
+# example mids object
+imp <- mice::mice(dat, printFlag = FALSE)
+```
+
+## Plot incomplete data
+
+We can evaluate the missingness in the incomplete data using two plotting devices:
+
+- histogram
+
+- scatterplot
+
+
+```{r}
+# histogram plot
+
+```
+

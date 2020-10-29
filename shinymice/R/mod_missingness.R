@@ -56,10 +56,20 @@ mod_missingness_ui <- function(id) {
 #' @noRd
 mod_missingness_server <- function(id) {
   moduleServer(id, function(input, output, session) {
+    p <- dummy_plot()
     output$na_tab <- DT::renderDT(cbind(mice::boys, mice::boys))
     output$na_desc <- renderTable(mis_descr(mice::boys))
-    output$md_pat <- renderPlot(dummy_plot())
-    output$na_plot <- renderPlot(dummy_plot() + list(ggplot2::labs(title = paste0("We'll eventually plot variables '", input$var1, "' and '", input$var2, "'"))))
+    output$md_pat <- renderPlot(p)
+    output$na_plot <- renderPlot(p +
+                                   list(ggplot2::labs(
+                                     title = paste0(
+                                       "We'll eventually plot variables '",
+                                       input$var1,
+                                       "' and '",
+                                       input$var2,
+                                       "'"
+                                     )
+                                   )))
   })
 }
 

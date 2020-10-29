@@ -56,9 +56,10 @@ mod_imputationmodel_ui <- function(id) {
 mod_imputationmodel_server <- function(id) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
-    output$pred_plot <- renderPlot(dummy_plot())
-    output$flux_plot <- renderPlot(dummy_plot())
-    output$trace_plot <- renderPlot(dummy_plot())
+    p <- dummy_plot()
+    output$pred_plot <- renderPlot(p)
+    output$flux_plot <- renderPlot(p)
+    output$trace_plot <- renderPlot(p)
   })
 }
 
