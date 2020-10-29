@@ -21,14 +21,15 @@ golem::fill_desc(
   author_last_name = "Oberman", # Your Last Name
   author_email = "h.i.oberman@uu.nl", # Your Email
   repo_url = NULL # The URL of the GitHub Repo (optional) 
-)     
+)  
+usethis::use_tidy_description()
 
 ## Set {golem} options ----
 golem::set_golem_options()
 
 ## Create Common Files ----
 ## See ?usethis for more information
-usethis::use_gpl3_license( name = "shinymice" )  # You can set another license here
+usethis::use_gpl3_license( name = "amices group" )  # You can set another license here
 usethis::use_readme_rmd( open = FALSE )
 usethis::use_code_of_conduct()
 usethis::use_lifecycle_badge( "Experimental" )

@@ -1,5 +1,4 @@
 # descriptive statistics for incomplete data
-library(dplyr)
 options(htmlwidgets.TOJSON_ARGS = list(na = 'string'))
 mis_descr <- function(d){
   tab <- psych::describe(d)[,c("n", "mean", "sd", "min", "max", "median")] %>% 

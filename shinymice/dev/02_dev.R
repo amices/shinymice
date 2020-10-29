@@ -18,6 +18,7 @@
 usethis::use_package("mice")
 usethis::use_package("ggplot2")
 usethis::use_package("dplyr")
+usethis::use_pipe()
 
 ## Add modules ----
 ## Create a module infrastructure in R/
