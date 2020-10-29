@@ -28,63 +28,23 @@ mod_imputeddata_ui <- function(id) {
                  tableOutput(ns("imp_desc"))),
         tabPanel(
           "Stripplot",
-          div(
-            style = "display:inline-block; margin-left: 20px",
-            selectInput(
-              "var",
-              label = NULL,
-              choices = c("Select a variable", names(mice::boys)),
-              width = 200
-            )
-          ),
+          select_var(ns("var1")),
           plotOutput(ns("strip_plot"))
         ),
         tabPanel(
           "Boxplot",
-          div(
-            style = "display:inline-block; margin-left: 20px",
-            selectInput(
-              "var",
-              label = NULL,
-              choices = c("Select a variable", names(mice::boys)),
-              width = 200
-            )
-          ),
+          select_var(ns("var1")),
           plotOutput(ns("bw_plot"))
         ),
         tabPanel(
           "Densityplot",
-          div(
-            style = "display:inline-block; margin-left: 20px",
-            selectInput(
-              "var",
-              label = NULL,
-              choices = c("Select a variable", names(mice::boys)),
-              width = 200
-            )
-          ),
-          plotOutput(ns("dens_plot"))
+           select_var(ns("var1")),
+           plotOutput(ns("dens_plot"))
         ),
         tabPanel(
           "Scatterplot",
-          div(
-            style = "display:inline-block; margin-left: 20px",
-            selectInput(
-              "var1",
-              label = NULL,
-              choices = c("Select a variable", names(mice::boys)),
-              width = 200
-            )
-          ),
-          div(
-            style = "display:inline-block; margin-left: 20px",
-            selectInput(
-              "var2",
-              label = NULL,
-              choices = c("Select a second variable", names(mice::boys)),
-              width = 200
-            )
-          ),
+          select_var(ns("var1")),
+          select_var(ns("var2")),
           plotOutput(ns("xy_plot"))
         )
       )
@@ -98,14 +58,11 @@ mod_imputeddata_ui <- function(id) {
 mod_imputeddata_server <- function(id) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
-    dummy_plot <-
-      ggplot2::ggplot(data = data.frame(x = c("dummy", "plot"), y = c(0, 0))) +
-      ggplot2::geom_point(ggplot2::aes(x = x, y = y))
     output$imp_desc <- renderTable(imp_descr(mice::mice(mice::boys, maxit = 2)))
-    output$strip_plot <- renderPlot(dummy_plot)
-    output$bw_plot <- renderPlot(dummy_plot)
-    output$dens_plot <- renderPlot(dummy_plot)
-    output$xy_plot <- renderPlot(dummy_plot)
+    output$strip_plot <- renderPlot(dummy_plot())
+    output$bw_plot <- renderPlot(dummy_plot())
+    output$dens_plot <- renderPlot(dummy_plot())
+    output$xy_plot <- renderPlot(dummy_plot())
   })
 }
 

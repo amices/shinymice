@@ -31,10 +31,7 @@ mod_scientificmodel_ui <- function(id) {
 mod_scientificmodel_server <- function(id) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
-    dummy_plot <-
-      ggplot2::ggplot(data = data.frame(x = c("dummy", "plot"), y = c(0, 0))) +
-      ggplot2::geom_point(ggplot2::aes(x = x, y = y))
-    output$sci_plot <- renderPlot(dummy_plot)
+    output$sci_plot <- renderPlot(dummy_plot())
   })
 }
 

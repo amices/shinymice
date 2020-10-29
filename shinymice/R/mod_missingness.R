@@ -9,7 +9,6 @@
 #' @importFrom shiny NS tagList
 mod_missingness_ui <- function(id) {
   ns <- NS(id)
-  #tagList(
   fluidPage(fluidRow(
     column(
       3,
@@ -17,16 +16,14 @@ mod_missingness_ui <- function(id) {
       br(),
       br(),
       "1. Load the incomplete data",
-      div(
-        fileInput(
-          ns("dat"),
-          label = NULL,
-          buttonLabel = icon("search"),
-          placeholder = ".csv/.Rdata/.txt",
-          accept = c(".rdata", ".csv", "text", ".txt")
-        ),
-        style = "margin-bottom: -15px"
+      fileInput(
+        ns("dat"),
+        label = NULL,
+        buttonLabel = icon("search"),
+        placeholder = ".csv/.Rdata/.txt",
+        accept = c(".rdata", ".csv", "text", ".txt")
       ),
+      no_br(),
       "2. Check how much missingness there is in each variable.",
       br(),
       "3. Browse the dataset to view missing data points.",
@@ -46,24 +43,8 @@ mod_missingness_ui <- function(id) {
                       plotOutput(ns("md_pat"))),
              tabPanel(
                "Distribution",
-               div(
-                 style = "display:inline-block; margin-left: 20px",
-                 selectInput(
-                   "var1",
-                   label = NULL,
-                   choices = c("Select a variable", names(mice::boys)),
-                   width = 200
-                 )
-               ),
-               div(
-                 style = "display:inline-block; margin-left: 20px",
-                 selectInput(
-                   "var2",
-                   label = NULL,
-                   choices = c("Select a second variable", names(mice::boys)),
-                   width = 200
-                 )
-               ),
+               select_var(ns("var1")),
+               select_var(ns("var2")),
                plotOutput(ns("na_plot"))
              )
            ))
@@ -75,13 +56,10 @@ mod_missingness_ui <- function(id) {
 #' @noRd
 mod_missingness_server <- function(id) {
   moduleServer(id, function(input, output, session) {
-    dummy_plot <-
-      ggplot2::ggplot(data = data.frame(x = c("dummy", "plot"), y = c(0, 0))) +
-      ggplot2::geom_point(ggplot2::aes(x = x, y = y))
-    output$na_tab <- DT::renderDT(mice::boys)
+    output$na_tab <- DT::renderDT(cbind(mice::boys, mice::boys))
     output$na_desc <- renderTable(mis_descr(mice::boys))
-    output$md_pat <- renderPlot(dummy_plot)
-    output$na_plot <- renderPlot(dummy_plot)
+    output$md_pat <- renderPlot(dummy_plot())
+    output$na_plot <- renderPlot(dummy_plot() + list(ggplot2::labs(title = paste0("We'll eventually plot variables '", input$var1, "' and '", input$var2, "'"))))
   })
 }
 

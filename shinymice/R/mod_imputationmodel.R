@@ -16,35 +16,14 @@ mod_imputationmodel_ui <- function(id) {
       br(),
       br(),
       "1. Make the imputations reproducible by specifying an initial random value (seed)",
-      div(
-        numericInput(
-          "seed",
-          NULL,
-          value = 123,
-          min = 1,
-          width = 100
-        ),
-        style = "margin-bottom: -15px"
-      ),
+      set_number("seed", val = 123),
+      no_br(),
       "2. Determine the number of imputations (m)",
-      div(numericInput(
-        "m",
-        NULL,
-        value = 5,
-        min = 1,
-        width = 100
-      ), style = "margin-bottom: -15px"),
+      set_number("m", val = 5),
+      no_br(),
       "3. And the number of iterations (maxit)",
-      div(
-        numericInput(
-          "maxit",
-          NULL,
-          value = 5,
-          min = 1,
-          width = 100
-        ),
-        style = "margin-bottom: -15px"
-      ),
+      set_number("maxit", val = 10),
+      no_br(),
       "4. Check (and modify??) the predictor matrix.",
       br(),
       "5. Run `mice()`.",
@@ -64,15 +43,7 @@ mod_imputationmodel_ui <- function(id) {
                       plotOutput(ns("flux_plot"))),
              tabPanel(
                "Traceplot",
-               div(
-                 style = "display:inline-block; margin-left:20px",
-                 selectInput(
-                   "var",
-                   label = NULL,
-                   choices = c("Select a variable", names(mice::boys)),
-                   width = 200
-                 )
-               ),
+               select_var(ns("var1")),
                plotOutput(ns("trace_plot"))
              )
            ))
@@ -85,12 +56,9 @@ mod_imputationmodel_ui <- function(id) {
 mod_imputationmodel_server <- function(id) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
-    dummy_plot <-
-      ggplot2::ggplot(data = data.frame(x = c("dummy", "plot"), y = c(0, 0))) + 
-      ggplot2::geom_point(ggplot2::aes(x = x, y = y))
-    output$pred_plot <- renderPlot(dummy_plot)
-    output$flux_plot <- renderPlot(dummy_plot)
-    output$trace_plot <- renderPlot(dummy_plot)
+    output$pred_plot <- renderPlot(dummy_plot())
+    output$flux_plot <- renderPlot(dummy_plot())
+    output$trace_plot <- renderPlot(dummy_plot())
   })
 }
 
