@@ -56,30 +56,30 @@ We need to preprocess the `mids` object to make it `tidy`. Then we can plot the 
 
 ```{r}
 # preprocess
-prepare_plotting <- function(mids, x, y = NULL){
-imps <- mids$imp[[x]] %>%
-  dplyr::mutate(.id = row.names(.)) %>%
-  tidyr::pivot_longer(
-    cols = 1:mids$m,
-    names_to = ".imp",
-    values_to = x,
-    names_transform = list(.imp = as.numeric)
-  )
-
-# preprocess incomplete data
-d <-
-  mids$data %>%
-  dplyr::mutate(.id = rownames(.)) %>%
-  .[c(x, y, ".id")] %>%
-  cbind(.imp = 0)
-
-# combine incomplete and imputed data
-if (is.null(y)) {
-  cd <- d %>%
-    dplyr::bind_rows(., imps) %>%
-    dplyr::mutate(imputed = ifelse(.imp > 0, 'Imputed', 'Observed'))
-}
-return(cd)
+prepare_plotting <- function(mids, x, y = NULL) {
+  imps <- mids$imp[[x]] %>%
+    dplyr::mutate(.id = row.names(.)) %>%
+    tidyr::pivot_longer(
+      cols = 1:mids$m,
+      names_to = ".imp",
+      values_to = x,
+      names_transform = list(.imp = as.numeric)
+    )
+  
+  # preprocess incomplete data
+  d <-
+    mids$data %>%
+    dplyr::mutate(.id = rownames(.)) %>%
+    .[c(x, y, ".id")] %>%
+    cbind(.imp = 0)
+  
+  # combine incomplete and imputed data
+  if (is.null(y)) {
+    cd <- d %>%
+      dplyr::bind_rows(., imps) %>%
+      dplyr::mutate(imputed = ifelse(.imp > 0, 'Imputed', 'Observed'))
+  }
+  return(cd)
 }
 
 # test
@@ -93,11 +93,10 @@ Now plot the prepared data
 ```{r}
 # stripplot
 m = 5
-geom_stripplot <- function(tidy_mids, x, m){
-p <- tidy_mids %>% 
-  ggplot2::ggplot() +
-  ggplot2::geom_jitter(
-    ggplot2::aes(
+geom_stripplot <- function(x, m) {
+  p <- list(
+    ggplot2::geom_jitter(
+      ggplot2::aes(
         x = as.factor(.data$.imp),
         y = .data[[x]],
         color = .data$imputed
@@ -105,39 +104,59 @@ p <- tidy_mids %>%
       na.rm = TRUE,
       height = 0.1,
       width = 0.1
-  ) +
-  ggplot2::scale_x_discrete(limits = as.character(0:m)) +
-  ggplot2::labs(
-    x = "Imputation (0 = observed data)", 
-    y = paste0("Variable: '", x, "'"),
-    color = "", 
-    fill = "", 
-    size = "") 
-return(p)
+    ),
+    ggplot2::scale_x_discrete(limits = as.character(0:m)),
+    ggplot2::labs(
+      x = "Imputation (0 = observed data)",
+      y = paste0("Variable: '", x, "'"),
+      color = "",
+      fill = "",
+      size = ""
+    )
+  )
+  return(p)
 }
-geom_stripplot(plot_dat, x, m)
+
+plot_dat %>%
+  ggplot2::ggplot() +
+  geom_stripplot(x, m)
 ```
 
 Now add a mice theme
 
 ```{r}
-theme_mice <- function(){
-  theme <- list(
-  ggplot2::theme_classic(),
-  ggplot2::theme(legend.position = "bottom"),
-  ggplot2::scale_color_manual(values = c(
-    "Observed" = mice:::mdc(1),
-    "Missing" = mice:::mdc(2),
-    "Imputed" = mice:::mdc(2)
-  )),
-  ggplot2::scale_fill_manual(values = c(
-    "Observed" = mice:::mdc(1),
-    "Missing" = mice:::mdc(2),
-    "Imputed" = mice:::mdc(2)
+theme_mice <- function() {
+  ggplot2::update_geom_defaults("point", list(
+    shape = 21,
+    size = 1.9,
+    stroke = 1.1,
+    alpha = 0.5
   ))
-)
-return(theme)
+  
+  theme <- list(
+    ggplot2::theme_classic(),
+    ggplot2::theme(legend.position = "bottom"),
+    ggplot2::scale_color_manual(
+      values = c(
+        "Observed" = mice:::mdc(1),
+        "Missing" = mice:::mdc(2),
+        "Imputed" = mice:::mdc(2)
+      )
+    ),
+    ggplot2::scale_fill_manual(
+      values = c(
+        "Observed" = mice:::mdc(1),
+        "Missing" = mice:::mdc(2),
+        "Imputed" = mice:::mdc(2)
+      )
+    )
+  )
+  return(theme)
 }
-geom_stripplot(plot_dat, x, m) + theme_mice()
+
+plot_dat %>%
+  ggplot2::ggplot() +
+  geom_stripplot(x, m) +
+  theme_mice()
 ```
 
