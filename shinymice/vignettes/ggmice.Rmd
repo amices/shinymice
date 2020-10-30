@@ -160,3 +160,45 @@ plot_dat %>%
   theme_mice()
 ```
 
+Do the same for a boxplot
+
+```{r}
+geom_boxplot <- function(x, m){
+  list(
+    ggplot2::stat_boxplot(
+      ggplot2::aes(
+        x = as.factor(.data$.imp),
+        y = .data[[x]],
+        color = .data$imputed
+      ),
+      na.rm = TRUE,
+      width = 0.25,
+      size = 1,
+      geom = "errorbar"
+    ),
+    ggplot2::geom_boxplot(
+      ggplot2::aes(
+        x = as.factor(.data$.imp),
+        y = .data[[x]],
+        color = .data$imputed
+      ),
+      na.rm = TRUE,
+      size = 1
+    ),
+    ggplot2::scale_x_discrete(limits = as.character(0:m)),
+    ggplot2::labs(
+      x = "Imputation (0 = observed data)",
+      y = paste0("Variable: '", x, "'"),
+      color = "",
+      fill = "",
+      size = ""
+    ))
+}
+
+plot_dat %>% 
+  ggplot2::ggplot() +
+  geom_boxplot(x, m) + 
+  theme_mice()
+
+```
+
