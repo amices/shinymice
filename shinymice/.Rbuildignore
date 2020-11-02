@@ -8,3 +8,5 @@ $run_dev.*
 ^Meta$
 ^LICENSE\.md$
 ^README\.Rmd$
+^app\.R$
+^rsconnect$

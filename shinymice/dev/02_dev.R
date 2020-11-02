@@ -18,6 +18,7 @@
 usethis::use_package("mice")
 usethis::use_package("ggplot2")
 usethis::use_package("dplyr")
+usethis::use_package("psych")
 usethis::use_pipe()
 
 ## Add modules ----

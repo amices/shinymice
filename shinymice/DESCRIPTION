@@ -22,7 +22,9 @@ Imports:
     magrittr,
     mice,
     processx,
-    shiny
+    shiny,
+    pkgload,
+    psych
 Suggests: 
     knitr,
     rmarkdown,

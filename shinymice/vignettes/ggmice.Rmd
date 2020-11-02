@@ -17,44 +17,12 @@ knitr::opts_chunk$set(
 ```{r setup}
 # set-up environment
 library(shinymice)
+library(tidyverse)
 # example dataset
 dat <- mice::boys
 # example mids object
 imp <- mice::mice(dat, printFlag = FALSE)
-```
 
-## Plot incomplete data
-
-We can evaluate the missingness in the incomplete data using two plotting devices:
-
-- histogram
-
-- scatterplot
-
-
-```{r}
-# histogram plot
-
-```
-
-```{r}
-# scatterplot
-
-```
-
-## Plot imputed data
-
-We need to preprocess the `mids` object to make it `tidy`. Then we can plot the imputed data using one of four plotting devices:
-
-- stripplot
-
-- boxplot
-
-- densityplot
-
-- scatterplot
-
-```{r}
 # preprocess
 prepare_plotting <- function(mids, x, y = NULL) {
   imps <- mids$imp[[x]] %>%
@@ -88,6 +56,38 @@ y = NULL
 plot_dat <- prepare_plotting(mids = imp, x)
 ```
 
+## Plot incomplete data
+
+We can evaluate the missingness in the incomplete data using two plotting devices:
+
+- histogram
+
+- scatterplot
+
+
+```{r}
+# histogram plot
+
+```
+
+```{r}
+# scatterplot
+
+```
+
+## Plot imputed data
+
+We need to preprocess the `mids` object to make it `tidy`. Then we can plot the imputed data using one of four plotting devices:
+
+- stripplot
+
+- bwplot/boxplot
+
+- densityplot
+
+- xyplot/scatterplot
+
+
 Now plot the prepared data
 
 ```{r}
@@ -101,7 +101,6 @@ geom_stripplot <- function(x, m) {
         y = .data[[x]],
         color = .data$imputed
       ),
-      na.rm = TRUE,
       height = 0.1,
       width = 0.1
     ),
@@ -131,6 +130,12 @@ theme_mice <- function() {
     size = 1.9,
     stroke = 1.1,
     alpha = 0.5
+  ))
+  ggplot2::update_geom_defaults("boxplot", list(
+    size = 1
+  ))
+  ggplot2::update_geom_defaults("line", list(
+    size = 1
   ))
   
   theme <- list(
@@ -163,27 +168,14 @@ plot_dat %>%
 Do the same for a boxplot
 
 ```{r}
-geom_boxplot <- function(x, m){
+geom_bwplot <- function(x, m){
   list(
-    ggplot2::stat_boxplot(
-      ggplot2::aes(
-        x = as.factor(.data$.imp),
-        y = .data[[x]],
-        color = .data$imputed
-      ),
-      na.rm = TRUE,
-      width = 0.25,
-      size = 1,
-      geom = "errorbar"
-    ),
     ggplot2::geom_boxplot(
       ggplot2::aes(
         x = as.factor(.data$.imp),
         y = .data[[x]],
         color = .data$imputed
       ),
-      na.rm = TRUE,
-      size = 1
     ),
     ggplot2::scale_x_discrete(limits = as.character(0:m)),
     ggplot2::labs(
@@ -197,8 +189,67 @@ geom_boxplot <- function(x, m){
 
 plot_dat %>% 
   ggplot2::ggplot() +
-  geom_boxplot(x, m) + 
+  geom_bwplot(x, m = imp$m) + 
   theme_mice()
 
+```
+
+And something similar for density plots:
+
+```{r}
+geom_densityplot <- function(x, m){
+  list(ggplot2::geom_density(
+    ggplot2::aes(
+    x = .data[[x]],
+    group = .data$.imp,
+    color = .data$imputed,
+    size = .data$imputed)),
+    ggplot2::scale_size_manual(values = c(0.5, 1) %>% setNames(c("Imputed", "Observed")))
+)}
+
+
+plot_dat %>% na.omit() %>% 
+  ggplot2::ggplot() +
+  geom_densityplot(x, m = imp$m) + 
+  theme_mice()
+
+
+```
+Note the addition of `na.omit()` to make sure that categorical variables don't get an NA category.
+
+```{r}
+# At some point, try to do this for histograms too? See https://github.com/amices/shinyMice/blob/Enhancements/R/gg.barplot.R
+
+# geom_densityplot <- function(x, m){
+#   list(ggplot2::geom_density(
+#     ggplot2::aes(
+#     x = .data[[x]],
+#     group = .data$.imp,
+#     color = .data$imputed,
+#     size = .data$imputed)),
+#     ggplot2::scale_size_manual(values = c(0.5, 1) %>% setNames(c("Imputed", "Observed")))
+# )}
+# 
+# plot_dat %>% 
+#   ggplot2::ggplot() +
+#   geom_densityplot(x, m = imp$m) + 
+#   theme_mice()
+```
+
+Now for something different: xyplots!
+
+```{r}
+geom_xyplot <- function(x, y, m) {
+  list(ggplot2::geom_point(
+    ggplot2::aes(
+    x = .data[[x]],
+    y = .data[[y]],
+    color = .data$imputed
+    )))}
+
+plot_dat %>% na.omit() %>% 
+  ggplot2::ggplot() +
+  geom_densityplot(x, m = imp$m) + 
+  theme_mice()
 ```
 

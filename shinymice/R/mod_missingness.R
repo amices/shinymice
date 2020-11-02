@@ -39,10 +39,10 @@ mod_missingness_ui <- function(id) {
                       tableOutput(ns("na_desc"))),
              tabPanel("Browse",
                       DT::DTOutput(ns("na_tab"))),
-             tabPanel("Pattern",
+             tabPanel("Missingness pattern",
                       plotOutput(ns("md_pat"))),
              tabPanel(
-               "Distribution",
+               "Distributions",
                select_var(ns("var1")),
                select_var(ns("var2")),
                plotOutput(ns("na_plot"))

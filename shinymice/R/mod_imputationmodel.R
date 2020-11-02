@@ -24,7 +24,7 @@ mod_imputationmodel_ui <- function(id) {
       "3. And the number of iterations (maxit)",
       set_number("maxit", val = 10),
       no_br(),
-      "4. Check (and modify??) the predictor matrix.",
+      "4. Check (and modify) the predictor matrix.",
       br(),
       "5. Run `mice()`.",
       br(),
