@@ -69,50 +69,67 @@ We can evaluate the missingness in the incomplete data using two plotting device
 
 - scatterplot
 
-- fluxplot
 
 ```{r}
 # histogram/density plot
-plot_conditional <- function(dat, x, z){
+plot_conditional <- function(dat, x, z) {
   if (is.numeric(dat[[x]])) {
-    geom <- ggplot2::geom_density(
-    ggplot2::aes(x = .data[[x]], y = ..count.., color = conditional)
-  )
+    geom <- ggplot2::geom_density(ggplot2::aes(x = .data[[x]], y = ..count.., color = conditional))
   } else {
-    geom <- ggplot2::geom_bar(ggplot2::aes(x = .data[[x]], color = conditional),
-                    position = position_dodge(),
-                    fill = "white")
+    geom <-
+      ggplot2::geom_bar(
+        ggplot2::aes(x = .data[[x]], color = conditional),
+        position = ggplot2::position_dodge(),
+        fill = "white"
+      )
   }
-  dat %>% 
-  dplyr::mutate(conditional = factor(is.na(.data[[z]]), levels = c(TRUE, FALSE), labels = c("Missing", "Observed"))) %>% 
-    ggplot2::remove_missing(., vars = x) %>% 
-  ggplot2::ggplot() +
-  geom + 
- theme_mice() +
-  ggplot2::labs(color = paste0("Variable '", z, "' is:"))
+  dat %>%
+    dplyr::mutate(conditional = factor(
+      is.na(.data[[z]]),
+      levels = c(TRUE, FALSE),
+      labels = c("Missing", "Observed")
+    )) %>%
+    ggplot2::remove_missing(., vars = x) %>%
+    ggplot2::ggplot() +
+    geom +
+    theme_mice() +
+    ggplot2::labs(color = paste0("Variable '", z, "' is:"))
 }
 
 plot_conditional(dat, x = "age", z = "hc")
 plot_conditional(dat, x = "reg", z = "hc")
-
-# dat %>% 
-#   dplyr::mutate(conditional = factor(
-#     is.na(.data[[z]]),
-#     levels = c(TRUE, FALSE),
-#     labels = c("Missing", "Observed")
-#   )) %>%
-#   ggplot2::remove_missing(., vars = x) %>% 
-#   ggplot2::ggplot() +
-#   ggplot2::geom_bar(ggplot2::aes(x = .data[[x]], color = conditional),
-#                     position = position_dodge(),
-#                     fill = "white") +
-#   theme_mice() +
-#   labs(color = paste0("Variable '", z, "' is:"))
-
 ```
 
 ```{r}
 # scatterplot
+x = "wgt"
+y = "hgt"
+NA_y <- min(dat[[y]], na.rm = TRUE) - sd(dat[[y]], na.rm = TRUE)
+NA_x <- min(dat[[x]], na.rm = TRUE) - sd(dat[[x]], na.rm = TRUE)
+
+dat %>% ggplot2::ggplot() +
+  ggplot2::geom_point(ggplot2::aes(x = .data[[x]], y = .data[[y]]), color = mice::mdc(1)) +
+  ggplot2::geom_point(
+    color = mice:::mdc(2),
+    shape = 4,
+    mapping = ggplot2::aes(x = .data[[x]], y = NA_y),
+    data = dat[is.na(dat[[y]]),]
+  ) +
+  ggplot2::geom_point(
+    color = mice:::mdc(2),
+    shape = 4,
+    mapping = ggplot2::aes(x = NA_x, y = .data[[y]]),
+    data = dat[is.na(dat[[x]]),]
+  ) +
+  ggplot2::geom_point(
+    color = mice:::mdc(2),
+    shape = 4,
+    mapping = ggplot2::aes(x = NA_x, y = NA_y),
+    data = dat[is.na(dat[[x]]) &
+                 is.na(dat[[y]]),]
+  ) + ggplot2::theme_classic() +
+  ggplot2::scale_x_continuous(expand = c(0.01, 0.01)) +
+  ggplot2::scale_y_continuous(expand = c(0.01, 0.01)) 
 
 ```
 
