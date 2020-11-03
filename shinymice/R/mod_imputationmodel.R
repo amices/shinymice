@@ -38,8 +38,9 @@ mod_imputationmodel_ui <- function(id) {
     column(9,
            tabsetPanel(
              tabPanel("Fluxplot",
-                      #plotly::plotlyOutput(
-                        plotOutput(ns("flux_plot"))),
+                      plotly::plotlyOutput(
+                      #  plotOutput(
+                          ns("flux_plot"))),
              tabPanel("Predictor matrix",
                       plotOutput(ns("pred_plot"))),
              tabPanel(
@@ -60,7 +61,8 @@ mod_imputationmodel_server <- function(id) {
     p <- dummy_plot()
     #mids <- mice::mice(mice::boys, maxit = 1)
     output$pred_plot <- renderPlot(p)
-    output$flux_plot <- renderPlot({#plotly::renderPlotly({
+    output$flux_plot <- #renderPlot({
+      plotly::renderPlotly({
       plot_flux(mice::boys) 
       #return(plotly::ggplotly())
       })
