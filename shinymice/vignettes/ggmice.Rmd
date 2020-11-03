@@ -23,6 +23,140 @@ dat <- mice::boys
 # example mids object
 imp <- mice::mice(dat, printFlag = FALSE)
 
+# define mice theme
+theme_mice <- function() {
+  # move this outside of the function to unnecessary avoid re-running
+  ggplot2::update_geom_defaults("point", list(
+    shape = 21,
+    size = 1.9,
+    stroke = 1.1,
+    alpha = 0.5
+  ))
+  ggplot2::update_geom_defaults("boxplot", list(
+    size = 1
+  ))
+  ggplot2::update_geom_defaults("line", list(
+    size = 1
+  ))
+  # the actual theme settings
+  theme <- list(
+    ggplot2::theme_classic(),
+    ggplot2::theme(legend.position = "bottom"),
+    ggplot2::scale_color_manual(
+      values = c(
+        "Observed" = mice:::mdc(1),
+        "Missing" = mice:::mdc(2),
+        "Imputed" = mice:::mdc(2)
+      )
+    ),
+    ggplot2::scale_fill_manual(
+      values = c(
+        "Observed" = mice:::mdc(1),
+        "Missing" = mice:::mdc(2),
+        "Imputed" = mice:::mdc(2)
+      )
+    )
+  )
+  return(theme)
+}
+```
+
+## Plot incomplete data
+
+We can evaluate the missingness in the incomplete data using two plotting devices:
+
+- histogram
+
+- scatterplot
+
+- fluxplot
+
+```{r}
+# histogram/density plot
+plot_conditional <- function(dat, x, z){
+  if (is.numeric(dat[[x]])) {
+    geom <- ggplot2::geom_density(
+    ggplot2::aes(x = .data[[x]], y = ..count.., color = conditional)
+  )
+  } else {
+    geom <- ggplot2::geom_bar(ggplot2::aes(x = .data[[x]], color = conditional),
+                    position = position_dodge(),
+                    fill = "white")
+  }
+  dat %>% 
+  dplyr::mutate(conditional = factor(is.na(.data[[z]]), levels = c(TRUE, FALSE), labels = c("Missing", "Observed"))) %>% 
+    ggplot2::remove_missing(., vars = x) %>% 
+  ggplot2::ggplot() +
+  geom + 
+ theme_mice() +
+  ggplot2::labs(color = paste0("Variable '", z, "' is:"))
+}
+
+plot_conditional(dat, x = "age", z = "hc")
+plot_conditional(dat, x = "reg", z = "hc")
+
+# dat %>% 
+#   dplyr::mutate(conditional = factor(
+#     is.na(.data[[z]]),
+#     levels = c(TRUE, FALSE),
+#     labels = c("Missing", "Observed")
+#   )) %>%
+#   ggplot2::remove_missing(., vars = x) %>% 
+#   ggplot2::ggplot() +
+#   ggplot2::geom_bar(ggplot2::aes(x = .data[[x]], color = conditional),
+#                     position = position_dodge(),
+#                     fill = "white") +
+#   theme_mice() +
+#   labs(color = paste0("Variable '", z, "' is:"))
+
+```
+
+```{r}
+# scatterplot
+
+```
+
+# Plot missingness
+
+- md pattern
+
+- fluxplot
+
+```{r}
+# md pattern
+
+```
+
+```{r}
+# plot in- and outflux of incomplete data
+plot_flux <- function(dat){
+  flx <- mice::flux(dat)
+  p <- flx %>% ggplot2::ggplot() +
+    ggplot2::geom_text(
+      ggplot2::aes(x = influx, y = outflux, label = rownames(flx))
+    ) +
+    geom_abline(intercept = 1, slope = -1, linetype = "dashed") +
+    lims(x = c(0,1), y = c(0,1)) +
+    theme_classic()
+  return(p)
+}
+plot_flux(flx)
+```
+
+
+## Plot imputed data
+
+We need to preprocess the `mids` object to make it `tidy`. Then we can plot the imputed data using one of four plotting devices:
+
+- stripplot
+
+- bwplot/boxplot
+
+- densityplot
+
+- xyplot/scatterplot
+
+```{r}
 # preprocess
 prepare_plotting <- function(mids, x, y = NULL) {
   imps <- mids$imp[[x]] %>%
@@ -55,77 +189,6 @@ x = "hc"
 y = NULL
 plot_dat <- prepare_plotting(mids = imp, x)
 ```
-
-## Plot incomplete data
-
-We can evaluate the missingness in the incomplete data using two plotting devices:
-
-- histogram
-
-- scatterplot
-
-- fluxplot
-
-```{r}
-# histogram plot
-
-```
-
-```{r}
-# scatterplot
-
-```
-
-# Plot missingness
-
-- md pattern
-
-- fluxplot
-
-```{r}
-# md pattern
-
-```
-
-```{r}
-# fluxplot
-# flx <- mice::flux(mice::boys)
-# plot_flux <- function(flx){
-# flx %>% ggplot2::ggplot() +
-#   ggplot2::geom_text(
-#     ggplot2::aes(x = influx, y = outflux, label = rownames(flx))
-#     ) +
-#   geom_abline(intercept = 1, slope = -1, linetype = "dashed") +
-#   lims(x = c(0,1), y = c(0,1)) +
-#   theme_classic()
-# }
-plot_flux <- function(dat){
-  flx <- mice::flux(dat)
-  p <- flx %>% ggplot2::ggplot() +
-    ggplot2::geom_text(
-      ggplot2::aes(x = influx, y = outflux, label = rownames(flx))
-    ) +
-    geom_abline(intercept = 1, slope = -1, linetype = "dashed") +
-    lims(x = c(0,1), y = c(0,1)) +
-    theme_classic()
-  return(p)
-}
-plot_flux(flx)
-```
-
-
-## Plot imputed data
-
-We need to preprocess the `mids` object to make it `tidy`. Then we can plot the imputed data using one of four plotting devices:
-
-- stripplot
-
-- bwplot/boxplot
-
-- densityplot
-
-- xyplot/scatterplot
-
 
 Now plot the prepared data
 
@@ -163,40 +226,6 @@ plot_dat %>%
 Now add a mice theme
 
 ```{r}
-theme_mice <- function() {
-  ggplot2::update_geom_defaults("point", list(
-    shape = 21,
-    size = 1.9,
-    stroke = 1.1,
-    alpha = 0.5
-  ))
-  ggplot2::update_geom_defaults("boxplot", list(
-    size = 1
-  ))
-  ggplot2::update_geom_defaults("line", list(
-    size = 1
-  ))
-  
-  theme <- list(
-    ggplot2::theme_classic(),
-    ggplot2::theme(legend.position = "bottom"),
-    ggplot2::scale_color_manual(
-      values = c(
-        "Observed" = mice:::mdc(1),
-        "Missing" = mice:::mdc(2),
-        "Imputed" = mice:::mdc(2)
-      )
-    ),
-    ggplot2::scale_fill_manual(
-      values = c(
-        "Observed" = mice:::mdc(1),
-        "Missing" = mice:::mdc(2),
-        "Imputed" = mice:::mdc(2)
-      )
-    )
-  )
-  return(theme)
-}
 
 plot_dat %>%
   ggplot2::ggplot() +

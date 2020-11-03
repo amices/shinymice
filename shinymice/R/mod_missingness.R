@@ -28,26 +28,37 @@ mod_missingness_ui <- function(id) {
       br(),
       "3. Browse the dataset to view missing data points.",
       br(),
-      "4. Look at the missing data pattern for an overview of the missingness.",
+      "4. Evaluate the distribution of variables conditional on missingness in another variable.",
       br(),
       "5. Evaluate the bivariate relations in the incomplete data.",
+      br(),
+      "6. Look at the missing data pattern for an overview of the missingness.",
       br()
     ),
-    column(9,
-           tabsetPanel(
-             tabPanel("Descriptives",
-                      tableOutput(ns("na_desc"))),
-             tabPanel("Browse",
-                      DT::DTOutput(ns("na_tab"))),
-             tabPanel("Missingness pattern",
-                      plotOutput(ns("md_pat"))),
-             tabPanel(
-               "Distributions",
-               select_var(ns("var1")),
-               select_var(ns("var2")),
-               plotOutput(ns("na_plot"))
-             )
-           ))
+    column(
+      9,
+      tabsetPanel(
+        tabPanel("Descriptives",
+                 tableOutput(ns("na_desc"))),
+        tabPanel("Browse",
+                 DT::DTOutput(ns("na_tab"))),
+        
+        tabPanel(
+          "Conditional distributions",
+          select_var(ns("var1")),
+          select_var(ns("var2")),
+          plotOutput(ns("cond_plot"))
+        ),
+        tabPanel(
+          "Bivariate distributions",
+          select_var(ns("var1")),
+          select_var(ns("var2")),
+          plotOutput(ns("na_plot"))
+        ),
+        tabPanel("Missingness pattern",
+                 plotOutput(ns("md_pat")))
+      )
+    )
   ))
 }
 
@@ -60,16 +71,23 @@ mod_missingness_server <- function(id) {
     output$na_tab <- DT::renderDT(cbind(mice::boys, mice::boys))
     output$na_desc <- renderTable(mis_descr(mice::boys))
     output$md_pat <- renderPlot(p)
-    output$na_plot <- renderPlot({plot_NA_margins(data = mice::boys, y = "hc", x = "age") +
-                                   list(ggplot2::labs(
-                                     title = paste0(
-                                       "We'll eventually plot variables '",
-                                       input$var1,
-                                       "' and '",
-                                       input$var2,
-                                       "' (select above)."
-                                     )
-                                   ))})
+    output$cond_plot <-
+      renderPlot(plot_conditional(dat = mice::boys, x = "reg", z = "hc"))
+    output$na_plot <-
+      renderPlot({
+        plot_NA_margins(data = mice::boys,
+                        y = "hc",
+                        x = "age") +
+          list(ggplot2::labs(
+            title = paste0(
+              "We'll eventually plot variables '",
+              input$var1,
+              "' and '",
+              input$var2,
+              "' (select above)."
+            )
+          ))
+      })
   })
 }
 
