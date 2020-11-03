@@ -24,7 +24,8 @@ Imports:
     processx,
     shiny,
     pkgload,
-    psych
+    psych,
+    plotly
 Suggests: 
     knitr,
     rmarkdown,

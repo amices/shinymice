@@ -60,16 +60,16 @@ mod_missingness_server <- function(id) {
     output$na_tab <- DT::renderDT(cbind(mice::boys, mice::boys))
     output$na_desc <- renderTable(mis_descr(mice::boys))
     output$md_pat <- renderPlot(p)
-    output$na_plot <- renderPlot(p +
+    output$na_plot <- renderPlot({plot_NA_margins(data = mice::boys, y = "hc", x = "age") +
                                    list(ggplot2::labs(
                                      title = paste0(
                                        "We'll eventually plot variables '",
                                        input$var1,
                                        "' and '",
                                        input$var2,
-                                       "'"
+                                       "' (select above)."
                                      )
-                                   )))
+                                   ))})
   })
 }
 

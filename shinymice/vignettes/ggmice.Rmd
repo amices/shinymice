@@ -64,6 +64,7 @@ We can evaluate the missingness in the incomplete data using two plotting device
 
 - scatterplot
 
+- fluxplot
 
 ```{r}
 # histogram plot
@@ -74,6 +75,44 @@ We can evaluate the missingness in the incomplete data using two plotting device
 # scatterplot
 
 ```
+
+# Plot missingness
+
+- md pattern
+
+- fluxplot
+
+```{r}
+# md pattern
+
+```
+
+```{r}
+# fluxplot
+# flx <- mice::flux(mice::boys)
+# plot_flux <- function(flx){
+# flx %>% ggplot2::ggplot() +
+#   ggplot2::geom_text(
+#     ggplot2::aes(x = influx, y = outflux, label = rownames(flx))
+#     ) +
+#   geom_abline(intercept = 1, slope = -1, linetype = "dashed") +
+#   lims(x = c(0,1), y = c(0,1)) +
+#   theme_classic()
+# }
+plot_flux <- function(dat){
+  flx <- mice::flux(dat)
+  p <- flx %>% ggplot2::ggplot() +
+    ggplot2::geom_text(
+      ggplot2::aes(x = influx, y = outflux, label = rownames(flx))
+    ) +
+    geom_abline(intercept = 1, slope = -1, linetype = "dashed") +
+    lims(x = c(0,1), y = c(0,1)) +
+    theme_classic()
+  return(p)
+}
+plot_flux(flx)
+```
+
 
 ## Plot imputed data
 

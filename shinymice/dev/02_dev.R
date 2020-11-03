@@ -18,6 +18,7 @@
 usethis::use_package("mice")
 usethis::use_package("ggplot2")
 usethis::use_package("dplyr")
+usethis::use_package("plotly")
 usethis::use_package("psych")
 usethis::use_pipe()
 
@@ -38,7 +39,7 @@ golem::add_utils("server")
 #golem::add_utils("ui", module = "missingness")
 golem::add_utils("server", module = "missingness")
 # golem::add_utils("ui", module = "imputationmodel")
-# golem::add_utils("server", module = "imputationmodel")
+golem::add_utils("server", module = "imputationmodel")
 #golem::add_utils("ui", module = "imputeddata")
 golem::add_utils("server", module = "imputeddata")
 
