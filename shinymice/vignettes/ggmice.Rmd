@@ -183,7 +183,7 @@ plot_bivariate(dat, x = "age", y = "hgt")
 plot_bivariate(dat, x = "reg", y = "hc")
 ```
 
-# Plot missingness
+## Plot missingness
 
 - md pattern
 
@@ -208,6 +208,34 @@ plot_flux <- function(dat){
   return(p)
 }
 plot_flux(flx)
+```
+## Plot convergence
+
+```{r}
+d <- imp$chainMean %>%
+    dplyr::na_if(., "NaN") %>%
+    as.data.frame() %>%
+    dplyr::mutate(var = row.names(.), theta = "Chain means") %>%
+    rbind(
+      .,
+      imp$chainVar %>%
+        sqrt() %>%
+        as.data.frame(.) %>%
+        dplyr::mutate(var = row.names(.), theta = "Chain standard deviations")
+    ) %>%
+    tidyr::pivot_longer(-c(var, theta)) %>%
+    cbind(.it = as.integer(1:imp$iteration),
+          .imp = as.factor(rep(1:imp$m, each = imp$iteration)))
+
+x = "hgt"
+d[d$var == x, ] %>% 
+  ggplot2::ggplot() +
+  ggplot2::geom_line(ggplot2::aes(x = .it, y = value, color = .imp)) +
+  ggplot2::facet_wrap(~theta, scales = "free", ncol = 1) +
+  ggplot2::theme_classic() +
+  ggplot2::labs(x = "Iteration", 
+                y = paste0("Variable: '", x, "'"),
+                color = "Imputation")
 ```
 
 
@@ -243,18 +271,19 @@ prepare_plotting <- function(mids, x, y = NULL) {
     cbind(.imp = 0)
   
   # combine incomplete and imputed data
-  if (is.null(y)) {
     cd <- d %>%
       dplyr::bind_rows(., imps) %>%
       dplyr::mutate(imputed = ifelse(.imp > 0, 'Imputed', 'Observed'))
-  }
+  
   return(cd)
 }
 
 # test
 x = "hc"
-y = NULL
-plot_dat <- prepare_plotting(mids = imp, x)
+y = "reg"
+plot_dat <- prepare_plotting(mids = imp, x = x, y = y)
+plot_dat2 <- prepare_plotting(mids = imp, x = y, y = x)
+a <- dplyr::full_join(plot_dat, plot_dat2)
 ```
 
 Now plot the prepared data
@@ -262,7 +291,7 @@ Now plot the prepared data
 ```{r}
 # stripplot
 m = 5
-geom_stripplot <- function(x, m) {
+geom_stripplot <- function(x, m, ...) {
   p <- list(
     ggplot2::geom_jitter(
       ggplot2::aes(
@@ -270,8 +299,9 @@ geom_stripplot <- function(x, m) {
         y = .data[[x]],
         color = .data$imputed
       ),
-      height = 0.1,
-      width = 0.1
+      height = 0,
+      width = 0.25, 
+      ...
     ),
     ggplot2::scale_x_discrete(limits = as.character(0:m)),
     ggplot2::labs(
@@ -311,6 +341,7 @@ geom_bwplot <- function(x, m){
         y = .data[[x]],
         color = .data$imputed
       ),
+      width = 0.5
     ),
     ggplot2::scale_x_discrete(limits = as.character(0:m)),
     ggplot2::labs(
@@ -325,6 +356,13 @@ geom_bwplot <- function(x, m){
 plot_dat %>% 
   ggplot2::ggplot() +
   geom_bwplot(x, m = imp$m) + 
+  theme_mice()
+
+# try to combine this with the stripplot??
+plot_dat %>%
+  ggplot2::ggplot() +
+  geom_bwplot(x, m) + 
+  geom_stripplot(x, m, alpha = 0.1) +
   theme_mice()
 
 ```

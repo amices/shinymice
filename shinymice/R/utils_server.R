@@ -17,6 +17,7 @@ dummy_plot <- function() {
     ggplot2::ggtitle("Dummy plot (to be replaced)")
 }
 
+# hide some plotly options, see https://plotly-r.com/control-modebar.html
 clean_plotly <- function(pp, ...) {
   plotly::config(
     p = pp,
