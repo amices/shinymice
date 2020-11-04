@@ -29,7 +29,8 @@ clean_plotly <- function(pp, ...) {
       "lasso2d",
       "select2d",
       "toggleSpikelines",
-      "hoverCompareCartesian"
+      "hoverCompareCartesian",
+      "hoverClosestCartesian"
     )
   )
 }

@@ -88,7 +88,7 @@ mod_missingness_server <- function(id) {
       })
     output$na_plot <-
       renderPlot({
-        plot_NA_margins(mice::boys, x, y) +
+        plot_bivariate(mice::boys, x, y) +
           list(ggplot2::labs(
             title = paste0("Scatter plot of '",
                            y,
