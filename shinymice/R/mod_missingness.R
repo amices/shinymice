@@ -71,21 +71,30 @@ mod_missingness_server <- function(id) {
     output$na_tab <- DT::renderDT(cbind(mice::boys, mice::boys))
     output$na_desc <- renderTable(mis_descr(mice::boys))
     output$md_pat <- renderPlot(p)
+    x = "age"
+    y = "hc"
+    z = "hc"
     output$cond_plot <-
-      renderPlot(plot_conditional(dat = mice::boys, x = "reg", z = "hc"))
+      renderPlot({
+        plot_conditional(mice::boys, x , z) + ggplot2::ggtitle(
+          paste0(
+            "Distribution of '",
+            x,
+            "' conditional on missingness in '",
+            z,
+            "' (select above)"
+          )
+        )
+      })
     output$na_plot <-
       renderPlot({
-        plot_NA_margins(data = mice::boys,
-                        y = "hc",
-                        x = "age") +
+        plot_NA_margins(mice::boys, x, y) +
           list(ggplot2::labs(
-            title = paste0(
-              "We'll eventually plot variables '",
-              input$var1,
-              "' and '",
-              input$var2,
-              "' (select above)."
-            )
+            title = paste0("Scatter plot of '",
+                           y,
+                           "' against '",
+                           x,
+                           "' (select above)")
           ))
       })
   })

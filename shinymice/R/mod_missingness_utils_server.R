@@ -16,13 +16,14 @@ mis_descr <- function(d) {
 plot_conditional <- function(dat, x, z) {
   if (is.numeric(dat[[x]])) {
     geom <-
-      ggplot2::geom_density(ggplot2::aes(x = .data[[x]], y = ..count.., color = conditional))
+      ggplot2::geom_density(ggplot2::aes(x = .data[[x]], y = ..count.., color = conditional), size = 1)
   } else {
     geom <-
       ggplot2::geom_bar(
         ggplot2::aes(x = .data[[x]], color = conditional),
         position = ggplot2::position_dodge(),
-        fill = "white"
+        fill = "white",
+        size = 1
       )
   }
   dat %>%

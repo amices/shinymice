@@ -33,7 +33,7 @@ mod_save_ui <- function(id) {
              tabPanel("Some plot/image?",
                       plotOutput(ns("save_plot"))),
              tabPanel("About",
-                      "[Some info about the `amices` universe.]")
+                      "[Some info about the `amices` universe, e.g. link to Github again and FIMD: https://stefvanbuuren.name/fimd/.]")
            ))
   ))
 }

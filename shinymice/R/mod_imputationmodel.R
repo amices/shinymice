@@ -37,17 +37,19 @@ mod_imputationmodel_ui <- function(id) {
     ),
     column(9,
            tabsetPanel(
-             tabPanel("Fluxplot",
-                      plotly::plotlyOutput(
-                      #  plotOutput(
-                          ns("flux_plot"))),
+             tabPanel(
+               "Fluxplot",
+               plotly::plotlyOutput(#  plotOutput(
+                 ns("flux_plot")),
+               br(),
+               tags$b("Interpretation:"),
+               "Influx and outflux are summaries of the missing data pattern intended to aid in the construction of imputation models. The influx of a variable quantifies how well its missing data connect to the observed data on other variables. The outflux of a variable quantifies how well its observed data connect to the missing data on other variables. Keeping everything else constant, variables with high influx and outflux are preferred."
+             ),
              tabPanel("Predictor matrix",
                       plotOutput(ns("pred_plot"))),
-             tabPanel(
-               "Traceplot",
-               select_var(ns("var1")),
-               plotOutput(ns("trace_plot"))
-             )
+             tabPanel("Traceplot",
+                      select_var(ns("var1")),
+                      plotOutput(ns("trace_plot")))
            ))
   ))
 }
@@ -63,8 +65,8 @@ mod_imputationmodel_server <- function(id) {
     output$pred_plot <- renderPlot(p)
     output$flux_plot <- #renderPlot({
       plotly::renderPlotly({
-      plot_flux(mice::boys) 
-      #return(plotly::ggplotly())
+        plot_flux(mice::boys)
+        #return(plotly::ggplotly())
       })
     output$trace_plot <- renderPlot(p)
   })
