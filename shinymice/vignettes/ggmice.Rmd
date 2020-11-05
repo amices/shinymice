@@ -105,8 +105,8 @@ plot_conditional(dat, x = "reg", z = "hc")
 plot_bivariate <- function(dat, x, y) {
   # set NA value and scale for variable 'x'
   if (is.numeric(dat[[x]])) {
-    NA_x <- 
-     min(dat[[x]], na.rm = TRUE) - .5 * sd(dat[[x]], na.rm = TRUE)
+    NA_x <-
+      min(dat[[x]], na.rm = TRUE) - .5 * sd(dat[[x]], na.rm = TRUE)
     scale_x <- ggplot2::scale_x_continuous(expand = c(0.01, 0.01),
                                            limits = c(NA_x, max(dat[[x]])))
   } else {
@@ -120,10 +120,8 @@ plot_bivariate <- function(dat, x, y) {
   if (is.numeric(dat[[y]])) {
     NA_y <-
       min(dat[[y]], na.rm = TRUE) - .5 * sd(dat[[y]], na.rm = TRUE)
-    scale_y <- ggplot2::scale_y_continuous(
-      expand = c(0.01, 0.01),
-      limits = c(NA_y, max(dat[[y]]))
-    )
+    scale_y <- ggplot2::scale_y_continuous(expand = c(0.01, 0.01),
+                                           limits = c(NA_y, max(dat[[y]])))
   } else {
     NA_y <- "NA"
     scale_y <-
@@ -138,7 +136,7 @@ plot_bivariate <- function(dat, x, y) {
       color = mice:::mdc(2),
       shape = 4,
       mapping = ggplot2::aes(x = NA_x, y = .data[[y]]),
-      data = dat[is.na(dat[[x]]), ]
+      data = dat[is.na(dat[[x]]),]
     )
   } else {
     geom_x <- NULL
@@ -151,7 +149,7 @@ plot_bivariate <- function(dat, x, y) {
       color = mice:::mdc(2),
       shape = 4,
       mapping = ggplot2::aes(x = .data[[x]], y = NA_y),
-      data = dat[is.na(dat[[y]]), ]
+      data = dat[is.na(dat[[y]]),]
     )
   } else{
     geom_y <- NULL
@@ -164,7 +162,7 @@ plot_bivariate <- function(dat, x, y) {
       color = mice:::mdc(2),
       shape = 4,
       mapping = ggplot2::aes(x = NA_x, y = NA_y),
-      data = dat[is.na(dat[[x]]) & is.na(dat[[y]]), ]
+      data = dat[is.na(dat[[x]]) & is.na(dat[[y]]),]
     )
   } else{
     geom_xy <- NULL
@@ -182,14 +180,12 @@ plot_bivariate <- function(dat, x, y) {
     geom_xy +
     theme_mice() +
     scale_x +
-    scale_y # +
-    # ggplot2::labs(tag = "NA") +
-    # ggplot2::theme(plot.tag.position = c(0.1, 0.1))
+    scale_y
   
   # output
   return(p)
 }
-plot_bivariate(dat, x = "age", y = "hc") #%>% plotly::ggplotly()#+ ggplot2::annotate(x=27, y=0, label="xyz", color="red") #+annotate(x=27, ymin=-1, ymax=1, color="red")
+plot_bivariate(dat, x = "age", y = "hc")
 plot_bivariate(dat, x = "reg", y = "hc")
 ```
 
