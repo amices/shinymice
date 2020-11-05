@@ -123,6 +123,7 @@ if (is.numeric(dat[[x]])) {
 # add geom for NAs in the 'x' space
 if (any(is.na(dat[[x]]))) {
   geom_x <- ggplot2::geom_point(
+    position = ggplot2::position_jitter(width = 0.1, height = 0.1),
     color = mice:::mdc(2),
     shape = 4,
     mapping = ggplot2::aes(x = NA_x, y = .data[[y]]),
@@ -138,7 +139,8 @@ if (is.numeric(dat[[y]])) {
     min(dat[[y]], na.rm = TRUE) - .5 * sd(dat[[y]], na.rm = TRUE)
   scale_y <- ggplot2::scale_y_continuous(
     expand = c(0.01, 0.01),
-    limits = c(NA_y, max(dat[[y]])))
+    limits = c(NA_y, max(dat[[y]])),
+    labels = )
 } else {
   NA_y <- "NA"
   scale_y <-
@@ -151,6 +153,7 @@ if (is.numeric(dat[[y]])) {
 # add geom for NAs in the 'y' space
 if (any(is.na(dat[[y]]))) {
   geom_y <- ggplot2::geom_point(
+    position = ggplot2::position_jitter(width = 0.1, height = 0.1),
     color = mice:::mdc(2),
     shape = 4,
     mapping = ggplot2::aes(x = .data[[x]], y = NA_y),
@@ -160,6 +163,7 @@ if (any(is.na(dat[[y]]))) {
 # add geom for NAs in the 'x' and 'y' space
 if (any(is.na(dat[[x]]) & is.na(dat[[y]]))){
   geom_xy <- ggplot2::geom_point(
+    position = ggplot2::position_jitter(width = 0.1, height = 0.1),
     color = mice:::mdc(2),
     shape = 4,
     mapping = ggplot2::aes(x = NA_x, y = NA_y),
@@ -168,7 +172,7 @@ if (any(is.na(dat[[x]]) & is.na(dat[[y]]))){
 
 # plot 
 p <- dat %>% ggplot2::ggplot() +
-  ggplot2::geom_point(ggplot2::aes(x = .data[[x]], y = .data[[y]]), color = mice::mdc(1)) +
+  ggplot2::geom_point(ggplot2::aes(x = .data[[x]], y = .data[[y]]), position = ggplot2::position_jitter(width = 0.1, height = 0.1), color = mice::mdc(1)) +
   geom_x +
   geom_y +
   geom_xy +
@@ -179,7 +183,7 @@ p <- dat %>% ggplot2::ggplot() +
 # output
 return(p)
 }
-plot_bivariate(dat, x = "age", y = "hgt")
+plot_bivariate(dat, x = "age", y = "hc")
 plot_bivariate(dat, x = "reg", y = "hc")
 ```
 
@@ -212,7 +216,10 @@ plot_flux(flx)
 ## Plot convergence
 
 ```{r}
-d <- imp$chainMean %>%
+
+# make chain means and variances tidy
+preprocess_thetas <- function(imp) {
+  d <- imp$chainMean %>%
     dplyr::na_if(., "NaN") %>%
     as.data.frame() %>%
     dplyr::mutate(var = row.names(.), theta = "Chain means") %>%
@@ -226,16 +233,40 @@ d <- imp$chainMean %>%
     tidyr::pivot_longer(-c(var, theta)) %>%
     cbind(.it = as.integer(1:imp$iteration),
           .imp = as.factor(rep(1:imp$m, each = imp$iteration)))
+  return(d)
+}
+# test
+trace_dat <- preprocess_thetas(imp)
 
-x = "hgt"
-d[d$var == x, ] %>% 
-  ggplot2::ggplot() +
-  ggplot2::geom_line(ggplot2::aes(x = .it, y = value, color = .imp)) +
-  ggplot2::facet_wrap(~theta, scales = "free", ncol = 1) +
-  ggplot2::theme_classic() +
-  ggplot2::labs(x = "Iteration", 
-                y = paste0("Variable: '", x, "'"),
-                color = "Imputation")
+trace_one_variable <- function(d, x) {
+  # plot one variable
+  p <- d[d$var == x,] %>%
+    ggplot2::ggplot() +
+    ggplot2::geom_line(ggplot2::aes(x = .it, y = value, color = .imp)) +
+    ggplot2::facet_wrap( ~ theta, scales = "free", ncol = 2) +
+    ggplot2::theme_classic() +
+    ggplot2::theme(
+      strip.background = element_rect(colour = "white"),
+      strip.text = element_text(face = "bold", size = 11)
+    ) +
+    ggplot2::labs(x = "Iteration",
+                  y = paste0("Variable: '", x, "'"),
+                  color = "Imputation")
+  # show message to user when variable is completely observed
+  if (all(is.na(p$data$value))) {
+    p <-
+      p + ggplot2::geom_text(ggplot2::aes(
+        x = median(as.numeric(d$.imp)),
+        y = 0,
+        label = "No \n imputations \n to show"
+      ),
+      color = "grey")
+  }
+  return(p)
+}
+#test
+trace_one_variable(trace_dat, x = "hgt")
+trace_one_variable(trace_dat, x = "age")
 ```
 
 

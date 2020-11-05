@@ -15,3 +15,24 @@ plot_flux <- function(dat) {
     plotly::ggplotly(p) %>% clean_plotly(pp = .)
   return(pp)
 }
+
+# traceplot functions
+
+# make chain means and variances tidy
+preprocess_thetas <- function(imp) {
+  d <- imp$chainMean %>%
+    dplyr::na_if(., "NaN") %>%
+    as.data.frame() %>%
+    dplyr::mutate(var = row.names(.), theta = "Chain means") %>%
+    rbind(
+      .,
+      imp$chainVar %>%
+        sqrt() %>%
+        as.data.frame(.) %>%
+        dplyr::mutate(var = row.names(.), theta = "Chain standard deviations")
+    ) %>%
+    tidyr::pivot_longer(-c(var, theta)) %>%
+    cbind(.it = as.integer(1:imp$iteration),
+          .imp = as.factor(rep(1:imp$m, each = imp$iteration)))
+  return(d)
+}
