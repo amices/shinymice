@@ -16,7 +16,7 @@ knitr::opts_chunk$set(
 
 ```{r setup}
 # set-up environment
-library(shinymice)
+# library(shinymice)
 library(tidyverse)
 # example dataset
 dat <- mice::boys
@@ -72,33 +72,59 @@ We can evaluate the missingness in the incomplete data using two plotting device
 
 ```{r}
 # histogram/density plot
+# plot_conditional <- function(dat, x, z) {
+#   if (is.numeric(dat[[x]])) {
+#     geom <- ggplot2::geom_density(ggplot2::aes(x = .data[[x]], y = ..count.., color = conditional))
+#   } else {
+#     geom <-
+#       ggplot2::geom_bar(
+#         ggplot2::aes(x = .data[[x]], color = conditional),
+#         position = ggplot2::position_dodge(),
+#         fill = "white"
+#       )
+#   }
+#   dat %>%
+#     dplyr::mutate(conditional = factor(
+#       is.na(.data[[z]]),
+#       levels = c(TRUE, FALSE),
+#       labels = c("Missing", "Observed")
+#     )) %>%
+#     ggplot2::remove_missing(., vars = x) %>%
+#     ggplot2::ggplot() +
+#     geom +
+#     theme_mice() +
+#     ggplot2::labs(color = paste(z)) +
+#     theme(legend.position = "top")
+# }
+
 plot_conditional <- function(dat, x, z) {
   if (is.numeric(dat[[x]])) {
-    geom <- ggplot2::geom_density(ggplot2::aes(x = .data[[x]], y = ..count.., color = conditional))
+    geom <- ggplot2::geom_histogram(ggplot2::aes(x = .data[[x]], color = conditional, fill = "white"))
   } else {
     geom <-
       ggplot2::geom_bar(
-        ggplot2::aes(x = .data[[x]], color = conditional),
-        position = ggplot2::position_dodge(),
-        fill = "white"
+        ggplot2::aes(x = .data[[x]],
+                     color = conditional, fill = "white")
       )
   }
-  dat %>%
+  dat[!is.na(dat[[x]]),] %>%
     dplyr::mutate(conditional = factor(
       is.na(.data[[z]]),
-      levels = c(TRUE, FALSE),
-      labels = c("Missing", "Observed")
+      levels = c(FALSE, TRUE),
+      labels = c("Observed", "Missing")
     )) %>%
-    ggplot2::remove_missing(., vars = x) %>%
+    #ggplot2::remove_missing(., vars = x) %>%
     ggplot2::ggplot() +
     geom +
     theme_mice() +
-    ggplot2::labs(color = paste0("Variable '", z, "' is:"))
+    ggplot2::facet_wrap(~conditional, ncol = 1, scales = "free_y", labeller = ggplot2::labeller(conditional = c(paste(z, "observed"), paste(z, "missing")) %>% setNames( c("Observed", "Missing")))) +
+    theme(legend.position = "none")
 }
 
 plot_conditional(dat, x = "age", z = "hc")
-plot_conditional(dat, x = "reg", z = "hc")
+plot_conditional(dat, x = "reg", z = "hc") # look at skyline plots in mi, and at the legend position --> varname + missing (red) + observed (blue)
 ```
+
 
 ```{r}
 # scatterplot
@@ -106,7 +132,7 @@ plot_bivariate <- function(dat, x, y) {
   # set NA value and scale for variable 'x'
   if (is.numeric(dat[[x]])) {
     NA_x <-
-      min(dat[[x]], na.rm = TRUE) - .5 * sd(dat[[x]], na.rm = TRUE)
+      min(dat[[x]], na.rm = TRUE) - .05 * diff(range(dat[[x]], na.rm = TRUE))
     scale_x <- ggplot2::scale_x_continuous(expand = c(0.01, 0.01),
                                            limits = c(NA_x, max(dat[[x]])))
   } else {
@@ -119,7 +145,7 @@ plot_bivariate <- function(dat, x, y) {
   # set NA value and scale for variable 'y'
   if (is.numeric(dat[[y]])) {
     NA_y <-
-      min(dat[[y]], na.rm = TRUE) - .5 * sd(dat[[y]], na.rm = TRUE)
+      min(dat[[y]], na.rm = TRUE) - .05 * diff(range(dat[[y]], na.rm = TRUE))
     scale_y <- ggplot2::scale_y_continuous(expand = c(0.01, 0.01),
                                            limits = c(NA_y, max(dat[[y]])))
   } else {
@@ -180,13 +206,14 @@ plot_bivariate <- function(dat, x, y) {
     geom_xy +
     theme_mice() +
     scale_x +
-    scale_y
+    scale_y 
   
   # output
   return(p)
 }
 plot_bivariate(dat, x = "age", y = "hc")
-plot_bivariate(dat, x = "reg", y = "hc")
+plot_bivariate(dat, x = "hgt", y = "hc") # instead of .5*SD take 10% of the range instead!
+# and add a grey area to distinguish the missing and observed parts of the plot
 ```
 
 ## Plot missingness
@@ -213,7 +240,7 @@ plot_flux <- function(dat){
     theme_classic()
   return(p)
 }
-plot_flux(flx)
+plot_flux(dat)
 ```
 ## Plot convergence
 
