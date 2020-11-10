@@ -18,6 +18,8 @@ knitr::opts_chunk$set(
 # set-up environment
 # library(shinymice)
 library(tidyverse)
+`%nin%` <- Negate(`%in%`)
+
 # example dataset
 dat <- mice::boys
 # example mids object
@@ -381,10 +383,11 @@ prepare_plotting <- function(mids, x, y = NULL) {
   return(cd)
 }
 
-# test
+# test 
 x = "hc"
 y = "reg"
 plot_dat <- prepare_plotting(mids = imp, x = x, y = y)
+# with second variable
 plot_dat2 <- prepare_plotting(mids = imp, x = y, y = x)
 a <- dplyr::full_join(plot_dat, plot_dat2)
 ```
@@ -516,21 +519,36 @@ Now for something different: xyplots!
 
 ```{r}
 # better preprocessing function??
-`%nin%` <- Negate(`%in%`)
-no_miss <- dat %>% cbind(.id = 1:nrow(.), .) %>% .[!is.na(dat[[x]])&!is.na(dat[[y]]),]
-imps <- imp %>% mice::complete("long") %>% filter(.id %nin% no_miss$.id)
+x = "hgt"
+y = "hc"
 
-geom_xyplot <- function(x, y, m) {
-  list(ggplot2::geom_point(
-    ggplot2::aes(
-    x = .data[[x]],
-    y = .data[[y]],
-    color = .data$imputed
-    )))}
+# preprocess mids object
+imps <- imp %>%
+  mice::complete("long")
 
-plot_dat %>% na.omit() %>% 
-  ggplot2::ggplot() +
-  geom_densityplot(x, m = imp$m) + 
-  theme_mice()
+xy_obs <- dat %>%
+  cbind(.imp = 0, .id = 1:nrow(.), .) %>%
+  .[!is.na(dat[[x]]) &
+      !is.na(dat[[y]]),]
+xy_imps <- imps[imps$.id %nin% xy_obs$.id, ] 
+
+xy_obs %>%
+  ggplot2::ggplot(ggplot2::aes(x = .data[[x]], y = .data[[y]], group = .id)) +
+  ggplot2::geom_point(color = mice:::mdc(1)) +
+  ggplot2::geom_point(data = xy_imps, color = mice:::mdc(2))  +
+  ggplot2::theme_classic()
+
+# geom_xyplot <- function(x, y, m) {
+#   list(ggplot2::geom_point(
+#     ggplot2::aes(
+#     x = .data[[x]],
+#     y = .data[[y]],
+#     color = .data$imputed
+#     )))}
+# 
+# plot_dat %>% na.omit() %>% 
+#   ggplot2::ggplot() +
+#   geom_densityplot(x, m = imp$m) + 
+#   theme_mice()
 ```
 
