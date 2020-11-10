@@ -43,21 +43,22 @@ theme_mice <- function() {
   # the actual theme settings
   theme <- list(
     ggplot2::theme_classic(),
-    ggplot2::theme(legend.position = "bottom"),
+    ggplot2::theme(legend.position = "top"),
     ggplot2::scale_color_manual(
       values = c(
-        "Observed" = mice:::mdc(1),
-        "Missing" = mice:::mdc(2),
-        "Imputed" = mice:::mdc(2)
+        "observed" = mice:::mdc(1),
+        "missing" = mice:::mdc(2),
+        "imputed" = mice:::mdc(2)
       )
     ),
     ggplot2::scale_fill_manual(
       values = c(
-        "Observed" = mice:::mdc(1),
-        "Missing" = mice:::mdc(2),
-        "Imputed" = mice:::mdc(2)
+        "observed" = mice:::mdc(1),
+        "missing" = mice:::mdc(2),
+        "imputed" = mice:::mdc(2)
       )
-    )
+    ),
+    ggplot2::labs(color = NULL, fill = NULL, size = NULL)
   )
   return(theme)
 }
@@ -89,7 +90,7 @@ We can evaluate the missingness in the incomplete data using two plotting device
 #     dplyr::mutate(conditional = factor(
 #       is.na(.data[[z]]),
 #       levels = c(TRUE, FALSE),
-#       labels = c("Missing", "Observed")
+#       labels = c("missing", "observed")
 #     )) %>%
 #     ggplot2::remove_missing(., vars = x) %>%
 #     ggplot2::ggplot() +
@@ -114,7 +115,7 @@ plot_conditional <- function(dat, x, z) {
     dplyr::mutate(conditional = factor(
       is.na(.data[[z]]),
       levels = c(FALSE, TRUE),
-      labels = c("Observed", "Missing")
+      labels = c("observed", "missing")
     )) %>%
     # plot
     ggplot2::ggplot(ggplot2::aes(
@@ -131,7 +132,7 @@ plot_conditional <- function(dat, x, z) {
       labeller = ggplot2::labeller(conditional = c(
         paste(z, "observed"), paste(z, "missing")
       ) %>% setNames(c(
-        "Observed", "Missing"
+        "observed", "missing"
       )))
     ) +
     # style
@@ -255,7 +256,7 @@ plot_bivariate <- function(dat, x, y) {
 }
 
 # test
-p <- plot_bivariate(dat, x = "reg", y = "hc")
+plot_bivariate(dat, x = "reg", y = "hc")
 plot_bivariate(dat, x = "hgt", y = "hc") 
 ```
 
@@ -267,7 +268,11 @@ plot_bivariate(dat, x = "hgt", y = "hc")
 
 ```{r}
 # md pattern
-
+pat <- mice::md.pattern(dat)
+(vrb <- colnames(pat))
+(n_pat_obs <- as.numeric(rownames(pat)))
+(n_vrb_inc <- as.numeric(pat[, ncol(pat)]))
+(n_cell_mis <- pat[nrow(pat),])
 ```
 
 ```{r}
@@ -377,7 +382,7 @@ prepare_plotting <- function(mids, x, y = NULL) {
   # combine incomplete and imputed data
     cd <- d %>%
       dplyr::bind_rows(., imps) %>%
-      dplyr::mutate(imputed = ifelse(.imp > 0, 'Imputed', 'Observed'))
+      dplyr::mutate(imputed = ifelse(.imp > 0, 'imputed', 'observed'))
   
   # output
   return(cd)
@@ -387,9 +392,9 @@ prepare_plotting <- function(mids, x, y = NULL) {
 x = "hc"
 y = "reg"
 plot_dat <- prepare_plotting(mids = imp, x = x, y = y)
-# with second variable
-plot_dat2 <- prepare_plotting(mids = imp, x = y, y = x)
-a <- dplyr::full_join(plot_dat, plot_dat2)
+# # with second variable
+# plot_dat2 <- prepare_plotting(mids = imp, x = y, y = x)
+# a <- dplyr::full_join(plot_dat, plot_dat2)
 ```
 
 Now plot the prepared data
@@ -450,13 +455,9 @@ geom_bwplot <- function(x, m){
       width = 0.5
     ),
     ggplot2::scale_x_discrete(limits = as.character(0:m)),
-    ggplot2::labs(
-      x = "Imputation (0 = observed data)",
-      y = paste0("Variable: '", x, "'"),
-      color = "",
-      fill = "",
-      size = ""
-    ))
+    ggplot2::xlab(
+      "Imputation (0 = observed data)")
+    )
 }
 
 plot_dat %>% 
@@ -483,11 +484,11 @@ geom_densityplot <- function(x, m){
     group = .data$.imp,
     color = .data$imputed,
     size = .data$imputed)),
-    ggplot2::scale_size_manual(values = c(0.5, 1) %>% setNames(c("Imputed", "Observed")))
+    ggplot2::scale_size_manual(guide = "none", values = c(0.5, 1) %>% setNames(c("imputed", "observed")))
 )}
 
 
-plot_dat %>% na.omit() %>% 
+plot_dat %>%  
   ggplot2::ggplot() +
   geom_densityplot(x, m = imp$m) + 
   theme_mice()
@@ -506,7 +507,7 @@ Note the addition of `na.omit()` to make sure that categorical variables don't g
 #     group = .data$.imp,
 #     color = .data$imputed,
 #     size = .data$imputed)),
-#     ggplot2::scale_size_manual(values = c(0.5, 1) %>% setNames(c("Imputed", "Observed")))
+#     ggplot2::scale_size_manual(values = c(0.5, 1) %>% setNames(c("imputed", "observed")))
 # )}
 # 
 # plot_dat %>% 
@@ -522,33 +523,97 @@ Now for something different: xyplots!
 x = "hgt"
 y = "hc"
 
-# preprocess mids object
+# extract imputations
 imps <- imp %>%
   mice::complete("long")
 
-xy_obs <- dat %>%
-  cbind(.imp = 0, .id = 1:nrow(.), .) %>%
-  .[!is.na(dat[[x]]) &
-      !is.na(dat[[y]]),]
-xy_imps <- imps[imps$.id %nin% xy_obs$.id, ] 
+preprocess_imps <- function(imp, x, y = NULL) {
+  if (is.null(y)) {
+    y <- x
+  }
+  # combine observed and imputed data
+  xy_obs <- imp$data %>%
+    cbind(datapoint = "observed",
+          .imp = 0,
+          .id = 1:nrow(.),
+          .) %>%
+    .[!is.na(imp$data[[x]]) &
+        !is.na(imp$data[[y]]), ]
+  xy_imps <- imps %>% 
+    cbind(datapoint = "imputed", .) %>% 
+    .[imps$.id %nin% xy_obs$.id,]
+  xy_dat <- rbind(xy_obs, xy_imps)
+  return(xy_dat)
+}
 
-xy_obs %>%
-  ggplot2::ggplot(ggplot2::aes(x = .data[[x]], y = .data[[y]], group = .id)) +
-  ggplot2::geom_point(color = mice:::mdc(1)) +
-  ggplot2::geom_point(data = xy_imps, color = mice:::mdc(2))  +
-  ggplot2::theme_classic()
 
-# geom_xyplot <- function(x, y, m) {
-#   list(ggplot2::geom_point(
-#     ggplot2::aes(
+xy_dat <- imp %>% preprocess_imps(x = "hgt", y = "hc")
+# two implementations, last one is more efficient
+# xy_obs %>%
+#   ggplot2::ggplot(ggplot2::aes(
 #     x = .data[[x]],
 #     y = .data[[y]],
-#     color = .data$imputed
-#     )))}
-# 
-# plot_dat %>% na.omit() %>% 
-#   ggplot2::ggplot() +
-#   geom_densityplot(x, m = imp$m) + 
-#   theme_mice()
+#     group = .id,
+#     color = datapoint
+#   )) +
+#   ggplot2::geom_point() +
+#   ggplot2::geom_point(data = xy_imps)  +
+#   theme_mice() +
+#   labs(color = NULL)
+
+xy_dat %>%
+  ggplot2::ggplot() +
+  ggplot2::geom_point(ggplot2::aes(
+    x = .data[[x]],
+    y = .data[[y]],
+    group = .id,
+    color = datapoint
+  )) +
+  theme_mice() +
+  labs(color = NULL)
+
+# geom_scatter <- ggplot2::geom_point(ggplot2::aes(
+#     x = .data[[x]],
+#     y = .data[[y]],
+#     group = .id,
+#     color = datapoint
+#   ))
+
+# maybe do something like this for the other imp plots??
+x = "hc"
+imp %>% preprocess_imps(x) %>% 
+  ggplot2::ggplot() +
+  theme_mice() +
+  ggplot2::geom_boxplot(
+      ggplot2::aes(
+        x = as.factor(.data$.imp), #x = factor(.data$.imp, levels = c(0, 1:imp$m), ordered = TRUE), use icw   scale_x_discrete(drop=FALSE)
+        y = .data[[x]],
+        color = .data$datapoint
+      ),
+      width = 0.5
+    ) +
+  ggplot2::geom_jitter(
+      ggplot2::aes(
+        x = as.factor(.data$.imp),
+        y = .data[[x]],
+        color = .data$datapoint
+      ),
+      height = 0,
+      width = 0.25,
+      alpha = 0.1) +
+  ggplot2::xlab("Imputation (0 = observed data)") 
+
+
+```
+
+Maybe develop a predictor matrix to adjust for the imputation model?
+
+```{r}
+# get the predictor matrix and add the rownames as variable
+(pred <- imp$predictorMatrix %>% as.data.frame() %>% cbind(vrb_to_imp = rownames(.), .))
+# make the data tidy to plot
+(long_pred <- pivot_longer(pred, cols = names(pred)[-1], names_to = "vrb_as_pred"))
+# plot the predictor matrix 
+long_pred %>% ggplot() + geom_raster(aes(x = vrb_as_pred, y = vrb_to_imp, fill = as.factor(value)))
 ```
 

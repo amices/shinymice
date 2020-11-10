@@ -46,7 +46,8 @@ mod_imputationmodel_ui <- function(id) {
                "Influx and outflux are summaries of the missing data pattern intended to aid in the construction of imputation models. The influx of a variable quantifies how well its missing data connect to the observed data on other variables. The outflux of a variable quantifies how well its observed data connect to the missing data on other variables. Keeping everything else constant, variables with high influx and outflux are preferred."
              ),
              tabPanel("Predictor matrix",
-                      plotOutput(ns("pred_plot"))),
+                      plotOutput(ns("pred_plot")),
+                      "Each row in the predictor matrix identifies which predictors are to be used for the variable in the row name."),
              tabPanel("Traceplot",
                       select_var(ns("var1")),
                       plotOutput(ns("trace_plot")))
