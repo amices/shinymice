@@ -36,7 +36,7 @@ app_ui <- function(request) {
         # tabPanel("Scientific model",
         #          icon = icon("calculator"),
         #          mod_scientificmodel_ui("scientificmodel_ui_1")),
-        tabPanel("Exit",
+        tabPanel("Save",
                  icon = icon("file-download"),
                  mod_save_ui("save_ui_1"))
       )

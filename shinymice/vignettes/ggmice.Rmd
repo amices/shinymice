@@ -62,6 +62,10 @@ theme_mice <- function() {
         "imputed" = mice:::mdc(2)
       )
     ),
+    ggplot2::scale_size_manual(
+      values = c("observed" = 1,
+      "imputed" = 0.5)
+),
     ggplot2::labs(color = NULL, fill = NULL, size = NULL)
   )
   return(theme)
@@ -591,7 +595,8 @@ preprocess_imps <- function(imp, x, y = NULL) {
   xy_imps <- imps %>% 
     cbind(datapoint = "imputed", .) %>% 
     .[imps$.id %nin% xy_obs$.id,]
-  xy_dat <- rbind(xy_obs, xy_imps)
+  xy_dat <- rbind(xy_obs, xy_imps) %>% 
+    dplyr::mutate(datapoint = factor(datapoint, levels = c("observed", "imputed")))
   return(xy_dat)
 }
 
@@ -643,15 +648,54 @@ imp %>% preprocess_imps(x) %>%
     ) +
   ggplot2::geom_jitter(
       ggplot2::aes(
-        x = as.factor(.data$.imp),
+        x = as.factor(.imp),
         y = .data[[x]],
-        color = .data$datapoint
+        color = datapoint
       ),
       height = 0,
       width = 0.25,
       alpha = 0.1) +
   ggplot2::xlab("Imputation (0 = observed data)") 
 
+# density plot
+imp %>% preprocess_imps(x) %>%
+  ggplot2::ggplot() +
+  theme_mice() +
+  ggplot2::geom_density(ggplot2::aes(
+    x = .data[[x]],
+    color = datapoint,
+    size = datapoint,
+    group = .imp
+  )) 
+
+# bar plot for categorical variables
+imp %>% preprocess_imps(x) %>%
+  ggplot2::ggplot() +
+  theme_mice() +
+  ggplot2::geom_histogram(ggplot2::aes(
+    x = .data[[x]],
+    color = datapoint,
+    group = .imp
+  ),
+  fill = "white",
+  position = "stack") +
+  ggplot2::facet_wrap(~datapoint, scales = "free_y", ncol = 1) +
+  ggplot2::theme(legend.position = "none")
+
+
+x = "reg"
+imp %>% preprocess_imps(x) %>%
+  ggplot2::ggplot() +
+  theme_mice() +
+  ggplot2::geom_bar(ggplot2::aes(
+    x = .data[[x]],
+    color = datapoint,
+    group = .imp
+  ),
+  fill = "white",
+  position = "stack") +
+  ggplot2::facet_wrap(~datapoint, scales = "free_y", ncol = 1) +
+  ggplot2::theme(legend.position = "none")
 
 ```
 
