@@ -657,17 +657,36 @@ imp %>% preprocess_imps(x) %>%
 
 Maybe develop a predictor matrix to adjust for the imputation model?
 
-```{r}
-# get the predictor matrix and add the rownames as variable
-(pred <-
-   imp$predictorMatrix %>% as.data.frame() %>% cbind(vrb_to_imp = rownames(.), .))
-# make the data tidy to plot
-(long_pred <-
-    pivot_longer(pred, cols = names(pred)[-1], names_to = "vrb_as_pred"))
-# plot the predictor matrix
-long_pred %>% 
-  ggplot2::ggplot() + 
-  ggplot2::geom_tile(ggplot2::aes(x = vrb_as_pred, y = vrb_to_imp, fill = as.factor(value)), color = "black") +
-  ggplot2::theme(legend.position = "none")
+```{r fig.height=6, fig.width=6}
+# plot the predictor matrix for the imputation model, make interactive later!
+plot_pred_matrix <- function(dat) {
+  # get the predictor matrix and add the rownames as variable
+  pred <-
+    dat %>%
+    mice::mice(maxit = 0) %>%
+    .$predictorMatrix %>%
+    as.data.frame() %>%
+    cbind(vrb_to_imp = rownames(.), .)
+  # make the data tidy to plot
+  long_pred <-
+    pivot_longer(pred, cols = names(pred)[-1], names_to = "vrb_as_pred")
+  # plot the predictor matrix
+  p <- long_pred %>%
+    ggplot2::ggplot() +
+    ggplot2::geom_tile(ggplot2::aes(
+      x = vrb_as_pred,
+      y = vrb_to_imp,
+      fill = as.factor(value)
+    ),
+    color = "black") +
+    ggplot2::theme(legend.position = "none") +
+    ggplot2::scale_fill_manual(values = c("1" = mice:::mdc(1), "0" = mice:::mdc(2))) +
+    ggplot2::labs(x = "Predictor", y = "Variable to impute", title = "Predictor matrix")
+  
+  return(p)
+}
+
+# test
+plot_pred_matrix(dat)
 ```
 
