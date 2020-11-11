@@ -270,37 +270,55 @@ plot_bivariate(dat, x = "hgt", y = "hc")
 
 - fluxplot
 
+First look at the missing data pattern
+
 ```{r fig.height=6, fig.width=6}
-# prepare md pattern
-pat <- mice::md.pattern(dat)
-vrb <- colnames(pat)[-ncol(pat)]
-(n_pat_obs <- as.numeric(rownames(pat))[-nrow(pat)])
-(n_vrb_inc <- as.numeric(pat[, ncol(pat)]))
-(n_val_mis <- as.numeric(pat[nrow(pat),])[-ncol(pat)])
-colnames(pat) <- c(vrb, "n_vrb_inc")
-clean_pat <- pat[-nrow(pat),] %>% 
-  cbind(., n_pat_obs, pat_nr = 1:nrow(.))
+# make ggplot version of md pattern plot
+plot_md_pattern <- function(dat) {
+  # prepare md pattern
+  pat <- mice::md.pattern(dat)
+  vrb <- colnames(pat)[-ncol(pat)]
+  n_pat_obs <- as.numeric(rownames(pat))[-nrow(pat)]
+  #n_vrb_inc <- as.numeric(pat[, ncol(pat)])
+  #n_val_mis <- as.numeric(pat[nrow(pat), ])[-ncol(pat)]
+  colnames(pat) <- c(vrb, "n_vrb_inc")
+  clean_pat <- pat[-nrow(pat), ] %>%
+    cbind(., n_pat_obs, pat_nr = 1:nrow(.))
+  
+  # make the pattern tidy
+  long_pat <- clean_pat %>%
+    as.data.frame() %>%
+    tidyr::pivot_longer(cols = all_of(vrb),
+                        names_to = "vrb",
+                        values_to = "obs") %>%
+    cbind(., n_val_mis) %>%
+    dplyr::mutate(pat_nr = factor(pat_nr, levels = 1:max(pat_nr)))
+  
+  # plot the md pattern
+  p <- long_pat %>%
+    ggplot2::ggplot() +
+    ggplot2::geom_tile(ggplot2::aes(
+      x = vrb,
+      y = pat_nr,
+      fill = as.factor(obs),
+      group = n_vrb_inc
+    ),
+    color = "black") +
+    ggplot2::theme(legend.position = "none") +
+    ggplot2::scale_fill_manual(values = c("1" = mice:::mdc(1), "0" = mice:::mdc(2))) +
+    ggplot2::scale_y_discrete(limits = rev(levels(long_pat$pat_nr)),
+                              labels = rev(as.character(n_pat_obs))) +
+    ggplot2::scale_x_discrete(limits = vrb, position = "top") + #, labels = as.character(n_val_mis)) +
+    ggplot2::labs(x = NULL, y = "frequency", title = "Missing data pattern (patterns as rows, variables as columns)") 
+  
+  return(p)
+}
 
-# make the pattern tidy
-long_pat <- clean_pat %>% 
-  as.data.frame() %>% 
-  tidyr::pivot_longer(cols = all_of(vrb), names_to = "vrb", values_to = "obs") %>% 
-  cbind(., n_val_mis) %>% 
-  dplyr::mutate(pat_nr = factor(pat_nr, levels = 1:max(pat_nr)))
-
-# plot the md pattern
-(p <- long_pat %>%
-  ggplot2::ggplot() +
-  ggplot2::geom_tile(ggplot2::aes(x = vrb, y = pat_nr, fill = as.factor(obs), group = n_vrb_inc), color = "black") +
-  ggplot2::theme(legend.position = "none") +
-  ggplot2::scale_fill_manual(values = c("1" = mice:::mdc(1), "0" = mice:::mdc(2))) +
-  ggplot2::scale_y_discrete(limits = rev(levels(long_pat$pat_nr)),
-                            labels = rev(as.character(n_pat_obs))) +
-  ggplot2::scale_x_discrete(limits = vrb, position = "top") + #, labels = as.character(n_val_mis)) +
-  ggplot2::labs(x = NULL, y = "pattern frequency")
-)
-
+# test
+plot_md_pattern(dat)
 ```
+
+Then look at the in- and outflux
 
 ```{r}
 # plot in- and outflux of incomplete data
@@ -315,8 +333,11 @@ plot_flux <- function(dat){
     theme_classic()
   return(p)
 }
+# test
 plot_flux(dat)
 ```
+
+
 ## Plot convergence
 
 ```{r}
