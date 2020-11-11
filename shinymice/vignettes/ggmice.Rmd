@@ -687,14 +687,21 @@ x = "reg"
 imp %>% preprocess_imps(x) %>%
   ggplot2::ggplot() +
   theme_mice() +
-  ggplot2::geom_bar(ggplot2::aes(
-    x = .data[[x]],
-    color = datapoint,
-    group = .imp
-  ),
-  fill = "white",
-  position = "stack") +
-  ggplot2::facet_wrap(~datapoint, scales = "free_y", ncol = 1) +
+  ggplot2::geom_bar(
+    ggplot2::aes(x = .data[[x]],
+                 color = datapoint,
+                 group = .imp),
+    fill = "white",
+    position = "stack"
+  ) +
+  ggplot2::facet_wrap(
+    ~ datapoint,
+    scales = "free_y",
+    ncol = 1,
+    labeller = ggplot2::labeller(datapoint = c(paste(x, "observed"), paste(x, "missing")) %>% 
+                                   setNames(c("observed", "missing"))
+                                 )
+  ) +
   ggplot2::theme(legend.position = "none")
 
 ```
@@ -703,17 +710,25 @@ Maybe develop a predictor matrix to adjust for the imputation model?
 
 ```{r fig.height=6, fig.width=6}
 # plot the predictor matrix for the imputation model, make interactive later!
-plot_pred_matrix <- function(dat) {
+plot_pred_matrix <- function(imp) {
+  # parse input
+  if (mice::is.mids(dat)) {
+    imp <- dat
+  } else {
+    imp <- mice::mice(dat, maxit = 0)
+  }
   # get the predictor matrix and add the rownames as variable
-  pred <-
-    dat %>%
-    mice::mice(maxit = 0) %>%
-    .$predictorMatrix %>%
+  pred <- imp$predictorMatrix %>%
     as.data.frame() %>%
     cbind(vrb_to_imp = rownames(.), .)
   # make the data tidy to plot
   long_pred <-
-    pivot_longer(pred, cols = names(pred)[-1], names_to = "vrb_as_pred")
+    pivot_longer(
+      pred,
+      cols = names(pred)[-1],
+      names_to = "vrb_as_pred",
+      names_transform = list(vrb_as_pred = as.factor)
+    )
   # plot the predictor matrix
   p <- long_pred %>%
     ggplot2::ggplot() +
@@ -724,6 +739,8 @@ plot_pred_matrix <- function(dat) {
     ),
     color = "black") +
     ggplot2::theme(legend.position = "none") +
+    ggplot2::scale_y_discrete(limits = rev(names(imp$data))) +
+    ggplot2::scale_x_discrete(limits = names(imp$data), position = "top") +
     ggplot2::scale_fill_manual(values = c("1" = mice:::mdc(1), "0" = mice:::mdc(2))) +
     ggplot2::labs(x = "Predictor", y = "Variable to impute", title = "Predictor matrix")
   
@@ -731,6 +748,11 @@ plot_pred_matrix <- function(dat) {
 }
 
 # test
-plot_pred_matrix(dat)
+plot_pred_matrix(imp)
+new_pred <- imp$predictorMatrix
+new_pred["bmi", c("hgt", "wgt")] <- 0
+imp2 <- mice::mice.mids(imp, predictorMatrix = new_pred, maxit = 0)
+plot_pred_matrix(imp2)
+
 ```
 
