@@ -10,7 +10,11 @@ vignette: >
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>"
+  comment = "#>",
+  warning = FALSE, 
+  message = FALSE,
+  fig.width = 6, 
+  fig.height = 6
 )
 ```
 
@@ -266,13 +270,36 @@ plot_bivariate(dat, x = "hgt", y = "hc")
 
 - fluxplot
 
-```{r}
-# md pattern
+```{r fig.height=6, fig.width=6}
+# prepare md pattern
 pat <- mice::md.pattern(dat)
-(vrb <- colnames(pat))
-(n_pat_obs <- as.numeric(rownames(pat)))
+vrb <- colnames(pat)[-ncol(pat)]
+(n_pat_obs <- as.numeric(rownames(pat))[-nrow(pat)])
 (n_vrb_inc <- as.numeric(pat[, ncol(pat)]))
-(n_cell_mis <- pat[nrow(pat),])
+(n_val_mis <- as.numeric(pat[nrow(pat),])[-ncol(pat)])
+colnames(pat) <- c(vrb, "n_vrb_inc")
+clean_pat <- pat[-nrow(pat),] %>% 
+  cbind(., n_pat_obs, pat_nr = 1:nrow(.))
+
+# make the pattern tidy
+long_pat <- clean_pat %>% 
+  as.data.frame() %>% 
+  tidyr::pivot_longer(cols = all_of(vrb), names_to = "vrb", values_to = "obs") %>% 
+  cbind(., n_val_mis) %>% 
+  dplyr::mutate(pat_nr = factor(pat_nr, levels = 1:max(pat_nr)))
+
+# plot the md pattern
+(p <- long_pat %>%
+  ggplot2::ggplot() +
+  ggplot2::geom_tile(ggplot2::aes(x = vrb, y = pat_nr, fill = as.factor(obs), group = n_vrb_inc), color = "black") +
+  ggplot2::theme(legend.position = "none") +
+  ggplot2::scale_fill_manual(values = c("1" = mice:::mdc(1), "0" = mice:::mdc(2))) +
+  ggplot2::scale_y_discrete(limits = rev(levels(long_pat$pat_nr)),
+                            labels = rev(as.character(n_pat_obs))) +
+  ggplot2::scale_x_discrete(limits = vrb, position = "top") + #, labels = as.character(n_val_mis)) +
+  ggplot2::labs(x = NULL, y = "pattern frequency")
+)
+
 ```
 
 ```{r}
@@ -324,7 +351,8 @@ trace_one_variable <- function(d, x) {
     ggplot2::theme_classic() +
     ggplot2::theme(
       strip.background = element_rect(colour = "white"),
-      strip.text = element_text(face = "bold", size = 11)
+      strip.text = element_text(face = "bold", size = 11),
+      legend.position = "bottom"
     ) +
     ggplot2::labs(x = "Iteration",
                   y = paste0("Variable: '", x, "'"),
@@ -488,14 +516,14 @@ geom_densityplot <- function(x, m){
 )}
 
 
-plot_dat %>%  
+plot_dat[!is.na(plot_dat[[x]]), ] %>%  
   ggplot2::ggplot() +
   geom_densityplot(x, m = imp$m) + 
   theme_mice()
 
 
 ```
-Note the addition of `na.omit()` to make sure that categorical variables don't get an NA category.
+<!-- Note the addition of `na.omit()` to make sure that categorical variables don't get an NA category. -->
 
 ```{r}
 # At some point, try to do this for histograms too? See https://github.com/amices/shinyMice/blob/Enhancements/R/gg.barplot.R
@@ -610,10 +638,15 @@ Maybe develop a predictor matrix to adjust for the imputation model?
 
 ```{r}
 # get the predictor matrix and add the rownames as variable
-(pred <- imp$predictorMatrix %>% as.data.frame() %>% cbind(vrb_to_imp = rownames(.), .))
+(pred <-
+   imp$predictorMatrix %>% as.data.frame() %>% cbind(vrb_to_imp = rownames(.), .))
 # make the data tidy to plot
-(long_pred <- pivot_longer(pred, cols = names(pred)[-1], names_to = "vrb_as_pred"))
-# plot the predictor matrix 
-long_pred %>% ggplot() + geom_raster(aes(x = vrb_as_pred, y = vrb_to_imp, fill = as.factor(value)))
+(long_pred <-
+    pivot_longer(pred, cols = names(pred)[-1], names_to = "vrb_as_pred"))
+# plot the predictor matrix
+long_pred %>% 
+  ggplot2::ggplot() + 
+  ggplot2::geom_tile(ggplot2::aes(x = vrb_as_pred, y = vrb_to_imp, fill = as.factor(value)), color = "black") +
+  ggplot2::theme(legend.position = "none")
 ```
 
