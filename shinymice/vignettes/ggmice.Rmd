@@ -18,7 +18,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r setup}
+```{r setup, include = FALSE}
 # set-up environment
 # library(shinymice)
 library(tidyverse)
@@ -82,7 +82,7 @@ We can evaluate the missingness in the incomplete data using two plotting device
 
 
 ```{r}
-# histogram/density plot
+# histogram/density plot dodged instead of faceted
 # plot_conditional <- function(dat, x, z) {
 #   if (is.numeric(dat[[x]])) {
 #     geom <- ggplot2::geom_density(ggplot2::aes(x = .data[[x]], y = ..count.., color = conditional))
@@ -108,6 +108,7 @@ We can evaluate the missingness in the incomplete data using two plotting device
 #     theme(legend.position = "top")
 # }
 
+# histogram/density plot faceted instead of dodged
 plot_conditional <- function(dat, x, z) {
   # define graphing elements to add to plot
   if (is.numeric(dat[[x]])) { # for continuous variables
@@ -148,13 +149,14 @@ plot_conditional <- function(dat, x, z) {
     theme(legend.position = "none")
 }
 
+# test
 plot_conditional(dat, x = "age", z = "hc")
 plot_conditional(dat, x = "reg", z = "hc")
 ```
 
 
 ```{r}
-# scatterplot
+# scatterplot with NAs
 plot_bivariate <- function(dat, x, y) {
   # define graphing elements to add to plot later
   # set NA value and scale for variable x
@@ -276,21 +278,20 @@ plot_bivariate(dat, x = "hgt", y = "hc")
 
 First look at the missing data pattern
 
-```{r fig.height=6, fig.width=6}
+```{r fig.height=7.5, fig.width=6}
 # make ggplot version of md pattern plot
 plot_md_pattern <- function(dat) {
-  # prepare md pattern
+  # get md pattern and store additional info
   pat <- mice::md.pattern(dat)
   vrb <- colnames(pat)[-ncol(pat)]
-  n_pat_obs <- as.numeric(rownames(pat))[-nrow(pat)]
-  #n_vrb_inc <- as.numeric(pat[, ncol(pat)])
-  #n_val_mis <- as.numeric(pat[nrow(pat), ])[-ncol(pat)]
   colnames(pat) <- c(vrb, "n_vrb_inc")
-  clean_pat <- pat[-nrow(pat), ] %>%
-    cbind(., n_pat_obs, pat_nr = 1:nrow(.))
+  n_pat_obs <- as.numeric(rownames(pat))[-nrow(pat)]
+  n_vrb_inc <- as.numeric(pat[, ncol(pat)])
+  n_val_mis <- as.numeric(pat[nrow(pat), ])[-ncol(pat)]
   
   # make the pattern tidy
-  long_pat <- clean_pat %>%
+  long_pat <- pat[-nrow(pat), ] %>%
+    cbind(., n_pat_obs, pat_nr = 1:nrow(.)) %>%
     as.data.frame() %>%
     tidyr::pivot_longer(cols = all_of(vrb),
                         names_to = "vrb",
@@ -313,7 +314,10 @@ plot_md_pattern <- function(dat) {
     ggplot2::scale_y_discrete(limits = rev(levels(long_pat$pat_nr)),
                               labels = rev(as.character(n_pat_obs))) +
     ggplot2::scale_x_discrete(limits = vrb, position = "top") + #, labels = as.character(n_val_mis)) +
-    ggplot2::labs(x = NULL, y = "frequency", title = "Missing data pattern (patterns as rows, variables as columns)") 
+    ggplot2::labs(
+      x = NULL, 
+      y = "frequency", 
+      title = "Missing data pattern (patterns as rows, variables as columns)") 
   
   return(p)
 }
@@ -479,9 +483,10 @@ geom_stripplot <- function(x, m, ...) {
   return(p)
 }
 
-plot_dat %>%
-  ggplot2::ggplot() +
-  geom_stripplot(x, m)
+# test
+# plot_dat %>%
+#   ggplot2::ggplot() +
+#   geom_stripplot(x, m)
 ```
 
 Now add a mice theme
@@ -698,8 +703,8 @@ imp %>% preprocess_imps(x) %>%
     ~ datapoint,
     scales = "free_y",
     ncol = 1,
-    labeller = ggplot2::labeller(datapoint = c(paste(x, "observed"), paste(x, "missing")) %>% 
-                                   setNames(c("observed", "missing"))
+    labeller = ggplot2::labeller(datapoint = c(paste(x, "observed"), paste(x, "imputed")) %>% 
+                                   setNames(c("observed", "imputed"))
                                  )
   ) +
   ggplot2::theme(legend.position = "none")
@@ -710,7 +715,7 @@ Maybe develop a predictor matrix to adjust for the imputation model?
 
 ```{r fig.height=6, fig.width=6}
 # plot the predictor matrix for the imputation model, make interactive later!
-plot_pred_matrix <- function(imp) {
+plot_pred_matrix <- function(dat) {
   # parse input
   if (mice::is.mids(dat)) {
     imp <- dat
@@ -751,7 +756,7 @@ plot_pred_matrix <- function(imp) {
 plot_pred_matrix(imp)
 new_pred <- imp$predictorMatrix
 new_pred["bmi", c("hgt", "wgt")] <- 0
-imp2 <- mice::mice.mids(imp, predictorMatrix = new_pred, maxit = 0)
+imp2 <- mice::mice(dat, predictorMatrix = new_pred, maxit = 0)
 plot_pred_matrix(imp2)
 
 ```
