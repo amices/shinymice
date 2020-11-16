@@ -680,12 +680,12 @@ xy_dat %>%
 #   ggplot2::xlab("Imputation (0 = observed data)") 
 
 # initialize plot
-x ="hc"
+x ="reg"
 p <- imp %>% preprocess_imps(x) %>% 
   ggplot2::ggplot() +
   theme_mice() 
 
-# boxplot
+# boxplot (doesn't work for categorical variables)
 p +
   ggplot2::geom_boxplot(
       ggplot2::aes(
@@ -705,7 +705,7 @@ p +
         y = .data[[x]],
         color = datapoint
       ),
-      height = 0,
+      height = 0.25,
       width = 0.25) +
     ggplot2::xlab("Imputation (0 = observed data)") 
 
@@ -753,6 +753,21 @@ p +
 #                                  )
 #   ) +
 #   ggplot2::theme(legend.position = "none")
+
+p +
+  ggplot2::geom_bar(
+      ggplot2::aes(
+        x = .data[[x]],
+        fill = datapoint
+        #group = as.factor(.data[[x]])#,
+        #fill = .data$datapoint
+      ),
+      width = 0.5,
+      #fill = "white",
+      color = "black",
+      position = position_dodge(preserve = "single")
+    ) +
+  facet_wrap(~.imp, scales = "free_y")
 
 ```
 
