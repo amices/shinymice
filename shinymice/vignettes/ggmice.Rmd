@@ -657,18 +657,48 @@ xy_dat %>%
 #   ))
 
 # maybe do something like this for the other imp plots??
-x = "hc"
-imp %>% preprocess_imps(x) %>% 
+# imp %>% preprocess_imps(x) %>% 
+#   ggplot2::ggplot() +
+#   theme_mice() +
+#   ggplot2::geom_boxplot(
+#       ggplot2::aes(
+#         x = as.factor(.data$.imp), #x = factor(.data$.imp, levels = c(0, 1:imp$m), ordered = TRUE), use icw   scale_x_discrete(drop=FALSE)
+#         y = .data[[x]],
+#         color = .data$datapoint
+#       ),
+#       width = 0.5
+#     ) +
+#   ggplot2::geom_jitter(
+#       ggplot2::aes(
+#         x = as.factor(.imp),
+#         y = .data[[x]],
+#         color = datapoint
+#       ),
+#       height = 0,
+#       width = 0.25,
+#       alpha = 0.1) +
+#   ggplot2::xlab("Imputation (0 = observed data)") 
+
+# initialize plot
+x ="hc"
+p <- imp %>% preprocess_imps(x) %>% 
   ggplot2::ggplot() +
-  theme_mice() +
+  theme_mice() 
+
+# boxplot
+p +
   ggplot2::geom_boxplot(
       ggplot2::aes(
-        x = as.factor(.data$.imp), #x = factor(.data$.imp, levels = c(0, 1:imp$m), ordered = TRUE), use icw   scale_x_discrete(drop=FALSE)
+        x = as.factor(.data$.imp), 
         y = .data[[x]],
         color = .data$datapoint
       ),
       width = 0.5
     ) +
+  ggplot2::xlab("Imputation (0 = observed data)") 
+
+# stripplot
+p + 
   ggplot2::geom_jitter(
       ggplot2::aes(
         x = as.factor(.imp),
@@ -676,14 +706,11 @@ imp %>% preprocess_imps(x) %>%
         color = datapoint
       ),
       height = 0,
-      width = 0.25,
-      alpha = 0.1) +
-  ggplot2::xlab("Imputation (0 = observed data)") 
+      width = 0.25) +
+    ggplot2::xlab("Imputation (0 = observed data)") 
 
 # density plot
-imp %>% preprocess_imps(x) %>%
-  ggplot2::ggplot() +
-  theme_mice() +
+p +
   ggplot2::geom_density(ggplot2::aes(
     x = .data[[x]],
     color = datapoint,
@@ -691,41 +718,41 @@ imp %>% preprocess_imps(x) %>%
     group = .imp
   )) 
 
-# bar plot for categorical variables
-imp %>% preprocess_imps(x) %>%
-  ggplot2::ggplot() +
-  theme_mice() +
-  ggplot2::geom_histogram(ggplot2::aes(
-    x = .data[[x]],
-    color = datapoint,
-    group = .imp
-  ),
-  fill = "white",
-  position = "stack") +
-  ggplot2::facet_wrap(~datapoint, scales = "free_y", ncol = 1) +
-  ggplot2::theme(legend.position = "none")
-
-
-x = "reg"
-imp %>% preprocess_imps(x) %>%
-  ggplot2::ggplot() +
-  theme_mice() +
-  ggplot2::geom_bar(
-    ggplot2::aes(x = .data[[x]],
-                 color = datapoint,
-                 group = .imp),
-    fill = "white",
-    position = "stack"
-  ) +
-  ggplot2::facet_wrap(
-    ~ datapoint,
-    scales = "free_y",
-    ncol = 1,
-    labeller = ggplot2::labeller(datapoint = c(paste(x, "observed"), paste(x, "imputed")) %>% 
-                                   setNames(c("observed", "imputed"))
-                                 )
-  ) +
-  ggplot2::theme(legend.position = "none")
+# # bar plot for categorical variables
+# imp %>% preprocess_imps(x) %>%
+#   ggplot2::ggplot() +
+#   theme_mice() +
+#   ggplot2::geom_histogram(ggplot2::aes(
+#     x = .data[[x]],
+#     color = datapoint,
+#     group = .imp
+#   ),
+#   fill = "white",
+#   position = "stack") +
+#   ggplot2::facet_wrap(~datapoint, scales = "free_y", ncol = 1) +
+#   ggplot2::theme(legend.position = "none")
+# 
+# 
+# x = "reg"
+# imp %>% preprocess_imps(x) %>%
+#   ggplot2::ggplot() +
+#   theme_mice() +
+#   ggplot2::geom_bar(
+#     ggplot2::aes(x = .data[[x]],
+#                  color = datapoint,
+#                  group = .imp),
+#     fill = "white",
+#     position = "stack"
+#   ) +
+#   ggplot2::facet_wrap(
+#     ~ datapoint,
+#     scales = "free_y",
+#     ncol = 1,
+#     labeller = ggplot2::labeller(datapoint = c(paste(x, "observed"), paste(x, "imputed")) %>% 
+#                                    setNames(c("observed", "imputed"))
+#                                  )
+#   ) +
+#   ggplot2::theme(legend.position = "none")
 
 ```
 
