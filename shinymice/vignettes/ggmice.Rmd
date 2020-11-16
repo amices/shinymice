@@ -82,32 +82,6 @@ We can evaluate the missingness in the incomplete data using two plotting device
 
 
 ```{r}
-# histogram/density plot dodged instead of faceted
-# plot_conditional <- function(dat, x, z) {
-#   if (is.numeric(dat[[x]])) {
-#     geom <- ggplot2::geom_density(ggplot2::aes(x = .data[[x]], y = ..count.., color = conditional))
-#   } else {
-#     geom <-
-#       ggplot2::geom_bar(
-#         ggplot2::aes(x = .data[[x]], color = conditional),
-#         position = ggplot2::position_dodge(),
-#         fill = "white"
-#       )
-#   }
-#   dat %>%
-#     dplyr::mutate(conditional = factor(
-#       is.na(.data[[z]]),
-#       levels = c(TRUE, FALSE),
-#       labels = c("missing", "observed")
-#     )) %>%
-#     ggplot2::remove_missing(., vars = x) %>%
-#     ggplot2::ggplot() +
-#     geom +
-#     theme_mice() +
-#     ggplot2::labs(color = paste(z)) +
-#     theme(legend.position = "top")
-# }
-
 # histogram/density plot faceted instead of dodged
 plot_conditional <- function(dat, x, z) {
   # define graphing elements to add to plot
@@ -394,15 +368,15 @@ trace_one_variable <- function(d, x) {
   p <- d[d$var == x,] %>%
     ggplot2::ggplot() +
     ggplot2::geom_line(ggplot2::aes(x = .it, y = value, color = .imp)) +
-    ggplot2::facet_wrap( ~ theta, scales = "free", ncol = 2) +
+    ggplot2::facet_wrap( ~ theta, scales = "free", ncol = 1) +
     ggplot2::theme_classic() +
     ggplot2::theme(
-      strip.background = element_rect(colour = "white"),
-      strip.text = element_text(face = "bold", size = 11),
-      legend.position = "bottom"
+      strip.background = element_rect(size = 0.5)#,
+      #strip.text = element_text(face = "bold", size = 11),
+      #legend.position = "bottom"
     ) +
     ggplot2::labs(x = "Iteration",
-                  y = paste0("Variable: '", x, "'"),
+                  y = paste0(x),
                   color = "Imputation")
   # show message to user when variable is completely observed
   if (all(is.na(p$data$value))) {
@@ -434,171 +408,8 @@ We need to preprocess the `mids` object to make it `tidy`. Then we can plot the 
 
 - xyplot/scatterplot
 
-```{r}
-# preprocess
-prepare_plotting <- function(mids, x, y = NULL) {
-  # preprocess incomplete data
-  d <-
-    mids$data %>%
-    dplyr::mutate(.id = rownames(.)) %>%
-    .[c(x, y, ".id")] %>%
-    cbind(.imp = 0)
-  
-  # preprocess imputations
-  imps <- mids$imp[[x]] %>%
-    dplyr::mutate(.id = row.names(.)) %>%
-    tidyr::pivot_longer(
-      cols = 1:mids$m,
-      names_to = ".imp",
-      values_to = x,
-      names_transform = list(.imp = as.numeric)
-    ) 
-  
-  # combine incomplete and imputed data
-    cd <- d %>%
-      dplyr::bind_rows(., imps) %>%
-      dplyr::mutate(imputed = ifelse(.imp > 0, 'imputed', 'observed'))
-  
-  # output
-  return(cd)
-}
-
-# test 
-x = "hc"
-y = "reg"
-plot_dat <- prepare_plotting(mids = imp, x = x, y = y)
-# # with second variable
-# plot_dat2 <- prepare_plotting(mids = imp, x = y, y = x)
-# a <- dplyr::full_join(plot_dat, plot_dat2)
-```
-
-Now plot the prepared data
 
 ```{r}
-# stripplot
-m = 5
-geom_stripplot <- function(x, m, ...) {
-  p <- list(
-    ggplot2::geom_jitter(
-      ggplot2::aes(
-        x = as.factor(.data$.imp),
-        y = .data[[x]],
-        color = .data$imputed
-      ),
-      height = 0,
-      width = 0.25, 
-      ...
-    ),
-    ggplot2::scale_x_discrete(limits = as.character(0:m)),
-    ggplot2::labs(
-      x = "Imputation (0 = observed data)",
-      y = paste0("Variable: '", x, "'"),
-      color = "",
-      fill = "",
-      size = ""
-    )
-  )
-  return(p)
-}
-
-# test
-# plot_dat %>%
-#   ggplot2::ggplot() +
-#   geom_stripplot(x, m)
-```
-
-Now add a mice theme
-
-```{r}
-
-plot_dat %>%
-  ggplot2::ggplot() +
-  geom_stripplot(x, m) +
-  theme_mice()
-```
-
-Do the same for a boxplot
-
-```{r}
-geom_bwplot <- function(x, m){
-  list(
-    ggplot2::geom_boxplot(
-      ggplot2::aes(
-        x = as.factor(.data$.imp),
-        y = .data[[x]],
-        color = .data$imputed
-      ),
-      width = 0.5
-    ),
-    ggplot2::scale_x_discrete(limits = as.character(0:m)),
-    ggplot2::xlab(
-      "Imputation (0 = observed data)")
-    )
-}
-
-plot_dat %>% 
-  ggplot2::ggplot() +
-  geom_bwplot(x, m = imp$m) + 
-  theme_mice()
-
-# try to combine this with the stripplot??
-plot_dat %>%
-  ggplot2::ggplot() +
-  geom_bwplot(x, m) + 
-  geom_stripplot(x, m, alpha = 0.1) +
-  theme_mice()
-
-```
-
-And something similar for density plots:
-
-```{r}
-geom_densityplot <- function(x, m){
-  list(ggplot2::geom_density(
-    ggplot2::aes(
-    x = .data[[x]],
-    group = .data$.imp,
-    color = .data$imputed,
-    size = .data$imputed)),
-    ggplot2::scale_size_manual(guide = "none", values = c(0.5, 1) %>% setNames(c("imputed", "observed")))
-)}
-
-
-plot_dat[!is.na(plot_dat[[x]]), ] %>%  
-  ggplot2::ggplot() +
-  geom_densityplot(x, m = imp$m) + 
-  theme_mice()
-
-
-```
-<!-- Note the addition of `na.omit()` to make sure that categorical variables don't get an NA category. -->
-
-```{r}
-# At some point, try to do this for histograms too? See https://github.com/amices/shinyMice/blob/Enhancements/R/gg.barplot.R
-
-# geom_densityplot <- function(x, m){
-#   list(ggplot2::geom_density(
-#     ggplot2::aes(
-#     x = .data[[x]],
-#     group = .data$.imp,
-#     color = .data$imputed,
-#     size = .data$imputed)),
-#     ggplot2::scale_size_manual(values = c(0.5, 1) %>% setNames(c("imputed", "observed")))
-# )}
-# 
-# plot_dat %>% 
-#   ggplot2::ggplot() +
-#   geom_densityplot(x, m = imp$m) + 
-#   theme_mice()
-```
-
-Now for something different: xyplots!
-
-```{r}
-# better preprocessing function??
-x = "hgt"
-y = "hc"
-
 # extract imputations and initialize plot
 plot_imps <- function(imp, x, y = NULL) {
   # parse inputs
@@ -687,46 +498,10 @@ imp %>% plot_imps(x) +
         size = datapoint
       ),
       width = 0.5,
-      fill = "white",
-      position = ggplot2::position_dodge(preserve = "single")
+      fill = "white"#,
+      #position = ggplot2::position_dodge(preserve = "single")
     ) +
   ggplot2::facet_wrap(~.imp, scales = "free_y", ncol = 2)
-
-# failed attempt at histogram/barplot
-# imp %>% preprocess_imps(x) %>%
-#   ggplot2::ggplot() +
-#   theme_mice() +
-#   ggplot2::geom_histogram(ggplot2::aes(
-#     x = .data[[x]],
-#     color = datapoint,
-#     group = .imp
-#   ),
-#   fill = "white",
-#   position = "stack") +
-#   ggplot2::facet_wrap(~datapoint, scales = "free_y", ncol = 1) +
-#   ggplot2::theme(legend.position = "none")
-# 
-# 
-# x = "reg"
-# imp %>% preprocess_imps(x) %>%
-#   ggplot2::ggplot() +
-#   theme_mice() +
-#   ggplot2::geom_bar(
-#     ggplot2::aes(x = .data[[x]],
-#                  color = datapoint,
-#                  group = .imp),
-#     fill = "white",
-#     position = "stack"
-#   ) +
-#   ggplot2::facet_wrap(
-#     ~ datapoint,
-#     scales = "free_y",
-#     ncol = 1,
-#     labeller = ggplot2::labeller(datapoint = c(paste(x, "observed"), paste(x, "imputed")) %>% 
-#                                    setNames(c("observed", "imputed"))
-#                                  )
-#   ) +
-#   ggplot2::theme(legend.position = "none")
 
 ```
 
