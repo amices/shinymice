@@ -297,38 +297,43 @@ plot_md_pattern <- function(dat) {
     tidyr::pivot_longer(cols = all_of(vrb),
                         names_to = "vrb",
                         values_to = "obs") %>%
-    cbind(., n_val_mis) %>%
-    dplyr::mutate(pat_nr = factor(pat_nr, levels = 1:max(pat_nr)))
+    cbind(., n_val_mis)
   
   # plot the md pattern
   p <- long_pat %>%
     ggplot2::ggplot() +
     ggplot2::geom_tile(ggplot2::aes(
       x = vrb,
-      y = as.numeric(pat_nr),
+      y = pat_nr,
       fill = as.factor(obs),
       group = n_vrb_inc
     ),
     color = "black") +
-    ggplot2::theme(legend.position = "none") +
-    ggplot2::scale_fill_manual(values = c("1" = mice:::mdc(1), "0" = mice:::mdc(2))) +
-    # ggplot2::scale_y_discrete(limits = rev(levels(long_pat$pat_nr)),
-    #                           labels = rev(as.character(n_pat_obs))) +
+    # set axes
     scale_y_reverse(
-      breaks = 1:max(as.numeric(long_pat$pat_nr)), 
+      breaks = 1:max(long_pat$pat_nr),
       labels = as.character(n_pat_obs),
       sec.axis = dup_axis(name = "Incomplete variables (per pattern)", labels = as.character(n_vrb_inc)),
-      expand = c(0.01,0.01)) +
-    ggplot2::scale_x_discrete(limits = vrb, position = "bottom", labels = as.character(n_val_mis)) + #, labels = as.character(n_val_mis)) +
-    ggplot2::labs(
-      x = "Incomplete cases (per variable)", 
-      y = "Pattern frequency"
-      ) + #, 
-      #title = "Missing data pattern (patterns as rows, variables as columns)") +
-    geom_text(aes(x = vrb, y = -Inf, label = vrb), data = long_pat, vjust = -0.5) +
+      expand = c(0.01, 0.01)
+    ) +
+    ggplot2::scale_x_discrete(limits = vrb,
+                              position = "bottom",
+                              labels = as.character(n_val_mis)) +
+    # add labels
+    ggplot2::labs(x = "Incomplete cases (per variable)",
+                  y = "Pattern frequency") +
+    geom_text(aes(x = vrb, y = -Inf, label = vrb),
+              data = long_pat,
+              vjust = -0.5) +
     coord_cartesian(clip = "off") +
-    theme(plot.margin = margin(25, 10, 10, 10, unit = "pt"))
-
+    # add styling
+    theme(
+      legend.position = "none",
+      plot.margin = margin(25, 10, 10, 10, unit = "pt"),
+      axis.title.y.right = element_text(margin = margin(l = 10)),
+      panel.grid = element_blank()
+    ) +
+    ggplot2::scale_fill_manual(values = c("1" = mice:::mdc(1), "0" = mice:::mdc(2))) 
   
   return(p)
 }
