@@ -242,6 +242,45 @@ plot_bivariate <- function(dat, x, y) {
 # test
 plot_bivariate(dat, x = "reg", y = "hc")
 plot_bivariate(dat, x = "hgt", y = "hc") 
+
+# same same but easier!
+x = "hgt"
+y = "hc"
+dat %>% ggplot2::ggplot() +
+  ggplot2::theme_classic() +
+  # plot observed datapoints in x-y space
+  ggplot2::geom_point(
+    ggplot2::aes(x = .data[[x]], y = .data[[y]]),
+    position = ggplot2::position_jitter(width = 0.2, height = 0.2),
+    color = mice::mdc(1)
+  ) +
+  # missing x
+  ggplot2::geom_point(
+    position = ggplot2::position_jitter(width = 0.2, height = 0.2),
+    color = mice:::mdc(2),
+    shape = 4,
+    mapping = ggplot2::aes(x = -Inf, y = .data[[y]]),
+    data = dat[is.na(dat[[x]]),]
+  ) +
+  # missing y
+  ggplot2::geom_point(
+    position = ggplot2::position_jitter(width = 0.2, height = 0.2),
+    color = mice:::mdc(2),
+    shape = 4,
+    mapping = ggplot2::aes(x = .data[[x]], y = -Inf),
+    data = dat[is.na(dat[[y]]),]
+  ) +
+  # missing xy
+  ggplot2::geom_point(
+    position = ggplot2::position_jitter(width = 0.2, height = 0.2),
+    color = mice:::mdc(2),
+    shape = 4,
+    mapping = ggplot2::aes(x = -Inf, y = -Inf),
+    data = dat[is.na(dat[[x]]) & is.na(dat[[y]]),]
+  ) +
+  # axes
+  ggplot2::coord_cartesian(clip = "off") 
+
 ```
 
 ## Plot missingness
