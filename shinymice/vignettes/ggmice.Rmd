@@ -310,28 +310,30 @@ plot_md_pattern <- function(dat) {
     ),
     color = "black") +
     # set axes
-    scale_y_reverse(
-      breaks = 1:max(long_pat$pat_nr),
-      labels = as.character(n_pat_obs),
-      sec.axis = dup_axis(name = "Incomplete variables (per pattern)", labels = as.character(n_vrb_inc)),
-      expand = c(0.01, 0.01)
-    ) +
     ggplot2::scale_x_discrete(limits = vrb,
                               position = "bottom",
-                              labels = as.character(n_val_mis)) +
+                              labels = as.character(n_val_mis)) +    
+    ggplot2::scale_y_reverse(
+      breaks = 1:max(long_pat$pat_nr),
+      labels = as.character(n_pat_obs),
+      expand = c(0.01, 0.01),
+      sec.axis = ggplot2::dup_axis(
+        labels = as.character(n_vrb_inc),
+        name = "Incomplete variables (per pattern)")
+    ) +
     # add labels
     ggplot2::labs(x = "Incomplete cases (per variable)",
                   y = "Pattern frequency") +
-    geom_text(aes(x = vrb, y = -Inf, label = vrb),
+    ggplot2::geom_text(aes(x = vrb, y = -Inf, label = vrb),
               data = long_pat,
               vjust = -0.5) +
-    coord_cartesian(clip = "off") +
+    ggplot2::coord_cartesian(clip = "off") +
     # add styling
-    theme(
+    ggplot2::theme(
       legend.position = "none",
-      plot.margin = margin(25, 10, 10, 10, unit = "pt"),
-      axis.title.y.right = element_text(margin = margin(l = 10)),
-      panel.grid = element_blank()
+      plot.margin = ggplot2::margin(25, 10, 10, 10, unit = "pt"),
+      axis.title.y.right = ggplot2::element_text(margin = ggplot2::margin(l = 10)),
+      panel.grid = ggplot2::element_blank()
     ) +
     ggplot2::scale_fill_manual(values = c("1" = mice:::mdc(1), "0" = mice:::mdc(2))) 
   
@@ -759,7 +761,7 @@ plot_pred_matrix <- function(dat) {
       fill = as.factor(value)
     ),
     color = "black") +
-    ggplot2::theme(legend.position = "none") +
+    ggplot2::theme(legend.position = "none", panel.grid = ggplot2::element_blank()) +
     ggplot2::scale_y_discrete(limits = rev(names(imp$data))) +
     ggplot2::scale_x_discrete(limits = names(imp$data), position = "top") +
     ggplot2::scale_fill_manual(values = c("1" = mice:::mdc(1), "0" = mice:::mdc(2))) +
