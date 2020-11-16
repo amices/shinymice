@@ -599,11 +599,9 @@ Now for something different: xyplots!
 x = "hgt"
 y = "hc"
 
-# extract imputations
-imps <- imp %>%
-  mice::complete("long")
-
-preprocess_imps <- function(imp, x, y = NULL) {
+# extract imputations and initialize plot
+plot_imps <- function(imp, x, y = NULL) {
+  # parse inputs
   if (is.null(y)) {
     y <- x
   }
@@ -615,90 +613,37 @@ preprocess_imps <- function(imp, x, y = NULL) {
           .) %>%
     .[!is.na(imp$data[[x]]) &
         !is.na(imp$data[[y]]), ]
-  xy_imps <- imps %>% 
+  xy_imps <- imp %>% 
+    mice::complete("long") %>% 
     cbind(datapoint = "imputed", .) %>% 
-    .[imps$.id %nin% xy_obs$.id,]
+    .[.$.id %nin% xy_obs$.id,]
   xy_dat <- rbind(xy_obs, xy_imps) %>% 
     dplyr::mutate(datapoint = factor(datapoint, levels = c("observed", "imputed")))
-  return(xy_dat)
+  # initialize plot
+  p <- xy_dat %>% 
+    ggplot2::ggplot() +
+    theme_mice() 
+  # output
+  return(p)
 }
 
-
-xy_dat <- imp %>% preprocess_imps(x = "hgt", y = "hc")
-# two implementations, last one is more efficient
-# xy_obs %>%
-#   ggplot2::ggplot(ggplot2::aes(
-#     x = .data[[x]],
-#     y = .data[[y]],
-#     group = .id,
-#     color = datapoint
-#   )) +
-#   ggplot2::geom_point() +
-#   ggplot2::geom_point(data = xy_imps)  +
-#   theme_mice() +
-#   labs(color = NULL)
-
-xy_dat %>%
-  ggplot2::ggplot() +
-  ggplot2::geom_point(ggplot2::aes(
-    x = .data[[x]],
-    y = .data[[y]],
-    group = .id,
-    color = datapoint
-  )) +
-  theme_mice() +
-  labs(color = NULL)
-
-# geom_scatter <- ggplot2::geom_point(ggplot2::aes(
-#     x = .data[[x]],
-#     y = .data[[y]],
-#     group = .id,
-#     color = datapoint
-#   ))
-
-# maybe do something like this for the other imp plots??
-# imp %>% preprocess_imps(x) %>% 
-#   ggplot2::ggplot() +
-#   theme_mice() +
-#   ggplot2::geom_boxplot(
-#       ggplot2::aes(
-#         x = as.factor(.data$.imp), #x = factor(.data$.imp, levels = c(0, 1:imp$m), ordered = TRUE), use icw   scale_x_discrete(drop=FALSE)
-#         y = .data[[x]],
-#         color = .data$datapoint
-#       ),
-#       width = 0.5
-#     ) +
-#   ggplot2::geom_jitter(
-#       ggplot2::aes(
-#         x = as.factor(.imp),
-#         y = .data[[x]],
-#         color = datapoint
-#       ),
-#       height = 0,
-#       width = 0.25,
-#       alpha = 0.1) +
-#   ggplot2::xlab("Imputation (0 = observed data)") 
-
-# initialize plot
-x ="reg"
-p <- imp %>% preprocess_imps(x) %>% 
-  ggplot2::ggplot() +
-  theme_mice() 
+# test with continuous variable
+x = "hc"
 
 # boxplot (doesn't work for categorical variables)
-p +
+imp %>% plot_imps(x) +
   ggplot2::geom_boxplot(
       ggplot2::aes(
-        x = as.factor(.data$.imp), 
+        x = as.factor(.imp), 
         y = .data[[x]],
-        color = .data$datapoint
+        color = datapoint
       ),
       width = 0.5
     ) +
   ggplot2::xlab("Imputation (0 = observed data)") 
 
 # stripplot
-p + 
+imp %>% plot_imps(x) +
   ggplot2::geom_jitter(
       ggplot2::aes(
         x = as.factor(.imp),
@@ -710,7 +655,7 @@ p +
     ggplot2::xlab("Imputation (0 = observed data)") 
 
 # density plot
-p +
+imp %>% plot_imps(x) +
   ggplot2::geom_density(ggplot2::aes(
     x = .data[[x]],
     color = datapoint,
@@ -718,7 +663,36 @@ p +
     group = .imp
   )) 
 
-# # bar plot for categorical variables
+# test with two continuous variables
+y = "hgt"
+
+# xyplot
+imp %>% plot_imps(x, y) +
+  ggplot2::geom_point(ggplot2::aes(
+    x = .data[[x]],
+    y = .data[[y]],
+    group = .id,
+    color = datapoint
+  ))
+
+# test with categorical variable
+x = "phb"
+
+# faceted barplot
+imp %>% plot_imps(x) +
+  ggplot2::geom_bar(
+      ggplot2::aes(
+        x = .data[[x]],
+        color = datapoint,
+        size = datapoint
+      ),
+      width = 0.5,
+      fill = "white",
+      position = ggplot2::position_dodge(preserve = "single")
+    ) +
+  ggplot2::facet_wrap(~.imp, scales = "free_y", ncol = 2)
+
+# failed attempt at histogram/barplot
 # imp %>% preprocess_imps(x) %>%
 #   ggplot2::ggplot() +
 #   theme_mice() +
@@ -753,21 +727,6 @@ p +
 #                                  )
 #   ) +
 #   ggplot2::theme(legend.position = "none")
-
-p +
-  ggplot2::geom_bar(
-      ggplot2::aes(
-        x = .data[[x]],
-        fill = datapoint
-        #group = as.factor(.data[[x]])#,
-        #fill = .data$datapoint
-      ),
-      width = 0.5,
-      #fill = "white",
-      color = "black",
-      position = position_dodge(preserve = "single")
-    ) +
-  facet_wrap(~.imp, scales = "free_y")
 
 ```
 
