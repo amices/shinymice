@@ -287,7 +287,7 @@ plot_md_pattern <- function(dat) {
   vrb <- colnames(pat)[-ncol(pat)]
   colnames(pat) <- c(vrb, "n_vrb_inc")
   n_pat_obs <- as.numeric(rownames(pat))[-nrow(pat)]
-  n_vrb_inc <- as.numeric(pat[, ncol(pat)])
+  n_vrb_inc <- as.numeric(pat[, ncol(pat)])[-nrow(pat)]
   n_val_mis <- as.numeric(pat[nrow(pat), ])[-ncol(pat)]
   
   # make the pattern tidy
@@ -305,22 +305,26 @@ plot_md_pattern <- function(dat) {
     ggplot2::ggplot() +
     ggplot2::geom_tile(ggplot2::aes(
       x = vrb,
-      y = pat_nr,
+      y = as.numeric(pat_nr),
       fill = as.factor(obs),
       group = n_vrb_inc
     ),
     color = "black") +
     ggplot2::theme(legend.position = "none") +
     ggplot2::scale_fill_manual(values = c("1" = mice:::mdc(1), "0" = mice:::mdc(2))) +
-    ggplot2::scale_y_discrete(limits = rev(levels(long_pat$pat_nr)),
-                              labels = rev(as.character(n_pat_obs))) +
+    # ggplot2::scale_y_discrete(limits = rev(levels(long_pat$pat_nr)),
+    #                           labels = rev(as.character(n_pat_obs))) +
+    scale_y_reverse(
+      breaks = 1:max(as.numeric(long_pat$pat_nr)), 
+      labels = as.character(n_pat_obs),
+      sec.axis = dup_axis(labels = as.character(n_vrb_inc))) +
     ggplot2::scale_x_discrete(limits = vrb, position = "bottom", labels = as.character(n_val_mis)) + #, labels = as.character(n_val_mis)) +
     ggplot2::labs(
       x = NULL, 
-      y = "frequency"
+      y = NULL
       ) + #, 
       #title = "Missing data pattern (patterns as rows, variables as columns)") +
-    geom_text(aes(x = vrb, y = Inf, label = vrb), data = long_pat, vjust = -0.5) +
+    geom_text(aes(x = vrb, y = -Inf, label = vrb), data = long_pat, vjust = -0.5) +
     coord_cartesian(clip = "off") +
     theme(plot.margin = margin(20, 2, 2, 2, unit = "pt"))
 
