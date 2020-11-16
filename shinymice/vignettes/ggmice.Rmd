@@ -146,7 +146,8 @@ plot_conditional <- function(dat, x, z) {
     ) +
     # style
     theme_mice() +
-    theme(legend.position = "none")
+    theme(legend.position = "none",
+          strip.background = element_rect(size = 0.5))
 }
 
 # test
@@ -241,7 +242,7 @@ plot_bivariate <- function(dat, x, y) {
       xmax = shade_x,
       ymin = -Inf,
       ymax = Inf,
-      alpha = 0.2
+      alpha = 0.1
     ) +
     # add area for NAs in the y space
     ggplot2::annotate(
@@ -250,7 +251,7 @@ plot_bivariate <- function(dat, x, y) {
       xmax = Inf,
       ymin = -Inf,
       ymax = shade_y,
-      alpha = 0.2
+      alpha = 0.1
     ) +
     # add NAs 
     geom_x +
@@ -313,11 +314,16 @@ plot_md_pattern <- function(dat) {
     ggplot2::scale_fill_manual(values = c("1" = mice:::mdc(1), "0" = mice:::mdc(2))) +
     ggplot2::scale_y_discrete(limits = rev(levels(long_pat$pat_nr)),
                               labels = rev(as.character(n_pat_obs))) +
-    ggplot2::scale_x_discrete(limits = vrb, position = "top") + #, labels = as.character(n_val_mis)) +
+    ggplot2::scale_x_discrete(limits = vrb, position = "bottom", labels = as.character(n_val_mis)) + #, labels = as.character(n_val_mis)) +
     ggplot2::labs(
       x = NULL, 
-      y = "frequency", 
-      title = "Missing data pattern (patterns as rows, variables as columns)") 
+      y = "frequency"
+      ) + #, 
+      #title = "Missing data pattern (patterns as rows, variables as columns)") +
+    geom_text(aes(x = vrb, y = Inf, label = vrb), data = long_pat, vjust = -0.5) +
+    coord_cartesian(clip = "off") +
+    theme(plot.margin = margin(20, 2, 2, 2, unit = "pt"))
+
   
   return(p)
 }
