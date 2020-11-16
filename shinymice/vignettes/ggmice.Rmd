@@ -317,16 +317,17 @@ plot_md_pattern <- function(dat) {
     scale_y_reverse(
       breaks = 1:max(as.numeric(long_pat$pat_nr)), 
       labels = as.character(n_pat_obs),
-      sec.axis = dup_axis(labels = as.character(n_vrb_inc))) +
+      sec.axis = dup_axis(name = "Incomplete variables (per pattern)", labels = as.character(n_vrb_inc)),
+      expand = c(0.01,0.01)) +
     ggplot2::scale_x_discrete(limits = vrb, position = "bottom", labels = as.character(n_val_mis)) + #, labels = as.character(n_val_mis)) +
     ggplot2::labs(
-      x = NULL, 
-      y = NULL
+      x = "Incomplete cases (per variable)", 
+      y = "Pattern frequency"
       ) + #, 
       #title = "Missing data pattern (patterns as rows, variables as columns)") +
     geom_text(aes(x = vrb, y = -Inf, label = vrb), data = long_pat, vjust = -0.5) +
     coord_cartesian(clip = "off") +
-    theme(plot.margin = margin(20, 2, 2, 2, unit = "pt"))
+    theme(plot.margin = margin(25, 10, 10, 10, unit = "pt"))
 
   
   return(p)
