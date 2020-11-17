@@ -28,11 +28,9 @@ mod_missingness_ui <- function(id) {
       br(),
       "3. Browse the dataset to view missing data points.",
       br(),
-      "4. Evaluate the distribution of variables conditional on missingness in another variable.",
+      "4. Evaluate the bivariate relations in the incomplete data.",
       br(),
-      "5. Evaluate the bivariate relations in the incomplete data.",
-      br(),
-      "6. Look at the missing data pattern for an overview of the missingness.",
+      "5. Evaluate the distribution of variables conditional on missingness in another variable.",
       br()
     ),
     column(
@@ -44,13 +42,13 @@ mod_missingness_ui <- function(id) {
                  DT::DTOutput(ns("na_tab"))),
         
         tabPanel(
-          "Conditional distributions",
+          "Scatterplot",
           select_var(ns("var1")),
           select_var(ns("var2")),
           plotOutput(ns("cond_plot"))
         ),
         tabPanel(
-          "Bivariate distributions",
+          "Conditional distribution",
           select_var(ns("var1")),
           select_var(ns("var2")),
           plotOutput(ns("na_plot"))
