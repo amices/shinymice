@@ -1,0 +1,8 @@
+default:
+  golem_name: shinymice
+  golem_version: 0.0.0.9000
+  app_prod: no
+production:
+  app_prod: yes
+dev:
+  golem_wd: C:/Users/4216318/Documents/shinyMice/shinymice

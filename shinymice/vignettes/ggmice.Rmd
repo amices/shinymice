@@ -1,0 +1,188 @@
+---
+title: "ggmice"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{ggmice}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  warning = FALSE, 
+  message = FALSE,
+  fig.width = 6, 
+  fig.height = 6
+)
+```
+
+```{r setup, include = FALSE}
+# set-up environment
+library(shinymice)
+library(tidyverse)
+
+# example dataset
+dat <- mice::boys
+# example mids object
+imp <- mice::mice(dat, printFlag = FALSE)
+```
+
+## Plot incomplete data
+
+We can evaluate the missingness in the incomplete data using two plotting devices:
+
+- histogram
+
+- scatterplot
+
+
+```{r}
+# conditional distribution
+shinymice::plot_NA_cond(dat, x = "age", z = "hc")
+shinymice::plot_NA_cond(dat, x = "reg", z = "hc")
+```
+
+
+```{r}
+# scatterplot with NAs
+shinymice::plot_NA_scatter(dat, x = "reg", y = "hc")
+shinymice::plot_NA_scatter(dat, x = "hgt", y = "hc") 
+
+# same same but easier!
+x = "hgt"
+y = "hc"
+dat %>% ggplot2::ggplot() +
+  ggplot2::theme_classic() +
+  # plot observed datapoints in x-y space
+  ggplot2::geom_point(
+    ggplot2::aes(x = .data[[x]], y = .data[[y]]),
+    position = ggplot2::position_jitter(width = 0.2, height = 0.2),
+    color = mice::mdc(1)
+  ) +
+  # missing x
+  ggplot2::geom_point(
+    position = ggplot2::position_jitter(width = 0.2, height = 0.2),
+    color = mice:::mdc(2),
+    shape = 4,
+    mapping = ggplot2::aes(x = -Inf, y = .data[[y]]),
+    data = dat[is.na(dat[[x]]),]
+  ) +
+  # missing y
+  ggplot2::geom_point(
+    position = ggplot2::position_jitter(width = 0.2, height = 0.2),
+    color = mice:::mdc(2),
+    shape = 4,
+    mapping = ggplot2::aes(x = .data[[x]], y = -Inf),
+    data = dat[is.na(dat[[y]]),]
+  ) +
+  # missing xy
+  ggplot2::geom_point(
+    position = ggplot2::position_jitter(width = 0.2, height = 0.2),
+    color = mice:::mdc(2),
+    shape = 4,
+    mapping = ggplot2::aes(x = -Inf, y = -Inf),
+    data = dat[is.na(dat[[x]]) & is.na(dat[[y]]),]
+  ) +
+  # axes
+  ggplot2::coord_cartesian(clip = "off") 
+
+```
+
+## Plot imputation model/missingness
+
+- md pattern
+
+- fluxplot
+
+First look at the missing data pattern
+
+```{r fig.height=7.5, fig.width=6}
+# plot md pattern 
+shinymice::plot_md_pattern(dat)
+pat <- mice::md.pattern(dat)
+```
+
+Then look at the in- and outflux
+
+```{r}
+# plot in- and outflux of incomplete data
+shinymice::plot_flux(dat)
+```
+Develop a predictor matrix to adjust for the imputation model
+
+```{r fig.height=6, fig.width=6}
+# plot the predictor matrix for the imputation model
+shinymice::plot_pred_matrix(imp)
+# change the predictor matrix and plot again
+new_pred <- imp$predictorMatrix
+new_pred["bmi", c("hgt", "wgt")] <- 0
+imp2 <- mice::mice(dat, predictorMatrix = new_pred, maxit = 0)
+shinymice::plot_pred_matrix(imp2)
+```
+
+
+## Plot convergence
+
+```{r}
+# traceplot: make chain means and variances tidy
+trace_dat <- shinymice::preprocess_thetas(imp)
+
+# traceplot: plot trace of one variable
+shinymice::trace_one_variable(trace_dat, x = "hgt")
+shinymice::trace_one_variable(trace_dat, x = "age")
+```
+
+
+## Plot imputed data
+
+We need to preprocess the `mids` object to make it `tidy`. Then we can plot the imputed data using one of four plotting devices:
+
+- stripplot
+
+- bwplot/boxplot
+
+- densityplot
+
+- xyplot/scatterplot
+
+
+```{r}
+# test imputation plots with continuous variable
+x = "hc"
+
+# boxplot (not informative with categorical variable)
+shinymice::plot_bw(imp, x)
+
+# stripplot
+shinymice::plot_strip(imp, x)
+
+# density plot
+shinymice::plot_dens(imp, x)
+
+# test with two continuous variables
+y = "hgt"
+
+# xyplot
+shinymice::plot_xy(imp, x, y)
+
+# # test with categorical variable
+# x = "phb"
+# 
+# # faceted barplot
+# imp %>% plot_imps(x) +
+#   ggplot2::geom_bar(
+#     ggplot2::aes(x = .data[[x]],
+#                  color = datapoint,
+#                  size = datapoint),
+#     width = 0.5,
+#     fill = "white"#,
+#     #position = ggplot2::position_dodge(preserve = "single")
+#   ) +
+#   ggplot2::facet_wrap(~ .imp, scales = "free_y", ncol = 2)
+
+```
+
+
+
