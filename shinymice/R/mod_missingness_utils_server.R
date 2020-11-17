@@ -1,9 +1,12 @@
 # descriptive statistics for incomplete data
-
-# show NAs in tables
-options("DT.TOJSON_ARGS" = list(na = "string"))
-
-# descriptives table
+#' Title
+#'
+#' @param d 
+#'
+#' @return
+#' @export
+#'
+#' @examples
 mis_descr <- function(d) {
   tab <-
     psych::describe(d)[, c("n", "mean", "sd", "min", "max", "median")] %>%
@@ -13,6 +16,16 @@ mis_descr <- function(d) {
 }
 
 # histogram/bar plot conditional on missingness in another variable
+#' Title
+#'
+#' @param dat 
+#' @param x 
+#' @param z 
+#'
+#' @return
+#' @export
+#'
+#' @examples
 plot_NA_cond <- function(dat, x, z) {
   # define graphing elements to add to plot
   if (is.numeric(dat[[x]])) {
@@ -51,6 +64,16 @@ plot_NA_cond <- function(dat, x, z) {
 }
 
 # scatterplot with NAs
+#' Title
+#'
+#' @param dat 
+#' @param x 
+#' @param y 
+#'
+#' @return
+#' @export
+#'
+#' @examples
 plot_NA_scatter <- function(dat, x, y) {
   # define graphing elements to add to plot later
   # set NA value and scale for variable x

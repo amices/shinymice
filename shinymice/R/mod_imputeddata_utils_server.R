@@ -1,4 +1,12 @@
 # descriptives for imputed data
+#' Title
+#'
+#' @param imp 
+#'
+#' @return
+#' @export
+#'
+#' @examples
 imp_descr <- function(imp){
   tab <- imp %>% mice::complete("all") %>% 
     purrr::map_df(., ~{psych::describe(.)[,c("n", "mean", "sd", "min", "max", "median")] %>% 
@@ -10,6 +18,16 @@ imp_descr <- function(imp){
 }
 
 # imputation plot: extract imputations and initialize plot
+#' Title
+#'
+#' @param imp 
+#' @param x 
+#' @param y 
+#'
+#' @return
+#' @export
+#'
+#' @examples
 plot_imps <- function(imp, x, y = NULL) {
   # parse inputs
   if (is.null(y)) {
@@ -38,6 +56,15 @@ plot_imps <- function(imp, x, y = NULL) {
 }
 
 # boxplot (not informative with categorical variable)
+#' Title
+#'
+#' @param imp 
+#' @param x 
+#'
+#' @return
+#' @export
+#'
+#' @examples
 plot_bw <- function(imp, x) {
   # plot box and whiskers
   p <- imp %>% plot_imps(x) +
@@ -53,6 +80,15 @@ plot_bw <- function(imp, x) {
 }
 
 # stripplot
+#' Title
+#'
+#' @param imp 
+#' @param x 
+#'
+#' @return
+#' @export
+#'
+#' @examples
 plot_strip <- function(imp, x) {
   # plot individual values (stripplot)
   p <- imp %>% plot_imps(x) +
@@ -71,6 +107,15 @@ plot_strip <- function(imp, x) {
 }
 
 # density plot
+#' Title
+#'
+#' @param imp 
+#' @param x 
+#'
+#' @return
+#' @export
+#'
+#' @examples
 plot_dens <- function(imp, x) {
   # plot density
   p <- imp %>% plot_imps(x) +
@@ -85,6 +130,16 @@ plot_dens <- function(imp, x) {
 }
 
 # xyplot
+#' Title
+#'
+#' @param imp 
+#' @param x 
+#' @param y 
+#'
+#' @return
+#' @export
+#'
+#' @examples
 plot_xy <- function(imp, x, y) {
   # plot xy datapoints (scatterplot)
   p <- imp %>% plot_imps(x, y) +

@@ -1,4 +1,12 @@
 # plot md pattern of incomplete data
+#' Title
+#'
+#' @param dat 
+#'
+#' @return
+#' @export
+#'
+#' @examples
 plot_md_pattern <- function(dat) {
   # get md pattern and store additional info
   pat <- mice::md.pattern(dat, plot = FALSE)
@@ -56,6 +64,14 @@ plot_md_pattern <- function(dat) {
 }
 
 # plot in- and outflux of incomplete data
+#' Title
+#'
+#' @param dat 
+#'
+#' @return
+#' @export
+#'
+#' @examples
 plot_flux <- function(dat) {
   flx <- mice::flux(dat)
   p <- flx %>% ggplot2::ggplot() +
@@ -74,6 +90,14 @@ plot_flux <- function(dat) {
 }
 
 # plot the predictor matrix for the imputation model
+#' Title
+#'
+#' @param dat 
+#'
+#' @return
+#' @export
+#'
+#' @examples
 plot_pred_matrix <- function(dat) {
   # parse input
   if (mice::is.mids(dat)) {
@@ -113,6 +137,14 @@ plot_pred_matrix <- function(dat) {
 }
 
 # traceplot: make chain means and variances tidy
+#' Title
+#'
+#' @param imp 
+#'
+#' @return
+#' @export
+#'
+#' @examples
 preprocess_thetas <- function(imp) {
   # preprocess chain means
   long_trace <- imp$chainMean %>%
@@ -136,6 +168,15 @@ preprocess_thetas <- function(imp) {
 }
 
 # traceplot: plot trace of one variable
+#' Title
+#'
+#' @param d 
+#' @param x 
+#'
+#' @return
+#' @export
+#'
+#' @examples
 trace_one_variable <- function(d, x) {
   # select one variable and plot it
   p <- d[d$var == x, ] %>%

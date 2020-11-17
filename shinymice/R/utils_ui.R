@@ -7,10 +7,13 @@
 #' @return The return value, if any, from executing the utility.
 #'
 #' @export
+
+# remove break (opposite of br())
 no_br <- function(){
   div(style = "margin-bottom: -15px")
 }
 
+# select input with defaults
 select_var <- function(ns_id, ...){
   div(
     selectInput(
@@ -24,6 +27,7 @@ select_var <- function(ns_id, ...){
   )
 }
 
+# select number with defaults
 set_number <- function(ns_id, val, ...){
   numericInput(
     ns_id,
@@ -34,3 +38,6 @@ set_number <- function(ns_id, val, ...){
     ...
   )
 }
+
+# show NAs in tables
+options("DT.TOJSON_ARGS" = list(na = "string"))
