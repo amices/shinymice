@@ -45,13 +45,13 @@ mod_missingness_ui <- function(id) {
           "Scatterplot",
           select_var(ns("var1")),
           select_var(ns("var2")),
-          plotOutput(ns("cond_plot"))
+          plotOutput(ns("na_plot"))
         ),
         tabPanel(
           "Conditional distribution",
-          select_var(ns("var1")),
-          select_var(ns("var2")),
-          plotOutput(ns("na_plot"))
+          select_var(ns("var3")),
+          select_var(ns("var4")),
+          plotOutput(ns("cond_plot"))
         )
       )
     )
@@ -65,31 +65,13 @@ mod_missingness_server <- function(id) {
   moduleServer(id, function(input, output, session) {
     output$na_tab <- DT::renderDT(mice::boys)
     output$na_desc <- renderTable(mis_descr(mice::boys))
-    x = "age"
-    y = "hc"
-    z = "hc"
-    output$cond_plot <-
-      renderPlot({
-        plot_NA_cond(mice::boys, x , z) + ggplot2::ggtitle(
-          paste0(
-            "Distribution of '",
-            x,
-            "' conditional on missingness in '",
-            z,
-            "' (select above)"
-          )
-        )
-      })
     output$na_plot <-
       renderPlot({
-        plot_NA_scatter(mice::boys, x, y) +
-          list(ggplot2::labs(
-            title = paste0("Scatter plot of '",
-                           y,
-                           "' against '",
-                           x,
-                           "' (select above)")
-          ))
+        plot_NA_scatter(mice::boys, x = input$var1, y = input$var2)
+      })
+    output$cond_plot <-
+      renderPlot({
+        plot_NA_cond(mice::boys, x = input$var3, z = input$var4)
       })
   })
 }

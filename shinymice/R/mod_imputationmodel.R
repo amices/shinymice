@@ -40,7 +40,10 @@ mod_imputationmodel_ui <- function(id) {
     column(9,
            tabsetPanel(
              tabPanel("Missingness pattern",
-                      plotOutput(ns("md_plot"))),
+                      plotOutput(ns("md_plot")),
+                      br(),
+                      tags$b("Interpretation:"),
+                      "The missing data pattern influences the amount of information that can be transferred between variables. Imputation can be more precise if other variables are non-missing for those cases that are to be imputed. The reverse is also true. Predictors are potentially more powerful if they have are non-missing in rows that are vastly incomplete."),
              tabPanel(
                "Fluxplot",
                plotly::plotlyOutput(
@@ -65,13 +68,14 @@ mod_imputationmodel_ui <- function(id) {
 mod_imputationmodel_server <- function(id) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
+    imp <- mice::mice(mice::boys)
     output$md_plot <- renderPlot(plot_md_pattern(mice::boys))
     output$flux_plot <- 
       plotly::renderPlotly({
         plot_flux(mice::boys)
       })
     output$pred_plot <- renderPlot(plot_pred_matrix(mice::boys))
-    output$trace_plot <- renderPlot(mice::mice(mice::boys) %>% preprocess_thetas(.) %>% trace_one_variable(., x = "hgt"))
+    output$trace_plot <- renderPlot(imp %>% preprocess_thetas(.) %>% trace_one_variable(., x = input$var1))
   })
 }
 

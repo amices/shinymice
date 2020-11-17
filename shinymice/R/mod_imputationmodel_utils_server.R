@@ -15,6 +15,7 @@ plot_md_pattern <- function(dat) {
   n_pat_obs <- as.numeric(rownames(pat))[-nrow(pat)]
   n_vrb_inc <- as.numeric(pat[, ncol(pat)])[-nrow(pat)]
   n_val_mis <- as.numeric(pat[nrow(pat), ])[-ncol(pat)]
+  n_mis_tot <- pat[nrow(pat), ncol(pat)]
   # make the pattern tidy
   long_pat <- pat[-nrow(pat), ] %>%
     cbind(., n_pat_obs, pat_nr = 1:nrow(.)) %>%
@@ -42,11 +43,12 @@ plot_md_pattern <- function(dat) {
       labels = as.character(n_pat_obs),
       expand = c(0.01, 0.01),
       sec.axis = ggplot2::dup_axis(labels = as.character(n_vrb_inc),
-                                   name = "Incomplete variables (per pattern)")
+                                   name = "Number of missing entries per pattern")
     ) +
     # add labels
-    ggplot2::labs(x = "Incomplete cases (per variable)",
-                  y = "Pattern frequency") +
+    ggplot2::labs(x = "Number of missing entries per variable",
+                  y = "Pattern frequency",
+                  title = paste0("Missing data pattern (total number of missing cells = ", n_mis_tot, ")\n")) +
     ggplot2::geom_text(ggplot2::aes(x = vrb, y = -Inf, label = vrb),
                        data = long_pat,
                        vjust = -0.5) +
@@ -54,7 +56,7 @@ plot_md_pattern <- function(dat) {
     # add styling
     ggplot2::theme(
       legend.position = "none",
-      plot.margin = ggplot2::margin(t = 25, l = 10, b = 10, r = 10, unit = "pt"),
+      plot.margin = ggplot2::margin(t = 20, l = 10, b = 10, r = 10, unit = "pt"),
       axis.title.y.right = ggplot2::element_text(margin = ggplot2::margin(l = 10)),
       panel.grid = ggplot2::element_blank()
     ) +
