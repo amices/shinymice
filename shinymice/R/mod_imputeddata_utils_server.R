@@ -9,124 +9,91 @@ imp_descr <- function(imp){
   return(tab)
 }
 
-####################
-# plotting functions
-####################
-
-# preprocess
-prepare_plotting <- function(mids, x, y = NULL) {
-  imps <- mids$imp[[x]] %>%
-    dplyr::mutate(.id = row.names(.)) %>%
-    tidyr::pivot_longer(
-      cols = 1:mids$m,
-      names_to = ".imp",
-      values_to = x,
-      names_transform = list(.imp = as.numeric)
-    )
-  
-  # preprocess incomplete data
-  d <-
-    mids$data %>%
-    dplyr::mutate(.id = rownames(.)) %>%
-    .[c(x, y, ".id")] %>%
-    cbind(.imp = 0)
-  
-  # combine incomplete and imputed data
+# imputation plot: extract imputations and initialize plot
+plot_imps <- function(imp, x, y = NULL) {
+  # parse inputs
   if (is.null(y)) {
-    cd <- d %>%
-      dplyr::bind_rows(., imps) %>%
-      dplyr::mutate(imputed = ifelse(.imp > 0, 'Imputed', 'Observed'))
+    y <- x
   }
-  return(cd)
-}
-
-# define theme
-theme_mice <- function() {
-  ggplot2::update_geom_defaults("point", list(
-    shape = 21,
-    size = 1.9,
-    stroke = 1.1,
-    alpha = 0.5
-  ))
-  ggplot2::update_geom_defaults("boxplot", list(
-    size = 1
-  ))
-  ggplot2::update_geom_defaults("line", list(
-    size = 1
-  ))
-  
-  theme <- list(
-    ggplot2::theme_classic(),
-    ggplot2::theme(legend.position = "bottom"),
-    ggplot2::scale_color_manual(
-      values = c(
-        "Observed" = mice:::mdc(1),
-        "Missing" = mice:::mdc(2),
-        "Imputed" = mice:::mdc(2)
-      )
-    ),
-    ggplot2::scale_fill_manual(
-      values = c(
-        "Observed" = mice:::mdc(1),
-        "Missing" = mice:::mdc(2),
-        "Imputed" = mice:::mdc(2)
-      )
-    )
-  )
-  return(theme)
-}
-
-# stripplot
-geom_stripplot <- function(x, m) {
-  p <- list(
-    ggplot2::geom_jitter(
-      ggplot2::aes(
-        x = as.factor(.data$.imp),
-        y = .data[[x]],
-        color = .data$imputed
-      ),
-      height = 0.1,
-      width = 0.1
-    ),
-    ggplot2::scale_x_discrete(limits = as.character(0:m)),
-    ggplot2::labs(
-      x = "Imputation (0 = observed data)",
-      y = paste0("Variable: '", x, "'"),
-      color = "",
-      fill = "",
-      size = ""
-    )
-  )
+  # combine observed and imputed data
+  xy_obs <- imp$data %>%
+    cbind(datapoint = "observed",
+          .imp = 0,
+          .id = 1:nrow(.),
+          .) %>%
+    .[!is.na(imp$data[[x]]) &
+        !is.na(imp$data[[y]]), ]
+  xy_imps <- imp %>%
+    mice::complete("long") %>%
+    cbind(datapoint = "imputed", .) %>%
+    .[.$.id %nin% xy_obs$.id,]
+  xy_dat <- rbind(xy_obs, xy_imps) %>%
+    dplyr::mutate(datapoint = factor(datapoint, levels = c("observed", "imputed")))
+  # initialize plot
+  p <- xy_dat %>%
+    ggplot2::ggplot() +
+    theme_mice()
+  # output
   return(p)
 }
 
-# bwplot
-geom_bwplot <- function(x, m){
-  list(
-    ggplot2::geom_boxplot(
-      ggplot2::aes(
-        x = as.factor(.data$.imp),
-        y = .data[[x]],
-        color = .data$imputed
-      ),
+# boxplot (not informative with categorical variable)
+plot_bw <- function(imp, x) {
+  # plot box and whiskers
+  p <- imp %>% plot_imps(x) +
+    ggplot2::geom_boxplot(ggplot2::aes(
+      x = as.factor(.imp),
+      y = .data[[x]],
+      color = datapoint
     ),
-    ggplot2::scale_x_discrete(limits = as.character(0:m)),
-    ggplot2::labs(
-      x = "Imputation (0 = observed data)",
-      y = paste0("Variable: '", x, "'"),
-      color = "",
-      fill = "",
-      size = ""
-    ))
+    width = 0.5) +
+    ggplot2::xlab("Imputation (0 = observed data)")
+  # output
+  return(p)
 }
 
-# densityplot
-geom_densityplot <- function(x, m){
-  list(ggplot2::geom_density(
-    ggplot2::aes(
+# stripplot
+plot_strip <- function(imp, x) {
+  # plot individual values (stripplot)
+  p <- imp %>% plot_imps(x) +
+    ggplot2::geom_jitter(
+      ggplot2::aes(
+        x = as.factor(.imp),
+        y = .data[[x]],
+        color = datapoint
+      ),
+      height = 0.25,
+      width = 0.25
+    ) +
+    ggplot2::xlab("Imputation (0 = observed data)")
+  # output
+  return(p)
+}
+
+# density plot
+plot_dens <- function(imp, x) {
+  # plot density
+  p <- imp %>% plot_imps(x) +
+    ggplot2::geom_density(ggplot2::aes(
       x = .data[[x]],
-      group = .data$.imp,
-      color = .data$imputed,
-      size = .data$imputed)),
-    ggplot2::scale_size_manual(values = c(0.5, 1) %>% setNames(c("Imputed", "Observed")))
-  )}
+      color = datapoint,
+      size = datapoint,
+      group = .imp
+    ))
+  # output
+  return(p)
+}
+
+# xyplot
+plot_xy <- function(imp, x, y) {
+  # plot xy datapoints (scatterplot)
+  p <- imp %>% plot_imps(x, y) +
+    ggplot2::geom_point(ggplot2::aes(
+      x = .data[[x]],
+      y = .data[[y]],
+      group = .id,
+      color = datapoint
+    ))
+  # output
+  return(p)
+}

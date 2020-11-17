@@ -12,110 +12,143 @@ mis_descr <- function(d) {
   return(tab)
 }
 
-# conditional distribution plot
-plot_conditional <- function(dat, x, z) {
-  # define geom for numerical vs. categorical data
+# histogram/bar plot conditional on missingness in another variable
+plot_NA_cond <- function(dat, x, z) {
+  # define graphing elements to add to plot
   if (is.numeric(dat[[x]])) {
-    geom <-
-      ggplot2::geom_density(ggplot2::aes(x = .data[[x]], y = ..count.., color = conditional), size = 1)
+    # for continuous variables
+    geom <- ggplot2::geom_histogram()
   } else {
-    geom <-
-      ggplot2::geom_bar(
-        ggplot2::aes(x = .data[[x]], color = conditional),
-        position = ggplot2::position_dodge(),
-        fill = "white",
-        size = 1
-      )
+    # for categorical variables
+    geom <- ggplot2::geom_bar()
   }
-  # preprocess and plot the data
-  dat %>%
+  # create facet labels
+  facet_labs <- c(paste(z, "observed"), paste(z, "missing")) %>%
+    setNames(c("observed", "missing"))
+  # preprocess the data
+  dat[!is.na(dat[[x]]), ] %>%
     dplyr::mutate(conditional = factor(
       is.na(.data[[z]]),
-      levels = c(TRUE, FALSE),
-      labels = c("Missing", "Observed")
+      levels = c(FALSE, TRUE),
+      labels = c("observed", "missing")
     )) %>%
-    ggplot2::remove_missing(., vars = x) %>%
-    ggplot2::ggplot() +
+    # plot
+    ggplot2::ggplot(ggplot2::aes(x = .data[[x]],
+                                 color = conditional,
+                                 fill = "white")) +
     geom +
+    # split by conditional variable
+    ggplot2::facet_wrap(
+      ~ conditional,
+      ncol = 1,
+      scales = "free_y",
+      labeller = ggplot2::labeller(conditional = facet_labs)
+    ) +
+    # style
     theme_mice() +
-    ggplot2::labs(color = paste0("Variable '", z, "' is:"))
+    theme(legend.position = "none",
+          strip.background = element_rect(size = 0.5))
 }
 
-# bivariate distribution plot
-plot_bivariate <- function(dat, x, y){
-  # set NA value and scale for variable 'x'
+# scatterplot with NAs
+plot_NA_scatter <- function(dat, x, y) {
+  # define graphing elements to add to plot later
+  # set NA value and scale for variable x
   if (is.numeric(dat[[x]])) {
     NA_x <-
-      min(dat[[x]], na.rm = TRUE) - .5 * sd(dat[[x]], na.rm = TRUE)
-    scale_x <- ggplot2::scale_x_continuous(
-      expand = c(0.01, 0.01),
-      limits = c(NA_x, max(dat[[x]]))
-    )
+      min(dat[[x]], na.rm = TRUE) - .1 * diff(range(dat[[x]], na.rm = TRUE))
+    shade_x <-
+      min(dat[[x]], na.rm = TRUE) - .05 * diff(range(dat[[x]], na.rm = TRUE))
+    scale_x <- NULL
   } else {
     NA_x <- "NA"
+    shade_x <- 1.5
     scale_x <-
-      ggplot2::scale_x_discrete(
-        expand = c(0.01, 0.01),
-        limits = c("NA", levels(dat[[x]]))
-      )
+      ggplot2::scale_x_discrete(limits = c("NA", levels(dat[[x]])))
   }
-  
-  # add geom for NAs in the 'x' space
+  # set NA value and scale for variable y
+  if (is.numeric(dat[[y]])) {
+    NA_y <-
+      min(dat[[y]], na.rm = TRUE) - .1 * diff(range(dat[[y]], na.rm = TRUE))
+    shade_y <-
+      min(dat[[y]], na.rm = TRUE) - .05 * diff(range(dat[[y]], na.rm = TRUE))
+    scale_y <- NULL
+  } else {
+    NA_y <- "NA"
+    shade_y <- 1.5
+    scale_y <-
+      ggplot2::scale_y_discrete(limits = c("NA", levels(dat[[y]])))
+  }
+  # add geom for NAs in the x space
   if (any(is.na(dat[[x]]))) {
     geom_x <- ggplot2::geom_point(
+      position = ggplot2::position_jitter(width = 0.2, height = 0.2),
       color = mice:::mdc(2),
       shape = 4,
       mapping = ggplot2::aes(x = NA_x, y = .data[[y]]),
-      data = dat[is.na(dat[[x]]),]
+      data = dat[is.na(dat[[x]]), ]
     )
   } else {
     geom_x <- NULL
   }
-  
-  # set NA value and scale for variable 'y'
-  if (is.numeric(dat[[y]])) {
-    NA_y <-
-      min(dat[[y]], na.rm = TRUE) - .5 * sd(dat[[y]], na.rm = TRUE)
-    scale_y <- ggplot2::scale_y_continuous(
-      expand = c(0.01, 0.01),
-      limits = c(NA_y, max(dat[[y]])))
-  } else {
-    NA_y <- "NA"
-    scale_y <-
-      ggplot2::scale_y_discrete(
-        expand = c(0.01, 0.01),
-        limits = c("NA", levels(dat[[y]]))
-      )
-  }
-  
-  # add geom for NAs in the 'y' space
+  # add geom for NAs in the y space
   if (any(is.na(dat[[y]]))) {
     geom_y <- ggplot2::geom_point(
+      position = ggplot2::position_jitter(width = 0.2, height = 0.2),
       color = mice:::mdc(2),
       shape = 4,
       mapping = ggplot2::aes(x = .data[[x]], y = NA_y),
-      data = dat[is.na(dat[[y]]),]
-    )} else{geom_y <- NULL}
-  
-  # add geom for NAs in the 'x' and 'y' space
-  if (any(is.na(dat[[x]]) & is.na(dat[[y]]))){
+      data = dat[is.na(dat[[y]]), ]
+    )
+  } else{
+    geom_y <- NULL
+  }
+  # add geom for NAs in the x-y space
+  if (any(is.na(dat[[x]]) & is.na(dat[[y]]))) {
     geom_xy <- ggplot2::geom_point(
+      position = ggplot2::position_jitter(width = 0.2, height = 0.2),
       color = mice:::mdc(2),
       shape = 4,
       mapping = ggplot2::aes(x = NA_x, y = NA_y),
-      data = dat[is.na(dat[[x]]) & is.na(dat[[y]]),]
-    )} else{geom_xy <- NULL}
-  
-  # plot 
+      data = dat[is.na(dat[[x]]) & is.na(dat[[y]]), ]
+    )
+  } else{
+    geom_xy <- NULL
+  }
+  # plot
   p <- dat %>% ggplot2::ggplot() +
-    ggplot2::geom_point(ggplot2::aes(x = .data[[x]], y = .data[[y]]), color = mice::mdc(1)) +
+    # plot observed datapoints in x-y space
+    ggplot2::geom_point(
+      ggplot2::aes(x = .data[[x]], y = .data[[y]]),
+      position = ggplot2::position_jitter(width = 0.2, height = 0.2),
+      color = mice::mdc(1)
+    ) +
+    # add area for NAs in the x space
+    ggplot2::annotate(
+      "rect",
+      xmin = -Inf,
+      xmax = shade_x,
+      ymin = -Inf,
+      ymax = Inf,
+      alpha = 0.1
+    ) +
+    # add area for NAs in the y space
+    ggplot2::annotate(
+      "rect",
+      xmin = -Inf,
+      xmax = Inf,
+      ymin = -Inf,
+      ymax = shade_y,
+      alpha = 0.1
+    ) +
+    # add NAs
     geom_x +
     geom_y +
     geom_xy +
+    # style graph
     theme_mice() +
     scale_x +
-    scale_y 
-  
+    scale_y
   # output
   return(p)
 }

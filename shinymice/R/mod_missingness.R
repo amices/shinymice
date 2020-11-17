@@ -76,7 +76,7 @@ mod_missingness_server <- function(id) {
     z = "hc"
     output$cond_plot <-
       renderPlot({
-        plot_conditional(mice::boys, x , z) + ggplot2::ggtitle(
+        plot_NA_cond(mice::boys, x , z) + ggplot2::ggtitle(
           paste0(
             "Distribution of '",
             x,
@@ -88,7 +88,7 @@ mod_missingness_server <- function(id) {
       })
     output$na_plot <-
       renderPlot({
-        plot_bivariate(mice::boys, x, y) +
+        plot_NA_scatter(mice::boys, x, y) +
           list(ggplot2::labs(
             title = paste0("Scatter plot of '",
                            y,
