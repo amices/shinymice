@@ -22,55 +22,11 @@ knitr::opts_chunk$set(
 # set-up environment
 library(shinymice)
 library(tidyverse)
-# `%nin%` <- Negate(`%in%`)
 
 # example dataset
 dat <- mice::boys
 # example mids object
 imp <- mice::mice(dat, printFlag = FALSE)
-
-# define mice theme
-# theme_mice <- function() {
-#   # change default settings (move this outside of the function to unnecessary avoid re-running?)
-#   ggplot2::update_geom_defaults("point", list(
-#     shape = 21,
-#     size = 1.9,
-#     stroke = 1.1,
-#     alpha = 0.5
-#   ))
-#   ggplot2::update_geom_defaults("boxplot", list(size = 1))
-#   ggplot2::update_geom_defaults("line", list(size = 1))
-#   # mice theme settings
-#   theme <- list(
-#     ggplot2::theme_classic(),
-#     ggplot2::theme(legend.position = "top"),
-#     ggplot2::scale_color_manual(
-#       values = c(
-#         "observed" = mice:::mdc(1),
-#         "missing" = mice:::mdc(2),
-#         "imputed" = mice:::mdc(2)
-#       )
-#     ),
-#     ggplot2::scale_fill_manual(
-#       values = c(
-#         "observed" = mice:::mdc(1),
-#         "missing" = mice:::mdc(2),
-#         "imputed" = mice:::mdc(2)
-#       )
-#     ),
-#     ggplot2::scale_size_manual(values = c(
-#       "observed" = 1,
-#       "imputed" = 0.5
-#     )),
-#     ggplot2::labs(
-#       color = NULL,
-#       fill = NULL,
-#       size = NULL
-#     )
-#   )
-#   # output
-#   return(theme)
-# }
 ```
 
 ## Plot incomplete data
@@ -83,48 +39,7 @@ We can evaluate the missingness in the incomplete data using two plotting device
 
 
 ```{r}
-# histogram/density plot conditional on missingness in another variable
-# plot_NA_cond <- function(dat, x, z) {
-#   # define graphing elements to add to plot
-#   if (is.numeric(dat[[x]])) {
-#     # for continuous variables
-#     geom <-
-#       ggplot2::geom_histogram()
-#   } else {
-#     # for categorical variables
-#     geom <-
-#       ggplot2::geom_bar()
-#   }
-#   # create facet labels
-#   facet_labs <- c(paste(z, "observed"), paste(z, "missing")) %>%
-#     setNames(c("observed", "missing"))
-#   
-#   # preprocess the data
-#   dat[!is.na(dat[[x]]), ] %>%
-#     dplyr::mutate(conditional = factor(
-#       is.na(.data[[z]]),
-#       levels = c(FALSE, TRUE),
-#       labels = c("observed", "missing")
-#     )) %>%
-#     # plot
-#     ggplot2::ggplot(ggplot2::aes(x = .data[[x]],
-#                                  color = conditional,
-#                                  fill = "white")) +
-#     geom +
-#     # split by conditional variable
-#     ggplot2::facet_wrap(
-#       ~ conditional,
-#       ncol = 1,
-#       scales = "free_y",
-#       labeller = ggplot2::labeller(conditional = facet_labs)
-#     ) +
-#     # style
-#     theme_mice() +
-#     ggplot2::theme(legend.position = "none",
-#           strip.background = ggplot2::element_rect(size = 0.5))
-# }
-
-# test
+# conditional distribution
 shinymice::plot_NA_cond(dat, x = "age", z = "hc")
 shinymice::plot_NA_cond(dat, x = "reg", z = "hc")
 ```
@@ -132,109 +47,6 @@ shinymice::plot_NA_cond(dat, x = "reg", z = "hc")
 
 ```{r}
 # scatterplot with NAs
-# plot_NA_scatter <- function(dat, x, y) {
-#   # define graphing elements to add to plot later
-#   # set NA value and scale for variable x
-#   if (is.numeric(dat[[x]])) {
-#     NA_x <-
-#       min(dat[[x]], na.rm = TRUE) - .1 * diff(range(dat[[x]], na.rm = TRUE))
-#     shade_x <-
-#       min(dat[[x]], na.rm = TRUE) - .05 * diff(range(dat[[x]], na.rm = TRUE))
-#     scale_x <- NULL
-#   } else {
-#     NA_x <- "NA"
-#     shade_x <- 1.5
-#     scale_x <-
-#       ggplot2::scale_x_discrete(limits = c("NA", levels(dat[[x]])))
-#   }
-#   # set NA value and scale for variable y
-#   if (is.numeric(dat[[y]])) {
-#     NA_y <-
-#       min(dat[[y]], na.rm = TRUE) - .1 * diff(range(dat[[y]], na.rm = TRUE))
-#     shade_y <-
-#       min(dat[[y]], na.rm = TRUE) - .05 * diff(range(dat[[y]], na.rm = TRUE))
-#     scale_y <- NULL
-#   } else {
-#     NA_y <- "NA"
-#     shade_y <- 1.5
-#     scale_y <-
-#       ggplot2::scale_y_discrete(limits = c("NA", levels(dat[[y]])))
-#   }
-#   # add geom for NAs in the x space
-#   if (any(is.na(dat[[x]]))) {
-#     geom_x <- ggplot2::geom_point(
-#       position = ggplot2::position_jitter(width = 0.2, height = 0.2),
-#       color = mice:::mdc(2),
-#       shape = 4,
-#       mapping = ggplot2::aes(x = NA_x, y = .data[[y]]),
-#       data = dat[is.na(dat[[x]]), ]
-#     )
-#   } else {
-#     geom_x <- NULL
-#   }
-#   # add geom for NAs in the y space
-#   if (any(is.na(dat[[y]]))) {
-#     geom_y <- ggplot2::geom_point(
-#       position = ggplot2::position_jitter(width = 0.2, height = 0.2),
-#       color = mice:::mdc(2),
-#       shape = 4,
-#       mapping = ggplot2::aes(x = .data[[x]], y = NA_y),
-#       data = dat[is.na(dat[[y]]), ]
-#     )
-#   } else{
-#     geom_y <- NULL
-#   }
-#   # add geom for NAs in the x-y space
-#   if (any(is.na(dat[[x]]) & is.na(dat[[y]]))) {
-#     geom_xy <- ggplot2::geom_point(
-#       position = ggplot2::position_jitter(width = 0.2, height = 0.2),
-#       color = mice:::mdc(2),
-#       shape = 4,
-#       mapping = ggplot2::aes(x = NA_x, y = NA_y),
-#       data = dat[is.na(dat[[x]]) & is.na(dat[[y]]), ]
-#     )
-#   } else{
-#     geom_xy <- NULL
-#   }
-#   # plot
-#   p <- dat %>% ggplot2::ggplot() +
-#     # plot observed datapoints in x-y space
-#     ggplot2::geom_point(
-#       ggplot2::aes(x = .data[[x]], y = .data[[y]]),
-#       position = ggplot2::position_jitter(width = 0.2, height = 0.2),
-#       color = mice::mdc(1)
-#     ) +
-#     # add area for NAs in the x space
-#     ggplot2::annotate(
-#       "rect",
-#       xmin = -Inf,
-#       xmax = shade_x,
-#       ymin = -Inf,
-#       ymax = Inf,
-#       alpha = 0.1
-#     ) +
-#     # add area for NAs in the y space
-#     ggplot2::annotate(
-#       "rect",
-#       xmin = -Inf,
-#       xmax = Inf,
-#       ymin = -Inf,
-#       ymax = shade_y,
-#       alpha = 0.1
-#     ) +
-#     # add NAs
-#     geom_x +
-#     geom_y +
-#     geom_xy +
-#     # style graph
-#     theme_mice() +
-#     scale_x +
-#     scale_y
-#   # output
-#   return(p)
-# }
-
-# test
 shinymice::plot_NA_scatter(dat, x = "reg", y = "hc")
 shinymice::plot_NA_scatter(dat, x = "hgt", y = "hc") 
 
@@ -278,7 +90,7 @@ dat %>% ggplot2::ggplot() +
 
 ```
 
-## Plot missingness
+## Plot imputation model/missingness
 
 - md pattern
 
@@ -288,146 +100,36 @@ First look at the missing data pattern
 
 ```{r fig.height=7.5, fig.width=6}
 # plot md pattern 
-# plot_md_pattern <- function(dat) {
-#   # get md pattern and store additional info
-#   pat <- mice::md.pattern(dat, plot = FALSE)
-#   vrb <- colnames(pat)[-ncol(pat)]
-#   colnames(pat) <- c(vrb, "n_vrb_inc")
-#   n_pat_obs <- as.numeric(rownames(pat))[-nrow(pat)]
-#   n_vrb_inc <- as.numeric(pat[, ncol(pat)])[-nrow(pat)]
-#   n_val_mis <- as.numeric(pat[nrow(pat), ])[-ncol(pat)]
-#   # make the pattern tidy
-#   long_pat <- pat[-nrow(pat), ] %>%
-#     cbind(., n_pat_obs, pat_nr = 1:nrow(.)) %>%
-#     as.data.frame() %>%
-#     tidyr::pivot_longer(cols = all_of(vrb),
-#                         names_to = "vrb",
-#                         values_to = "obs") %>%
-#     cbind(., n_val_mis)
-#   # plot the md pattern
-#   p <- long_pat %>%
-#     ggplot2::ggplot() +
-#     ggplot2::geom_tile(ggplot2::aes(
-#       x = vrb,
-#       y = pat_nr,
-#       fill = as.factor(obs),
-#       group = n_vrb_inc
-#     ),
-#     color = "black") +
-#     # set axes
-#     ggplot2::scale_x_discrete(limits = vrb,
-#                               position = "bottom",
-#                               labels = as.character(n_val_mis)) +
-#     ggplot2::scale_y_reverse(
-#       breaks = 1:max(long_pat$pat_nr),
-#       labels = as.character(n_pat_obs),
-#       expand = c(0.01, 0.01),
-#       sec.axis = ggplot2::dup_axis(labels = as.character(n_vrb_inc),
-#                                    name = "Incomplete variables (per pattern)")
-#     ) +
-#     # add labels
-#     ggplot2::labs(x = "Incomplete cases (per variable)",
-#                   y = "Pattern frequency") +
-#     ggplot2::geom_text(ggplot2::aes(x = vrb, y = -Inf, label = vrb),
-#                        data = long_pat,
-#                        vjust = -0.5) +
-#     ggplot2::coord_cartesian(clip = "off") +
-#     # add styling
-#     ggplot2::theme(
-#       legend.position = "none",
-#       plot.margin = ggplot2::margin(t = 25, l = 10, b = 10, r = 10, unit = "pt"),
-#       axis.title.y.right = ggplot2::element_text(margin = ggplot2::margin(l = 10)),
-#       panel.grid = ggplot2::element_blank()
-#     ) +
-#     ggplot2::scale_fill_manual(values = c("1" = mice:::mdc(1), "0" = mice:::mdc(2)))
-#   # output
-#   return(p)
-# }
-
-# test
 shinymice::plot_md_pattern(dat)
-mice::md.pattern(dat)
+pat <- mice::md.pattern(dat)
 ```
 
 Then look at the in- and outflux
 
 ```{r}
 # plot in- and outflux of incomplete data
-# plot_flux <- function(dat) {
-#   flx <- mice::flux(dat)
-#   p <- flx %>% ggplot2::ggplot() +
-#     ggplot2::geom_text(ggplot2::aes(
-#       x = influx,
-#       y = outflux,
-#       label = rownames(flx)
-#     )) +
-#     ggplot2::geom_abline(intercept = 1,
-#                 slope = -1,
-#                 linetype = "dashed") +
-#     ggplot2::lims(x = c(0, 1), y = c(0, 1)) +
-#     ggplot2::theme_classic()
-#   # output
-#   return(p)
-# }
-# test
 shinymice::plot_flux(dat)
+```
+Develop a predictor matrix to adjust for the imputation model
+
+```{r fig.height=6, fig.width=6}
+# plot the predictor matrix for the imputation model
+shinymice::plot_pred_matrix(imp)
+# change the predictor matrix and plot again
+new_pred <- imp$predictorMatrix
+new_pred["bmi", c("hgt", "wgt")] <- 0
+imp2 <- mice::mice(dat, predictorMatrix = new_pred, maxit = 0)
+shinymice::plot_pred_matrix(imp2)
 ```
 
 
 ## Plot convergence
 
 ```{r}
-# make chain means and variances tidy
-# preprocess_thetas <- function(imp) {
-#   # preprocess chain means
-#   long_trace <- imp$chainMean %>%
-#     dplyr::na_if(., "NaN") %>%
-#     as.data.frame(.) %>%
-#     dplyr::mutate(var = row.names(.), theta = "Chain means") %>%
-#     # preprocess chain variances
-#     rbind(
-#       .,
-#       imp$chainVar %>%
-#         sqrt(.) %>%
-#         as.data.frame(.) %>%
-#         dplyr::mutate(var = row.names(.), theta = "Chain standard deviations")
-#     ) %>%
-#     # convert to long format
-#     tidyr::pivot_longer(-c(var, theta)) %>%
-#     cbind(.it = as.integer(1:imp$iteration),
-#           .imp = as.factor(rep(1:imp$m, each = imp$iteration)))
-#   # output
-#   return(long_trace)
-# }
-# test
+# traceplot: make chain means and variances tidy
 trace_dat <- shinymice::preprocess_thetas(imp)
 
 # traceplot: plot trace of one variable
-# trace_one_variable <- function(d, x) {
-#   # select one variable and plot it
-#   p <- d[d$var == x, ] %>%
-#     ggplot2::ggplot() +
-#     ggplot2::geom_line(ggplot2::aes(x = .it, y = value, color = .imp)) +
-#     ggplot2::facet_wrap(~ theta, scales = "free", ncol = 1) +
-#     ggplot2::theme_classic() +
-#     ggplot2::theme(strip.background = ggplot2::element_rect(size = 0.5)) +
-#     ggplot2::labs(x = "Iteration",
-#                   y = paste0(x),
-#                   color = "Imputation")
-#   # show user if the variable is completely observed
-#   if (all(is.na(p$data$value))) {
-#     p <-
-#       p + ggplot2::geom_text(ggplot2::aes(
-#         x = median(as.numeric(d$.imp)),
-#         y = 0,
-#         label = "No \n imputations \n to show"
-#       ),
-#       color = "grey")
-#   }
-#   # output
-#   return(p)
-# }
-#test
 shinymice::trace_one_variable(trace_dat, x = "hgt")
 shinymice::trace_one_variable(trace_dat, x = "age")
 ```
@@ -447,111 +149,22 @@ We need to preprocess the `mids` object to make it `tidy`. Then we can plot the 
 
 
 ```{r}
-# extract imputations and initialize plot
-# plot_imps <- function(imp, x, y = NULL) {
-#   # parse inputs
-#   if (is.null(y)) {
-#     y <- x
-#   }
-#   # combine observed and imputed data
-#   xy_obs <- imp$data %>%
-#     cbind(datapoint = "observed",
-#           .imp = 0,
-#           .id = 1:nrow(.),
-#           .) %>%
-#     .[!is.na(imp$data[[x]]) &
-#         !is.na(imp$data[[y]]), ]
-#   xy_imps <- imp %>%
-#     mice::complete("long") %>%
-#     cbind(datapoint = "imputed", .) %>%
-#     .[.$.id %nin% xy_obs$.id,]
-#   xy_dat <- rbind(xy_obs, xy_imps) %>%
-#     dplyr::mutate(datapoint = factor(datapoint, levels = c("observed", "imputed")))
-#   # initialize plot
-#   p <- xy_dat %>%
-#     ggplot2::ggplot() +
-#     theme_mice()
-#   # output
-#   return(p)
-# }
-
-# test with continuous variable
+# test imputation plots with continuous variable
 x = "hc"
 
 # boxplot (not informative with categorical variable)
-# plot_bw <- function(imp, x) {
-#   # plot box and whiskers
-#   p <- imp %>% plot_imps(x) +
-#     ggplot2::geom_boxplot(ggplot2::aes(
-#       x = as.factor(.imp),
-#       y = .data[[x]],
-#       color = datapoint
-#     ),
-#     width = 0.5) +
-#     ggplot2::xlab("Imputation (0 = observed data)")
-#   # output
-#   return(p)
-# }
-
-# test 
 shinymice::plot_bw(imp, x)
 
 # stripplot
-# plot_strip <- function(imp, x) {
-#   # plot individual values (stripplot)
-#   p <- imp %>% plot_imps(x) +
-#   ggplot2::geom_jitter(
-#     ggplot2::aes(
-#       x = as.factor(.imp),
-#       y = .data[[x]],
-#       color = datapoint
-#     ),
-#     height = 0.25,
-#     width = 0.25
-#   ) +
-#   ggplot2::xlab("Imputation (0 = observed data)")
-#   # output
-#   return(p)
-# }
-
-# test 
 shinymice::plot_strip(imp, x)
 
 # density plot
-# plot_dens <- function(imp, x) {
-#   # plot density
-#   p <- imp %>% plot_imps(x) +
-#   ggplot2::geom_density(ggplot2::aes(
-#     x = .data[[x]],
-#     color = datapoint,
-#     size = datapoint,
-#     group = .imp
-#   ))
-#   # output
-#   return(p)
-# }
-
-# test 
 shinymice::plot_dens(imp, x)
 
 # test with two continuous variables
 y = "hgt"
 
 # xyplot
-# plot_xy <- function(imp, x, y) {
-#   # plot xy datapoints (scatterplot)
-#   p <- imp %>% plot_imps(x, y) +
-#   ggplot2::geom_point(ggplot2::aes(
-#     x = .data[[x]],
-#     y = .data[[y]],
-#     group = .id,
-#     color = datapoint
-#   ))
-#   # output
-#   return(p)
-# }
-
-# test 
 shinymice::plot_xy(imp, x, y)
 
 # # test with categorical variable
@@ -571,54 +184,5 @@ shinymice::plot_xy(imp, x, y)
 
 ```
 
-Maybe develop a predictor matrix to adjust for the imputation model?
 
-```{r fig.height=6, fig.width=6}
-# plot the predictor matrix for the imputation model
-# plot_pred_matrix <- function(dat) {
-#   # parse input
-#   if (mice::is.mids(dat)) {
-#     imp <- dat
-#   } else {
-#     imp <- mice::mice(dat, maxit = 0)
-#   }
-#   # get the predictor matrix and add the rownames as variable
-#   pred <- imp$predictorMatrix %>%
-#     as.data.frame() %>%
-#     cbind(vrb_to_imp = rownames(.), .)
-#   # make the data tidy to plot
-#   long_pred <-
-#     tidyr::pivot_longer(
-#       pred,
-#       cols = names(pred)[-1],
-#       names_to = "vrb_as_pred",
-#       names_transform = list(vrb_as_pred = as.factor)
-#     )
-#   # plot the predictor matrix
-#   p <- long_pred %>%
-#     ggplot2::ggplot() +
-#     ggplot2::geom_tile(ggplot2::aes(
-#       x = vrb_as_pred,
-#       y = vrb_to_imp,
-#       fill = as.factor(value)
-#     ),
-#     color = "black") +
-#     ggplot2::theme(legend.position = "none",
-#                    panel.grid = ggplot2::element_blank()) +
-#     ggplot2::scale_y_discrete(limits = rev(names(imp$data))) +
-#     ggplot2::scale_x_discrete(limits = names(imp$data), position = "top") +
-#     ggplot2::scale_fill_manual(values = c("1" = mice:::mdc(1), "0" = mice:::mdc(2))) +
-#     ggplot2::labs(x = "Predictor", y = "Variable to impute")#, title = "Predictor matrix")
-#   # output
-#   return(p)
-# }
-
-# test
-shinymice::plot_pred_matrix(imp)
-new_pred <- imp$predictorMatrix
-new_pred["bmi", c("hgt", "wgt")] <- 0
-imp2 <- mice::mice(dat, predictorMatrix = new_pred, maxit = 0)
-shinymice::plot_pred_matrix(imp2)
-
-```
 
