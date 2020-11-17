@@ -58,30 +58,13 @@ mod_imputeddata_ui <- function(id) {
 mod_imputeddata_server <- function(id) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
-    p <- dummy_plot()
     mids <- mice::mice(mice::boys, maxit = 2)
-    plot_dat <- prepare_plotting(mids, x = "hc")
-    # output
+    x = "hc"
     output$imp_desc <- renderTable(imp_descr(mids))
-    output$strip_plot <- renderPlot({
-      plot_dat %>%
-       ggplot2::ggplot() +
-       geom_stripplot(x = "hc", m = mids$m) + 
-        theme_mice()
-    })
-    output$bw_plot <- renderPlot({
-      plot_dat %>%
-        ggplot2::ggplot() +
-        geom_bwplot(x = "hc", m = mids$m) +
-        theme_mice()
-    })
-    output$dens_plot <- renderPlot({
-      plot_dat %>%
-        ggplot2::ggplot() +
-        geom_densityplot(x = "hc", m = mids$m) +
-        theme_mice()
-    })
-    output$xy_plot <- renderPlot(p)
+    output$strip_plot <- renderPlot(plot_strip(mids, x))
+    output$bw_plot <- renderPlot(plot_bw(mids, x))
+    output$dens_plot <- renderPlot(plot_dens(mids, x))
+    output$xy_plot <- renderPlot(plot_xy(mids, x, y = "hgt"))
   })
 }
 

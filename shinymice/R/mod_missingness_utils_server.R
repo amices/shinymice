@@ -46,8 +46,8 @@ plot_NA_cond <- function(dat, x, z) {
     ) +
     # style
     theme_mice() +
-    theme(legend.position = "none",
-          strip.background = element_rect(size = 0.5))
+    ggplot2::theme(legend.position = "none",
+          strip.background = ggplot2::element_rect(size = 0.5))
 }
 
 # scatterplot with NAs

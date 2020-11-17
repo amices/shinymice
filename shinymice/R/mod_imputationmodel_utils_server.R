@@ -39,7 +39,7 @@ plot_md_pattern <- function(dat) {
     # add labels
     ggplot2::labs(x = "Incomplete cases (per variable)",
                   y = "Pattern frequency") +
-    ggplot2::geom_text(aes(x = vrb, y = -Inf, label = vrb),
+    ggplot2::geom_text(ggplot2::aes(x = vrb, y = -Inf, label = vrb),
                        data = long_pat,
                        vjust = -0.5) +
     ggplot2::coord_cartesian(clip = "off") +
@@ -87,7 +87,7 @@ plot_pred_matrix <- function(dat) {
     cbind(vrb_to_imp = rownames(.), .)
   # make the data tidy to plot
   long_pred <-
-    pivot_longer(
+    tidyr::pivot_longer(
       pred,
       cols = names(pred)[-1],
       names_to = "vrb_as_pred",
@@ -143,7 +143,7 @@ trace_one_variable <- function(d, x) {
     ggplot2::geom_line(ggplot2::aes(x = .it, y = value, color = .imp)) +
     ggplot2::facet_wrap(~ theta, scales = "free", ncol = 1) +
     ggplot2::theme_classic() +
-    ggplot2::theme(strip.background = element_rect(size = 0.5)) +
+    ggplot2::theme(strip.background = ggplot2::element_rect(size = 0.5)) +
     ggplot2::labs(x = "Iteration",
                   y = paste0(x),
                   color = "Imputation")

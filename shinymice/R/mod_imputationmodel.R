@@ -37,9 +37,11 @@ mod_imputationmodel_ui <- function(id) {
     ),
     column(9,
            tabsetPanel(
+             tabPanel("Missingness pattern",
+                      plotOutput(ns("md_plot"))),
              tabPanel(
                "Fluxplot",
-               plotly::plotlyOutput(#  plotOutput(
+               plotly::plotlyOutput(
                  ns("flux_plot")),
                br(),
                tags$b("Interpretation:"),
@@ -61,15 +63,13 @@ mod_imputationmodel_ui <- function(id) {
 mod_imputationmodel_server <- function(id) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
-    p <- dummy_plot()
-    #mids <- mice::mice(mice::boys, maxit = 1)
-    output$pred_plot <- renderPlot(p)
-    output$flux_plot <- #renderPlot({
+    output$md_plot <- renderPlot(plot_md_pattern(mice::boys))
+    output$flux_plot <- 
       plotly::renderPlotly({
         plot_flux(mice::boys)
-        #return(plotly::ggplotly())
       })
-    output$trace_plot <- renderPlot(p)
+    output$pred_plot <- renderPlot(plot_pred_matrix(mice::boys))
+    output$trace_plot <- renderPlot(mice::mice(mice::boys) %>% preprocess_thetas(.) %>% trace_one_variable(., x = "hgt"))
   })
 }
 

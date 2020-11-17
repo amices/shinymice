@@ -54,9 +54,7 @@ mod_missingness_ui <- function(id) {
           select_var(ns("var1")),
           select_var(ns("var2")),
           plotOutput(ns("na_plot"))
-        ),
-        tabPanel("Missingness pattern",
-                 plotOutput(ns("md_pat")))
+        )
       )
     )
   ))
@@ -67,10 +65,8 @@ mod_missingness_ui <- function(id) {
 #' @noRd
 mod_missingness_server <- function(id) {
   moduleServer(id, function(input, output, session) {
-    p <- dummy_plot()
     output$na_tab <- DT::renderDT(mice::boys)
     output$na_desc <- renderTable(mis_descr(mice::boys))
-    output$md_pat <- renderPlot(p)
     x = "age"
     y = "hc"
     z = "hc"
