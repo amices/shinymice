@@ -180,6 +180,9 @@ preprocess_thetas <- function(imp) {
 #'
 #' @examples
 trace_one_variable <- function(d, x) {
+  # escape function if no variable is selected
+  if (x == "Select a variable") {return(NULL)}
+  
   # select one variable and plot it
   p <- d[d$var == x, ] %>%
     ggplot2::ggplot() +

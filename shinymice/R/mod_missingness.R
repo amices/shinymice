@@ -11,7 +11,7 @@ mod_missingness_ui <- function(id) {
   ns <- NS(id)
   fluidPage(fluidRow(
     column(
-      3,
+      4,
       tags$b("Explore the missingness"),
       br(),
       br(),
@@ -34,7 +34,7 @@ mod_missingness_ui <- function(id) {
       br()
     ),
     column(
-      9,
+      8,
       tabsetPanel(
         tabPanel("Descriptives",
                  tableOutput(ns("na_desc"))),

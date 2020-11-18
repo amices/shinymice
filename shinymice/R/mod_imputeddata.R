@@ -11,7 +11,7 @@ mod_imputeddata_ui <- function(id) {
   ns <- NS(id)
   fluidPage(fluidRow(
     column(
-      3,
+      4,
       tags$b("Inspect the imputations"),
       br(),
       br(),
@@ -22,7 +22,7 @@ mod_imputeddata_ui <- function(id) {
       "3. Evaluate the bivariate relations post-imputation."
     ),
     column(
-      9,
+      8,
       tabsetPanel(
         tabPanel("Descriptives",
                  tableOutput(ns("imp_desc"))),

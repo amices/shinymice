@@ -11,7 +11,7 @@ mod_save_ui <- function(id) {
   ns <- NS(id)
   fluidPage(fluidRow(
     column(
-      3,
+      4,
       tags$b("Save the data/results"),
       br(),
       br(),
@@ -28,7 +28,7 @@ mod_save_ui <- function(id) {
       "2. Save the imputations.",
       downloadButton("save_file", label = NULL)
     ),
-    column(9,
+    column(8,
            tabsetPanel(
              tabPanel("About",
                       br(),

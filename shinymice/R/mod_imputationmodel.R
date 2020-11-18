@@ -11,7 +11,7 @@ mod_imputationmodel_ui <- function(id) {
   ns <- NS(id)
   fluidPage(fluidRow(
     column(
-      3,
+      4,
       tags$b("Define the imputation model"),
       br(),
       br(),
@@ -37,7 +37,7 @@ mod_imputationmodel_ui <- function(id) {
       "8. Monitor potential non-convergence through visual inspection.",
       verbatimTextOutput(ns("micecall"))
     ),
-    column(9,
+    column(8,
            tabsetPanel(
              tabPanel("Missingness pattern",
                       plotOutput(ns("md_plot")),
@@ -54,6 +54,8 @@ mod_imputationmodel_ui <- function(id) {
              ),
              tabPanel("Predictor matrix",
                       plotOutput(ns("pred_plot")),
+                      br(),
+                      tags$b("Interpretation:"),
                       "Each row in the predictor matrix identifies which predictors are to be used for the variable in the row name."),
              tabPanel("Traceplot",
                       select_var(ns("var1")),
