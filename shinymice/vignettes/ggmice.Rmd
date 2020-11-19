@@ -50,43 +50,43 @@ shinymice::plot_NA_cond(dat, x = "reg", z = "hc")
 shinymice::plot_NA_scatter(dat, x = "reg", y = "hc")
 shinymice::plot_NA_scatter(dat, x = "hgt", y = "hc") 
 
-# same same but easier!
-x = "hgt"
-y = "hc"
-dat %>% ggplot2::ggplot() +
-  ggplot2::theme_classic() +
-  # plot observed datapoints in x-y space
-  ggplot2::geom_point(
-    ggplot2::aes(x = .data[[x]], y = .data[[y]]),
-    position = ggplot2::position_jitter(width = 0.2, height = 0.2),
-    color = mice::mdc(1)
-  ) +
-  # missing x
-  ggplot2::geom_point(
-    position = ggplot2::position_jitter(width = 0.2, height = 0.2),
-    color = mice:::mdc(2),
-    shape = 4,
-    mapping = ggplot2::aes(x = -Inf, y = .data[[y]]),
-    data = dat[is.na(dat[[x]]),]
-  ) +
-  # missing y
-  ggplot2::geom_point(
-    position = ggplot2::position_jitter(width = 0.2, height = 0.2),
-    color = mice:::mdc(2),
-    shape = 4,
-    mapping = ggplot2::aes(x = .data[[x]], y = -Inf),
-    data = dat[is.na(dat[[y]]),]
-  ) +
-  # missing xy
-  ggplot2::geom_point(
-    position = ggplot2::position_jitter(width = 0.2, height = 0.2),
-    color = mice:::mdc(2),
-    shape = 4,
-    mapping = ggplot2::aes(x = -Inf, y = -Inf),
-    data = dat[is.na(dat[[x]]) & is.na(dat[[y]]),]
-  ) +
-  # axes
-  ggplot2::coord_cartesian(clip = "off") 
+# # same same but easier!
+# x = "hgt"
+# y = "hc"
+# dat %>% ggplot2::ggplot() +
+#   ggplot2::theme_classic() +
+#   # plot observed datapoints in x-y space
+#   ggplot2::geom_point(
+#     ggplot2::aes(x = .data[[x]], y = .data[[y]]),
+#     position = ggplot2::position_jitter(width = 0.2, height = 0.2),
+#     color = mice::mdc(1)
+#   ) +
+#   # missing x
+#   ggplot2::geom_point(
+#     position = ggplot2::position_jitter(width = 0.2, height = 0.2),
+#     color = mice:::mdc(2),
+#     shape = 4,
+#     mapping = ggplot2::aes(x = -Inf, y = .data[[y]]),
+#     data = dat[is.na(dat[[x]]),]
+#   ) +
+#   # missing y
+#   ggplot2::geom_point(
+#     position = ggplot2::position_jitter(width = 0.2, height = 0.2),
+#     color = mice:::mdc(2),
+#     shape = 4,
+#     mapping = ggplot2::aes(x = .data[[x]], y = -Inf),
+#     data = dat[is.na(dat[[y]]),]
+#   ) +
+#   # missing xy
+#   ggplot2::geom_point(
+#     position = ggplot2::position_jitter(width = 0.2, height = 0.2),
+#     color = mice:::mdc(2),
+#     shape = 4,
+#     mapping = ggplot2::aes(x = -Inf, y = -Inf),
+#     data = dat[is.na(dat[[x]]) & is.na(dat[[y]]),]
+#   ) +
+#   # axes
+#   ggplot2::coord_cartesian(clip = "off") 
 
 ```
 
@@ -100,7 +100,8 @@ First look at the missing data pattern
 
 ```{r fig.height=7.5, fig.width=6}
 # plot md pattern 
-shinymice::plot_md_pattern(dat)
+dat2 <- mice::boys %>% cbind(bhgdhjahfjhksgdkfkjhsdgfksd = mice::boys$age) 
+SHINYMICE::plot_md_pattern(dat2) 
 pat <- mice::md.pattern(dat)
 ```
 
@@ -152,7 +153,7 @@ We need to preprocess the `mids` object to make it `tidy`. Then we can plot the 
 # test imputation plots with continuous variable
 x = "hc"
 
-# boxplot (not informative with categorical variable)
+# boxplot 
 shinymice::plot_bw(imp, x)
 
 # stripplot
@@ -167,20 +168,30 @@ y = "hgt"
 # xyplot
 shinymice::plot_xy(imp, x, y)
 
-# # test with categorical variable
-# x = "phb"
-# 
-# # faceted barplot
-# imp %>% plot_imps(x) +
-#   ggplot2::geom_bar(
-#     ggplot2::aes(x = .data[[x]],
-#                  color = datapoint,
-#                  size = datapoint),
-#     width = 0.5,
-#     fill = "white"#,
-#     #position = ggplot2::position_dodge(preserve = "single")
-#   ) +
-#   ggplot2::facet_wrap(~ .imp, scales = "free_y", ncol = 2)
+# test with categorical variable
+x = "phb"
+
+# boxplot (not informative with categorical variable)
+shinymice::plot_bw(imp, x)
+
+# stripplot
+shinymice::plot_strip(imp, x)
+
+# density plot (not appropriate with categorical variable)
+shinymice::plot_dens(imp, x)
+ 
+# faceted barplot
+imp %>% plot_imps(x) +
+  ggplot2::geom_bar(
+    ggplot2::aes(x = .data[[x]],
+                 color = datapoint,
+                 size = datapoint),
+    width = 0.5,
+    fill = "white"#,
+    #position = ggplot2::position_dodge(preserve = "single")
+  ) +
+  ggplot2::facet_wrap(~ .imp, scales = "free_y", ncol = 2)
+# add arg 'showall = FALSE' 
 
 ```
 
@@ -270,7 +281,8 @@ compute_rhat <- function(x) {
 }
 # imp2 <- mice::mice.mids(imp, maxit = 15)
 x = "hc"
-theta <- imp2$chainMean[x,,]
+imp3 <- mice::mice.mids(imp, maxit = 10, printFlag = FALSE) 
+theta <- imp3$chainMean[x,,]
 compute_rhat(theta) %>% 
   ggplot2::ggplot() + 
   ggplot2::geom_line(aes(x = iteration, y = rhat)) + 

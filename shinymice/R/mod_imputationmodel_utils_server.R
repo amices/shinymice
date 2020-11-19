@@ -51,7 +51,9 @@ plot_md_pattern <- function(dat) {
                   title = paste0("Missing data pattern (total number of missing cells = ", n_mis_tot, ")\n")) +
     ggplot2::geom_text(ggplot2::aes(x = vrb, y = -Inf, label = vrb),
                        data = long_pat,
-                       vjust = -0.5) +
+                       vjust = -0.5,
+                       fontface = 0.1) +
+    #ggrepel::geom_text_repel(ggplot2::aes(x = vrb, y = -Inf, label = vrb)) +
     ggplot2::coord_cartesian(clip = "off") +
     # add styling
     ggplot2::theme(
