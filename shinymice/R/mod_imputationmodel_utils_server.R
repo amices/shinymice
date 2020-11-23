@@ -37,11 +37,12 @@ plot_md_pattern <- function(dat) {
     # set axes
     ggplot2::scale_x_discrete(limits = vrb,
                               position = "bottom",
-                              labels = as.character(n_val_mis)) +
+                              labels = as.character(n_val_mis),
+                              expand = c(0,0)) +
     ggplot2::scale_y_reverse(
       breaks = 1:max(long_pat$pat_nr),
       labels = as.character(n_pat_obs),
-      expand = c(0.01, 0.01),
+      expand = c(0, 0),
       sec.axis = ggplot2::dup_axis(labels = as.character(n_vrb_inc),
                                    name = "Number of missing entries per pattern")
     ) +
@@ -49,10 +50,9 @@ plot_md_pattern <- function(dat) {
     ggplot2::labs(x = "Number of missing entries per variable",
                   y = "Pattern frequency",
                   title = paste0("Missing data pattern (total number of missing cells = ", n_mis_tot, ")\n")) +
-    ggplot2::geom_text(ggplot2::aes(x = vrb, y = -Inf, label = vrb),
-                       data = long_pat,
-                       vjust = -0.5,
-                       fontface = 0.1) +
+    ggplot2::geom_text(ggplot2::aes(x = vrb, y = -Inf, label = abbreviate(.data[["vrb"]])),
+                       data = long_pat[1:length(vrb),],
+                       vjust = -0.5) +
     #ggrepel::geom_text_repel(ggplot2::aes(x = vrb, y = -Inf, label = vrb)) +
     ggplot2::coord_cartesian(clip = "off") +
     # add styling
@@ -132,8 +132,8 @@ plot_pred_matrix <- function(dat) {
     color = "black") +
     ggplot2::theme(legend.position = "none",
                    panel.grid = ggplot2::element_blank()) +
-    ggplot2::scale_y_discrete(limits = rev(names(imp$data))) +
-    ggplot2::scale_x_discrete(limits = names(imp$data), position = "top") +
+    ggplot2::scale_y_discrete(limits = rev(names(imp$data)), expand = c(0,0), label = abbreviate(rev(names(imp$data)))) +
+    ggplot2::scale_x_discrete(limits = names(imp$data), position = "top", expand = c(0,0), label = abbreviate(names(imp$data))) +
     ggplot2::scale_fill_manual(values = c("1" = mice:::mdc(1), "0" = mice:::mdc(2))) +
     ggplot2::labs(x = "Predictor", y = "Variable to impute")#, title = "Predictor matrix")
   # output
