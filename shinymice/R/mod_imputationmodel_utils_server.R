@@ -183,7 +183,7 @@ preprocess_thetas <- function(imp) {
 #' @examples
 trace_one_variable <- function(d, x) {
   # escape function if no variable is selected
-  if (x == "Select a variable") {return(ggplot2::ggplot(dat) + ggplot2::ggtitle("Please select variable(s)"))}
+  if (x == "Select a variable") {return(ggplot2::ggplot(d) + ggplot2::ggtitle("Please select variable(s)"))}
   
   # select one variable and plot it
   p <- d[d$var == x, ] %>%
