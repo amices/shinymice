@@ -37,12 +37,12 @@ mod_missingness_ui <- function(id) {
       8,
       tabsetPanel(
         tabPanel("Descriptives",
-                 tableOutput(ns("na_desc"))),
+                 DT::DTOutput(ns("na_desc"))),
         tabPanel("Browse",
                  DT::DTOutput(ns("na_tab"))),
         
         tabPanel(
-          "Scatterplot",
+          "Scatter plot",
           select_var(ns("var1")),
           select_var(ns("var2")),
           plotOutput(ns("na_plot"))
@@ -63,8 +63,8 @@ mod_missingness_ui <- function(id) {
 #' @noRd
 mod_missingness_server <- function(id) {
   moduleServer(id, function(input, output, session) {
-    output$na_tab <- DT::renderDT(mice::boys)
-    output$na_desc <- renderTable(mis_descr(mice::boys))
+    output$na_desc <- DT::renderDT(descr_NA(mice::boys))
+    output$na_tab <- DT::renderDT(tab_NA(mice::boys))
     output$na_plot <-
       renderPlot({
         plot_NA_scatter(mice::boys, x = input$var1, y = input$var2)

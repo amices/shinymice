@@ -7,12 +7,38 @@
 #' @export
 #'
 #' @examples
-mis_descr <- function(d) {
+descr_NA <- function(d) {
   tab <-
-    psych::describe(d)[, c("n", "mean", "sd", "min", "max", "median")] %>%
-    cbind(variable = rownames(.), ., n_missing = as.integer(nrow(d) - .$n))
-  tab[, 2] <- as.integer(tab[, 2])
-  return(tab)
+    psych::describe(d, skew = FALSE)[, c("n", "mean", "sd", "min", "max")] %>%
+    cbind(variable = rownames(.), .) %>% 
+    dplyr::mutate(n = as.integer(n), mean = round(mean, 2), sd = round(sd, 2), n_missing = nrow(d) - n)
+  dt <- DT::datatable(tab, rownames = FALSE) %>% 
+    DT::formatStyle(
+      "n_missing",
+      color = "#B61A51",
+      fontWeight = "bold")
+  return(dt)
+}
+
+# tabulate dataset and highlight NAs
+#' Title
+#'
+#' @param d 
+#'
+#' @return
+#' @export
+#'
+#' @examples
+tab_NA <- function(d){
+  dt <- d %>% 
+    dplyr::mutate(dplyr::across(where(is.numeric), round, 2)) %>% 
+    DT::datatable(d) %>% 
+    DT::formatStyle(
+    names(d),
+    target = "cell",
+    color = DT::styleEqual("NA", "#B61A51"),
+    fontWeight = DT::styleEqual("NA", "bold"))
+  return(dt)
 }
 
 # histogram/bar plot conditional on missingness in another variable
