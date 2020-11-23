@@ -27,22 +27,22 @@ mod_imputeddata_ui <- function(id) {
         tabPanel("Descriptives",
                  tableOutput(ns("imp_desc"))),
         tabPanel(
-          "Stripplot",
+          "Data points",
           select_var(ns("var1")),
           plotOutput(ns("strip_plot"))
         ),
         tabPanel(
-          "Boxplot",
+          "Distribution",
           select_var(ns("var2")),
           plotOutput(ns("bw_plot"))
         ),
         tabPanel(
-          "Densityplot",
+          "Density",
            select_var(ns("var3")),
            plotOutput(ns("dens_plot"))
         ),
         tabPanel(
-          "Scatterplot",
+          "Scatter plot",
           select_var(ns("var4")),
           select_var(ns("var5")),
           plotOutput(ns("xy_plot"))

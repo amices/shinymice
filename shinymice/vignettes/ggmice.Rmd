@@ -183,17 +183,15 @@ shinymice::plot_strip(imp, x)
 # density plot (not appropriate with categorical variable)
 shinymice::plot_dens(imp, x)
 
-facet_labs <- c("Observed data", paste("Imputation", 1:5)) %>% setNames(0:5)
-# faceted barplot
-imp %>% plot_imps(x) +
-  ggplot2::geom_bar(
-    ggplot2::aes(x = .data[[x]],
-                 color = datapoint),
-    width = 0.5,
-    fill = "white"#,
-    #position = ggplot2::position_dodge(preserve = "single")
-  ) +
-  ggplot2::facet_wrap(~ .imp, scales = "free_y", ncol = 2, labeller = ggplot2::labeller(.imp = facet_labs))
+# # faceted barplot
+# imp %>% plot_imps(x) +
+#   ggplot2::geom_bar(
+#     ggplot2::aes(x = .data[[x]],
+#                  color = datapoint),
+#     width = 0.5,
+#     fill = "white"
+#   ) +
+#   ggplot2::facet_wrap(~ .imp, scales = "free_y", ncol = 2, labeller = ggplot2::labeller(.imp = c("Observed data", paste("Imputation", 1:imp$m)) %>% setNames(0:imp$m)))
 # add arg 'showall = FALSE' 
 
 ```
