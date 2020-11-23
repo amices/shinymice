@@ -118,14 +118,14 @@ plot_pred_matrix <- function(dat) {
     tidyr::pivot_longer(
       pred,
       cols = names(pred)[-1],
-      names_to = "vrb_as_pred",
-      names_transform = list(vrb_as_pred = as.factor)
+      names_to = "predictor",
+      names_transform = list(predictord = as.factor)
     )
   # plot the predictor matrix
   p <- long_pred %>%
     ggplot2::ggplot() +
     ggplot2::geom_tile(ggplot2::aes(
-      x = vrb_as_pred,
+      x = predictor,
       y = vrb_to_imp,
       fill = as.factor(value)
     ),
@@ -183,7 +183,7 @@ preprocess_thetas <- function(imp) {
 #' @examples
 trace_one_variable <- function(d, x) {
   # escape function if no variable is selected
-  if (x == "Select a variable") {return(NULL)}
+  if (x == "Select a variable") {return(ggplot2::ggplot(dat) + ggplot2::ggtitle("Please select variable(s)"))}
   
   # select one variable and plot it
   p <- d[d$var == x, ] %>%

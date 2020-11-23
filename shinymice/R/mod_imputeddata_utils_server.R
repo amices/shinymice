@@ -30,7 +30,7 @@ imp_descr <- function(imp){
 #' @examples
 plot_imps <- function(imp, x, y = NULL) {
   # escape function if no variable is selected
-  if (x == "Select a variable") {return(NULL)}
+  if (x == "Select a variable") {return(ggplot2::ggplot(dat) + ggplot2::ggtitle("Please select variable(s)"))}
   # parse inputs
   if (is.null(y)) {
     y <- x
@@ -69,7 +69,7 @@ plot_imps <- function(imp, x, y = NULL) {
 #' @examples
 plot_bw <- function(imp, x) {
   # escape function if no variable is selected
-  if (x == "Select a variable") {return(NULL)}
+  if (x == "Select a variable") {return(ggplot2::ggplot(dat) + ggplot2::ggtitle("Please select variable(s)"))}
   # plot box and whiskers
   p <- imp %>% plot_imps(x) +
     ggplot2::geom_boxplot(ggplot2::aes(
@@ -95,7 +95,7 @@ plot_bw <- function(imp, x) {
 #' @examples
 plot_strip <- function(imp, x) {
   # escape function if no variable is selected
-  if (x == "Select a variable") {return(NULL)}
+  if (x == "Select a variable") {return(ggplot2::ggplot(dat) + ggplot2::ggtitle("Please select variable(s)"))}
   # plot individual values (stripplot)
   p <- imp %>% plot_imps(x) +
     ggplot2::geom_jitter(
@@ -124,7 +124,7 @@ plot_strip <- function(imp, x) {
 #' @examples
 plot_dens <- function(imp, x) {
   # escape function if no variable is selected
-  if (x == "Select a variable") {return(NULL)}
+  if (x == "Select a variable") {return(ggplot2::ggplot(dat) + ggplot2::ggtitle("Please select variable(s)"))}
   # plot density
   p <- imp %>% plot_imps(x) +
     ggplot2::geom_density(ggplot2::aes(
@@ -150,7 +150,7 @@ plot_dens <- function(imp, x) {
 #' @examples
 plot_xy <- function(imp, x, y) {
   # escape function if no variable is selected
-  if (x == "Select a variable" | y == "Select a variable") {return(NULL)}
+  if (x == "Select a variable" | y == "Select a variable") {return(ggplot2::ggplot(dat) + ggplot2::ggtitle("Please select variable(s)"))}
   # plot xy datapoints (scatterplot)
   p <- imp %>% plot_imps(x, y) +
     ggplot2::geom_point(ggplot2::aes(

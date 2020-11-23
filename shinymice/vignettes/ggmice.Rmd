@@ -123,7 +123,7 @@ shinymice::plot_pred_matrix(imp)
 new_pred <- imp$predictorMatrix
 new_pred["bmi", c("hgt", "wgt")] <- 0
 imp2 <- mice::mice(dat, predictorMatrix = new_pred, maxit = 0)
-shinymice::plot_pred_matrix(imp2)
+shinymice::plot_pred_matrix(imp2) 
 ```
 
 
