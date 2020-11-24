@@ -7,7 +7,7 @@
 imp_descr(imp)
 }
 \arguments{
-\item{imp}{}
+\item{imp}{A multiply imputed data set (`mids`) object}
 }
 \value{
 
