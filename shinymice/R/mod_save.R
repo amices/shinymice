@@ -30,17 +30,19 @@ mod_save_ui <- function(id) {
     ),
     column(8,
            tabsetPanel(
-             tabPanel("About",
-                      br(),
-                      div(img(src = "www/logo.png", width = 300), align = "center"),
-                      br(),
-                      "This app is part of the `amices` universe ('a home for the growing MICE family'). Amices is a place for people interested in solving missing data problems. Find us online on ",
-                      tags$a(href = "https://github.com/amices", "GitHub"),
-                      " or our ",
-                      tags$a(href = "https://amices.org", "website"),
-                      ". For an introduction to missing data and imputation methods, see the open access book 'Flexible Imputation of Missing Data'",
-                      tags$a(href = "https://stefvanbuuren.name/fimd/", "(van Buuren, 2018)"),
-                      ".")
+             tabPanel(
+               "About",
+               br(),
+               div(img(src = "www/logo.png", width = 300), align = "center"),
+               br(),
+               "This app is part of the `amices` universe ('a home for the growing MICE family'). Amices is a place for people interested in solving missing data problems. Find us online on ",
+               tags$a(href = "https://github.com/amices", "GitHub"),
+               " or our ",
+               tags$a(href = "https://amices.org", "website"),
+               ". For an introduction to missing data and imputation methods, see the open access book 'Flexible Imputation of Missing Data'",
+               tags$a(href = "https://stefvanbuuren.name/fimd/", "(van Buuren, 2018)"),
+               "."
+             )
            ))
   ))
 }

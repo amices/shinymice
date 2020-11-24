@@ -7,8 +7,6 @@
 plot_strip(imp, x)
 }
 \arguments{
-\item{imp}{}
-
 \item{x}{}
 }
 \value{

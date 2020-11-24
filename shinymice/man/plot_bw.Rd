@@ -7,8 +7,6 @@
 plot_bw(imp, x)
 }
 \arguments{
-\item{imp}{}
-
 \item{x}{}
 }
 \value{

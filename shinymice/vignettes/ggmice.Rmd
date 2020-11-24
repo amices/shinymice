@@ -117,7 +117,7 @@ Then look at the in- and outflux
 ```{r}
 # plot in- and outflux of incomplete data
 shinymice::plot_flux(dat)
-plotly::ggplotly(p)
+# plotly::ggplotly(p)
 ```
 Develop a predictor matrix to adjust for the imputation model
 
@@ -129,8 +129,7 @@ new_pred <- imp$predictorMatrix
 new_pred["bmi", c("hgt", "wgt")] <- 0
 imp2 <- mice::mice(dat, predictorMatrix = new_pred, maxit = 0)
 shinymice::plot_pred_matrix(imp2) 
-mice::quickpred(dat)
-
+shinymice::plot_pred_matrix(mice::quickpred(dat)) 
 ```
 
 
@@ -189,18 +188,6 @@ shinymice::plot_strip(imp, x)
 
 # density plot (not appropriate with categorical variable)
 shinymice::plot_dens(imp, x)
-
-# # faceted barplot
-# imp %>% plot_imps(x) +
-#   ggplot2::geom_bar(
-#     ggplot2::aes(x = .data[[x]],
-#                  color = datapoint),
-#     width = 0.5,
-#     fill = "white"
-#   ) +
-#   ggplot2::facet_wrap(~ .imp, scales = "free_y", ncol = 2, labeller = ggplot2::labeller(.imp = c("Observed data", paste("Imputation", 1:imp$m)) %>% setNames(0:imp$m)))
-# add arg 'showall = FALSE' 
-
 ```
 
 

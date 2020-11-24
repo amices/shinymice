@@ -7,10 +7,6 @@
 plot_imps(imp, x, y = NULL)
 }
 \arguments{
-\item{imp}{}
-
-\item{x}{}
-
 \item{y}{}
 }
 \value{

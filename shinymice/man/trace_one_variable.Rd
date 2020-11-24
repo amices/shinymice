@@ -7,8 +7,6 @@
 trace_one_variable(d, x)
 }
 \arguments{
-\item{d}{}
-
 \item{x}{}
 }
 \value{

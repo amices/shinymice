@@ -7,10 +7,6 @@
 plot_NA_cond(dat, x, z)
 }
 \arguments{
-\item{dat}{}
-
-\item{x}{}
-
 \item{z}{}
 }
 \value{

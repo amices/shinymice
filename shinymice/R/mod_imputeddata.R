@@ -26,21 +26,15 @@ mod_imputeddata_ui <- function(id) {
       tabsetPanel(
         tabPanel("Descriptives",
                  tableOutput(ns("imp_desc"))),
-        tabPanel(
-          "Data points",
-          select_var(ns("var1")),
-          plotOutput(ns("strip_plot"))
-        ),
-        tabPanel(
-          "Distribution",
-          select_var(ns("var2")),
-          plotOutput(ns("bw_plot"))
-        ),
-        tabPanel(
-          "Density",
-           select_var(ns("var3")),
-           plotOutput(ns("dens_plot"))
-        ),
+        tabPanel("Data points",
+                 select_var(ns("var1")),
+                 plotOutput(ns("strip_plot"))),
+        tabPanel("Distribution",
+                 select_var(ns("var2")),
+                 plotOutput(ns("bw_plot"))),
+        tabPanel("Density",
+                 select_var(ns("var3")),
+                 plotOutput(ns("dens_plot"))),
         tabPanel(
           "Scatter plot",
           select_var(ns("var4")),
@@ -60,10 +54,12 @@ mod_imputeddata_server <- function(id) {
     ns <- session$ns
     mids <- mice::mice(mice::boys, maxit = 2)
     output$imp_desc <- renderTable(imp_descr(mids))
-    output$strip_plot <- renderPlot(plot_strip(mids, x = input$var1))
+    output$strip_plot <-
+      renderPlot(plot_strip(mids, x = input$var1))
     output$bw_plot <- renderPlot(plot_bw(mids, x = input$var2))
     output$dens_plot <- renderPlot(plot_dens(mids, x = input$var3))
-    output$xy_plot <- renderPlot(plot_xy(mids, x = input$var4, y = input$var5))
+    output$xy_plot <-
+      renderPlot(plot_xy(mids, x = input$var4, y = input$var5))
   })
 }
 

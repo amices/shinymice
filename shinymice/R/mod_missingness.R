@@ -33,28 +33,25 @@ mod_missingness_ui <- function(id) {
       "5. Evaluate the distribution of variables conditional on missingness in another variable.",
       br()
     ),
-    column(
-      8,
-      tabsetPanel(
-        tabPanel("Descriptives",
-                 DT::DTOutput(ns("na_desc"))),
-        tabPanel("Browse",
-                 DT::DTOutput(ns("na_tab"))),
-        
-        tabPanel(
-          "Scatter plot",
-          select_var(ns("var1")),
-          select_var(ns("var2")),
-          plotOutput(ns("na_plot"))
-        ),
-        tabPanel(
-          "Conditional distribution",
-          select_var(ns("var3")),
-          select_var(ns("var4")),
-          plotOutput(ns("cond_plot"))
-        )
-      )
-    )
+    column(8,
+           tabsetPanel(
+             tabPanel("Descriptives",
+                      DT::DTOutput(ns("na_desc"))),
+             tabPanel("Browse",
+                      DT::DTOutput(ns("na_tab"))),
+             tabPanel(
+               "Scatter plot",
+               select_var(ns("var1")),
+               select_var(ns("var2")),
+               plotOutput(ns("na_plot"))
+             ),
+             tabPanel(
+               "Conditional distribution",
+               select_var(ns("var3")),
+               select_var(ns("var4")),
+               plotOutput(ns("cond_plot"))
+             )
+           ))
   ))
 }
 

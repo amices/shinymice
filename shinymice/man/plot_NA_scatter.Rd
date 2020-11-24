@@ -7,10 +7,6 @@
 plot_NA_scatter(dat, x, y)
 }
 \arguments{
-\item{dat}{}
-
-\item{x}{}
-
 \item{y}{}
 }
 \value{
