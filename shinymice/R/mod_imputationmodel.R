@@ -17,19 +17,19 @@ mod_imputationmodel_ui <- function(id) {
       br(),
       "1. Look at the missing data pattern for an overview of the missingness.",
       br(),
-      "2. Make the imputations reproducible by specifying an initial random value (seed)",
+      "2. Evaluate the in and outflux of the model.",
+      br(),
+      "3. Check (and modify) the predictor matrix.",
+      br(),
+      "4. Make the imputations reproducible by specifying an initial random value (seed)",
       set_number("seed", val = 123),
       no_br(),
-      "3. Determine the number of imputations (m)",
+      "5. Determine the number of imputations (m)",
       set_number("m", val = 5),
       no_br(),
-      "4. And the number of iterations (maxit)",
+      "6. And the number of iterations (maxit)",
       set_number("maxit", val = 10),
       no_br(),
-      "5. Evaluate the in and outflux of the model.",
-      br(),
-      "6. Check (and modify) the predictor matrix.",
-      br(),
       "7. Run `mice()`.",
       br(),
       actionButton(ns("run_mice"), label = "Impute", width = 100),
@@ -53,6 +53,7 @@ mod_imputationmodel_ui <- function(id) {
                "Influx and outflux are summaries of the missing data pattern intended to aid in the construction of imputation models. The influx of a variable quantifies how well its missing data connect to the observed data on other variables. The outflux of a variable quantifies how well its observed data connect to the missing data on other variables. Keeping everything else constant, variables with high influx and outflux are preferred."
              ),
              tabPanel("Predictor matrix",
+                      actionButton(ns("quickpred"), "Update"),
                       plotOutput(ns("pred_plot")),
                       br(),
                       tags$b("Interpretation:"),
@@ -76,7 +77,7 @@ mod_imputationmodel_server <- function(id) {
       plotly::renderPlotly({
         plot_flux(mice::boys)
       })
-    output$pred_plot <- renderPlot(plot_pred_matrix(mice::boys))
+    output$pred_plot <- renderPlot({if (input$quickpred == 0){plot_pred_matrix(mice::boys)} else {plot_pred_matrix(mice::quickpred(mice::boys))}})
     output$trace_plot <- renderPlot(imp %>% preprocess_thetas(.) %>% trace_one_variable(., x = input$var1))
   })
 }
