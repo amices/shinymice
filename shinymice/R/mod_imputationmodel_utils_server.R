@@ -11,19 +11,19 @@ plot_md_pattern <- function(dat) {
   # get md pattern and store additional info
   pat <- mice::md.pattern(dat, plot = FALSE)
   vrb <- colnames(pat)[-ncol(pat)]
-  colnames(pat) <- c(vrb, "n_vrb_inc")
-  n_pat_obs <- as.numeric(rownames(pat))[-nrow(pat)]
-  n_vrb_inc <- as.numeric(pat[, ncol(pat)])[-nrow(pat)]
-  n_val_mis <- as.numeric(pat[nrow(pat), ])[-ncol(pat)]
-  n_mis_tot <- pat[nrow(pat), ncol(pat)]
+  colnames(pat) <- c(vrb, "NA_per_pat")
+  pat_freq <- as.numeric(rownames(pat))[-nrow(pat)]
+  NA_per_pat <- as.numeric(pat[, ncol(pat)])[-nrow(pat)]
+  NA_per_vrb <- as.numeric(pat[nrow(pat), ])[-ncol(pat)]
+  NA_total <- pat[nrow(pat), ncol(pat)]
   # make the pattern tidy
   long_pat <- pat[-nrow(pat), ] %>%
-    cbind(., n_pat_obs, pat_nr = 1:nrow(.)) %>%
+    cbind(., pat_freq, pat_nr = 1:nrow(.)) %>%
     as.data.frame() %>%
     tidyr::pivot_longer(cols = all_of(vrb),
                         names_to = "vrb",
                         values_to = "obs") %>%
-    cbind(., n_val_mis)
+    cbind(., NA_per_vrb)
   # plot the md pattern
   p <- long_pat %>%
     ggplot2::ggplot() +
@@ -31,25 +31,27 @@ plot_md_pattern <- function(dat) {
       x = vrb,
       y = pat_nr,
       fill = as.factor(obs),
-      group = n_vrb_inc
+      group = NA_per_pat,
+      text = paste('pat_freq: ', pat_freq,
+                   '</br>NA_per_vrb: ', NA_per_vrb)
     ),
     color = "black") +
     # set axes
     ggplot2::scale_x_discrete(limits = vrb,
                               position = "bottom",
-                              labels = as.character(n_val_mis),
+                              labels = as.character(NA_per_vrb),
                               expand = c(0,0)) +
     ggplot2::scale_y_reverse(
       breaks = 1:max(long_pat$pat_nr),
-      labels = as.character(n_pat_obs),
+      labels = as.character(pat_freq),
       expand = c(0, 0),
-      sec.axis = ggplot2::dup_axis(labels = as.character(n_vrb_inc),
+      sec.axis = ggplot2::dup_axis(labels = as.character(NA_per_pat),
                                    name = "Number of missing entries per pattern")
     ) +
     # add labels
     ggplot2::labs(x = "Number of missing entries per variable",
                   y = "Pattern frequency",
-                  title = paste0("Missing data pattern (total number of missing cells = ", n_mis_tot, ")\n")) +
+                  title = paste0("Missing data pattern (total number of missing cells = ", NA_total, ")\n")) +
     ggplot2::geom_text(ggplot2::aes(x = vrb, y = -Inf, label = abbreviate(.data[["vrb"]])),
                        data = long_pat[1:length(vrb),],
                        vjust = -0.5) +
@@ -77,12 +79,12 @@ plot_md_pattern <- function(dat) {
 #'
 #' @examples
 plot_flux <- function(dat) {
-  flx <- mice::flux(dat)
+  flx <- mice::flux(dat) %>% cbind(variable = rownames(.))
   p <- flx %>% ggplot2::ggplot() +
     ggplot2::geom_text(ggplot2::aes(
       x = influx,
       y = outflux,
-      label = rownames(flx)
+      label = variable
     )) +
     ggplot2::geom_abline(intercept = 1,
                          slope = -1,

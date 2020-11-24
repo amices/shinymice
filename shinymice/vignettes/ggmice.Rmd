@@ -106,6 +106,10 @@ First look at the missing data pattern
 dat2 <- mice::boys %>% cbind(bhgdhjahfjhksgdkfkjhsdgfksd = mice::boys$age) 
 shinymice::plot_md_pattern(dat2) 
 pat <- mice::md.pattern(dat)
+
+# change what plotly shows (see https://stackoverflow.com/questions/36325154/how-to-choose-variable-to-display-in-tooltip-when-using-ggplotly)
+(p <- plot_md_pattern(dat))
+plotly::ggplotly(p, tooltip = c("x", "group", "text")) 
 ```
 
 Then look at the in- and outflux
@@ -113,6 +117,7 @@ Then look at the in- and outflux
 ```{r}
 # plot in- and outflux of incomplete data
 shinymice::plot_flux(dat)
+plotly::ggplotly(p)
 ```
 Develop a predictor matrix to adjust for the imputation model
 

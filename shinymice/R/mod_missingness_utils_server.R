@@ -15,7 +15,7 @@ descr_NA <- function(d) {
   dt <- DT::datatable(tab, rownames = FALSE) %>% 
     DT::formatStyle(
       "n_missing",
-      color = "#B61A51",
+      color = DT::styleInterval(cuts = 0, values = c("black", "#B61A51")),
       fontWeight = "bold")
   return(dt)
 }
