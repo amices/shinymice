@@ -107,9 +107,9 @@ dat2 <- mice::boys %>% cbind(bhgdhjahfjhksgdkfkjhsdgfksd = mice::boys$age)
 shinymice::plot_md_pattern(dat2) 
 pat <- mice::md.pattern(dat)
 
-# change what plotly shows (see https://stackoverflow.com/questions/36325154/how-to-choose-variable-to-display-in-tooltip-when-using-ggplotly)
-(p <- plot_md_pattern(dat))
-plotly::ggplotly(p, tooltip = c("x", "group", "text")) 
+# # change what plotly shows (see https://stackoverflow.com/questions/36325154/how-to-choose-variable-to-display-in-tooltip-when-using-ggplotly)
+# (p <- plot_md_pattern(dat))
+# plotly::ggplotly(p, tooltip = c("x", "group", "text")) 
 ```
 
 Then look at the in- and outflux
@@ -129,6 +129,8 @@ new_pred <- imp$predictorMatrix
 new_pred["bmi", c("hgt", "wgt")] <- 0
 imp2 <- mice::mice(dat, predictorMatrix = new_pred, maxit = 0)
 shinymice::plot_pred_matrix(imp2) 
+mice::quickpred(dat)
+
 ```
 
 

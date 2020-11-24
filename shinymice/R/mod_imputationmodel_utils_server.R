@@ -104,24 +104,23 @@ plot_flux <- function(dat) {
 #' @export
 #'
 #' @examples
-plot_pred_matrix <- function(dat) {
+plot_pred_matrix <- function(d) {
   # parse input
-  if (mice::is.mids(dat)) {
-    imp <- dat
+  if (is(d, "mids")) {
+    pred <- d$predictorMatrix
+  } else if (is(d, "matrix")) {
+    pred <- d
   } else {
-    imp <- mice::mice(dat, maxit = 0)
+    pred <- mice::mice(d, maxit = 0) %>% .$predictorMatrix
   }
-  # get the predictor matrix and add the rownames as variable
-  pred <- imp$predictorMatrix %>%
-    as.data.frame() %>%
-    cbind(vrb_to_imp = rownames(.), .)
   # make the data tidy to plot
-  long_pred <-
+  long_pred <- pred %>%
+    as.data.frame() %>%
+    cbind(vrb_to_imp = rownames(.), .) %>% 
     tidyr::pivot_longer(
-      pred,
-      cols = names(pred)[-1],
+      cols = names(.)[-1],
       names_to = "predictor",
-      names_transform = list(predictord = as.factor)
+      names_transform = list(predictor = as.factor)
     )
   # plot the predictor matrix
   p <- long_pred %>%
