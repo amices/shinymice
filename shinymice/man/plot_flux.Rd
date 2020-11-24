@@ -7,7 +7,7 @@
 plot_flux(dat)
 }
 \arguments{
-\item{dat}{}
+\item{dat}{An incomplete dataset of class dataframe}
 }
 \value{
 

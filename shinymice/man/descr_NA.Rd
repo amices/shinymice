@@ -7,7 +7,7 @@
 descr_NA(d)
 }
 \arguments{
-\item{d}{}
+\item{d}{An incomplete dataset of class dataframe}
 }
 \value{
 

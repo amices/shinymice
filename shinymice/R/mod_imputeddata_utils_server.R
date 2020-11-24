@@ -1,12 +1,10 @@
 # descriptives for imputed data
 #' Title
 #'
-#' @param imp
+#' @param imp A multiply imputed data set (`mids`) object
 #'
 #' @return
 #' @export
-#'
-#' @examples
 imp_descr <- function(imp) {
   tab <- imp %>% mice::complete("all") %>%
     purrr::map_df(., ~ {
@@ -22,14 +20,12 @@ imp_descr <- function(imp) {
 # imputation plot: extract imputations and initialize plot
 #' Title
 #'
-#' @param imp
-#' @param x
-#' @param y
+#' @param imp A multiply imputed data set (`mids`) object
+#' @param x A variable to plot
+#' @param y An optional second variable to plot
 #'
 #' @return
 #' @export
-#'
-#' @examples
 plot_imps <- function(imp, x, y = NULL) {
   # escape function if no variable is selected
   if (x == "Select a variable") {
@@ -64,13 +60,11 @@ plot_imps <- function(imp, x, y = NULL) {
 # boxplot (not informative with categorical variable)
 #' Title
 #'
-#' @param imp
-#' @param x
+#' @param imp A multiply imputed data set (`mids`) object
+#' @param x A variable to plot
 #'
 #' @return
 #' @export
-#'
-#' @examples
 plot_bw <- function(imp, x) {
   # escape function if no variable is selected
   if (x == "Select a variable") {
@@ -110,13 +104,11 @@ plot_bw <- function(imp, x) {
 # stripplot
 #' Title
 #'
-#' @param imp
-#' @param x
+#' @param imp A multiply imputed data set (`mids`) object
+#' @param x A variable to plot
 #'
 #' @return
 #' @export
-#'
-#' @examples
 plot_strip <- function(imp, x) {
   # escape function if no variable is selected
   if (x == "Select a variable") {
@@ -141,13 +133,11 @@ plot_strip <- function(imp, x) {
 # density plot
 #' Title
 #'
-#' @param imp
-#' @param x
+#' @param imp A multiply imputed data set (`mids`) object
+#' @param x A variable to plot
 #'
 #' @return
 #' @export
-#'
-#' @examples
 plot_dens <- function(imp, x) {
   # escape function if no variable is selected
   if (x == "Select a variable") {
@@ -168,14 +158,12 @@ plot_dens <- function(imp, x) {
 # xyplot
 #' Title
 #'
-#' @param imp
-#' @param x
-#' @param y
+#' @param imp A multiply imputed data set (`mids`) object
+#' @param x A variable to plot
+#' @param y A second variable to plot
 #'
 #' @return
 #' @export
-#'
-#' @examples
 plot_xy <- function(imp, x, y) {
   # escape function if no variable is selected
   if (x == "Select a variable" |

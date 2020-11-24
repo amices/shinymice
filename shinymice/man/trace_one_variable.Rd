@@ -7,7 +7,9 @@
 trace_one_variable(d, x)
 }
 \arguments{
-\item{x}{}
+\item{d}{A dataframe with preprocessed imputation chains generated via the function `preprocess_thetas()`}
+
+\item{x}{A variable to plot}
 }
 \value{
 

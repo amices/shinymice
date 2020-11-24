@@ -7,7 +7,9 @@
 plot_bw(imp, x)
 }
 \arguments{
-\item{x}{}
+\item{imp}{A multiply imputed data set (`mids`) object}
+
+\item{x}{A variable to plot}
 }
 \value{
 

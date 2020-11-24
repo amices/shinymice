@@ -7,7 +7,7 @@
 plot_pred_matrix(d)
 }
 \arguments{
-\item{dat}{}
+\item{dat}{An incomplete dataset of class dataframe, a multiply imputed data set of class mids, or a predictor matrix}
 }
 \value{
 

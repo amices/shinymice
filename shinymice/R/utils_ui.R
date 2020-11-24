@@ -15,10 +15,11 @@ no_br <- function() {
 
 # select input with defaults
 select_var <- function(ns_id, ...) {
-  div(selectInput(
+  div("Select a variable:", 
+      selectInput(
     ns_id,
     label = NULL,
-    choices = c("Select a variable", names(mice::boys)),
+    choices = names(mice::boys),
     width = 200,
     ...
   ),

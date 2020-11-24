@@ -7,7 +7,11 @@
 plot_xy(imp, x, y)
 }
 \arguments{
-\item{y}{}
+\item{imp}{A multiply imputed data set (`mids`) object}
+
+\item{x}{A variable to plot}
+
+\item{y}{A second variable to plot}
 }
 \value{
 

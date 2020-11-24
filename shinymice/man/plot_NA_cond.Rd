@@ -7,7 +7,11 @@
 plot_NA_cond(dat, x, z)
 }
 \arguments{
-\item{z}{}
+\item{dat}{An incomplete dataset of class dataframe}
+
+\item{x}{A variable to plot}
+
+\item{z}{A second variable to plot}
 }
 \value{
 

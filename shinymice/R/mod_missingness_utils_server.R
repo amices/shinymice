@@ -1,12 +1,10 @@
 # descriptive statistics for incomplete data
 #' Title
 #'
-#' @param d
+#' @param d An incomplete dataset of class dataframe
 #'
 #' @return
 #' @export
-#'
-#' @examples
 descr_NA <- function(d) {
   tab <-
     psych::describe(d, skew = FALSE)[, c("n", "mean", "sd", "min", "max")] %>%
@@ -29,12 +27,10 @@ descr_NA <- function(d) {
 # tabulate dataset and highlight NAs
 #' Title
 #'
-#' @param d
+#' @param d An incomplete dataset of class dataframe
 #'
 #' @return
 #' @export
-#'
-#' @examples
 tab_NA <- function(d) {
   dt <- d %>%
     dplyr::mutate(dplyr::across(where(is.numeric), round, 2)) %>%
@@ -51,14 +47,12 @@ tab_NA <- function(d) {
 # histogram/bar plot conditional on missingness in another variable
 #' Title
 #'
-#' @param dat
-#' @param x
-#' @param z
+#' @param dat An incomplete dataset of class dataframe
+#' @param x A variable to plot
+#' @param z A second variable to plot
 #'
 #' @return
 #' @export
-#'
-#' @examples
 plot_NA_cond <- function(dat, x, z) {
   # escape function if no variable is selected
   if (x == "Select a variable" |
@@ -106,14 +100,12 @@ plot_NA_cond <- function(dat, x, z) {
 # scatterplot with NAs
 #' Title
 #'
-#' @param dat
-#' @param x
-#' @param y
+#' @param dat An incomplete dataset of class dataframe
+#' @param x A variable to plot
+#' @param y A second variable to plot
 #'
 #' @return
 #' @export
-#'
-#' @examples
 plot_NA_scatter <- function(dat, x, y) {
   # escape function if no variable is selected
   if (x == "Select a variable" |

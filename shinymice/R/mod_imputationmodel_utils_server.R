@@ -1,12 +1,10 @@
 # plot md pattern of incomplete data
 #' Title
 #'
-#' @param dat
+#' @param dat An incomplete dataset of class dataframe
 #'
 #' @return
 #' @export
-#'
-#' @examples
 plot_md_pattern <- function(dat) {
   # get md pattern and store additional info
   pat <- mice::md.pattern(dat, plot = FALSE)
@@ -94,12 +92,10 @@ plot_md_pattern <- function(dat) {
 # plot in- and outflux of incomplete data
 #' Title
 #'
-#' @param dat
+#' @param dat An incomplete dataset of class dataframe
 #'
 #' @return
 #' @export
-#'
-#' @examples
 plot_flux <- function(dat) {
   flx <- mice::flux(dat) %>% cbind(variable = rownames(.))
   p <- flx %>% ggplot2::ggplot() +
@@ -118,12 +114,10 @@ plot_flux <- function(dat) {
 # plot the predictor matrix for the imputation model
 #' Title
 #'
-#' @param dat
+#' @param dat An incomplete dataset of class dataframe, a multiply imputed data set of class mids, or a predictor matrix
 #'
 #' @return
 #' @export
-#'
-#' @examples
 plot_pred_matrix <- function(d) {
   # parse input
   if (is(d, "mids")) {
@@ -173,12 +167,10 @@ plot_pred_matrix <- function(d) {
 # traceplot: make chain means and variances tidy
 #' Title
 #'
-#' @param imp
+#' @param imp A multiply imputed data set (mids) object
 #'
 #' @return
 #' @export
-#'
-#' @examples
 preprocess_thetas <- function(imp) {
   # preprocess chain means
   long_trace <- imp$chainMean %>%
@@ -204,13 +196,11 @@ preprocess_thetas <- function(imp) {
 # traceplot: plot trace of one variable
 #' Title
 #'
-#' @param d
-#' @param x
+#' @param d A dataframe with preprocessed imputation chains generated via the function `preprocess_thetas()`
+#' @param x A variable to plot
 #'
 #' @return
 #' @export
-#'
-#' @examples
 trace_one_variable <- function(d, x) {
   # escape function if no variable is selected
   if (x == "Select a variable") {

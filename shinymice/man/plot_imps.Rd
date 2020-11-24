@@ -7,7 +7,11 @@
 plot_imps(imp, x, y = NULL)
 }
 \arguments{
-\item{y}{}
+\item{imp}{A multiply imputed data set (`mids`) object}
+
+\item{x}{A variable to plot}
+
+\item{y}{An optional second variable to plot}
 }
 \value{
 
