@@ -9,26 +9,24 @@
 #' @export
 
 # remove break (opposite of br())
-no_br <- function(){
+no_br <- function() {
   div(style = "margin-bottom: -15px")
 }
 
 # select input with defaults
-select_var <- function(ns_id, ...){
-  div(
-    selectInput(
-      ns_id,
-      label = NULL,
-      choices = c("Select a variable", names(mice::boys)),
-      width = 200,
-      ...
-    ),
-    style = "display:inline-block; margin-left: 20px; margin-top: 10px"
-  )
+select_var <- function(ns_id, ...) {
+  div(selectInput(
+    ns_id,
+    label = NULL,
+    choices = c("Select a variable", names(mice::boys)),
+    width = 200,
+    ...
+  ),
+  style = "display:inline-block; margin-left: 20px; margin-top: 10px")
 }
 
 # select number with defaults
-set_number <- function(ns_id, val, ...){
+set_number <- function(ns_id, val, ...) {
   numericInput(
     ns_id,
     label = NULL,

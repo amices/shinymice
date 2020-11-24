@@ -1,32 +1,70 @@
 # descriptive statistics for incomplete data
 #' Title
 #'
-#' @param d 
+#' @param d
 #'
 #' @return
 #' @export
 #'
 #' @examples
-mis_descr <- function(d) {
+descr_NA <- function(d) {
   tab <-
-    psych::describe(d)[, c("n", "mean", "sd", "min", "max", "median")] %>%
-    cbind(variable = rownames(.), ., n_missing = as.integer(nrow(d) - .$n))
-  tab[, 2] <- as.integer(tab[, 2])
-  return(tab)
+    psych::describe(d, skew = FALSE)[, c("n", "mean", "sd", "min", "max")] %>%
+    cbind(variable = rownames(.), .) %>%
+    dplyr::mutate(
+      n = as.integer(n),
+      mean = round(mean, 2),
+      sd = round(sd, 2),
+      n_missing = nrow(d) - n
+    )
+  dt <- DT::datatable(tab, rownames = FALSE) %>%
+    DT::formatStyle(
+      "n_missing",
+      color = DT::styleInterval(cuts = 0, values = c("black", "#B61A51")),
+      fontWeight = "bold"
+    )
+  return(dt)
+}
+
+# tabulate dataset and highlight NAs
+#' Title
+#'
+#' @param d
+#'
+#' @return
+#' @export
+#'
+#' @examples
+tab_NA <- function(d) {
+  dt <- d %>%
+    dplyr::mutate(dplyr::across(where(is.numeric), round, 2)) %>%
+    DT::datatable(d) %>%
+    DT::formatStyle(
+      names(d),
+      target = "cell",
+      color = DT::styleEqual("NA", "#B61A51"),
+      fontWeight = DT::styleEqual("NA", "bold")
+    )
+  return(dt)
 }
 
 # histogram/bar plot conditional on missingness in another variable
 #' Title
 #'
-#' @param dat 
-#' @param x 
-#' @param z 
+#' @param dat
+#' @param x
+#' @param z
 #'
 #' @return
 #' @export
 #'
 #' @examples
 plot_NA_cond <- function(dat, x, z) {
+  # escape function if no variable is selected
+  if (x == "Select a variable" |
+      z == "Select a variable") {
+    return(ggplot2::ggplot(dat) + ggplot2::ggtitle("Please select variable(s)"))
+  }
   # define graphing elements to add to plot
   if (is.numeric(dat[[x]])) {
     # for continuous variables
@@ -59,22 +97,29 @@ plot_NA_cond <- function(dat, x, z) {
     ) +
     # style
     theme_mice() +
-    ggplot2::theme(legend.position = "none",
-          strip.background = ggplot2::element_rect(size = 0.5))
+    ggplot2::theme(
+      legend.position = "none",
+      strip.background = ggplot2::element_rect(size = 0.5)
+    )
 }
 
 # scatterplot with NAs
 #' Title
 #'
-#' @param dat 
-#' @param x 
-#' @param y 
+#' @param dat
+#' @param x
+#' @param y
 #'
 #' @return
 #' @export
 #'
 #' @examples
 plot_NA_scatter <- function(dat, x, y) {
+  # escape function if no variable is selected
+  if (x == "Select a variable" |
+      y == "Select a variable") {
+    return(ggplot2::ggplot(dat) + ggplot2::ggtitle("Please select variable(s)"))
+  }
   # define graphing elements to add to plot later
   # set NA value and scale for variable x
   if (is.numeric(dat[[x]])) {

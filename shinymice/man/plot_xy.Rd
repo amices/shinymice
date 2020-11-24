@@ -7,10 +7,6 @@
 plot_xy(imp, x, y)
 }
 \arguments{
-\item{imp}{}
-
-\item{x}{}
-
 \item{y}{}
 }
 \value{

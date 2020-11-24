@@ -4,7 +4,7 @@
 \alias{plot_pred_matrix}
 \title{Title}
 \usage{
-plot_pred_matrix(dat)
+plot_pred_matrix(d)
 }
 \arguments{
 \item{dat}{}

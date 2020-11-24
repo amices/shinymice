@@ -7,8 +7,6 @@
 plot_dens(imp, x)
 }
 \arguments{
-\item{imp}{}
-
 \item{x}{}
 }
 \value{

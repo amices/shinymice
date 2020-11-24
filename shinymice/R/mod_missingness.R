@@ -11,7 +11,7 @@ mod_missingness_ui <- function(id) {
   ns <- NS(id)
   fluidPage(fluidRow(
     column(
-      3,
+      4,
       tags$b("Explore the missingness"),
       br(),
       br(),
@@ -33,28 +33,25 @@ mod_missingness_ui <- function(id) {
       "5. Evaluate the distribution of variables conditional on missingness in another variable.",
       br()
     ),
-    column(
-      9,
-      tabsetPanel(
-        tabPanel("Descriptives",
-                 tableOutput(ns("na_desc"))),
-        tabPanel("Browse",
-                 DT::DTOutput(ns("na_tab"))),
-        
-        tabPanel(
-          "Scatterplot",
-          select_var(ns("var1")),
-          select_var(ns("var2")),
-          plotOutput(ns("cond_plot"))
-        ),
-        tabPanel(
-          "Conditional distribution",
-          select_var(ns("var1")),
-          select_var(ns("var2")),
-          plotOutput(ns("na_plot"))
-        )
-      )
-    )
+    column(8,
+           tabsetPanel(
+             tabPanel("Descriptives",
+                      DT::DTOutput(ns("na_desc"))),
+             tabPanel("Browse",
+                      DT::DTOutput(ns("na_tab"))),
+             tabPanel(
+               "Scatter plot",
+               select_var(ns("var1")),
+               select_var(ns("var2")),
+               plotOutput(ns("na_plot"))
+             ),
+             tabPanel(
+               "Conditional distribution",
+               select_var(ns("var3")),
+               select_var(ns("var4")),
+               plotOutput(ns("cond_plot"))
+             )
+           ))
   ))
 }
 
@@ -63,33 +60,15 @@ mod_missingness_ui <- function(id) {
 #' @noRd
 mod_missingness_server <- function(id) {
   moduleServer(id, function(input, output, session) {
-    output$na_tab <- DT::renderDT(mice::boys)
-    output$na_desc <- renderTable(mis_descr(mice::boys))
-    x = "age"
-    y = "hc"
-    z = "hc"
-    output$cond_plot <-
-      renderPlot({
-        plot_NA_cond(mice::boys, x , z) + ggplot2::ggtitle(
-          paste0(
-            "Distribution of '",
-            x,
-            "' conditional on missingness in '",
-            z,
-            "' (select above)"
-          )
-        )
-      })
+    output$na_desc <- DT::renderDT(descr_NA(mice::boys))
+    output$na_tab <- DT::renderDT(tab_NA(mice::boys))
     output$na_plot <-
       renderPlot({
-        plot_NA_scatter(mice::boys, x, y) +
-          list(ggplot2::labs(
-            title = paste0("Scatter plot of '",
-                           y,
-                           "' against '",
-                           x,
-                           "' (select above)")
-          ))
+        plot_NA_scatter(mice::boys, x = input$var1, y = input$var2)
+      })
+    output$cond_plot <-
+      renderPlot({
+        plot_NA_cond(mice::boys, x = input$var3, z = input$var4)
       })
   })
 }

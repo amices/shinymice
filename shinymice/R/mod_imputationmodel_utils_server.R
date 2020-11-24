@@ -1,7 +1,7 @@
 # plot md pattern of incomplete data
 #' Title
 #'
-#' @param dat 
+#' @param dat
 #'
 #' @return
 #' @export
@@ -11,50 +11,78 @@ plot_md_pattern <- function(dat) {
   # get md pattern and store additional info
   pat <- mice::md.pattern(dat, plot = FALSE)
   vrb <- colnames(pat)[-ncol(pat)]
-  colnames(pat) <- c(vrb, "n_vrb_inc")
-  n_pat_obs <- as.numeric(rownames(pat))[-nrow(pat)]
-  n_vrb_inc <- as.numeric(pat[, ncol(pat)])[-nrow(pat)]
-  n_val_mis <- as.numeric(pat[nrow(pat), ])[-ncol(pat)]
+  colnames(pat) <- c(vrb, "NA_per_pat")
+  pat_freq <- as.numeric(rownames(pat))[-nrow(pat)]
+  NA_per_pat <- as.numeric(pat[, ncol(pat)])[-nrow(pat)]
+  NA_per_vrb <- as.numeric(pat[nrow(pat), ])[-ncol(pat)]
+  NA_total <- pat[nrow(pat), ncol(pat)]
   # make the pattern tidy
   long_pat <- pat[-nrow(pat), ] %>%
-    cbind(., n_pat_obs, pat_nr = 1:nrow(.)) %>%
+    cbind(., pat_freq, pat_nr = 1:nrow(.)) %>%
     as.data.frame() %>%
     tidyr::pivot_longer(cols = all_of(vrb),
                         names_to = "vrb",
                         values_to = "obs") %>%
-    cbind(., n_val_mis)
+    cbind(., NA_per_vrb)
   # plot the md pattern
   p <- long_pat %>%
     ggplot2::ggplot() +
-    ggplot2::geom_tile(ggplot2::aes(
-      x = vrb,
-      y = pat_nr,
-      fill = as.factor(obs),
-      group = n_vrb_inc
-    ),
-    color = "black") +
+    ggplot2::geom_tile(
+      ggplot2::aes(
+        x = vrb,
+        y = pat_nr,
+        fill = as.factor(obs),
+        group = NA_per_pat,
+        text = paste('pat_freq: ', pat_freq,
+                     '</br>NA_per_vrb: ', NA_per_vrb)
+      ),
+      color = "black"
+    ) +
     # set axes
-    ggplot2::scale_x_discrete(limits = vrb,
-                              position = "bottom",
-                              labels = as.character(n_val_mis)) +
+    ggplot2::scale_x_discrete(
+      limits = vrb,
+      position = "bottom",
+      labels = as.character(NA_per_vrb),
+      expand = c(0, 0)
+    ) +
     ggplot2::scale_y_reverse(
       breaks = 1:max(long_pat$pat_nr),
-      labels = as.character(n_pat_obs),
-      expand = c(0.01, 0.01),
-      sec.axis = ggplot2::dup_axis(labels = as.character(n_vrb_inc),
-                                   name = "Incomplete variables (per pattern)")
+      labels = as.character(pat_freq),
+      expand = c(0, 0),
+      sec.axis = ggplot2::dup_axis(labels = as.character(NA_per_pat),
+                                   name = "Number of missing entries per pattern")
     ) +
     # add labels
-    ggplot2::labs(x = "Incomplete cases (per variable)",
-                  y = "Pattern frequency") +
-    ggplot2::geom_text(ggplot2::aes(x = vrb, y = -Inf, label = vrb),
-                       data = long_pat,
-                       vjust = -0.5) +
+    ggplot2::labs(
+      x = "Number of missing entries per variable",
+      y = "Pattern frequency",
+      title = paste0(
+        "Missing data pattern (total number of missing cells = ",
+        NA_total,
+        ")\n"
+      )
+    ) +
+    ggplot2::geom_text(
+      ggplot2::aes(
+        x = vrb,
+        y = -Inf,
+        label = abbreviate(.data[["vrb"]])
+      ),
+      data = long_pat[1:length(vrb),],
+      vjust = -0.5
+    ) +
+    #ggrepel::geom_text_repel(ggplot2::aes(x = vrb, y = -Inf, label = vrb)) +
     ggplot2::coord_cartesian(clip = "off") +
     # add styling
     ggplot2::theme(
       legend.position = "none",
-      plot.margin = ggplot2::margin(t = 25, l = 10, b = 10, r = 10, unit = "pt"),
+      plot.margin = ggplot2::margin(
+        t = 20,
+        l = 10,
+        b = 10,
+        r = 10,
+        unit = "pt"
+      ),
       axis.title.y.right = ggplot2::element_text(margin = ggplot2::margin(l = 10)),
       panel.grid = ggplot2::element_blank()
     ) +
@@ -66,20 +94,18 @@ plot_md_pattern <- function(dat) {
 # plot in- and outflux of incomplete data
 #' Title
 #'
-#' @param dat 
+#' @param dat
 #'
 #' @return
 #' @export
 #'
 #' @examples
 plot_flux <- function(dat) {
-  flx <- mice::flux(dat)
+  flx <- mice::flux(dat) %>% cbind(variable = rownames(.))
   p <- flx %>% ggplot2::ggplot() +
-    ggplot2::geom_text(ggplot2::aes(
-      x = influx,
-      y = outflux,
-      label = rownames(flx)
-    )) +
+    ggplot2::geom_text(ggplot2::aes(x = influx,
+                                    y = outflux,
+                                    label = variable)) +
     ggplot2::geom_abline(intercept = 1,
                          slope = -1,
                          linetype = "dashed") +
@@ -92,44 +118,52 @@ plot_flux <- function(dat) {
 # plot the predictor matrix for the imputation model
 #' Title
 #'
-#' @param dat 
+#' @param dat
 #'
 #' @return
 #' @export
 #'
 #' @examples
-plot_pred_matrix <- function(dat) {
+plot_pred_matrix <- function(d) {
   # parse input
-  if (mice::is.mids(dat)) {
-    imp <- dat
+  if (is(d, "mids")) {
+    pred <- d$predictorMatrix
+  } else if (is(d, "matrix")) {
+    pred <- d
   } else {
-    imp <- mice::mice(dat, maxit = 0)
+    pred <- mice::mice(d, maxit = 0) %>% .$predictorMatrix
   }
-  # get the predictor matrix and add the rownames as variable
-  pred <- imp$predictorMatrix %>%
-    as.data.frame() %>%
-    cbind(vrb_to_imp = rownames(.), .)
   # make the data tidy to plot
-  long_pred <-
+  long_pred <- pred %>%
+    as.data.frame() %>%
+    cbind(vrb_to_imp = rownames(.), .) %>%
     tidyr::pivot_longer(
-      pred,
-      cols = names(pred)[-1],
-      names_to = "vrb_as_pred",
-      names_transform = list(vrb_as_pred = as.factor)
+      cols = names(.)[-1],
+      names_to = "predictor",
+      names_transform = list(predictor = as.factor)
     )
   # plot the predictor matrix
   p <- long_pred %>%
     ggplot2::ggplot() +
     ggplot2::geom_tile(ggplot2::aes(
-      x = vrb_as_pred,
+      x = predictor,
       y = vrb_to_imp,
       fill = as.factor(value)
     ),
     color = "black") +
     ggplot2::theme(legend.position = "none",
                    panel.grid = ggplot2::element_blank()) +
-    ggplot2::scale_y_discrete(limits = rev(names(imp$data))) +
-    ggplot2::scale_x_discrete(limits = names(imp$data), position = "top") +
+    ggplot2::scale_y_discrete(
+      limits = rev(names(imp$data)),
+      expand = c(0, 0),
+      label = abbreviate(rev(names(imp$data)))
+    ) +
+    ggplot2::scale_x_discrete(
+      limits = names(imp$data),
+      position = "top",
+      expand = c(0, 0),
+      label = abbreviate(names(imp$data))
+    ) +
     ggplot2::scale_fill_manual(values = c("1" = mice:::mdc(1), "0" = mice:::mdc(2))) +
     ggplot2::labs(x = "Predictor", y = "Variable to impute")#, title = "Predictor matrix")
   # output
@@ -139,7 +173,7 @@ plot_pred_matrix <- function(dat) {
 # traceplot: make chain means and variances tidy
 #' Title
 #'
-#' @param imp 
+#' @param imp
 #'
 #' @return
 #' @export
@@ -170,14 +204,19 @@ preprocess_thetas <- function(imp) {
 # traceplot: plot trace of one variable
 #' Title
 #'
-#' @param d 
-#' @param x 
+#' @param d
+#' @param x
 #'
 #' @return
 #' @export
 #'
 #' @examples
 trace_one_variable <- function(d, x) {
+  # escape function if no variable is selected
+  if (x == "Select a variable") {
+    return(ggplot2::ggplot(d) + ggplot2::ggtitle("Please select variable(s)"))
+  }
+  
   # select one variable and plot it
   p <- d[d$var == x, ] %>%
     ggplot2::ggplot() +

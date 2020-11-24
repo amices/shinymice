@@ -11,25 +11,25 @@ mod_imputationmodel_ui <- function(id) {
   ns <- NS(id)
   fluidPage(fluidRow(
     column(
-      3,
+      4,
       tags$b("Define the imputation model"),
       br(),
       br(),
       "1. Look at the missing data pattern for an overview of the missingness.",
       br(),
-      "2. Make the imputations reproducible by specifying an initial random value (seed)",
+      "2. Evaluate the in and outflux of the model.",
+      br(),
+      "3. Check (and modify) the predictor matrix.",
+      br(),
+      "4. Make the imputations reproducible by specifying an initial random value (seed)",
       set_number("seed", val = 123),
       no_br(),
-      "3. Determine the number of imputations (m)",
+      "5. Determine the number of imputations (m)",
       set_number("m", val = 5),
       no_br(),
-      "4. And the number of iterations (maxit)",
+      "6. And the number of iterations (maxit)",
       set_number("maxit", val = 10),
       no_br(),
-      "5. Evaluate the in and outflux of the model.",
-      br(),
-      "6. Check (and modify) the predictor matrix.",
-      br(),
       "7. Run `mice()`.",
       br(),
       actionButton(ns("run_mice"), label = "Impute", width = 100),
@@ -37,21 +37,30 @@ mod_imputationmodel_ui <- function(id) {
       "8. Monitor potential non-convergence through visual inspection.",
       verbatimTextOutput(ns("micecall"))
     ),
-    column(9,
+    column(8,
            tabsetPanel(
-             tabPanel("Missingness pattern",
-                      plotOutput(ns("md_plot"))),
+             tabPanel(
+               "Missingness pattern",
+               plotOutput(ns("md_plot")),
+               br(),
+               tags$b("Interpretation:"),
+               "The missing data pattern influences the amount of information that can be transferred between variables. Imputation can be more precise if other variables are non-missing for those cases that are to be imputed. The reverse is also true. Predictors are potentially more powerful if they have are non-missing in rows that are vastly incomplete."
+             ),
              tabPanel(
                "Fluxplot",
-               plotly::plotlyOutput(
-                 ns("flux_plot")),
+               plotly::plotlyOutput(ns("flux_plot")),
                br(),
                tags$b("Interpretation:"),
                "Influx and outflux are summaries of the missing data pattern intended to aid in the construction of imputation models. The influx of a variable quantifies how well its missing data connect to the observed data on other variables. The outflux of a variable quantifies how well its observed data connect to the missing data on other variables. Keeping everything else constant, variables with high influx and outflux are preferred."
              ),
-             tabPanel("Predictor matrix",
-                      plotOutput(ns("pred_plot")),
-                      "Each row in the predictor matrix identifies which predictors are to be used for the variable in the row name."),
+             tabPanel(
+               "Predictor matrix",
+               actionButton(ns("quickpred"), "Update"),
+               plotOutput(ns("pred_plot")),
+               br(),
+               tags$b("Interpretation:"),
+               "Each row in the predictor matrix identifies which predictors are to be used for the variable in the row name."
+             ),
              tabPanel("Traceplot",
                       select_var(ns("var1")),
                       plotOutput(ns("trace_plot")))
@@ -65,13 +74,22 @@ mod_imputationmodel_ui <- function(id) {
 mod_imputationmodel_server <- function(id) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
+    imp <- mice::mice(mice::boys)
     output$md_plot <- renderPlot(plot_md_pattern(mice::boys))
-    output$flux_plot <- 
+    output$flux_plot <-
       plotly::renderPlotly({
         plot_flux(mice::boys)
       })
-    output$pred_plot <- renderPlot(plot_pred_matrix(mice::boys))
-    output$trace_plot <- renderPlot(mice::mice(mice::boys) %>% preprocess_thetas(.) %>% trace_one_variable(., x = "hgt"))
+    output$pred_plot <-
+      renderPlot({
+        if (input$quickpred == 0) {
+          plot_pred_matrix(mice::boys)
+        } else {
+          plot_pred_matrix(mice::quickpred(mice::boys))
+        }
+      })
+    output$trace_plot <-
+      renderPlot(imp %>% preprocess_thetas(.) %>% trace_one_variable(., x = input$var1))
   })
 }
 
