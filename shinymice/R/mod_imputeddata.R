@@ -27,6 +27,7 @@ mod_imputeddata_ui <- function(id) {
       8,
       tabsetPanel(
         tabPanel("Descriptives",
+                 h6("Please make sure to impute the incomplete data first (see 'Imputation model')"),
                  tableOutput(ns("imp_desc"))),
         tabPanel("Data points",
                  select_var(ns("var1")),

@@ -25,7 +25,8 @@ mod_save_ui <- function(id) {
         ),
         style = "margin-bottom: -15px"
       ),
-      "2. Save the imputations.",
+      "2. Save the imputations [this feature is currently disabeled].",
+      br(),
       downloadButton("save_file", label = NULL)
     ),
     column(8,

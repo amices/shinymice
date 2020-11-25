@@ -15,7 +15,7 @@ mod_missingness_ui <- function(id) {
       tags$b("Explore the missingness"),
       br(),
       br(),
-      "1. Load the incomplete data",
+      "1. Load the incomplete data [this feature is currently disabeled].",
       fileInput(
         ns("dat"),
         label = NULL,
@@ -36,6 +36,7 @@ mod_missingness_ui <- function(id) {
     column(8,
            tabsetPanel(
              tabPanel("Descriptives",
+                      h6("Note that variables with an asteriks ('*') are categorical, so the mean and standard deviation may not be meaningful."),
                       DT::DTOutput(ns("na_desc"))),
              tabPanel("Browse",
                       DT::DTOutput(ns("na_tab"))),

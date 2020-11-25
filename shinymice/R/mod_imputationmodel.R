@@ -62,8 +62,8 @@ mod_imputationmodel_ui <- function(id) {
                "Each row in the predictor matrix identifies which predictors are to be used for the variable in the row name."
              ),
              tabPanel("Traceplot",
+                      h6("Please make sure to impute the incomplete data first (see left-hand side)"),
                       select_var(ns("var1")),
-                      "Please make sure to impute the incomplete data first (see left-hand side)",
                       plotOutput(ns("trace_plot")))
            ))
   ))
