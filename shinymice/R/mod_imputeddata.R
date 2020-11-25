@@ -15,11 +15,13 @@ mod_imputeddata_ui <- function(id) {
       tags$b("Inspect the imputations"),
       br(),
       br(),
-      "1. Check the descriptive statistics of the imputed data.",
+      "1. Make sure you have imputed the incomplete data (see 'Imputation model').",
       br(),
-      "2. Inspect the distribution of the imputed data per variable.",
+      "2. Check the descriptive statistics of the imputed data.",
       br(),
-      "3. Evaluate the bivariate relations post-imputation."
+      "3. Inspect the distribution of the imputed data per variable.",
+      br(),
+      "4. Evaluate the bivariate relations post-imputation."
     ),
     column(
       8,

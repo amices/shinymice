@@ -54,11 +54,6 @@ tab_NA <- function(d) {
 #' @return
 #' @export
 plot_NA_cond <- function(dat, x, z) {
-  # escape function if no variable is selected
-  if (x == "Select a variable" |
-      z == "Select a variable") {
-    return(ggplot2::ggplot(dat) + ggplot2::ggtitle("Please select variable(s)"))
-  }
   # define graphing elements to add to plot
   if (is.numeric(dat[[x]])) {
     # for continuous variables
@@ -107,11 +102,6 @@ plot_NA_cond <- function(dat, x, z) {
 #' @return
 #' @export
 plot_NA_scatter <- function(dat, x, y) {
-  # escape function if no variable is selected
-  if (x == "Select a variable" |
-      y == "Select a variable") {
-    return(ggplot2::ggplot(dat) + ggplot2::ggtitle("Please select variable(s)"))
-  }
   # define graphing elements to add to plot later
   # set NA value and scale for variable x
   if (is.numeric(dat[[x]])) {

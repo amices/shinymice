@@ -63,6 +63,7 @@ mod_imputationmodel_ui <- function(id) {
              ),
              tabPanel("Traceplot",
                       select_var(ns("var1")),
+                      "Please make sure to impute the incomplete data first (see left-hand side)",
                       plotOutput(ns("trace_plot")))
            ))
   ))
