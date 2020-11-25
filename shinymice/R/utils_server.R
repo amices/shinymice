@@ -11,15 +11,9 @@
 # not in
 `%nin%` <- Negate(`%in%`)
 
-# dummy plot
-dummy_plot <- function() {
-  ggplot2::ggplot(data = data.frame(
-    a = c(0, 1),
-    b = c(1, 0),
-    c = c("dummy", "plot")
-  )) +
-    ggplot2::geom_text(ggplot2::aes(x = a, y = b, label = c), size = 5) +
-    ggplot2::ggtitle("Dummy plot (to be replaced)")
+# update variable selection
+update_vars <- function(session, ns_id, d){
+updateSelectInput(session, "var1", choices = names(d))
 }
 
 # mice theme

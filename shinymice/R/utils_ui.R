@@ -19,7 +19,7 @@ select_var <- function(ns_id, ...) {
       selectInput(
     ns_id,
     label = NULL,
-    choices = names(mice::boys),
+    choices = "Select a variable",
     width = 200,
     ...
   ),

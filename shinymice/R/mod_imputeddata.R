@@ -52,10 +52,15 @@ mod_imputeddata_ui <- function(id) {
 #' imputeddata Server Functions
 #'
 #' @noRd
-mod_imputeddata_server <- function(id, imp) {
+mod_imputeddata_server <- function(id, data, imp) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
     stopifnot(is.reactive(imp))
+    updateSelectInput(session, "var1", choices = names(isolate(data())))
+    updateSelectInput(session, "var2", choices = names(isolate(data())))
+    updateSelectInput(session, "var3", choices = names(isolate(data())))
+    updateSelectInput(session, "var4", choices = names(isolate(data())))
+    updateSelectInput(session, "var5", choices = names(isolate(data())))
     output$imp_desc <- renderTable(imp_descr(imp()))
     output$strip_plot <-
       renderPlot(plot_strip(imp(), x = input$var1))

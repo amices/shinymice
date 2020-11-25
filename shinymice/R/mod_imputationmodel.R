@@ -76,6 +76,7 @@ mod_imputationmodel_server <- function(id, data) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
     stopifnot(is.reactive(data))
+    updateSelectInput(session, "var1", choices = names(isolate(data())))
     output$md_plot <- renderPlot(plot_md_pattern(data()))
     output$flux_plot <-
       plotly::renderPlotly({

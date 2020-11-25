@@ -62,6 +62,10 @@ mod_missingness_ui <- function(id) {
 mod_missingness_server <- function(id) {
   moduleServer(id, function(input, output, session) {
     data <- reactive(mice::boys)
+    updateSelectInput(session, "var1", choices = names(isolate(data())))
+    updateSelectInput(session, "var2", choices = names(isolate(data())))
+    updateSelectInput(session, "var3", choices = names(isolate(data())))
+    updateSelectInput(session, "var4", choices = names(isolate(data())))
     output$na_desc <- DT::renderDT(descr_NA(data()))
     output$na_tab <- DT::renderDT(tab_NA(data()))
     output$na_plot <-
