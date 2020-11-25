@@ -71,26 +71,28 @@ mod_imputationmodel_ui <- function(id) {
 #' imputationmodel Server Functions
 #'
 #' @noRd
-mod_imputationmodel_server <- function(id) {
+mod_imputationmodel_server <- function(id, data) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
-    imp <- mice::mice(mice::boys)
-    output$md_plot <- renderPlot(plot_md_pattern(mice::boys))
+    stopifnot(is.reactive(data))
+    output$md_plot <- renderPlot(plot_md_pattern(data()))
     output$flux_plot <-
       plotly::renderPlotly({
-        plot_flux(mice::boys)
+        plot_flux(data())
       })
     output$pred_plot <-
       renderPlot({
         if (input$quickpred == 0) {
-          plot_pred_matrix(mice::boys)
+          plot_pred_matrix(data())
         } else {
-          plot_pred_matrix(mice::quickpred(mice::boys))
+          plot_pred_matrix(mice::quickpred(data()))
         }
       })
+    imp <- reactive(mice::mice(data()))
     output$trace_plot <-
-      renderPlot(imp %>% preprocess_thetas(.) %>% trace_one_variable(., x = input$var1))
-  })
+      renderPlot(imp() %>% preprocess_thetas(.) %>% trace_one_variable(., x = input$var1))
+  return(reactive(imp()))
+    })
 }
 
 ## To be copied in the UI
