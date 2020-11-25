@@ -22,13 +22,13 @@ mod_imputationmodel_ui <- function(id) {
       "3. Check (and modify) the predictor matrix.",
       br(),
       "4. Make the imputations reproducible by specifying an initial random value (seed)",
-      set_number("seed", val = 123),
+      set_number(ns("seed"), val = 123),
       no_br(),
       "5. Determine the number of imputations (m)",
-      set_number("m", val = 5),
+      set_number(ns("m"), val = 5),
       no_br(),
       "6. And the number of iterations (maxit)",
-      set_number("maxit", val = 10),
+      set_number(ns("maxit"), val = 10),
       no_br(),
       "7. Run `mice()`.",
       br(),
@@ -88,7 +88,7 @@ mod_imputationmodel_server <- function(id, data) {
           plot_pred_matrix(mice::quickpred(data()))
         }
       })
-    imp <- reactive(mice::mice(data()))
+    imp <- eventReactive(input$run_mice, mice::mice(data(), seed = input$seed, m = input$m, maxit = input$maxit))
     output$trace_plot <-
       renderPlot(imp() %>% preprocess_thetas(.) %>% trace_one_variable(., x = input$var1))
   return(reactive(imp()))

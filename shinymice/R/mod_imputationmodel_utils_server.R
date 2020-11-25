@@ -210,7 +210,7 @@ trace_one_variable <- function(d, x) {
   # select one variable and plot it
   p <- d[d$var == x, ] %>%
     ggplot2::ggplot() +
-    ggplot2::geom_line(ggplot2::aes(x = .it, y = value, color = .imp)) +
+    ggplot2::geom_line(ggplot2::aes(x = as.integer(.it), y = value, color = .imp)) +
     ggplot2::facet_wrap(~ theta, scales = "free", ncol = 1) +
     ggplot2::theme_classic() +
     ggplot2::theme(strip.background = ggplot2::element_rect(size = 0.5)) +
@@ -221,7 +221,7 @@ trace_one_variable <- function(d, x) {
   if (all(is.na(p$data$value))) {
     p <-
       p + ggplot2::geom_text(ggplot2::aes(
-        x = median(as.numeric(d$.imp)),
+        x = mean(1:max(d$.it)),
         y = 0,
         label = "No \n imputations \n to show"
       ),
