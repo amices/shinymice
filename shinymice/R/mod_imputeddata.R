@@ -49,17 +49,17 @@ mod_imputeddata_ui <- function(id) {
 #' imputeddata Server Functions
 #'
 #' @noRd
-mod_imputeddata_server <- function(id) {
+mod_imputeddata_server <- function(id, imp) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
-    mids <- mice::mice(mice::boys, maxit = 2)
-    output$imp_desc <- renderTable(imp_descr(mids))
+    stopifnot(is.reactive(imp))
+    output$imp_desc <- renderTable(imp_descr(imp()))
     output$strip_plot <-
-      renderPlot(plot_strip(mids, x = input$var1))
-    output$bw_plot <- renderPlot(plot_bw(mids, x = input$var2))
-    output$dens_plot <- renderPlot(plot_dens(mids, x = input$var3))
+      renderPlot(plot_strip(imp(), x = input$var1))
+    output$bw_plot <- renderPlot(plot_bw(imp(), x = input$var2))
+    output$dens_plot <- renderPlot(plot_dens(imp(), x = input$var3))
     output$xy_plot <-
-      renderPlot(plot_xy(mids, x = input$var4, y = input$var5))
+      renderPlot(plot_xy(imp(), x = input$var4, y = input$var5))
   })
 }
 

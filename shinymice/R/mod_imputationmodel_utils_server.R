@@ -114,7 +114,7 @@ plot_flux <- function(dat) {
 # plot the predictor matrix for the imputation model
 #' Title
 #'
-#' @param dat An incomplete dataset of class dataframe, a multiply imputed data set of class mids, or a predictor matrix
+#' @param d An incomplete dataset of class dataframe, a multiply imputed data set of class mids, or a predictor matrix
 #'
 #' @return
 #' @export
@@ -148,15 +148,15 @@ plot_pred_matrix <- function(d) {
     ggplot2::theme(legend.position = "none",
                    panel.grid = ggplot2::element_blank()) +
     ggplot2::scale_y_discrete(
-      limits = rev(names(imp$data)),
+      limits = rev(colnames(pred)),
       expand = c(0, 0),
-      label = abbreviate(rev(names(imp$data)))
+      label = abbreviate(rev(colnames(pred)))
     ) +
     ggplot2::scale_x_discrete(
-      limits = names(imp$data),
+      limits = colnames(pred),
       position = "top",
       expand = c(0, 0),
-      label = abbreviate(names(imp$data))
+      label = abbreviate(colnames(pred))
     ) +
     ggplot2::scale_fill_manual(values = c("1" = mice:::mdc(1), "0" = mice:::mdc(2))) +
     ggplot2::labs(x = "Predictor", y = "Variable to impute")#, title = "Predictor matrix")

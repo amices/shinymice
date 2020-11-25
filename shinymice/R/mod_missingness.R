@@ -60,16 +60,18 @@ mod_missingness_ui <- function(id) {
 #' @noRd
 mod_missingness_server <- function(id) {
   moduleServer(id, function(input, output, session) {
-    output$na_desc <- DT::renderDT(descr_NA(mice::boys))
-    output$na_tab <- DT::renderDT(tab_NA(mice::boys))
+    data <- reactive(mice::boys)
+    output$na_desc <- DT::renderDT(descr_NA(data()))
+    output$na_tab <- DT::renderDT(tab_NA(data()))
     output$na_plot <-
       renderPlot({
-        plot_NA_scatter(mice::boys, x = input$var1, y = input$var2)
+        plot_NA_scatter(data(), x = input$var1, y = input$var2)
       })
     output$cond_plot <-
       renderPlot({
-        plot_NA_cond(mice::boys, x = input$var3, z = input$var4)
+        plot_NA_cond(data(), x = input$var3, z = input$var4)
       })
+    return(reactive(data()))
   })
 }
 
