@@ -28,7 +28,7 @@ mod_imputationmodel_ui <- function(id) {
       set_number(ns("m"), val = 5),
       no_br(),
       "6. And the number of iterations (maxit)",
-      set_number(ns("maxit"), val = 10),
+      set_number(ns("maxit"), val = 2),
       no_br(),
       "7. Run `mice()`.",
       br(),

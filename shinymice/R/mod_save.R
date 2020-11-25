@@ -15,7 +15,9 @@ mod_save_ui <- function(id) {
       tags$b("Save the data/results"),
       br(),
       br(),
-      "1. Select the file type to save the imputations.",
+      "1. Please make sure to impute the incomplete data first (see 'Imputation model').",
+      br(),
+      "2. Select the file type to save the imputations [this feature is currently disabeled].",
       div(
         radioButtons(
           "file_type",
@@ -25,9 +27,11 @@ mod_save_ui <- function(id) {
         ),
         style = "margin-bottom: -15px"
       ),
-      "2. Save the imputations [this feature is currently disabeled].",
+      "3. Save the imputations.",
       br(),
-      downloadButton("save_file", label = NULL)
+      downloadButton(ns("save_file"), label = NULL),
+      br(),
+      textOutput(ns("no_imp_to_save"))
     ),
     column(8,
            tabsetPanel(
@@ -51,10 +55,19 @@ mod_save_ui <- function(id) {
 #' save Server Functions
 #'
 #' @noRd
-mod_save_server <- function(id) {
+mod_save_server <- function(id, imp) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
-    output$save_plot <- renderPlot(dummy_plot())
+    stopifnot(is.reactive(imp))
+    output$save_file <- downloadHandler(
+      filename = function() {
+        paste0("imp", ".RData")
+      },
+      content = function(file) {
+        mids_object <- imp()
+        save(mids_object, file = file)
+      }
+    )
   })
 }
 
