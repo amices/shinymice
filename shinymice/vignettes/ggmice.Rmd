@@ -302,5 +302,6 @@ imp3 <- mice::mice.mids(imp, maxit = 10, printFlag = FALSE)
 a <- shinymice::plot_rhat(imp3, x = x) 
 b <- shinymice::plot_rhat(imp3, x = x, theta = "vars")
 list(a, b)
+plot_rhat( imp3, x=x, theta = "both")
 ```
 

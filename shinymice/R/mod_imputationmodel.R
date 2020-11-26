@@ -91,8 +91,8 @@ mod_imputationmodel_server <- function(id, data) {
         }
       })
     imp <- eventReactive(input$run_mice, mice::mice(data(), seed = input$seed, m = input$m, maxit = input$maxit))
-    output$trace_plot <-
-      renderPlot(imp() %>% preprocess_thetas(.) %>% trace_one_variable(., x = input$var1))
+    chains <- reactive(preprocess_thetas(imp()))
+    output$trace_plot <- renderPlot(trace_one_variable(chains(), x = input$var1))
   return(reactive(imp()))
     })
 }

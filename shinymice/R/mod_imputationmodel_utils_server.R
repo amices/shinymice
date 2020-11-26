@@ -206,6 +206,7 @@ trace_one_variable <- function(d, x) {
   p <- d[d$var == x, ] %>%
     ggplot2::ggplot() +
     ggplot2::geom_line(ggplot2::aes(x = as.integer(.it), y = value, color = .imp)) +
+    ggplot2::geom_point(ggplot2::aes(x = as.integer(.it), y = value, color = .imp), size = 0.5) +
     ggplot2::facet_wrap(~ theta, scales = "free", ncol = 1) +
     ggplot2::theme_classic() +
     ggplot2::theme(strip.background = ggplot2::element_rect(size = 0.5)) +
