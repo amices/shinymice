@@ -11,11 +11,6 @@
 # not in
 `%nin%` <- Negate(`%in%`)
 
-# update variable selection
-update_vars <- function(session, ns_id, d){
-updateSelectInput(session, "var1", choices = names(d))
-}
-
 # mice theme
 theme_mice <- function() {
   # change default plotting options (move this outside of the function to unnecessary avoid re-running?)
