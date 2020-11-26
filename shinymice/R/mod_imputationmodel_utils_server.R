@@ -225,3 +225,119 @@ trace_one_variable <- function(d, x) {
   # output
   return(p)
 }
+
+# rhat plot functions
+# compute rhat
+rhat_functions <- function(sims) {
+  # compute potential scale reduction factor (rhat) for each variable in mids object
+  # equations adapted from Vehtari et al. (2019)
+  # helper functions
+  n_it <- length(sims)
+  # split chains with maxit > 4 to detect trending
+  split_chains <- function(sims) {
+    # split Markov chains, adapted from rstan
+    n_it <- dim(sims)[1]
+    # output
+    if (n_it < 4)
+      # do not split if result will be chains of length 1
+      return(sims)
+    else {
+      # split each chain to get 2m chains
+      lower <- 1:floor(n_it / 2)
+      upper <- ceiling((n_it / 2) + 1):n_it
+      splits <- base::cbind(sims[lower,], sims[upper,])
+      return(splits)
+    }
+  }
+  # rank-normalize chains because Gelman says so
+  z_scale <- function(x) {
+    # rank-normalize Markov chain, copied from rstan
+    t <- length(x)
+    r <- rank(x, ties.method = 'average')
+    z <- qnorm((r - 1 / 2) / t)
+    # output
+    if (!is.null(dim(x))) {
+      # output should have the input dimensions
+      z <- array(z, dim = dim(x), dimnames = dimnames(x))
+    }
+    return(z)
+  }
+  # preprocess chains
+  sims <- sims %>% split_chains(.) %>% z_scale(.)
+  # compute rhat
+  var_between <-
+    n_it * var(apply(sims, 2, mean))
+  var_within <- mean(apply(sims, 2, var))
+  rhat <-
+    sqrt((var_between / var_within + n_it - 1) / n_it)
+  # output
+  return(rhat)
+}
+
+# function for Rhat for two or more imputation chains
+compute_rhat <- function(x) {
+  # input: object with theta values (rows are iterations, columns are imputations)
+  # output: convergence diagnostic Rhat across imputations
+  # parse inputs
+  if (is.data.frame(x)) {
+    x <- as.matrix(x)
+  }
+  # quit function if there are not enough iterations
+  n_it <- dim(x)[1]
+  if (is.null(n_it)) {
+    return(data.frame(
+      iteration = 1,
+      max.r.hat = NA,
+      r.hat = NA
+    ))
+  } else {
+    r.hat <- map_dfr(2:n_it, function(it) {
+      # compute r hat in all ways described by Vehtari et al. (2019)
+      rhat_bulk <- x[1:it, ] %>%
+        rhat_functions(.)
+      # for rhat of the tails, fold the chains
+      rhat_tail <- abs(x[1:it, ] - median(x[1:it, ])) %>% 
+        rhat_functions(.)
+      max(rhat_bulk, rhat_tail) %>%
+        data.frame(rhat = .)
+    }) %>%
+      rbind(NA, .) %>%
+      cbind(iteration = 1:n_it, .)
+  }
+  # output
+  return(r.hat)
+}
+
+# plot rhat
+#' Title
+#'
+#' @param imp A multiply imputed data set (mids) object
+#' @param x A variable to plot
+#' @param theta The parameter to plot (either "means" for chain means, or "vars" for chain variances)
+#'
+#' @return
+#' @export
+plot_rhat <- function(imp, x, theta = "means") {
+  #parse inputs
+  if (theta == "means" | theta == "both") {
+    thetas <- imp$chainMean[x, ,]
+  }
+  if (theta == "vars") {
+    thetas <- imp$chainVar[x, ,]
+  }
+  # plot
+  p <- compute_rhat(thetas) %>%
+    ggplot2::ggplot() +
+    ggplot2::geom_line(aes(x = iteration, y = rhat)) +
+    ggplot2::geom_hline(yintercept = 1.2,
+                        color = "grey",
+                        size = 1) +
+    ggplot2::theme_classic()
+  # optional added second theta
+  if (theta == "both"){
+    p <- p + ggplot2::geom_line(aes(x = iteration, y = rhat), linetype = "dashed", data = compute_rhat(imp$chainVar[x, ,]))
+  }
+  # output
+  return(p)
+}
+
