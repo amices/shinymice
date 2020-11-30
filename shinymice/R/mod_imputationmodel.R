@@ -97,7 +97,7 @@ mod_imputationmodel_server <- function(id, data) {
     imp <- eventReactive(input$run_mice, mice::mice(data(), seed = input$seed, m = input$m, maxit = input$maxit))
     chains <- reactive(preprocess_thetas(imp()))
     output$trace_plot <- renderPlot(trace_one_variable(chains(), x = input$var1))
-    output$rhat_plot <- renderPlot(plot_rhat(imp(), x = input$var1, theta = "both"))
+    output$rhat_plot <- renderPlot(plot_rhat(imp(), x = input$var1))
     return(reactive(imp()))
     })
 }
