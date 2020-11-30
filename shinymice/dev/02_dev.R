@@ -58,6 +58,8 @@ usethis::use_data(mouse)
 ## Tests ----
 ## Add one line by test you want to create
 usethis::use_test("plot_md_pattern")
+usethis::use_test("plot_flux")
+usethis::use_test("plot_pred_matrix")
 
 # Documentation
 

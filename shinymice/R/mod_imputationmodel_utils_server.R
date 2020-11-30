@@ -98,7 +98,10 @@ plot_md_pattern <- function(dat) {
 #'
 #' @return
 #' @export
-plot_flux <- function(dat) {
+plot_flux <- function(dat) { 
+  # escape function if dataset is complete
+  # if(!any(is.na(dat))){return(plot_a_mouse())}
+  # plot in and outflux
   flx <- mice::flux(dat) %>% cbind(variable = rownames(.))
   p <- flx %>% ggplot2::ggplot() +
     ggplot2::geom_text(ggplot2::aes(x = influx,
