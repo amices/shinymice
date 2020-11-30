@@ -6,6 +6,8 @@
 #' @return
 #' @export
 plot_md_pattern <- function(dat) {
+  # escape function if dataset is complete
+  if(!any(is.na(dat))){return(plot_a_mouse())}
   # get md pattern and store additional info
   pat <- mice::md.pattern(dat, plot = FALSE)
   vrb <- colnames(pat)[-ncol(pat)]
@@ -30,9 +32,9 @@ plot_md_pattern <- function(dat) {
         x = vrb,
         y = pat_nr,
         fill = as.factor(obs),
-        group = NA_per_pat,
-        text = paste('pat_freq: ', pat_freq,
-                     '</br>NA_per_vrb: ', NA_per_vrb)
+        group = NA_per_pat#,
+        # text = paste('pat_freq: ', pat_freq,
+        #              '</br>NA_per_vrb: ', NA_per_vrb)
       ),
       color = "black"
     ) +

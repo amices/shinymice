@@ -55,7 +55,7 @@ mod_imputationmodel_ui <- function(id) {
              ),
              tabPanel(
                "Predictor matrix",
-               actionButton(ns("quickpred"), "Update"),
+               actionButton(ns("quickpred"), "Best guess"),
                plotOutput(ns("pred_plot")),
                br(),
                tags$b("Interpretation:"),
@@ -66,8 +66,8 @@ mod_imputationmodel_ui <- function(id) {
                h6("Please make sure to impute the incomplete data first (see left-hand side)"),
                select_var(ns("var1")),
                plotOutput(ns("trace_plot")),
-               "Convergence diagnostic",
-               plotOutput(ns("rhat_plot"))
+               # "Convergence diagnostic",
+               # plotOutput(ns("rhat_plot"))
              )
            ))
   ))

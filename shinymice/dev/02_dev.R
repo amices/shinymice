@@ -52,10 +52,12 @@ golem::add_css_file("custom")
 ## Add internal datasets ----
 ## If you have data in your package
 # usethis::use_data_raw(name = "my_dataset", open = FALSE)
+load("plotmouse.RData")
+usethis::use_data(mouse)
 
 ## Tests ----
 ## Add one line by test you want to create
-usethis::use_test("app")
+usethis::use_test("plot_md_pattern")
 
 # Documentation
 
