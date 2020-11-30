@@ -30,11 +30,13 @@ mod_imputationmodel_ui <- function(id) {
       "6. And the number of iterations (maxit)",
       set_number(ns("maxit"), val = 2),
       no_br(),
-      "7. Run `mice()`.",
+      "7. Add optional arguments to the imputation model (e.g., `method = 'pmm'`)",
+      textInput(ns("add_args"), label = NULL, value = NULL),
+      "8. Run `mice()`.",
       br(),
       actionButton(ns("run_mice"), label = "Impute", width = 100),
       br(),
-      "8. Monitor potential non-convergence through visual inspection.",
+      "9. Monitor potential non-convergence through visual inspection.",
       verbatimTextOutput(ns("micecall"))
     ),
     column(8,
@@ -94,7 +96,9 @@ mod_imputationmodel_server <- function(id, data) {
           plot_pred_matrix(mice::quickpred(data()))
         }
       })
-    imp <- eventReactive(input$run_mice, mice::mice(data(), seed = input$seed, m = input$m, maxit = input$maxit))
+    imp <- eventReactive(input$run_mice, 
+                         do.call(mice::mice, c(list(data(), seed = input$seed, m = input$m, maxit = input$maxit), list(str2lang(input$add_args)))))
+                         #mice::mice(data(), seed = input$seed, m = input$m, maxit = input$maxit))
     chains <- reactive(preprocess_thetas(imp()))
     output$trace_plot <- renderPlot(trace_one_variable(chains(), x = input$var1))
     output$rhat_plot <- renderPlot(plot_rhat(imp(), x = input$var1))
