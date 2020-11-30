@@ -292,7 +292,7 @@ compute_rhat <- function(x) {
       r.hat = NA
     ))
   } else {
-    r.hat <- map_dfr(2:n_it, function(it) {
+    r.hat <- purrr::map_dfr(2:n_it, function(it) {
       # compute r hat in all ways described by Vehtari et al. (2019)
       rhat_bulk <- x[1:it, ] %>%
         rhat_functions(.)
@@ -329,14 +329,14 @@ plot_rhat <- function(imp, x, theta = "means") {
   # plot
   p <- compute_rhat(thetas) %>%
     ggplot2::ggplot() +
-    ggplot2::geom_line(aes(x = iteration, y = rhat)) +
+    ggplot2::geom_line(ggplot2::aes(x = iteration, y = rhat)) +
     ggplot2::geom_hline(yintercept = 1.2,
                         color = "grey",
                         size = 1) +
     ggplot2::theme_classic()
   # optional added second theta
   if (theta == "both"){
-    p <- p + ggplot2::geom_line(aes(x = iteration, y = rhat), linetype = "dashed", data = compute_rhat(imp$chainVar[x, ,]))
+    p <- p + ggplot2::geom_line(ggplot2::aes(x = iteration, y = rhat), linetype = "dashed", data = compute_rhat(imp$chainVar[x, ,]))
   }
   # output
   return(p)

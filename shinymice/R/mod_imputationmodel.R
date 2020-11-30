@@ -61,10 +61,14 @@ mod_imputationmodel_ui <- function(id) {
                tags$b("Interpretation:"),
                "Each row in the predictor matrix identifies which predictors are to be used for the variable in the row name."
              ),
-             tabPanel("Traceplot",
-                      h6("Please make sure to impute the incomplete data first (see left-hand side)"),
-                      select_var(ns("var1")),
-                      plotOutput(ns("trace_plot")))
+             tabPanel(
+               "Traceplot",
+               h6("Please make sure to impute the incomplete data first (see left-hand side)"),
+               select_var(ns("var1")),
+               plotOutput(ns("trace_plot")),
+               "Convergence diagnostic",
+               plotOutput(ns("rhat_plot"))
+             )
            ))
   ))
 }
@@ -93,7 +97,8 @@ mod_imputationmodel_server <- function(id, data) {
     imp <- eventReactive(input$run_mice, mice::mice(data(), seed = input$seed, m = input$m, maxit = input$maxit))
     chains <- reactive(preprocess_thetas(imp()))
     output$trace_plot <- renderPlot(trace_one_variable(chains(), x = input$var1))
-  return(reactive(imp()))
+    output$rhat_plot <- renderPlot(plot_rhat(imp(), x = input$var1, theta = "both"))
+    return(reactive(imp()))
     })
 }
 

@@ -297,11 +297,12 @@ shinymice::plot_dens(imp, x)
 # }
 
 # test
-x = "hc"
-imp3 <- mice::mice.mids(imp, maxit = 10, printFlag = FALSE) 
-a <- shinymice::plot_rhat(imp3, x = x) 
+x = "age"
+imp3 <- mice::mice.mids(imp, maxit = 10, printFlag = FALSE)
+a <- shinymice::plot_rhat(imp3, x = x)
 b <- shinymice::plot_rhat(imp3, x = x, theta = "vars")
 list(a, b)
-plot_rhat( imp3, x=x, theta = "both")
+shinymice::plot_rhat( imp3, x=x, theta = "both")
+imp3 %>% shinymice::preprocess_thetas() %>% shinymice::trace_one_variable(x=x)
 ```
 
