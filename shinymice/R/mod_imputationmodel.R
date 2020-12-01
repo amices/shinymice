@@ -97,7 +97,8 @@ mod_imputationmodel_server <- function(id, data) {
         }
       })
     imp <- eventReactive(input$run_mice, 
-                         do.call(mice::mice, c(list(data(), seed = input$seed, m = input$m, maxit = input$maxit), list(str2lang(input$add_args)))))
+                         eval(parse(text = paste("mice::mice(data(), seed = input$seed, m = input$m, maxit = input$maxit, ", input$add_args, ")"))))
+                         #do.call(mice::mice, c(list(data(), seed = input$seed, m = input$m, maxit = input$maxit), list(str2lang(input$add_args)))))
                          #mice::mice(data(), seed = input$seed, m = input$m, maxit = input$maxit))
     chains <- reactive(preprocess_thetas(imp()))
     output$trace_plot <- renderPlot(trace_one_variable(chains(), x = input$var1))
