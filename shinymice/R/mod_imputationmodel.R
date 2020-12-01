@@ -21,13 +21,13 @@ mod_imputationmodel_ui <- function(id) {
       br(),
       "3. Check (and modify) the predictor matrix.",
       br(),
-      "4. Make the imputations reproducible by specifying an initial random value (seed)",
+      with_red_star("4. Make the imputations reproducible by specifying an initial random value (seed)"),
       set_number(ns("seed"), val = 123),
       no_br(),
-      "5. Determine the number of imputations (m)",
+      with_red_star("5. Determine the number of imputations (m)"),
       set_number(ns("m"), val = 5),
       no_br(),
-      "6. And the number of iterations (maxit)",
+      with_red_star("6. And the number of iterations (maxit)"),
       set_number(ns("maxit"), val = 2),
       no_br(),
       "7. Add optional arguments to the imputation model (e.g., `method = 'pmm'`)",
@@ -101,7 +101,10 @@ mod_imputationmodel_server <- function(id, data) {
                          #do.call(mice::mice, c(list(data(), seed = input$seed, m = input$m, maxit = input$maxit), list(str2lang(input$add_args)))))
                          #mice::mice(data(), seed = input$seed, m = input$m, maxit = input$maxit))
     chains <- reactive(preprocess_thetas(imp()))
-    output$trace_plot <- renderPlot(trace_one_variable(chains(), x = input$var1))
+    output$trace_plot <- renderPlot({
+      #if(length(chains()==0)){shinyFeedback::showFeedbackWarning("add_args", "Please impute the incomplete data first")} else {shinyFeedback::hideFeedback("add_args")}
+      req(chains())
+      trace_one_variable(chains(), x = input$var1)})
     output$rhat_plot <- renderPlot(plot_rhat(imp(), x = input$var1))
     return(reactive(imp()))
     })
