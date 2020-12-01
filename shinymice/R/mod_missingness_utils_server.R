@@ -7,7 +7,7 @@
 #' @export
 descr_NA <- function(d) {
   tab <-
-    psych::describe(d, skew = FALSE)[, c("n", "mean", "sd", "min", "max")] %>%
+    psych::describe(d)[, c("n", "mean", "sd", "min", "max", "median")] %>%
     cbind(variable = rownames(.), .) %>%
     dplyr::mutate(
       n = as.integer(n),

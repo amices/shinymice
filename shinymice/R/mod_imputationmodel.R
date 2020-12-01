@@ -98,8 +98,7 @@ mod_imputationmodel_server <- function(id, data) {
       })
     imp <- eventReactive(input$run_mice, 
                          eval(parse(text = paste("mice::mice(data(), seed = input$seed, m = input$m, maxit = input$maxit, ", input$add_args, ")"))))
-                         #do.call(mice::mice, c(list(data(), seed = input$seed, m = input$m, maxit = input$maxit), list(str2lang(input$add_args)))))
-                         #mice::mice(data(), seed = input$seed, m = input$m, maxit = input$maxit))
+    # validate additional arguments with formals(mice::mice)
     chains <- reactive(preprocess_thetas(imp()))
     output$trace_plot <- renderPlot({
       #if(length(chains()==0)){shinyFeedback::showFeedbackWarning("add_args", "Please impute the incomplete data first")} else {shinyFeedback::hideFeedback("add_args")}

@@ -12,9 +12,21 @@ imp_descr <- function(imp) {
         cbind(., variable = rownames(.))
     }) %>%
     aggregate(. ~ variable, data = ., FUN = "mean") %>%
-    cbind(., n_imputed = as.integer(imp$nmis))
+    dplyr::mutate(
+      n = as.integer(n),
+      mean = round(mean, 2),
+      sd = round(sd, 2),
+      n_imputed = as.integer(imp$nmis)
+    )
+    #cbind(., n_imputed = as.integer(imp$nmis))
   tab[, 2] <- as.integer(tab[, 2])
-  return(tab)
+  dt <- DT::datatable(tab, rownames = FALSE) %>%
+    DT::formatStyle(
+      "n_imputed",
+      color = DT::styleInterval(cuts = 0, values = c("black", "#B61A51")),
+      fontWeight = "bold"
+    )
+  return(dt)
 }
 
 # imputation plot: extract imputations and initialize plot

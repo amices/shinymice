@@ -28,7 +28,7 @@ mod_imputeddata_ui <- function(id) {
       tabsetPanel(
         tabPanel("Descriptives",
                  h6("Please make sure to impute the incomplete data first (see 'Imputation model')"),
-                 tableOutput(ns("imp_desc"))),
+                 DT::DTOutput(ns("imp_desc"))),
         tabPanel("Data points",
                  select_var(ns("var1")),
                  plotOutput(ns("strip_plot"))),
@@ -61,7 +61,7 @@ mod_imputeddata_server <- function(id, data, imp) {
     updateSelectInput(session, "var3", choices = names(isolate(data())))
     updateSelectInput(session, "var4", choices = names(isolate(data())))
     updateSelectInput(session, "var5", choices = names(isolate(data())))
-    output$imp_desc <- renderTable(imp_descr(imp()))
+    output$imp_desc <- DT::renderDT(imp_descr(imp()))
     output$strip_plot <-
       renderPlot(plot_strip(imp(), x = input$var1))
     output$bw_plot <- renderPlot(plot_bw(imp(), x = input$var2))
