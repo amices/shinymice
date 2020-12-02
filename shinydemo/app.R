@@ -37,29 +37,82 @@ ui <- fluidPage(navbarPage(
   tabPanel("3.",
            h2("3. Building blocks"),
            fluidRow(
-             column(6,
-             tags$b("UI"),
+             column(5,
+             tags$b("Shiny UI"),
              br(),
              br(),
              tags$code("sliderInput('bins', 'Number of bins:', min = 1, max = 50, value = 30)"),
-             img(src = "slider.png", style = "width:100%"),
+             img(src = "slider.png", style = "width:100%"), br(), br(),
              tags$code("plotOutput('distPlot')"),
              img(src = "histogram.png", style = "width:100%")
              ),
-             column(6, 
-             tags$b("Server"),
+             column(1, " "),
+             column(5, 
+             tags$b("Shiny server"),
              br(),
              br(),
-             tags$code("output$distPlot <- renderPlot({"), br(),
-             tags$code("x    <- faithful[, 2]"), br(),
-             tags$code("bins <- seq(min(x), max(x), length.out = input$bins + 1)"), br(),
+             tags$code("output$distPlot <- renderPlot({"), br(), br(),
+             tags$code("x    <- faithful[, 2]"), br(), br(),
+             tags$code("bins <- seq(min(x), max(x), length.out = input$bins + 1)"), br(), br(),
              tags$code("hist(x,
                     breaks = bins,
                     col = 'darkgray',
-                    border = 'white')"), br(),
+                    border = 'white')"), br(), br(),
              tags$code("})")
              )
-  ))
+  )),
+  tabPanel("4.", 
+           h2("4. How to start"),
+           "According to",
+           tags$a("Engineering Shiny", href = "https://engineering-shiny.org/"),
+           "and yours truly.", br(), br(),
+           tabsetPanel(
+           tabPanel(tags$b("STEP 1: DESIGN"),
+           br(), 
+           # "Unless you are just coding for the joy of coding, there will always be one or more end users. And if these people cannot use the application because it is too hard to use, too hard to understand, because it is too slow or there is no inherent logic in how the user experience is designed, then it is inappropriate to call the app a success.",
+           "Don't rush into coding when you should be thinking.", br(), br(),
+           "You should KISS:",
+           tags$div(
+             tags$ul(
+               tags$li("Avoid unnecessary complexity and 'feature creep'."),
+               tags$li("UI first approach."),
+               tags$li("Rmd first approach.")
+               # "Modules aim at three things: simplifying "id" namespacing, split the code base into a series of functions, and allow UI/Server parts of your app to be reused",
+             )
+           ), 
+           # "Most systems work best if they are kept simple rather than made complicated; therefore, simplicity should be a key goal in design, and unnecessary complexity should be avoided",
+           "Ask yourself:",
+           tags$div(
+             tags$ul(
+               tags$li("Who are the end users of your app?"),
+               tags$li("Are they tech-literate?"),
+               tags$li("In which context will they be using your app?"),
+               tags$li("On what machines? E.g., will they be using the app on their office desktop PC, on their phone while driving a tractor, etc.?")
+             )
+           )), 
+           tabPanel(tags$b("STEP 2: PROTOTYPE"), br(), 
+           "Build the front-end and the back-end, but separately.", br(), br(),
+           "Front-end:",
+           tags$div(
+             tags$ul(
+               tags$li("Work on the general appearance, e.g. tabs, inputs, outputs; anything that does not rely on computation."),
+               tags$li("Use mock data and/or text (build an 'ipsum-app')."),
+               tags$li("Make the app self-evident; if possible, the main usage of the application does not require reading the manual.")
+             )),
+           "Back-end:",
+           tags$div(
+             tags$ul(
+               tags$li("Extract your core 'non-reactive' functions."),
+               tags$li("Split your app into modules."),
+               tags$li("Reactivity vs. speed trade-off.")
+             ))),
+           tabPanel(tags$b("STEP 3: BUILD"), br(),
+           "Something about building, like documentation.", br(), br(), br()),
+           tabPanel(tags$b("STEP 4: STRENGTHEN"), br(), 
+           "Something about testing and dependencies.", br(), br(), br()),
+           tabPanel(tags$b("STEP 5: DEPLOY"), br(), 
+           "Something about making it a package, using shinyapps.io, etc.",  br(), br()
+  )))
   ))
 
 # Define server logic required to draw a histogram
