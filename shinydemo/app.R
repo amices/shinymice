@@ -11,9 +11,10 @@ library(shiny)
 
 # Define UI for application that draws a histogram
 ui <- fluidPage(navbarPage(
-  "Shiny demo",
+  "SHINY101",
   tabPanel("1.",
            h2("1. The default app"),
+           "The result of navigating to 'File' >> 'New File' >> 'Shiny Web App' in RStudio.", br(), br(),
            # Sidebar with a slider input for number of bins
            sidebarLayout(sidebarPanel(
              sliderInput(
@@ -30,12 +31,16 @@ ui <- fluidPage(navbarPage(
                            ),
   tabPanel("2.",
            h2("2. The basic mechanism"),
+           "From the 'Introduction to Shiny'",
+           tags$a("webinar.", href = "https://rstudio.com/resources/webinars/introduction-to-shiny/"), br(), br(),
            #uiOutput("pdf")
            #img(src = "test.png"),
            tags$iframe(style="height:600px; width:100%; scrolling=yes",
                        src = "shiny_logic.pdf")),
   tabPanel("3.",
-           h2("3. Building blocks"),
+           h2("3. The building blocks"),
+           "See also the",
+           tags$a("Shiny cheatsheet.", href= "https://rstudio.com/resources/cheatsheets/"), br(), br(),
            fluidRow(
              column(5,
              tags$b("Shiny UI"),
@@ -62,7 +67,26 @@ ui <- fluidPage(navbarPage(
              )
   )),
   tabPanel("4.", 
-           h2("4. How to start"),
+           h2("4. Some examples"),
+           "For an overview, see the ",
+           tags$a("Shiny gallery", href = "https://shiny.rstudio.com/gallery/"), 
+           "and the",
+           tags$a("Shiny contest winners.", href = "https://blog.rstudio.com/2020/07/13/winners-of-the-2nd-shiny-contest/"), br(),
+           br(), br(),
+           img(style = "width:50%", src = "normal.PNG"),
+           "Let's start very simple with a",
+           tags$a("normal distribution app.", href = "http://teaching.sociology.ul.ie:3838/apps/normsd/"),
+           br(), br(),
+           img(style = "width:50%", src = "outlier.PNG"),
+           "Or an app to investigate the effect of",
+           tags$a("outliers.", href = "http://teaching.sociology.ul.ie:3838/influence/"),
+           br(), br(),
+           img(style = "width:50%", src = "hex.PNG"),
+           "Now, something more interesting, a ",
+           tags$a("hex sticker designer.", href = "https://connect.thinkr.fr/hexmake/")
+           ),
+  tabPanel("5.", 
+           h2("5. How to"),
            "According to",
            tags$a("Engineering Shiny", href = "https://engineering-shiny.org/"),
            "and yours truly.", br(), br(),
