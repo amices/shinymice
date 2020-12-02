@@ -32,6 +32,7 @@ mod_imputationmodel_ui <- function(id) {
       no_br(),
       "7. Add optional arguments to the imputation model (e.g., `method = 'pmm'`)",
       textInput(ns("add_args"), label = NULL, value = NULL),
+      no_br(),
       "8. Run `mice()`.",
       br(),
       actionButton(ns("run_mice"), label = "Impute", width = 100),

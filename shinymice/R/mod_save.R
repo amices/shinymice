@@ -20,9 +20,9 @@ mod_save_ui <- function(id) {
       "2. Select the file type to save the imputations [this feature is currently disabeled].",
       div(
         radioButtons(
-          "file_type",
+          ns("file_type"),
           label = NULL,
-          choices = c(".Rdata", ".spv"),
+          choices = c(".RData", ".sav"),
           inline = TRUE
         ),
         style = "margin-bottom: -15px"
@@ -61,11 +61,17 @@ mod_save_server <- function(id, imp) {
     stopifnot(is.reactive(imp))
     output$save_file <- downloadHandler(
       filename = function() {
-        paste0("imp", ".RData")
+        # ext <- switch(input$file_type,
+        #           .RData = ".RData",
+        #           .sav = ".sav")
+        paste0("imp", input$file_type)
       },
       content = function(file) {
         mids_object <- imp()
-        save(mids_object, file = file)
+        if(input$file_type == ".RData"){
+            save(mids_object, file = file)
+        } else {
+            mids2spss(imp = mids_object, file)}
       }
     )
   })
