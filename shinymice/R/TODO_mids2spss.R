@@ -9,3 +9,5 @@ mids2spss <- function(imp, file) {
     dplyr::rename("Imputation_" = ".imp")
   haven::write_sav(out, file)
 }
+
+# after export, see https://bookdown.org/mwheymans/bookmi/multiple-imputation.html#multiple-imputation-in-spss

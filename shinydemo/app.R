@@ -12,6 +12,8 @@ library(shiny)
 # Define UI for application that draws a histogram
 ui <- fluidPage(navbarPage(
   "SHINY101",
+  tabPanel("0.",
+           img(src="SHINY101.png", style="width:100%")),
   tabPanel("1.",
            h2("1. The default app"),
            "The result of navigating to 'File' >> 'New File' >> 'Shiny Web App' in RStudio.", br(), br(),
@@ -25,10 +27,9 @@ ui <- fluidPage(navbarPage(
                value = 30
              )
            ),
-           
            # Show a plot of the generated distribution
            mainPanel(plotOutput("distPlot")))
-                           ),
+                           ), #segway: should you choose 1 or 2 file app??
   tabPanel("2.",
            h2("2. The basic mechanism"),
            "From the 'Introduction to Shiny'",
@@ -46,16 +47,19 @@ ui <- fluidPage(navbarPage(
              tags$b("Shiny UI"),
              br(),
              br(),
+             tags$code("ui <- fluidPage("), br(), br(),
              tags$code("sliderInput('bins', 'Number of bins:', min = 1, max = 50, value = 30)"),
              img(src = "slider.png", style = "width:100%"), br(), br(),
              tags$code("plotOutput('distPlot')"),
-             img(src = "histogram.png", style = "width:100%")
+             img(src = "histogram.png", style = "width:100%"), 
+             tags$code(")")
              ),
              column(1, " "),
              column(5, 
              tags$b("Shiny server"),
              br(),
              br(),
+             tags$code("server <- function(input, output) {"), br(), br(),
              tags$code("output$distPlot <- renderPlot({"), br(), br(),
              tags$code("x    <- faithful[, 2]"), br(), br(),
              tags$code("bins <- seq(min(x), max(x), length.out = input$bins + 1)"), br(), br(),
@@ -63,7 +67,8 @@ ui <- fluidPage(navbarPage(
                     breaks = bins,
                     col = 'darkgray',
                     border = 'white')"), br(), br(),
-             tags$code("})")
+             tags$code("})"), br(), br(),
+             tags$code("}")
              )
   )),
   tabPanel("4.", 
@@ -127,11 +132,20 @@ ui <- fluidPage(navbarPage(
            tags$div(
              tags$ul(
                tags$li("Extract your core 'non-reactive' functions."),
-               tags$li("Split your app into modules."),
-               tags$li("Reactivity vs. speed trade-off.")
+               tags$li("Reactivity vs. speed trade-off."),
+               tags$li("OPTIONAL: Split your app into modules.")
              ))),
+           tabPanel("DETOUR: MODULES", br(),
+           "Something about modules.", br(), br(),
+           "What are modules? Definition from",
+           tags$a("RStudio:", href = "https://shiny.rstudio.com/articles/modules.html"), br(),
+           img(src="module.PNG", style = "width:100%"),
+           "If you want to learn more, watch this",
+           tags$a("presentation.", href = "https://www.youtube.com/watch?v=ylLLVo2VL50"),
+           br()
+           ),
            tabPanel(tags$b("STEP 3: BUILD"), br(),
-           "Something about building, like documentation.", br(), br(), br()),
+                    "Something about building, like documentation.", br(), br(), br()),
            tabPanel(tags$b("STEP 4: STRENGTHEN"), br(), 
            "Something about testing and dependencies.", br(), br(), br()),
            tabPanel(tags$b("STEP 5: DEPLOY"), br(), 
