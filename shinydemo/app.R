@@ -131,26 +131,71 @@ ui <- fluidPage(navbarPage(
            "Back-end:",
            tags$div(
              tags$ul(
-               tags$li("Extract your core 'non-reactive' functions."),
-               tags$li("Reactivity vs. speed trade-off."),
+               tags$li("Think about what could to be 'hard coded', because of the reactivity vs. speed trade-off."),
+               tags$li("Extract your core 'non-reactive' functions and put them in separate files."),
+               tags$li("Use sensible non-reactive defaults while develioping (e.g., `data <- mtcars` instead of `data <- reactive(...).`"),
                tags$li("OPTIONAL: Split your app into modules.")
              ))),
            tabPanel("DETOUR: MODULES", br(),
            "Something about modules.", br(), br(),
            "What are modules? Definition from",
-           tags$a("RStudio:", href = "https://shiny.rstudio.com/articles/modules.html"), br(),
-           img(src="module.PNG", style = "width:100%"),
-           "If you want to learn more, watch this",
-           tags$a("presentation.", href = "https://www.youtube.com/watch?v=ylLLVo2VL50"),
+           tags$a("RStudio:", href = "https://shiny.rstudio.com/articles/modules.html"), br(), br(),
+           img(src="module.PNG", style = "width:100%"), br(),
+           "If you want to learn more, watch ",
+           tags$a("this presentation.", href = "https://www.youtube.com/watch?v=ylLLVo2VL50"),
            br()
            ),
            tabPanel(tags$b("STEP 3: BUILD"), br(),
-                    "Something about building, like documentation.", br(), br(), br()),
+                    "Now that you have a rough sketch of the app, and the 'dumb' (i.e., non-reactive) functions to perform data processing and visualization, you need to link the front-end and back-end together.", br(), br(), 
+                    "Things to think about:", 
+                    tags$div(
+                      tags$ul(
+                        tags$li("Package dependencies (e.g., using `library()` vs. making a package)."),
+                        tags$li("Documentation (e.g., of functions, the UX, maybe even write a vignette)."),
+                        tags$li("Combine server-side requirements with user feedback such as input validation, pop-up messages, or loading icons."),
+                        tags$li("If you're not sure if a reactive is working, just print the output (i.e., `renderPrint(...)`).")
+                      ))),
            tabPanel(tags$b("STEP 4: STRENGTHEN"), br(), 
-           "Something about testing and dependencies.", br(), br(), br()),
+           "If you want your Shiny app to last, you should make it robust.", br(), br(), 
+           "At least:",
+           tags$div(
+             tags$ul(
+               tags$li("Run the app in the viewer panel, a separate window, and your browser."),
+               tags$li("Monkey test it (i.e., click EVERYTHING)."),
+               tags$li("Provide the wrong inputs (e.g., a corrupt data file, a file with the 'wrong' extension, an 'impossible' numeric input, etc.)")
+             )),
+           "If you're being fancy, also:",
+           tags$div(
+             tags$ul(
+               tags$li("Add 'real' tests with the {thatthat} and {shinytest} packages."),
+               tags$li("Optimize certain computations that are flagged by the {shinyloadtest} package."),
+               tags$li("Make the app future-proof with a reproducible environment like {renv} or a Docker container.")
+             ))),
            tabPanel(tags$b("STEP 5: DEPLOY"), br(), 
-           "Something about making it a package, using shinyapps.io, etc.",  br(), br()
-  )))
+           "If you want your app to 'live' on a webpage, you should deploy it. For example on",
+           tags$a("shinyapps.io.",href = "https://www.shinyapps.io/"),  br(), br(),
+           "Note that:",
+           tags$div(
+             tags$ul(
+               tags$li("With a free account, your app will be public."),
+               tags$li("If your app is too popular, you will need to pay (for an upgrade that is, not automatically)."),
+               tags$li("You can tweak your app to cache certain outputs, or have several users in one session (like Google Drive documents)."),
+               tags$li("You could also host your app on your own website. Or don't deploy it at all (e.g., for privacy reasons).")
+             )))
+  )), 
+  tabPanel("6.", 
+               h2("6. Take", HTML("<strike>home</strike>"), "away"),
+               "So, what should you remember from all this?",
+           "First of all:",
+           tags$div(
+             tags$ul(
+               tags$li("Google is your friend*."),
+               tags$li("Don't forget to add 'r' to your 'shiny ...' searches."),
+               tags$li("Keep your `id`'s simple and sensible. If you use modules, add the namespace function to each `id`."),
+               tags$li("You will now be able to create silly apps for friends/loved ones in a matter of minutes, (ab)use that power!")
+             )), 
+           "Furthermore, you could use the {golem} framework to guide you through these steps, but decide to do this up front otherwise you'll end up with 'Frankencode'. I wouldn't use it for this course, because there is quite some terminology/setting up to get through and I don't think it's worth it."
+  )
   ))
 
 # Define server logic required to draw a histogram
