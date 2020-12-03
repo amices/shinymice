@@ -7,6 +7,5 @@ mids2spss <- function(imp, file) {
     mice::complete(action = "long", include = TRUE) %>%
     dplyr::select(-.id) %>% 
     dplyr::rename("Imputation_" = ".imp")
-  #tmp <- tempfile(fileext = ".sav")
   haven::write_sav(out, file)
 }

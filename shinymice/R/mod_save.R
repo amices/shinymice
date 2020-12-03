@@ -22,7 +22,7 @@ mod_save_ui <- function(id) {
         radioButtons(
           ns("file_type"),
           label = NULL,
-          choices = rev(c(".RData", ".sav")),
+          choices = c(".RData", ".sav"),
           inline = TRUE
         ),
         style = "margin-bottom: -15px"
