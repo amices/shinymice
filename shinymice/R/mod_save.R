@@ -22,7 +22,7 @@ mod_save_ui <- function(id) {
         radioButtons(
           ns("file_type"),
           label = NULL,
-          choices = c(".RData", ".sav"),
+          choices = rev(c(".RData", ".sav")),
           inline = TRUE
         ),
         style = "margin-bottom: -15px"
@@ -64,14 +64,14 @@ mod_save_server <- function(id, imp) {
         # ext <- switch(input$file_type,
         #           .RData = ".RData",
         #           .sav = ".sav")
-        paste0("imp", input$file_type)
+        paste0("imp", isolate(input$file_type))
       },
       content = function(file) {
         mids_object <- imp()
         if(input$file_type == ".RData"){
             save(mids_object, file = file)
         } else {
-            mids2spss(imp = mids_object, file)}
+            mids2spss(imp = mids_object, file = file)}
       }
     )
   })

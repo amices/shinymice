@@ -89,7 +89,7 @@ ui <- fluidPage(navbarPage(
            h2("5. How to"),
            "According to",
            tags$a("Engineering Shiny", href = "https://engineering-shiny.org/"),
-           "and yours truly.", br(), br(),
+           "and yours truly. [Add golem and why (not)]", br(), br(),
            tabsetPanel(
            tabPanel(tags$b("STEP 1: DESIGN"),
            br(), 
