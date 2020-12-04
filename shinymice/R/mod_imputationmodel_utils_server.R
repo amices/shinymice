@@ -7,7 +7,7 @@
 #' @export
 plot_md_pattern <- function(dat) {
   # escape function if dataset is complete
-  if(!any(is.na(dat))){return(plot_a_mouse())}
+  #if(!any(is.na(dat))){return(plot_a_mouse())}
   # get md pattern and store additional info
   pat <- mice::md.pattern(dat, plot = FALSE)
   vrb <- colnames(pat)[-ncol(pat)]

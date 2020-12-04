@@ -27,9 +27,11 @@ mod_save_ui <- function(id) {
         ),
         style = "margin-bottom: -15px"
       ),
-      "3. Save the imputations.",
+      "3. Save the imputations (download button appears after data imputation).",
       br(),
-      downloadButton(ns("save_file"), label = NULL),
+      shinyjs::hidden(downloadButton("save_file")),
+      
+      #downloadButton(ns("save_file"), label = NULL),
       br(),
       textOutput(ns("no_imp_to_save"))
     ),
@@ -59,6 +61,8 @@ mod_save_server <- function(id, imp) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
     stopifnot(is.reactive(imp))
+    observe(if(is(imp(), "mids")){
+      shinyjs::hide("save_file")} else {shinyjs::show("save_file")})
     output$save_file <- downloadHandler(
       filename = function() {
         # ext <- switch(input$file_type,
