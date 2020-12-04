@@ -66,7 +66,7 @@ mod_imputationmodel_ui <- function(id) {
              ),
              tabPanel(
                "Traceplot",
-               h6("Please make sure to impute the incomplete data first (see left-hand side)"),
+#               h6("Please make sure to impute the incomplete data first (see left-hand side)"),
                select_var(ns("var1")),
                plotOutput(ns("trace_plot")),
                # "Convergence diagnostic",
@@ -103,8 +103,12 @@ mod_imputationmodel_server <- function(id, data) {
     chains <- reactive(preprocess_thetas(imp()))
     output$trace_plot <- renderPlot({
       #if(length(chains()==0)){shinyFeedback::showFeedbackWarning("add_args", "Please impute the incomplete data first")} else {shinyFeedback::hideFeedback("add_args")}
-      req(chains())
-      trace_one_variable(chains(), x = input$var1)})
+      validate(need(input$run_mice, message = "Please impute the incomplete data first."))
+        trace_one_variable(chains(), x = input$var1)
+        # } else {
+          #ggplot2::ggplot(data.frame(x=NA, y=NA)) + ggplot2::ggtitle("Please impute the incomplete data first")
+          #}
+      })
     output$rhat_plot <- renderPlot(plot_rhat(imp(), x = input$var1))
     return(reactive(imp()))
     })
