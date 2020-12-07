@@ -21,7 +21,6 @@ read_data <- function(file) {
   }
 }
 
-
 # descriptive statistics for incomplete data
 #' Title
 #'

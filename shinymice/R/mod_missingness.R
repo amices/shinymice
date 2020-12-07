@@ -61,7 +61,10 @@ mod_missingness_ui <- function(id) {
 #' @noRd
 mod_missingness_server <- function(id) {
   moduleServer(id, function(input, output, session) {
-    data <- reactive(read_data(file = input$dat))
+    data <- reactive({
+      d <- read_data(file = input$dat)
+      validate(need(is.data.frame(d), "Sorry, {shinymice}  cannot process this dataset. Please check if you specified the right file."))
+      d})
     # update variables
     observe(purrr::map(paste0("var", 1:4), function(x){
       updateSelectInput(session, x, choices = names(data()))
