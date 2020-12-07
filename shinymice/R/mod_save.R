@@ -29,8 +29,8 @@ mod_save_ui <- function(id) {
       ),
       "3. Save the imputations (button disabled until data is imputed).",
       br(),
-      shinyjs::disabled(downloadButton("save_file")),
-      
+      shinyjs::disabled(downloadButton(ns("save_file"))),
+      actionButton(ns("test"), "test"),
       #downloadButton(ns("save_file"), label = NULL),
       br(),
       textOutput(ns("no_imp_to_save"))
@@ -61,8 +61,7 @@ mod_save_server <- function(id, imp) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
     stopifnot(is.reactive(imp))
-    observe(if(is(imp(), "mids")){
-      shinyjs::disable("save_file")} else {shinyjs::enable("save_file")})
+    observe(if(input$test>0) {shinyjs::enable("save_file")}) #shinyjs::disable("save_file")
     output$save_file <- downloadHandler(
       filename = function() {
         # ext <- switch(input$file_type,
