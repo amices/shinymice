@@ -99,16 +99,12 @@ mod_imputationmodel_server <- function(id, data) {
       })
     imp <- eventReactive(input$run_mice, 
                          eval(parse(text = paste("mice::mice(data(), seed = input$seed, m = input$m, maxit = input$maxit, ", input$add_args, ")"))))
-    # validate additional arguments with formals(mice::mice)
+    # TODO: validate additional arguments with formals(mice::mice)
     chains <- reactive(preprocess_thetas(imp()))
     output$trace_plot <- renderPlot({
-      #if(length(chains()==0)){shinyFeedback::showFeedbackWarning("add_args", "Please impute the incomplete data first")} else {shinyFeedback::hideFeedback("add_args")}
       validate(need(input$run_mice, message = "Please impute the incomplete data first."))
-        trace_one_variable(chains(), x = input$var1)
-        # } else {
-          #ggplot2::ggplot(data.frame(x=NA, y=NA)) + ggplot2::ggtitle("Please impute the incomplete data first")
-          #}
-      })
+      trace_one_variable(chains(), x = input$var1)
+    })
     output$rhat_plot <- renderPlot(plot_rhat(imp(), x = input$var1))
     return(reactive(imp()))
     })
