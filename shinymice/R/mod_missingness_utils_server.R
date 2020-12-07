@@ -1,3 +1,27 @@
+# upload or file with incomplete data, or don't (then use mice::boys)
+read_data <- function(file) {
+  if (is.null(file)) {
+    set.seed(123)
+    return(mice::boys[sample.int(748, 100), ])
+  } else {
+    ext <- tools::file_ext(file$name)
+    f <- file$datapath
+    e <- new.env()
+    d <- switch(
+      ext,
+      csv = vroom::vroom(f, delim = ","),
+      tsv = vroom::vroom(f, delim = "\t"),
+      Rdata = e[[load(f, envir = e)]],
+      #Rdata = get_rdata_file(path = input$upload$datapath),
+      validate(
+        "Invalid file; Please upload a .csv, .tsv or .Rdata file"
+      )
+    )
+    return(d)
+  }
+}
+
+
 # descriptive statistics for incomplete data
 #' Title
 #'

@@ -163,12 +163,15 @@ plot_dens <- function(imp, x) {
 plot_xy <- function(imp, x, y) {
   # plot xy datapoints (scatterplot)
   p <- imp %>% plot_imps(x, y) +
-    ggplot2::geom_point(ggplot2::aes(
+    ggplot2::geom_point(
+      ggplot2::aes(
       x = .data[[x]],
       y = .data[[y]],
       group = .id,
       color = datapoint
-    ))
+      ), 
+      position = ggplot2::position_jitter(height = 0.1, width = 0.1)
+    )
   # output
   return(p)
 }

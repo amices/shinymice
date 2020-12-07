@@ -61,11 +61,11 @@ mod_missingness_ui <- function(id) {
 #' @noRd
 mod_missingness_server <- function(id) {
   moduleServer(id, function(input, output, session) {
-    data <- reactive(mice::boys)
+    data <- reactive(read_data(file = input$dat))
     # update variables
-    purrr::map(paste0("var", 1:4), function(x){
-      updateSelectInput(session, x, choices = names(isolate(data())))
-    })
+    observe(purrr::map(paste0("var", 1:4), function(x){
+      updateSelectInput(session, x, choices = names(data()))
+    }))
     output$na_desc <- DT::renderDT(descr_NA(data()))
     output$na_tab <- DT::renderDT(tab_NA(data()))
     output$na_plot <-
