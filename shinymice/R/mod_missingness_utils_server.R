@@ -2,7 +2,7 @@
 read_data <- function(file) {
   if (is.null(file)) {
     set.seed(123)
-    return(mice::boys[sample.int(748, 100), ])
+    return(mice::boys[sample.int(748, 100),])
   } else {
     ext <- tools::file_ext(file$name)
     f <- file$datapath
@@ -14,9 +14,7 @@ read_data <- function(file) {
       Rdata = e[[load(f, envir = e)]],
       rda = e[[load(f, envir = e)]],
       #Rdata = get_rdata_file(path = input$upload$datapath),
-      validate(
-        "Invalid file; Please upload a .csv, .tsv, or .Rdata file"
-      )
+      validate("Invalid file; Please upload a .csv, .tsv, or .Rdata file")
     )
     return(d)
   }
@@ -90,7 +88,7 @@ plot_NA_cond <- function(dat, x, z) {
   facet_labs <- c(paste(z, "observed"), paste(z, "missing")) %>%
     setNames(c("observed", "missing"))
   # preprocess the data
-  dat[!is.na(dat[[x]]), ] %>%
+  dat[!is.na(dat[[x]]),] %>%
     dplyr::mutate(conditional = factor(
       is.na(.data[[z]]),
       levels = c(FALSE, TRUE),
@@ -160,7 +158,7 @@ plot_NA_scatter <- function(dat, x, y) {
       color = mice:::mdc(2),
       shape = 4,
       mapping = ggplot2::aes(x = NA_x, y = .data[[y]]),
-      data = dat[is.na(dat[[x]]), ]
+      data = dat[is.na(dat[[x]]),]
     )
   } else {
     geom_x <- NULL
@@ -172,7 +170,7 @@ plot_NA_scatter <- function(dat, x, y) {
       color = mice:::mdc(2),
       shape = 4,
       mapping = ggplot2::aes(x = .data[[x]], y = NA_y),
-      data = dat[is.na(dat[[y]]), ]
+      data = dat[is.na(dat[[y]]),]
     )
   } else{
     geom_y <- NULL
@@ -184,7 +182,7 @@ plot_NA_scatter <- function(dat, x, y) {
       color = mice:::mdc(2),
       shape = 4,
       mapping = ggplot2::aes(x = NA_x, y = NA_y),
-      data = dat[is.na(dat[[x]]) & is.na(dat[[y]]), ]
+      data = dat[is.na(dat[[x]]) & is.na(dat[[y]]),]
     )
   } else{
     geom_xy <- NULL

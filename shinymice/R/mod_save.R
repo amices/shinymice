@@ -31,7 +31,7 @@ mod_save_ui <- function(id) {
       br(),
       shinyjs::disabled(downloadButton(ns("save_file"))),
       br()
-      ),
+    ),
     column(8,
            tabsetPanel(
              tabPanel(
@@ -58,7 +58,9 @@ mod_save_server <- function(id, imp) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
     stopifnot(is.reactive(imp))
-    observe(if(is.list(imp())) {shinyjs::enable("save_file")}) #shinyjs::disable("save_file")
+    observe(if (is.list(imp())) {
+      shinyjs::enable("save_file")
+    }) #shinyjs::disable("save_file")
     output$save_file <- downloadHandler(
       filename = function() {
         # ext <- switch(input$file_type,
@@ -68,10 +70,11 @@ mod_save_server <- function(id, imp) {
       },
       content = function(file) {
         mids_object <- imp()
-        if(input$file_type == ".RData"){
-            save(mids_object, file = file)
+        if (input$file_type == ".RData") {
+          save(mids_object, file = file)
         } else {
-            mids2spss(imp = mids_object, file = file)}
+          mids2spss(imp = mids_object, file = file)
+        }
       }
     )
   })

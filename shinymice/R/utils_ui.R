@@ -15,15 +15,17 @@ no_br <- function() {
 
 # select input with defaults
 select_var <- function(ns_id, ...) {
-  div("Select a variable:", 
-      selectInput(
-    ns_id,
-    label = NULL,
-    choices = "Select a variable",
-    width = 200,
-    ...
-  ),
-  style = "display:inline-block; margin-left: 20px; margin-top: 10px")
+  div(
+    "Select a variable:",
+    selectInput(
+      ns_id,
+      label = NULL,
+      choices = "Select a variable",
+      width = 200,
+      ...
+    ),
+    style = "display:inline-block; margin-left: 20px; margin-top: 10px"
+  )
 }
 
 # select number with defaults

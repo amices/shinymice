@@ -7,17 +7,19 @@
 #' @export
 plot_md_pattern <- function(dat) {
   # escape function if dataset is complete
-  if(!any(is.na(dat))){return(plot_a_mouse())}
+  if (!any(is.na(dat))) {
+    return(plot_a_mouse())
+  }
   # get md pattern and store additional info
   pat <- mice::md.pattern(dat, plot = FALSE)
   vrb <- colnames(pat)[-ncol(pat)]
   colnames(pat) <- c(vrb, "NA_per_pat")
   pat_freq <- as.numeric(rownames(pat))[-nrow(pat)]
   NA_per_pat <- as.numeric(pat[, ncol(pat)])[-nrow(pat)]
-  NA_per_vrb <- as.numeric(pat[nrow(pat), ])[-ncol(pat)]
+  NA_per_vrb <- as.numeric(pat[nrow(pat),])[-ncol(pat)]
   NA_total <- pat[nrow(pat), ncol(pat)]
   # make the pattern tidy
-  long_pat <- pat[-nrow(pat), ] %>%
+  long_pat <- pat[-nrow(pat),] %>%
     cbind(., pat_freq, pat_nr = 1:nrow(.)) %>%
     as.data.frame() %>%
     tidyr::pivot_longer(cols = all_of(vrb),
@@ -27,17 +29,15 @@ plot_md_pattern <- function(dat) {
   # plot the md pattern
   p <- long_pat %>%
     ggplot2::ggplot() +
-    ggplot2::geom_tile(
-      ggplot2::aes(
-        x = vrb,
-        y = pat_nr,
-        fill = as.factor(obs),
-        group = NA_per_pat#,
-        # text = paste('pat_freq: ', pat_freq,
-        #              '</br>NA_per_vrb: ', NA_per_vrb)
-      ),
-      color = "black"
-    ) +
+    ggplot2::geom_tile(ggplot2::aes(
+      x = vrb,
+      y = pat_nr,
+      fill = as.factor(obs),
+      group = NA_per_pat#,
+      # text = paste('pat_freq: ', pat_freq,
+      #              '</br>NA_per_vrb: ', NA_per_vrb)
+    ),
+    color = "black") +
     # set axes
     ggplot2::scale_x_discrete(
       limits = vrb,
@@ -68,7 +68,7 @@ plot_md_pattern <- function(dat) {
         y = -Inf,
         label = abbreviate(.data[["vrb"]])
       ),
-      data = long_pat[1:length(vrb),],
+      data = long_pat[1:length(vrb), ],
       vjust = -0.5
     ) +
     #ggrepel::geom_text_repel(ggplot2::aes(x = vrb, y = -Inf, label = vrb)) +
@@ -98,7 +98,7 @@ plot_md_pattern <- function(dat) {
 #'
 #' @return
 #' @export
-plot_flux <- function(dat) { 
+plot_flux <- function(dat) {
   # escape function if dataset is complete
   # if(!any(is.na(dat))){return(plot_a_mouse())}
   # plot in and outflux
@@ -177,7 +177,9 @@ plot_pred_matrix <- function(d) {
 #' @return
 #' @export
 preprocess_thetas <- function(imp) {
-  if(!any(imp$nmis>0)){return(NULL)} 
+  if (!any(imp$nmis > 0)) {
+    return(NULL)
+  }
   # preprocess chain means
   long_trace <- imp$chainMean %>%
     dplyr::na_if(., "NaN") %>%
@@ -208,13 +210,23 @@ preprocess_thetas <- function(imp) {
 #' @return
 #' @export
 trace_one_variable <- function(d, x) {
-  if(is.null(d)){return(plot_a_mouse())} 
+  if (is.null(d)) {
+    return(plot_a_mouse())
+  }
   # select one variable and plot it
-  p <- d[d$var == x, ] %>%
+  p <- d[d$var == x,] %>%
     ggplot2::ggplot() +
-    ggplot2::geom_line(ggplot2::aes(x = as.integer(.it), y = value, color = .imp)) +
-    ggplot2::geom_point(ggplot2::aes(x = as.integer(.it), y = value, color = .imp), size = 0.5) +
-    ggplot2::facet_wrap(~ theta, scales = "free", ncol = 1) +
+    ggplot2::geom_line(ggplot2::aes(
+      x = as.integer(.it),
+      y = value,
+      color = .imp
+    )) +
+    ggplot2::geom_point(ggplot2::aes(
+      x = as.integer(.it),
+      y = value,
+      color = .imp
+    ), size = 0.5) +
+    ggplot2::facet_wrap( ~ theta, scales = "free", ncol = 1) +
     ggplot2::theme_classic() +
     ggplot2::theme(strip.background = ggplot2::element_rect(size = 0.5)) +
     ggplot2::labs(x = "Iteration",
@@ -253,14 +265,14 @@ rhat_functions <- function(sims) {
       # split each chain to get 2m chains
       lower <- 1:floor(n_it / 2)
       upper <- ceiling((n_it / 2) + 1):n_it
-      splits <- base::cbind(sims[lower,], sims[upper,])
+      splits <- base::cbind(sims[lower, ], sims[upper, ])
       return(splits)
     }
   }
   # rank-normalize chains because Gelman says so
   z_scale <- function(splits) {
     # if there are no imputations, exit function
-    if(all(is.na(splits))){
+    if (all(is.na(splits))) {
       return(splits)
     }
     # rank-normalize Markov chain, copied from rstan
@@ -305,10 +317,10 @@ compute_rhat <- function(thetas) {
   } else {
     r.hat <- purrr::map_dfr(2:n_it, function(it) {
       # compute r hat in all ways described by Vehtari et al. (2019)
-      rhat_bulk <- thetas[1:it, ] %>%
+      rhat_bulk <- thetas[1:it,] %>%
         rhat_functions(.)
       # for rhat of the tails, fold the chains
-      rhat_tail <- abs(thetas[1:it, ] - median(thetas[1:it, ])) %>% 
+      rhat_tail <- abs(thetas[1:it,] - median(thetas[1:it,])) %>%
         rhat_functions(.)
       max(rhat_bulk, rhat_tail) %>%
         data.frame(rhat = .)
@@ -332,11 +344,11 @@ compute_rhat <- function(thetas) {
 plot_rhat <- function(imp, x, theta = "means") {
   #parse inputs
   if (theta == "means" | theta == "both") {
-    thetas <- imp$chainMean[x, ,] 
+    thetas <- imp$chainMean[x, , ]
     thetas[is.nan(thetas)] <- NA
   }
   if (theta == "vars") {
-    thetas <- imp$chainVar[x, ,]
+    thetas <- imp$chainVar[x, , ]
   }
   # plot
   p <- compute_rhat(thetas) %>%
@@ -347,10 +359,14 @@ plot_rhat <- function(imp, x, theta = "means") {
                         size = 1) +
     ggplot2::theme_classic()
   # optional added second theta
-  if (theta == "both"){
-    p <- p + ggplot2::geom_line(ggplot2::aes(x = iteration, y = rhat), linetype = "dashed", data = compute_rhat(imp$chainVar[x, ,]))
+  if (theta == "both") {
+    p <-
+      p + ggplot2::geom_line(
+        ggplot2::aes(x = iteration, y = rhat),
+        linetype = "dashed",
+        data = compute_rhat(imp$chainVar[x, , ])
+      )
   }
   # output
   return(p)
 }
-

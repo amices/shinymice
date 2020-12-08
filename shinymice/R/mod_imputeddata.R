@@ -25,7 +25,7 @@ mod_imputeddata_ui <- function(id) {
       "3. Inspect the distribution of the imputed data per variable.",
       br(),
       "4. Evaluate the bivariate relations post-imputation."
-      ),
+    ),
     column(
       8,
       tabsetPanel(
@@ -61,10 +61,10 @@ mod_imputeddata_server <- function(id, data, imp) {
     stopifnot(is.reactive(imp))
     observe({
       updateSelectInput(session, "var1", choices = names(data()))
-    updateSelectInput(session, "var2", choices = names(data()))
-    updateSelectInput(session, "var3", choices = names(data()))
-    updateSelectInput(session, "var4", choices = names(data()))
-    updateSelectInput(session, "var5", choices = names(data()))
+      updateSelectInput(session, "var2", choices = names(data()))
+      updateSelectInput(session, "var3", choices = names(data()))
+      updateSelectInput(session, "var4", choices = names(data()))
+      updateSelectInput(session, "var5", choices = names(data()))
     })
     output$imp_desc <- DT::renderDT({
       req(!is.null(imp()))#, "Please impute the incomplete data first.")

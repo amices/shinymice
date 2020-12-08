@@ -18,7 +18,6 @@ imp_descr <- function(imp) {
       sd = round(sd, 2),
       n_imputed = as.integer(imp$nmis)
     )
-    #cbind(., n_imputed = as.integer(imp$nmis))
   tab[, 2] <- as.integer(tab[, 2])
   dt <- DT::datatable(tab, rownames = FALSE) %>%
     DT::formatStyle(
@@ -165,11 +164,11 @@ plot_xy <- function(imp, x, y) {
   p <- imp %>% plot_imps(x, y) +
     ggplot2::geom_point(
       ggplot2::aes(
-      x = .data[[x]],
-      y = .data[[y]],
-      group = .id,
-      color = datapoint
-      ), 
+        x = .data[[x]],
+        y = .data[[y]],
+        group = .id,
+        color = datapoint
+      ),
       position = ggplot2::position_jitter(height = 0.1, width = 0.1)
     )
   # output

@@ -17,8 +17,11 @@ mod_home_ui <- function(id) {
     #h2("[navigation buttons here]", align = "center"),
     div(tags$b("Dear reader,"), align = "center"),
     div(tags$b("This app is still under development."),
-        align = "center"),  
-    div(tags$b("Please feel free to explore it anyway, but beware of bugs."), align = "center"),
+        align = "center"),
+    div(
+      tags$b("Please feel free to explore it anyway, but beware of bugs."),
+      align = "center"
+    ),
     div(tags$b("-Hanne"), align = "center"),
     br(),
     br(),

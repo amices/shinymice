@@ -35,9 +35,13 @@ mod_missingness_ui <- function(id) {
     ),
     column(8,
            tabsetPanel(
-             tabPanel("Descriptives",
-                      h6("Note that variables with an asteriks ('*') are categorical, so the mean and standard deviation may not be meaningful."),
-                      DT::DTOutput(ns("na_desc"))),
+             tabPanel(
+               "Descriptives",
+               h6(
+                 "Note that variables with an asteriks ('*') are categorical, so the mean and standard deviation may not be meaningful."
+               ),
+               DT::DTOutput(ns("na_desc"))
+             ),
              tabPanel("Browse",
                       DT::DTOutput(ns("na_tab"))),
              tabPanel(
@@ -63,10 +67,16 @@ mod_missingness_server <- function(id) {
   moduleServer(id, function(input, output, session) {
     data <- reactive({
       d <- read_data(file = input$dat)
-      validate(need(is.data.frame(d), "Sorry, {shinymice}  cannot process this dataset. Please check if you specified the right file."))
-      d})
+      validate(
+        need(
+          is.data.frame(d),
+          "Sorry, {shinymice}  cannot process this dataset. Please check if you specified the right file."
+        )
+      )
+      d
+    })
     # update variables
-    observe(purrr::map(paste0("var", 1:4), function(x){
+    observe(purrr::map(paste0("var", 1:4), function(x) {
       updateSelectInput(session, x, choices = names(data()))
     }))
     output$na_desc <- DT::renderDT(descr_NA(data()))
