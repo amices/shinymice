@@ -12,9 +12,10 @@ read_data <- function(file) {
       csv = vroom::vroom(f, delim = ","),
       tsv = vroom::vroom(f, delim = "\t"),
       Rdata = e[[load(f, envir = e)]],
+      rda = e[[load(f, envir = e)]],
       #Rdata = get_rdata_file(path = input$upload$datapath),
       validate(
-        "Invalid file; Please upload a .csv, .tsv or .Rdata file"
+        "Invalid file; Please upload a .csv, .tsv, or .Rdata file"
       )
     )
     return(d)

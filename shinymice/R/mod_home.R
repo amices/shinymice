@@ -16,12 +16,10 @@ mod_home_ui <- function(id) {
     br(),
     #h2("[navigation buttons here]", align = "center"),
     div(tags$b("Dear reader,"), align = "center"),
-    div(
-      tags$b(
-        "This app is still in the experimental stage. Much of the reactivity is currently switched off, and many plotting functions are still under development. Please feel free to browse the app anyway."
-      ),
-      align = "center"
-    ),
+    div(tags$b("This app is still under development."),
+        align = "center"),  
+    div(tags$b("Please feel free to explore it anyway, but beware of bugs."), align = "center"),
+    div(tags$b("-Hanne"), align = "center"),
     br(),
     br(),
     div(

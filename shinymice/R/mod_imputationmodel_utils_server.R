@@ -177,6 +177,7 @@ plot_pred_matrix <- function(d) {
 #' @return
 #' @export
 preprocess_thetas <- function(imp) {
+  if(!any(imp$nmis>0)){return(NULL)} 
   # preprocess chain means
   long_trace <- imp$chainMean %>%
     dplyr::na_if(., "NaN") %>%
@@ -207,6 +208,7 @@ preprocess_thetas <- function(imp) {
 #' @return
 #' @export
 trace_one_variable <- function(d, x) {
+  if(is.null(d)){return(plot_a_mouse())} 
   # select one variable and plot it
   p <- d[d$var == x, ] %>%
     ggplot2::ggplot() +

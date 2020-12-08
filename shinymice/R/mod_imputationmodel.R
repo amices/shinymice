@@ -101,7 +101,7 @@ mod_imputationmodel_server <- function(id, data) {
                          {waiter::waiter_show(html = waiter::spin_throbber(), color = waiter::transparent(.5))
                           on.exit(waiter::waiter_hide())
                           eval(parse(text = paste("mice::mice(data(), seed = input$seed, m = input$m, maxit = input$maxit, ", input$add_args, ")")))
-                          })
+                          }) #, ignoreNULL = FALSE, ignoreInit = TRUE
     # TODO: validate additional arguments with formals(mice::mice)
     chains <- reactive(preprocess_thetas(imp()))
     output$trace_plot <- renderPlot({

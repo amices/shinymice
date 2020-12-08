@@ -15,7 +15,7 @@ mod_imputeddata_ui <- function(id) {
       tags$b("Inspect the imputations"),
       br(),
       br(),
-      with_red_star("1. Please make sure you have imputed the incomplete data."),
+      "1. Please make sure you have imputed the incomplete data.",
       # no_br(),
       # checkboxInput(ns("check_imp"), NULL),
       # no_br(),
@@ -59,13 +59,15 @@ mod_imputeddata_server <- function(id, data, imp) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
     stopifnot(is.reactive(imp))
-    updateSelectInput(session, "var1", choices = names(isolate(data())))
-    updateSelectInput(session, "var2", choices = names(isolate(data())))
-    updateSelectInput(session, "var3", choices = names(isolate(data())))
-    updateSelectInput(session, "var4", choices = names(isolate(data())))
-    updateSelectInput(session, "var5", choices = names(isolate(data())))
+    observe({
+      updateSelectInput(session, "var1", choices = names(data()))
+    updateSelectInput(session, "var2", choices = names(data()))
+    updateSelectInput(session, "var3", choices = names(data()))
+    updateSelectInput(session, "var4", choices = names(data()))
+    updateSelectInput(session, "var5", choices = names(data()))
+    })
     output$imp_desc <- DT::renderDT({
-      #shiny::validate(need(!is.null(imp()), "Please impute the incomplete data first."))
+      req(!is.null(imp()))#, "Please impute the incomplete data first.")
       imp_descr(imp())
     })
     output$strip_plot <-

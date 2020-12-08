@@ -15,13 +15,13 @@ mod_missingness_ui <- function(id) {
       tags$b("Explore the missingness"),
       br(),
       br(),
-      "1. Load the incomplete data [this feature is currently disabeled].",
+      "1. Load the incomplete data.",
       fileInput(
         ns("dat"),
         label = NULL,
         buttonLabel = icon("search"),
-        placeholder = ".csv/.Rdata/.txt",
-        accept = c(".rdata", ".csv", "text", ".txt")
+        placeholder = ".csv/.Rdata/.rda",
+        accept = c(".rdata", ".rda", ".csv", "text", ".txt", ".tsv")
       ),
       no_br(),
       "2. Check how much missingness there is in each variable.",
