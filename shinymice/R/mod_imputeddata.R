@@ -59,16 +59,17 @@ mod_imputeddata_server <- function(id, data, imp) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
     stopifnot(is.reactive(imp))
-    observe({
-      updateSelectInput(session, "var1", choices = names(data()))
-      updateSelectInput(session, "var2", choices = names(data()))
-      updateSelectInput(session, "var3", choices = names(data()))
-      updateSelectInput(session, "var4", choices = names(data()))
-      updateSelectInput(session, "var5", choices = names(data()))
-    })
+    observe(purrr::map(paste0("var", 1:5), function(x) {
+      updateSelectInput(session, x, choices = names(data()))
+    }))
+    # observe(showModal(modalDialog(
+    #   title = "Important message",
+    #   "This is an important message!"
+    # )))
     output$imp_desc <- DT::renderDT({
-      req(!is.null(imp()))#, "Please impute the incomplete data first.")
-      imp_descr(imp())
+      if(is.null(imp())){return(data.frame(x=0, y=0))} else{
+      #validate(need(is.list(imp()), "Please impute the incomplete data first."))
+      imp_descr(imp())}
     })
     output$strip_plot <-
       renderPlot(plot_strip(imp(), x = input$var1))

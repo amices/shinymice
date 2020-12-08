@@ -98,7 +98,8 @@ mod_imputationmodel_server <- function(id, data) {
         }
       })
     imp <-
-      eventReactive(input$run_mice, {
+     eventReactive(input$run_mice, {
+        validate(need(input$run_mice>0, "Please impute the incomplete data first."))
         waiter::waiter_show(html = waiter::spin_throbber(),
                             color = waiter::transparent(.5))
         on.exit(waiter::waiter_hide())
@@ -108,11 +109,11 @@ mod_imputationmodel_server <- function(id, data) {
             input$add_args,
             ")")
         ))
-      }) #, ignoreNULL = FALSE, ignoreInit = TRUE
+      }, ignoreNULL = FALSE)  
     # TODO: validate additional arguments with formals(mice::mice)
     chains <- reactive(preprocess_thetas(imp()))
     output$trace_plot <- renderPlot({
-      validate(need(input$run_mice, message = "Please impute the incomplete data first."))
+      #validate(need(input$run_mice, message = "Please impute the incomplete data first."))
       trace_one_variable(chains(), x = input$var1)
     })
     output$rhat_plot <- renderPlot(plot_rhat(imp(), x = input$var1))
