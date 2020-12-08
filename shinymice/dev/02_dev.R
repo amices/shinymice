@@ -22,6 +22,7 @@ usethis::use_package("plotly")
 usethis::use_package("psych")
 usethis::use_package("haven")
 usethis::use_package("shinyjs")
+usethis::use_package("waiter")
 usethis::use_pipe()
 
 ## Add modules ----

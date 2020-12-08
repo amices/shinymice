@@ -8,6 +8,7 @@ app_ui <- function(request) {
   tagList(# Leave this function for adding external resources
     golem_add_external_resources(),
     shinyjs::useShinyjs(),
+    waiter::use_waiter(),
     # shinyFeedback::useShinyFeedback(),
     # List the first level UI elements here
     fluidPage(

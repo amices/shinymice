@@ -27,7 +27,8 @@ Imports:
     psych,
     plotly,
     haven,
-    shinyjs
+    shinyjs,
+    waiter
 Suggests: 
     knitr,
     rmarkdown,
