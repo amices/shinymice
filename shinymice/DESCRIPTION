@@ -25,7 +25,9 @@ Imports:
     shiny,
     pkgload,
     psych,
-    plotly
+    plotly,
+    haven,
+    shinyjs
 Suggests: 
     knitr,
     rmarkdown,

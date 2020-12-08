@@ -21,6 +21,7 @@ usethis::use_package("dplyr")
 usethis::use_package("plotly")
 usethis::use_package("psych")
 usethis::use_package("haven")
+usethis::use_package("shinyjs")
 usethis::use_pipe()
 
 ## Add modules ----
@@ -53,7 +54,7 @@ golem::add_css_file("custom")
 ## Add internal datasets ----
 ## If you have data in your package
 # usethis::use_data_raw(name = "my_dataset", open = FALSE)
-load("plotmouse.RData")
+# load("plotmouse.RData")
 usethis::use_data(mouse)
 
 ## Tests ----
