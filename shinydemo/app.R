@@ -29,7 +29,9 @@ ui <- fluidPage(
           min = 1,
           max = 50,
           value = 30
-        )
+        ),
+        br(), br(),
+        actionButton("show", "!")
       ),
       # Show a plot of the generated distribution
       mainPanel(plotOutput("distPlot")))
@@ -44,7 +46,7 @@ ui <- fluidPage(
       br(),
       #uiOutput("pdf")
       #img(src = "test.png"),
-      tags$iframe(style = "height:600px; width:100%; scrolling=yes",
+      tags$iframe(style = "height:500px; width:100%; scrolling=yes",
                   src = "shiny_logic.pdf")
     ),
     tabPanel(
@@ -67,7 +69,6 @@ ui <- fluidPage(
             "sliderInput('bins', 'Number of bins:', min = 1, max = 50, value = 30)"
           ),
           img(src = "slider.png", style = "width:100%"),
-          br(),
           br(),
           tags$code("plotOutput('distPlot')"),
           img(src = "histogram.png", style = "width:100%"),
@@ -186,7 +187,7 @@ ui <- fluidPage(
               "Extract your core 'non-reactive' functions and put them in separate files."
             ),
             tags$li(
-              "Use sensible non-reactive defaults while develioping (e.g., `data <- mtcars` instead of `data <- reactive(...).`"
+              "Use sensible non-reactive defaults while develioping (e.g., `data <- mtcars` instead of `data <- reactive(...).`)"
             ),
             tags$li("OPTIONAL: Split your app into modules.")
           ))
@@ -201,12 +202,17 @@ ui <- fluidPage(
           tags$a("RStudio:", href = "https://shiny.rstudio.com/articles/modules.html"),
           br(),
           br(),
-          img(src = "module.PNG", style = "width:100%"),
-          br(),
-          "Modules aim at three things: simplifying 'id' namespacing, split the code base into a series of functions, and allow UI/Server parts of your app to be reused.",
+          img(src = "modules.PNG", style = "width:100%"),
+          br(), br(), 
+          "Modules aim at three things:", 
+          tags$div(tags$ul(
+            tags$li("simplifying 'id' namespacing,"),
+            tags$li("split the code base into a series of functions,"),
+            tags$li("and allow UI/Server parts of your app to be reused.")
+            )),
           "If you want to learn more, watch ",
           tags$a("this presentation.", href = "https://www.youtube.com/watch?v=ylLLVo2VL50"),
-          br()
+          br(), br()
         ),
         tabPanel(
           tags$b("STEP 3: BUILD"),
@@ -277,13 +283,24 @@ ui <- fluidPage(
               "You could also host your app on your own website. Or don't deploy it at all (e.g., for privacy reasons)."
             )
           ))
-        )
+        ),
+        tabPanel(
+          tags$b("STEP 6: PROFIT (unofficial step)"),
+          br(),
+          "These steps make it easier to develop (complex) Shiny apps.", br(), br(), 
+          "Q: But, should you use them?", br(), br(),
+          actionButton("answer", "A:"),
+          #renderText("A1"),
+          br(), "You could use the {golem} framework to guide you through these steps, but decide to do this up front otherwise you'll end up with 'Frankencode'.",
+          br(), "I wouldn't use it for this course, because there is quite some terminology/setting up to get through and I don't think it's worth it.",
+          br(), "If you choose to invest some time in a new package next to {shiny}, I'd advice {datatable} or {plotly}.",
       )
-    ),
+    )),
     tabPanel(
       "6.",
       h2("6. Take", HTML("<strike>home</strike>"), "away"),
       "So, what should you remember from all this?",
+      br(),
       "First of all:",
       tags$div(tags$ul(
         tags$li("Google is your friend*."),
@@ -296,10 +313,12 @@ ui <- fluidPage(
           "You will now be able to create silly apps for friends/loved ones in a matter of minutes, (ab)use that power!"
         )
       )),
-      "Furthermore, you could use the {golem} framework to guide you through these steps, but decide to do this up front otherwise you'll end up with 'Frankencode'.",
-      br(), "I wouldn't use it for this course, because there is quite some terminology/setting up to get through and I don't think it's worth it.",
-      br(), "If you choose to invest some time in a new package next to {shiny}, I'd advice {datatable} or {plotly}.",
-      br(), br(), br(),
+      br(), 
+      "CHALLENGE TO YOU: find the flaws in {shinymice}!",
+      br(),
+      "Please go to",
+      tags$a("hanneoberman.shinyapps.io/shinymice-demo/", href = "https://hanneoberman.shinyapps.io/shinymice-demo/"),
+      br(), br(),
       h6("*Debatable.")
     )
   )
@@ -317,6 +336,16 @@ server <- function(input, output) {
          col = 'darkgray',
          border = 'white')
   })
+  observeEvent(input$show, {
+    showModal(modalDialog(
+      title = "Decision time!",
+      "Do you choose a single file app or two separate files?",
+      easyClose = TRUE,
+      footer = NULL
+    ))
+  })
+  a1 <- eventReactive(input$answer, {if(input$answer>0){"You could use the {golem} framework to guide you through these steps, but decide to do this up front otherwise you'll end up with 'Frankencode'."}else{NULL}})
+  output$A1 <- renderText(a1())
   #output$pdf <- renderUI()
 }
 
