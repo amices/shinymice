@@ -150,6 +150,10 @@ ui <- fluidPage(
           "Don't rush into coding when you should be thinking.",
           br(),
           br(),
+          fluidRow(
+            column(6, 
+                   img(src="design.jpg", style= "width:90%")),
+            column(6,
           "You should KISS (i.e., Keep It Simple, Stupid):",
           tags$div(tags$ul(
             tags$li("Avoid unnecessary complexity and 'feature creep'."),
@@ -165,7 +169,7 @@ ui <- fluidPage(
             tags$li(
               "On what machines? E.g., will they be using the app on their office desktop PC, on their phone while driving a tractor, etc.?"
             )
-          ))
+          ))))
         ),
         tabPanel(
           tags$b("STEP 2: PROTOTYPE"),
@@ -173,7 +177,11 @@ ui <- fluidPage(
           "Build the front-end and the back-end, but separately.",
           br(),
           br(),
-          "Front-end:",
+          fluidRow(
+          column(6, 
+                 img(src="prototype.png", style= "width:90%")),
+          column(6,
+                 "Front-end:",
           tags$div(tags$ul(
             tags$li(
               "Work on the general appearance, e.g. tabs, inputs, outputs; anything that does not rely on computation."
@@ -195,7 +203,7 @@ ui <- fluidPage(
               "Use sensible non-reactive defaults while develioping (e.g., `data <- mtcars` instead of `data <- reactive(...).`)"
             ),
             tags$li("OPTIONAL: Split your app into modules.")
-          ))
+          ))))
         ),
         tabPanel(
           "DETOUR: MODULES",
@@ -227,7 +235,10 @@ ui <- fluidPage(
           "Now that you have a rough sketch of the app, and the 'dumb' (i.e., non-reactive) functions to perform data processing and visualization, you need to link the front-end and back-end together.",
           br(),
           br(),
-          "Things to think about:",
+          fluidRow(
+            column(6, 
+                   img(src="build.png", style= "width:90%")),
+            column(6,"Things to think about:",
           tags$div(tags$ul(
             tags$li(
               "Package dependencies (e.g., using `library()` vs. making your app a package)."
@@ -241,7 +252,7 @@ ui <- fluidPage(
             tags$li(
               "If you're not sure if a reactive is working, just print the output (i.e., `renderPrint(...)`)."
             )
-          ))
+          ))))
         ),
         tabPanel(
           tags$b("STEP 4: STRENGTHEN"),
@@ -249,7 +260,10 @@ ui <- fluidPage(
           "If you want your Shiny app to last, you should make it robust.",
           br(),
           br(),
-          "At least:",
+          fluidRow(
+            column(6, 
+                   img(src="strengthen.jpg", style= "width:70%")),
+            column(6,"At least:",
           tags$div(tags$ul(
             tags$li(
               "Run the app in the viewer panel, a separate window, and your browser."
@@ -268,7 +282,7 @@ ui <- fluidPage(
             tags$li(
               "Make the app future-proof with a reproducible environment like {renv} or a Docker container."
             )
-          ))
+          ))))
         ),
         tabPanel(
           tags$b("STEP 5: DEPLOY"),
@@ -277,7 +291,10 @@ ui <- fluidPage(
           tags$a("shinyapps.io.", href = "https://www.shinyapps.io/"),
           br(),
           br(),
-          "Note that:",
+          fluidRow(
+            column(6, 
+                   img(src="deploy.png", style= "width:90%")),
+            column(6,"Note that:",
           tags$div(tags$ul(
             tags$li("With a free account, your app will be public."),
             tags$li(
@@ -288,7 +305,7 @@ ui <- fluidPage(
             ),
             tags$li(
               "You could also host your app on your own website. Or don't deploy it at all (e.g., for privacy reasons)."
-            )
+            )))
           ))
         ),
         tabPanel(
@@ -297,7 +314,10 @@ ui <- fluidPage(
           "These steps make it easier to develop (complex) Shiny apps.",
           br(),
           br(),
-          "Q: But, should you use them?",
+          fluidRow(
+            column(6, 
+                   img(src="golem.png", style= "width:90%")),
+            column(6,"Q: But, should you use them?",
           br(),
           br(),
           actionButton("answer", "A:"),
@@ -315,14 +335,18 @@ ui <- fluidPage(
           ),
           br()
         )
-      )
+      )))
     ),
     tabPanel(
       "6.",
       h2("6. Take", HTML("<strike>home</strike>"), "away"),
       "So, what should you remember from all this?",
       br(),
-      "First of all:",
+      fluidRow(
+        column(6, 
+               img(src="SHINY101.png", style= "width:90%")),
+        column(6,
+               "First of all:",
       tags$div(
         tags$ul(
           tags$li("Google is your friend*."),
@@ -341,8 +365,7 @@ ui <- fluidPage(
         )
       ),
       br(),
-      br(),
-      h6("*Debatable.")
+      h6("*Debatable.")))
     ),
     tabPanel(
       "7.",
