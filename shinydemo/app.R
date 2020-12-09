@@ -347,13 +347,13 @@ ui <- fluidPage(
     tabPanel(
       "7.",
       h2("7. CHALLENGE TO YOU: find the flaws in {shinymice}!"),
-      br(),
-      br(),
-      "Please go to",
-      tags$a("hanneoberman.shinyapps.io/shinymice-demo/", href = "https://hanneoberman.shinyapps.io/shinymice-demo/"),
-      br(),
-      br(),
-      img(src = "shinymice.png", style = "width:50%")
+      column(6,
+             br(),
+             br(),
+             "Please go to",
+      tags$a("hanneoberman.shinyapps.io/shinymice-demo/", href = "https://hanneoberman.shinyapps.io/shinymice-demo/")),
+      column(6,
+      img(src = "shinymice.png", style = "width:80%"))
     )
       
   )
