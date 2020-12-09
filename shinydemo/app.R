@@ -11,8 +11,10 @@ library(shiny)
 
 # Define UI for application that draws a histogram
 ui <- fluidPage(
+  shinyjs::useShinyjs(),
   navbarPage(
     "SHINY101",
+    collapsible = TRUE,
     tabPanel("0.",
              img(src = "SHINY101.png", style = "width:800")),
     tabPanel(
@@ -22,19 +24,22 @@ ui <- fluidPage(
       br(),
       br(),
       # Sidebar with a slider input for number of bins
-      sidebarLayout(sidebarPanel(
-        sliderInput(
-          "bins",
-          "Number of bins:",
-          min = 1,
-          max = 50,
-          value = 30
+      sidebarLayout(
+        sidebarPanel(
+          sliderInput(
+            "bins",
+            "Number of bins:",
+            min = 1,
+            max = 50,
+            value = 30
+          ),
+          br(),
+          br(),
+          actionButton("show", "!")
         ),
-        br(), br(),
-        actionButton("show", "!")
-      ),
-      # Show a plot of the generated distribution
-      mainPanel(plotOutput("distPlot")))
+        # Show a plot of the generated distribution
+        mainPanel(plotOutput("distPlot"))
+      )
     ),
     #segway: should you choose 1 or 2 file app??
     tabPanel(
@@ -203,16 +208,18 @@ ui <- fluidPage(
           br(),
           br(),
           img(src = "modules.PNG", style = "width:100%"),
-          br(), br(), 
-          "Modules aim at three things:", 
+          br(),
+          br(),
+          "Modules aim at three things:",
           tags$div(tags$ul(
             tags$li("simplifying 'id' namespacing,"),
             tags$li("split the code base into a series of functions,"),
             tags$li("and allow UI/Server parts of your app to be reused.")
-            )),
+          )),
           "If you want to learn more, watch ",
           tags$a("this presentation.", href = "https://www.youtube.com/watch?v=ylLLVo2VL50"),
-          br(), br()
+          br(),
+          br()
         ),
         tabPanel(
           tags$b("STEP 3: BUILD"),
@@ -287,40 +294,68 @@ ui <- fluidPage(
         tabPanel(
           tags$b("STEP 6: PROFIT (unofficial step)"),
           br(),
-          "These steps make it easier to develop (complex) Shiny apps.", br(), br(), 
-          "Q: But, should you use them?", br(), br(),
+          "These steps make it easier to develop (complex) Shiny apps.",
+          br(),
+          br(),
+          "Q: But, should you use them?",
+          br(),
+          br(),
           actionButton("answer", "A:"),
-          #renderText("A1"),
-          br(), "You could use the {golem} framework to guide you through these steps, but decide to do this up front otherwise you'll end up with 'Frankencode'.",
-          br(), "I wouldn't use it for this course, because there is quite some terminology/setting up to get through and I don't think it's worth it.",
-          br(), "If you choose to invest some time in a new package next to {shiny}, I'd advice {datatable} or {plotly}.",
+          br(),
+          shinyjs::hidden(
+            div(
+              id = 'text_div',
+              br(),
+              textOutput("A1"),
+              br(),
+              textOutput("A2"),
+              br(),
+              textOutput("A3")
+            )
+          ),
+          br()
+        )
       )
-    )),
+    ),
     tabPanel(
       "6.",
       h2("6. Take", HTML("<strike>home</strike>"), "away"),
       "So, what should you remember from all this?",
       br(),
       "First of all:",
-      tags$div(tags$ul(
-        tags$li("Google is your friend*."),
-        tags$li("Don't forget to add 'r' to your 'shiny ...' searches."),
-        tags$li(
-          "Keep your `id`s simple and sensible. If you use modules, add the namespace function to each `id`."
-        ),
-        tags$li("If you copy something just ONCE, make it a function/module."),
-        tags$li(
-          "You will now be able to create silly apps for friends/loved ones in a matter of minutes, (ab)use that power!"
+      tags$div(
+        tags$ul(
+          tags$li("Google is your friend*."),
+          tags$li("Don't forget to add 'r' to your 'shiny ...' searches."),
+          tags$li("Keep your `id`s simple and sensible."),
+          tags$li(
+            "If you use modules, don't forget to add the namespace function to each `id`."
+          ),
+          tags$li(
+            "If you don't use modules, I highly recommend to update RStudio to the 'daily build' for color coded brackets."
+          ),
+          tags$li("If you copy something just ONCE, make it a function/module."),
+          tags$li(
+            "You will now be able to create silly apps for friends/loved ones in a matter of minutes, (ab)use that power!"
+          )
         )
-      )),
-      br(), 
-      "CHALLENGE TO YOU: find the flaws in {shinymice}!",
+      ),
+      br(),
+      br(),
+      h6("*Debatable.")
+    ),
+    tabPanel(
+      "7.",
+      h2("7. CHALLENGE TO YOU: find the flaws in {shinymice}!"),
+      br(),
       br(),
       "Please go to",
       tags$a("hanneoberman.shinyapps.io/shinymice-demo/", href = "https://hanneoberman.shinyapps.io/shinymice-demo/"),
-      br(), br(),
-      h6("*Debatable.")
+      br(),
+      br(),
+      img(src = "shinymice.png", style = "width:50%")
     )
+      
   )
 )
 
@@ -337,16 +372,40 @@ server <- function(input, output) {
          border = 'white')
   })
   observeEvent(input$show, {
-    showModal(modalDialog(
-      title = "Decision time!",
-      "Do you choose a single file app or two separate files?",
-      easyClose = TRUE,
-      footer = NULL
-    ))
+    showModal(
+      modalDialog(
+        title = "Decision time!",
+        "Do you choose a single file app or two separate files?",
+        easyClose = TRUE,
+        footer = NULL
+      )
+    )
   })
-  a1 <- eventReactive(input$answer, {if(input$answer>0){"You could use the {golem} framework to guide you through these steps, but decide to do this up front otherwise you'll end up with 'Frankencode'."}else{NULL}})
-  output$A1 <- renderText(a1())
-  #output$pdf <- renderUI()
+  # a1 <-
+  #   eventReactive(input$answer, {
+  #     if (input$answer > 0) {
+  #       "You could use the {golem} framework to guide you through these steps, but decide to do this up front otherwise you'll end up with 'Frankencode'."
+  #     } else{
+  #       NULL
+  #     }
+  #   })
+  # output$A1 <- renderText(a1())
+  observeEvent(input$answer, {
+    shinyjs::toggle('text_div')
+    output$A1 <-
+      renderText({
+        "You could use the {golem} framework to guide you through these steps, but decide to do this up front otherwise you'll end up with 'Frankencode'."
+      })
+    output$A2 <-
+      renderText({
+        "I wouldn't use it for this course, because there is quite some terminology/setting up to get through and I don't think it's worth it."
+      })
+    output$A3 <-
+      renderText({
+        "If you choose to invest some time in a new package next to {shiny}, I'd advice {datatable} or {plotly}."
+      })
+  })
+  
 }
 
 # Run the application
