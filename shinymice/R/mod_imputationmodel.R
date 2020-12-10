@@ -68,9 +68,10 @@ mod_imputationmodel_ui <- function(id) {
              ),
              tabPanel("Traceplot",
                       select_var(ns("var1")),
-                      plotOutput(ns("trace_plot"))
-                      # "Convergence diagnostic",
-                      # plotOutput(ns("rhat_plot"))))#
+                      plotOutput(ns("trace_plot"))),
+             tabPanel("Convergence",
+                      select_var(ns("var2")),
+                      plotOutput(ns("rhat_plot"))
                       )
              ))
     ))
@@ -83,7 +84,9 @@ mod_imputationmodel_server <- function(id, data) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
     stopifnot(is.reactive(data))
-    updateSelectInput(session, "var1", choices = names(isolate(data())))
+    observe(purrr::map(paste0("var", 1:2), function(x) {
+      updateSelectInput(session, x, choices = names(data()))
+    }))
     output$md_plot <- renderPlot(plot_md_pattern(data()))
     output$flux_plot <-
       plotly::renderPlotly({
@@ -114,12 +117,12 @@ mod_imputationmodel_server <- function(id, data) {
           )
         ))
       }, ignoreNULL = FALSE)
-    # TODO: validate additional arguments with formals(mice::mice)
+    # TODO: validate additional arguments with formals(mice::mice)?
     chains <- reactive(preprocess_thetas(imp()))
     output$trace_plot <- renderPlot({
       trace_one_variable(chains(), x = input$var1)
     })
-    output$rhat_plot <- renderPlot(plot_rhat(imp(), x = input$var1))
+    output$rhat_plot <- renderPlot(plot_rhat(imp(), x = input$var2))
     return(reactive(imp()))
   })
 }

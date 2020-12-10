@@ -351,6 +351,7 @@ plot_rhat <- function(imp, x, theta = "means") {
     thetas <- imp$chainVar[x, , ]
   }
   # plot
+  if(all(is.na(thetas))){return(ggplot2::ggplot(data.frame(thetas))+ggplot2::ggtitle("Convergence diagnostic is not computed for iteration 1 to 3")+ggplot2::theme_classic())}
   p <- compute_rhat(thetas) %>%
     ggplot2::ggplot() +
     ggplot2::geom_line(ggplot2::aes(x = iteration, y = rhat)) +
