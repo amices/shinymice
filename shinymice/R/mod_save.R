@@ -18,15 +18,13 @@ mod_save_ui <- function(id) {
       "1. Please make sure to impute the incomplete data first (see 'Imputation model').",
       br(),
       "2. Select the file type to save the imputations [this feature is currently disabeled].",
-      div(
-        radioButtons(
-          ns("file_type"),
-          label = NULL,
-          choices = c(".RData", ".sav"),
-          inline = TRUE
-        ),
-        style = "margin-bottom: -15px"
+      div(radioButtons(
+        ns("file_type"),
+        label = NULL,
+        choices = c(".RData", ".sav"),
+        inline = TRUE
       ),
+      style = "margin-bottom: -15px"),
       "3. Save the imputations (button disabled until data is imputed).",
       br(),
       shinyjs::disabled(downloadButton(ns("save_file"))),
@@ -60,12 +58,9 @@ mod_save_server <- function(id, imp) {
     stopifnot(is.reactive(imp))
     observe(if (is.list(imp())) {
       shinyjs::enable("save_file")
-    }) #shinyjs::disable("save_file")
+    })
     output$save_file <- downloadHandler(
       filename = function() {
-        # ext <- switch(input$file_type,
-        #           .RData = ".RData",
-        #           .sav = ".sav")
         paste0("imp", isolate(input$file_type))
       },
       content = function(file) {
@@ -84,4 +79,4 @@ mod_save_server <- function(id, imp) {
 # mod_save_ui("save_ui_1")
 
 ## To be copied in the server
-# mod_save_server("save_ui_1")
+# mod_save_server("save_ui_1", imp)

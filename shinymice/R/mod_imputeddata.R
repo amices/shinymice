@@ -16,9 +16,6 @@ mod_imputeddata_ui <- function(id) {
       br(),
       br(),
       "1. Please make sure you have imputed the incomplete data.",
-      # no_br(),
-      # checkboxInput(ns("check_imp"), NULL),
-      # no_br(),
       br(),
       "2. Check the descriptive statistics of the imputed data.",
       br(),
@@ -30,7 +27,6 @@ mod_imputeddata_ui <- function(id) {
       8,
       tabsetPanel(
         tabPanel("Descriptives",
-                 #h6("Please make sure to impute the incomplete data first (see 'Imputation model')"),
                  DT::DTOutput(ns("imp_desc"))),
         tabPanel("Data points",
                  select_var(ns("var1")),
@@ -68,7 +64,6 @@ mod_imputeddata_server <- function(id, data, imp) {
     # )))
     output$imp_desc <- DT::renderDT({
       if(is.null(imp())){return(data.frame(x=0, y=0))} else{
-      #validate(need(is.list(imp()), "Please impute the incomplete data first."))
       imp_descr(imp())}
     })
     output$strip_plot <-

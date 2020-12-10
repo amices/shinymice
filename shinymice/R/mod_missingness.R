@@ -20,7 +20,7 @@ mod_missingness_ui <- function(id) {
         ns("dat"),
         label = NULL,
         buttonLabel = icon("search"),
-        placeholder = ".csv/.Rdata/.rda",
+        placeholder = ".csv/.Rdata/.rda", # add sav
         accept = c(".rdata", ".rda", ".csv", "text", ".txt", ".tsv")
       ),
       no_br(),

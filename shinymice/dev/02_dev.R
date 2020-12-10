@@ -27,12 +27,12 @@ usethis::use_pipe()
 
 ## Add modules ----
 ## Create a module infrastructure in R/
-golem::add_module(name = "home") # Name of the module
-golem::add_module(name = "missingness") # Name of the module
-golem::add_module(name = "imputationmodel") # Name of the module
-golem::add_module(name = "imputeddata") # Name of the module
-golem::add_module(name = "scientificmodel") # Name of the module
-golem::add_module(name = "save") # Name of the module
+golem::add_module(name = "00_home") # Name of the module
+golem::add_module(name = "01_data") # Name of the module
+golem::add_module(name = "02_model") # Name of the module
+golem::add_module(name = "03_convergence") # Name of the module
+golem::add_module(name = "04_imputations") # Name of the module
+golem::add_module(name = "05_save") # Name of the module
 
 ## Add helper functions ----
 ## Creates ftc_* and utils_*
