@@ -60,17 +60,20 @@ mod_02_model_ui <- function(id){
           ),
           tabPanel(
             "Predictor matrix",
+            div(
+              actionButton(ns("quickpred"), "Generate"), 
+              "a predictor matrix with minimum (absolute) correlations of \U03C1 = ", 
+              style = "display:inline-block;"
+            ),
+            div(
+              numericInput(ns("mincor"), NULL, value = 0, min = 0, max = 1, step = 0.1, width = 80),
+              style = "display:inline-block;"
+            ),
             plotOutput(ns("pred_plot")),
             br(),
             tags$b("Interpretation:"),
-            "Each row in the predictor matrix identifies which predictors are to be used for the variable in the row name.",
-            br(),
-            div(
-              actionButton(ns("quickpred"), "Generate"), 
-              "a predictor matrix with minimum (absolute) correlations of", 
-              numericInput(ns("mincor"), NULL, value = 0.1, min = 0, max = 1, step = 0.1, width = 100),
-              style = "display:inline-block"
-            )
+            "Each row in the predictor matrix identifies which predictors are to be used for the variable in the row name. Note that the pedictor matrix also includes variables that are completely observed (and thus have no predictors).",
+            br()
           )
         ))
     ))
@@ -83,20 +86,14 @@ mod_02_model_server <- function(id, data){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
     stopifnot(is.reactive(data))
+    pred <- eventReactive(input$quickpred, {mice::quickpred(data(), mincor = input$mincor)}, ignoreNULL = FALSE)
     output$md_plot <- renderPlot(plot_md_pattern(data()))
     output$flux_plot <-
       plotly::renderPlotly({
         plot_flux(data())
       })
-    # "generate one" or "quick pred" instead of "best guess"
     output$pred_plot <-
-      renderPlot({
-        if (input$quickpred == 0) {
-          plot_pred_matrix(data())
-        } else {
-          plot_pred_matrix(mice::quickpred(data(), mincor = input$mincor))
-        }
-      })
+      renderPlot(plot_pred_matrix(pred()))
     imp <-
       eventReactive(input$run_mice, {
         validate(need(input$run_mice > 0,
@@ -106,7 +103,7 @@ mod_02_model_server <- function(id, data){
         on.exit(waiter::waiter_hide())
         eval(parse(
           text = paste(
-            "mice::mice(data(), seed = input$seed, m = input$m, maxit = input$maxit, ",
+            "mice::mice(data(), seed = input$seed, m = input$m, maxit = input$maxit, predictorMatrix = pred(), ",
             input$add_args,
             ")"
           )

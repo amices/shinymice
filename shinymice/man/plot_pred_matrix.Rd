@@ -4,7 +4,7 @@
 \alias{plot_pred_matrix}
 \title{Title}
 \usage{
-plot_pred_matrix(d)
+plot_pred_matrix(pred)
 }
 \arguments{
 \item{d}{An incomplete dataset of class dataframe, a multiply imputed data set of class mids, or a predictor matrix}

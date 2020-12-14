@@ -123,15 +123,16 @@ plot_flux <- function(dat) {
 #'
 #' @return
 #' @export
-plot_pred_matrix <- function(d) {
-  # parse input
-  if (is(d, "mids")) {
-    pred <- d$predictorMatrix
-  } else if (is(d, "matrix")) {
-    pred <- d
-  } else {
-    pred <- mice::mice(d, maxit = 0) %>% .$predictorMatrix
-  }
+plot_pred_matrix <- function(pred) {
+  # # parse input
+  # if (is(d, "mids")) {
+  #   pred <- d$predictorMatrix
+  # } else if (is(d, "matrix")) {
+  #   pred <- d
+  # } else {
+  #   pred <- mice::mice(d, maxit = 0) %>% .$predictorMatrix
+  # }
+  
   # make the data tidy to plot
   long_pred <- pred %>%
     as.data.frame() %>%
