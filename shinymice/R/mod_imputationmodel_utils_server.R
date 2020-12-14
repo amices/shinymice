@@ -106,11 +106,11 @@ plot_flux <- function(dat) {
   p <- flx %>% ggplot2::ggplot() +
     ggplot2::geom_text(ggplot2::aes(x = influx,
                                     y = outflux,
-                                    label = variable)) +
+                                    label = variable), position = ggplot2::position_jitter(width = 0.01, height = 0.01)) +
     ggplot2::geom_abline(intercept = 1,
                          slope = -1,
                          linetype = "dashed") +
-    ggplot2::lims(x = c(0, 1), y = c(0, 1)) +
+    ggplot2::lims(x = c(-0.01, 1.01), y = c(-0.01, 1.01)) +
     ggplot2::theme_classic()
   # output
   return(p)

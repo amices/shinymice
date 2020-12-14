@@ -27,13 +27,15 @@ mod_02_model_ui <- function(id){
         ),
         set_number(ns("seed"), val = 123),
         no_br(),
-        with_red_star("5. Determine the number of imputations (m)"),
+        with_red_star(div("5. Determine the number of imputations (", "m)")),
         set_number(ns("m"), val = 5),
         no_br(),
         with_red_star("6. And the number of iterations (maxit)"),
         set_number(ns("maxit"), val = 2),
         no_br(),
-        "7. Add optional arguments to the imputation model (e.g., `method = 'pmm'`)",
+        "7. Add optional arguments to the imputation model (e.g.,",
+        tags$code("method = 'pmm'"), 
+        ")",
         textInput(ns("add_args"), label = NULL, value = NULL),
         no_br(),
         "8. Run `mice()`.",
@@ -86,12 +88,14 @@ mod_02_model_server <- function(id, data){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
     stopifnot(is.reactive(data))
-    pred <- eventReactive(input$quickpred, {mice::quickpred(data(), mincor = input$mincor)}, ignoreNULL = FALSE)
     output$md_plot <- renderPlot(plot_md_pattern(data()))
     output$flux_plot <-
       plotly::renderPlotly({
-        plot_flux(data())
+        p <- plot_flux(data())
+        plotly::ggplotly(p) %>% 
+          clean_plotly()
       })
+    pred <- eventReactive(input$quickpred, {mice::quickpred(data(), mincor = input$mincor)}) #, ignoreNULL = FALSE
     output$pred_plot <-
       renderPlot(plot_pred_matrix(pred()))
     imp <-
