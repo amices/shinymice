@@ -60,11 +60,17 @@ mod_02_model_ui <- function(id){
           ),
           tabPanel(
             "Predictor matrix",
-            actionButton(ns("quickpred"), "Best guess"),
             plotOutput(ns("pred_plot")),
             br(),
             tags$b("Interpretation:"),
-            "Each row in the predictor matrix identifies which predictors are to be used for the variable in the row name."
+            "Each row in the predictor matrix identifies which predictors are to be used for the variable in the row name.",
+            br(),
+            div(
+              actionButton(ns("quickpred"), "Generate"), 
+              "a predictor matrix with minimum (absolute) correlations of", 
+              numericInput(ns("mincor"), NULL, value = 0.1, min = 0, max = 1, step = 0.1, width = 100),
+              style = "display:inline-block"
+            )
           )
         ))
     ))
@@ -82,12 +88,13 @@ mod_02_model_server <- function(id, data){
       plotly::renderPlotly({
         plot_flux(data())
       })
+    # "generate one" or "quick pred" instead of "best guess"
     output$pred_plot <-
       renderPlot({
         if (input$quickpred == 0) {
           plot_pred_matrix(data())
         } else {
-          plot_pred_matrix(mice::quickpred(data()))
+          plot_pred_matrix(mice::quickpred(data(), mincor = input$mincor))
         }
       })
     imp <-
