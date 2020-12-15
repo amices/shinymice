@@ -85,11 +85,11 @@ mod_01_data_server <- function(id){
     output$na_tab <- DT::renderDT(tab_NA(data()))
     output$na_plot <-
       renderPlot({
-        plot_NA_scatter(data(), x = input$var1, y = input$var2)
+        suppressMessages(plot_NA_scatter(data(), x = input$var1, y = input$var2))
       })
     output$cond_plot <-
       renderPlot({
-        plot_NA_cond(data(), x = input$var3, z = input$var4)
+        suppressMessages(plot_NA_cond(data(), x = input$var3, z = input$var4))
       })
     # output
     return(reactive(data()))

@@ -39,12 +39,19 @@ golem::add_module(name = "05_save") # Name of the module
 #golem::add_fct("helpers")
 golem::add_utils("ui")
 golem::add_utils("server")
-#golem::add_utils("ui", module = "missingness")
-golem::add_utils("server", module = "missingness")
-# golem::add_utils("ui", module = "imputationmodel")
-golem::add_utils("server", module = "imputationmodel")
-#golem::add_utils("ui", module = "imputeddata")
-golem::add_utils("server", module = "imputeddata")
+# golem::add_utils("00_home")
+golem::add_utils("01_data")
+# golem::add_utils("02_model")
+# golem::add_utils("03_convergence")
+# golem::add_utils("04_imputations")
+# golem::add_utils("05_save")
+
+# #golem::add_utils("ui", module = "missingness")
+# golem::add_utils("server", module = "missingness")
+# # golem::add_utils("ui", module = "imputationmodel")
+# golem::add_utils("server", module = "imputationmodel")
+# #golem::add_utils("ui", module = "imputeddata")
+# golem::add_utils("server", module = "imputeddata")
 
 ## External resources
 ## Creates .js and .css files at inst/app/www
