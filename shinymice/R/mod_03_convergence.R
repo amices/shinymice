@@ -44,7 +44,7 @@ mod_03_convergence_server <- function(id, data, imp){
     }))
     chains <- reactive(preprocess_thetas(imp()))
     output$trace_plot <- renderPlot({
-      trace_one_variable(chains(), x = input$var1) #get x tick labels from imp()$maxit
+      plot_trace(chains(), x = input$var1) #get x tick labels from imp()$maxit
     })
     output$rhat_plot <- renderPlot(plot_rhat(imp(), x = input$var2))
   })

@@ -123,12 +123,11 @@ Develop a predictor matrix to adjust for the imputation model
 
 ```{r fig.height=6, fig.width=6}
 # plot the predictor matrix for the imputation model
-shinymice::plot_pred_matrix(imp)
+pred <- imp$predictorMatrix
+shinymice::plot_pred_matrix(pred)
 # change the predictor matrix and plot again
-new_pred <- imp$predictorMatrix
-new_pred["bmi", c("hgt", "wgt")] <- 0
-imp2 <- mice::mice(dat, predictorMatrix = new_pred, maxit = 0)
-shinymice::plot_pred_matrix(imp2) 
+pred["bmi", c("hgt", "wgt")] <- 0
+shinymice::plot_pred_matrix(pred) 
 shinymice::plot_pred_matrix(mice::quickpred(dat)) 
 ```
 
@@ -140,8 +139,8 @@ shinymice::plot_pred_matrix(mice::quickpred(dat))
 trace_dat <- shinymice::preprocess_thetas(imp)
 
 # traceplot: plot trace of one variable
-shinymice::trace_one_variable(trace_dat, x = "hgt")
-shinymice::trace_one_variable(trace_dat, x = "age")
+shinymice::plot_trace(trace_dat, x = "hgt")
+shinymice::plot_trace(trace_dat, x = "age")
 ```
 
 
