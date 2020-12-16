@@ -27,16 +27,15 @@ usethis::use_pipe()
 
 ## Add modules ----
 ## Create a module infrastructure in R/
-golem::add_module(name = "00_home") # Name of the module
-golem::add_module(name = "01_data") # Name of the module
-golem::add_module(name = "02_model") # Name of the module
-golem::add_module(name = "03_convergence") # Name of the module
-golem::add_module(name = "04_imputations") # Name of the module
-golem::add_module(name = "05_save") # Name of the module
+golem::add_module(name = "00_home") 
+golem::add_module(name = "01_data") 
+golem::add_module(name = "02_model") 
+golem::add_module(name = "03_convergence") 
+golem::add_module(name = "04_imputations") 
+golem::add_module(name = "05_save") 
 
 ## Add helper functions ----
 ## Creates ftc_* and utils_*
-#golem::add_fct("helpers")
 golem::add_utils("ui")
 golem::add_utils("server")
 # golem::add_utils("00_home")
@@ -45,13 +44,6 @@ golem::add_utils("02_model")
 golem::add_utils("03_convergence")
 golem::add_utils("04_imputations")
 # golem::add_utils("05_save")
-
-# #golem::add_utils("ui", module = "missingness")
-# golem::add_utils("server", module = "missingness")
-# # golem::add_utils("ui", module = "imputationmodel")
-# golem::add_utils("server", module = "imputationmodel")
-# #golem::add_utils("ui", module = "imputeddata")
-# golem::add_utils("server", module = "imputeddata")
 
 ## External resources
 ## Creates .js and .css files at inst/app/www
@@ -62,8 +54,7 @@ golem::add_css_file("custom")
 ## Add internal datasets ----
 ## If you have data in your package
 # usethis::use_data_raw(name = "my_dataset", open = FALSE)
-# load("plotmouse.RData")
-usethis::use_data(mouse)
+# usethis::use_data(mouse)
 
 ## Tests ----
 ## Add one line by test you want to create
