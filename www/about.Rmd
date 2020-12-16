@@ -1,8 +1,0 @@
----
-  title: "About"
-output: html_document
----
-  
-This Shiny app has the sole purpose of showing that I'm able to program an app in `R Shiny`. However, if all goes well, I might use this as the foundation of the interactive evaluation suite for evaluating multiply imputed data that I'm developing as Research Master's thesis project. `shinymice` will be integrated into the `mice` environment in `R`.
-
-Watch the current state of the project on [github.com/amices/shinyMice](https://github.com/amices/shinyMice/).
