@@ -1,13 +1,13 @@
-#' imputeddata UI Function
+#' 04_imputations UI Function
 #'
 #' @description A shiny Module.
 #'
 #' @param id,input,output,session Internal parameters for {shiny}.
 #'
-#' @noRd
+#' @noRd 
 #'
-#' @importFrom shiny NS tagList
-mod_imputeddata_ui <- function(id) {
+#' @importFrom shiny NS tagList 
+mod_04_imputations_ui <- function(id){
   ns <- NS(id)
   fluidPage(fluidRow(
     column(
@@ -15,17 +15,19 @@ mod_imputeddata_ui <- function(id) {
       tags$b("Inspect the imputations"),
       br(),
       br(),
-      "1. Check the descriptive statistics of the imputed data.",
+      "1. Please make sure you have imputed the incomplete data.",
       br(),
-      "2. Inspect the distribution of the imputed data per variable.",
+      "2. Check the descriptive statistics of the imputed data.",
       br(),
-      "3. Evaluate the bivariate relations post-imputation."
+      "3. Inspect the distribution of the imputed data per variable.",
+      br(),
+      "4. Evaluate the bivariate relations post-imputation."
     ),
     column(
       8,
       tabsetPanel(
         tabPanel("Descriptives",
-                 tableOutput(ns("imp_desc"))),
+                 DT::DTOutput(ns("imp_desc"))),
         tabPanel("Data points",
                  select_var(ns("var1")),
                  plotOutput(ns("strip_plot"))),
@@ -45,15 +47,17 @@ mod_imputeddata_ui <- function(id) {
     )
   ))
 }
-
-#' imputeddata Server Functions
+    
+#' 04_imputations Server Functions
 #'
-#' @noRd
-mod_imputeddata_server <- function(id, imp) {
-  moduleServer(id, function(input, output, session) {
+#' @noRd 
+mod_04_imputations_server <- function(id, data, imp){
+  moduleServer( id, function(input, output, session){
     ns <- session$ns
-    stopifnot(is.reactive(imp))
-    output$imp_desc <- renderTable(imp_descr(imp()))
+    observe(purrr::map(paste0("var", 1:5), function(x) {
+      updateSelectInput(session, x, choices = names(data()))
+    }))
+    output$imp_desc <- DT::renderDT({imp_descr(imp())})
     output$strip_plot <-
       renderPlot(plot_strip(imp(), x = input$var1))
     output$bw_plot <- renderPlot(plot_bw(imp(), x = input$var2))
@@ -62,9 +66,9 @@ mod_imputeddata_server <- function(id, imp) {
       renderPlot(plot_xy(imp(), x = input$var4, y = input$var5))
   })
 }
-
+    
 ## To be copied in the UI
-# mod_imputeddata_ui("imputeddata_ui_1")
-
+# mod_04_imputations_ui("04_imputations_ui_1")
+    
 ## To be copied in the server
-# mod_imputeddata_server("imputeddata_ui_1")
+# mod_04_imputations_server("04_imputations_ui_1", data, imp)

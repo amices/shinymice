@@ -1,13 +1,13 @@
-#' missingness UI Function
+#' 01_data UI Function
 #'
 #' @description A shiny Module.
 #'
 #' @param id,input,output,session Internal parameters for {shiny}.
 #'
-#' @noRd
+#' @noRd 
 #'
-#' @importFrom shiny NS tagList
-mod_missingness_ui <- function(id) {
+#' @importFrom shiny NS tagList 
+mod_01_data_ui <- function(id){
   ns <- NS(id)
   fluidPage(fluidRow(
     column(
@@ -15,13 +15,14 @@ mod_missingness_ui <- function(id) {
       tags$b("Explore the missingness"),
       br(),
       br(),
-      "1. Load the incomplete data",
+      "1. Load the incomplete data.",
       fileInput(
         ns("dat"),
         label = NULL,
         buttonLabel = icon("search"),
-        placeholder = ".csv/.Rdata/.txt",
-        accept = c(".rdata", ".csv", "text", ".txt")
+        placeholder = ".csv/.Rdata/.rda",
+        # add sav
+        accept = c(".rdata", ".rda", ".csv", "text", ".txt", ".tsv")
       ),
       no_br(),
       "2. Check how much missingness there is in each variable.",
@@ -35,8 +36,13 @@ mod_missingness_ui <- function(id) {
     ),
     column(8,
            tabsetPanel(
-             tabPanel("Descriptives",
-                      DT::DTOutput(ns("na_desc"))),
+             tabPanel(
+               "Descriptives",
+               h6(
+                 "Note that variables with an asteriks ('*') are categorical, so the mean and standard deviation may not be meaningful."
+               ),
+               DT::DTOutput(ns("na_desc"))
+             ),
              tabPanel("Browse",
                       DT::DTOutput(ns("na_tab"))),
              tabPanel(
@@ -54,29 +60,44 @@ mod_missingness_ui <- function(id) {
            ))
   ))
 }
-
-#' missingness Server Function
+    
+#' 01_data Server Functions
 #'
-#' @noRd
-mod_missingness_server <- function(id) {
-  moduleServer(id, function(input, output, session) {
-    data <- reactive(mice::boys)
+#' @noRd 
+mod_01_data_server <- function(id){
+  moduleServer( id, function(input, output, session){
+    ns <- session$ns
+    data <- reactive({
+      d <- read_data(file = input$dat)
+      validate(
+        need(
+          is.data.frame(d),
+          "Sorry, {shinymice}  cannot process this dataset. Please check if you specified the right file."
+        )
+      )
+      d
+    })
+    # update variables
+    observe(purrr::map(paste0("var", 1:4), function(x) {
+      updateSelectInput(session, x, choices = names(data()))
+    }))
     output$na_desc <- DT::renderDT(descr_NA(data()))
     output$na_tab <- DT::renderDT(tab_NA(data()))
     output$na_plot <-
       renderPlot({
-        plot_NA_scatter(data(), x = input$var1, y = input$var2)
+        suppressMessages(plot_NA_scatter(data(), x = input$var1, y = input$var2))
       })
     output$cond_plot <-
       renderPlot({
-        plot_NA_cond(data(), x = input$var3, z = input$var4)
+        suppressMessages(plot_NA_cond(data(), x = input$var3, z = input$var4))
       })
+    # output
     return(reactive(data()))
   })
 }
-
+    
 ## To be copied in the UI
-# mod_missingness_ui("missingness_ui_1")
-
+# mod_01_data_ui("01_data_ui_1")
+    
 ## To be copied in the server
-# callModule(mod_missingness_server, "missingness_ui_1")
+# mod_01_data_server("01_data_ui_1")

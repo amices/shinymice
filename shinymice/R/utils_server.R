@@ -11,17 +11,6 @@
 # not in
 `%nin%` <- Negate(`%in%`)
 
-# dummy plot
-dummy_plot <- function() {
-  ggplot2::ggplot(data = data.frame(
-    a = c(0, 1),
-    b = c(1, 0),
-    c = c("dummy", "plot")
-  )) +
-    ggplot2::geom_text(ggplot2::aes(x = a, y = b, label = c), size = 5) +
-    ggplot2::ggtitle("Dummy plot (to be replaced)")
-}
-
 # mice theme
 theme_mice <- function() {
   # change default plotting options (move this outside of the function to unnecessary avoid re-running?)
@@ -82,4 +71,16 @@ clean_plotly <- function(pp, ...) {
       "hoverClosestCartesian"
     )
   )
+}
+
+# mock plot for complete datasets
+plot_a_mouse <- function() {
+  ggplot2::ggplot(mouse, ggplot2::aes(x = X, y = Y)) +
+    ggplot2::geom_point(size = 5,
+                        shape = 20,
+                        alpha = 1) +
+    ggplot2::scale_x_continuous(limits = c(0, 100)) +
+    ggplot2::scale_y_continuous(limits = c(0, 100)) +
+    ggplot2::geom_text(ggplot2::aes(x = 50, y = 10, label = "No need for mice!"), size = 10) +
+    ggplot2::theme_classic()
 }

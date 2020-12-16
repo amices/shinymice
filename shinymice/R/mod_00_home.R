@@ -1,27 +1,26 @@
-#' home UI Function
+#' 00_home UI Function
 #'
 #' @description A shiny Module.
 #'
 #' @param id,input,output,session Internal parameters for {shiny}.
 #'
-#' @noRd
+#' @noRd 
 #'
-#' @importFrom shiny NS tagList
-mod_home_ui <- function(id) {
+#' @importFrom shiny NS tagList 
+mod_00_home_ui <- function(id){
   ns <- NS(id)
   fluidPage(fluidRow(
     div(img(src = "www/favicon.png", width = 300), align = "center"),
-    #h2("[shinymice logo here]", align = "center"),
     br(),
     br(),
-    #h2("[navigation buttons here]", align = "center"),
     div(tags$b("Dear reader,"), align = "center"),
+    div(tags$b("This app is still under development."),
+        align = "center"),
     div(
-      tags$b(
-        "This app is still in the experimental stage. Much of the reactivity is currently switched off, and many plotting functions are still under development. Please feel free to browse the app anyway."
-      ),
+      tags$b("Please feel free to explore it anyway, but beware of bugs."),
       align = "center"
     ),
+    div(tags$b("-Hanne"), align = "center"),
     br(),
     br(),
     div(
@@ -33,18 +32,19 @@ mod_home_ui <- function(id) {
     br()
   ))
 }
-
-#' home Server Functions
+    
+#' 00_home Server Functions
 #'
-#' @noRd
-mod_home_server <- function(id) {
-  moduleServer(id, function(input, output, session) {
+#' @noRd 
+mod_00_home_server <- function(id){
+  moduleServer( id, function(input, output, session){
     ns <- session$ns
+ 
   })
 }
-
+    
 ## To be copied in the UI
-# mod_home_ui("home_ui_1")
-
+# mod_00_home_ui("00_home_ui_1")
+    
 ## To be copied in the server
-# mod_home_server("home_ui_1")
+# mod_00_home_server("00_home_ui_1")
