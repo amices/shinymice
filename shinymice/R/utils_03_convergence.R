@@ -178,7 +178,8 @@ plot_rhat <- function(imp, x, theta = "means") {
   # plot
   if (all(is.na(thetas))) {
     return(
-      ggplot2::ggplot(data.frame(thetas)) + ggplot2::ggtitle("Convergence diagnostic cannot be computed if the number of iterations is three or less (or for completely observed variables)") +
+      ggplot2::ggplot(data.frame(thetas)) + 
+        ggplot2::ggtitle("Convergence diagnostics cannot be computed \n if the number of iterations is three or less \n (or for completely observed variables)") +
         ggplot2::theme_classic()
     )
   }
