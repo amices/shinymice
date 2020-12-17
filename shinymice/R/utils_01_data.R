@@ -38,7 +38,7 @@ descr_NA <- function(d) {
       sd = round(sd, 2),
       n_missing = nrow(d) - n
     )
-  dt <- DT::datatable(tab, rownames = FALSE) %>%
+  dt <- DT::datatable(tab, rownames = FALSE, options = list(dom = 't')) %>%
     DT::formatStyle(
       "n_missing",
       color = DT::styleInterval(cuts = 0, values = c("black", "#B61A51")),
@@ -57,7 +57,7 @@ tab_NA <- function(d) {
     dplyr::mutate(dplyr::across(where(is.numeric), round, 2)) %>%
     DT::datatable(d) %>%
     DT::formatStyle(
-      names(d),
+      .,
       target = "cell",
       color = DT::styleEqual("NA", "#B61A51"),
       fontWeight = DT::styleEqual("NA", "bold")
