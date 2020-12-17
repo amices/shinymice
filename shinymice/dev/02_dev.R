@@ -43,7 +43,7 @@ golem::add_utils("01_data")
 golem::add_utils("02_model")
 golem::add_utils("03_convergence")
 golem::add_utils("04_imputations")
-# golem::add_utils("05_save")
+golem::add_utils("05_save")
 
 ## External resources
 ## Creates .js and .css files at inst/app/www

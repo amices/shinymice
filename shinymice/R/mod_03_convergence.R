@@ -24,10 +24,14 @@ mod_03_convergence_ui <- function(id){
            tabsetPanel(
              tabPanel("Traceplot",
                       select_var(ns("var1")),
-                      plotOutput(ns("trace_plot"))),
+                      plotOutput(ns("trace_plot")),
+                      tags$b("Interpretation:"),
+                      "This traceplot displays the 'imputation chains' or 'streams' of the algorithm against the iteration number. On convergence, the different streams should be freely intermingled with one another, without showing any definite trends."),
              tabPanel("Convergence",
                       select_var(ns("var2")),
-                      plotOutput(ns("rhat_plot")))
+                      plotOutput(ns("rhat_plot")),
+                      tags$b("Interpretation:"),
+                      "This figure shows the potential scale reduction factor (R hat) conform Vehtari et al. (2019). If the potential scale reduction is high, then we have reason to believe that proceeding with further iterations may improve our inference.")
            ))
   ))
 }

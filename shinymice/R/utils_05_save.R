@@ -1,3 +1,9 @@
+#' Title Save imputations in SPSS readable format
+#'
+#' @param imp A multiply imputed data set (mids) object
+#' @param file Temporary file location needed for shiny::downloadHandler()
+#'
+#' @return A SPPS readable multiply imputed data set
 mids2spss <- function(imp, file) {
   .id <- NULL # avoid empty global variable binding
   #extract a completed dataset (long format - all imputations stacked)
@@ -8,6 +14,4 @@ mids2spss <- function(imp, file) {
     dplyr::select(-.id) %>%
     dplyr::rename("Imputation_" = ".imp")
   haven::write_sav(out, file)
-}
-
-# after export, see https://bookdown.org/mwheymans/bookmi/multiple-imputation.html#multiple-imputation-in-spss
+} # what to do after export? See https://bookdown.org/mwheymans/bookmi/multiple-imputation.html#multiple-imputation-in-spss
