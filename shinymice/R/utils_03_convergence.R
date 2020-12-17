@@ -176,10 +176,15 @@ plot_rhat <- function(imp, x, theta = "means") {
     thetas <- imp$chainVar[x, ,]
   }
   # plot
-  if (all(is.na(thetas))) {
+  if (all(is.na(thetas)) | imp$iteration < 3) {
     return(
       ggplot2::ggplot(data.frame(thetas)) + 
-        ggplot2::ggtitle("Convergence diagnostics cannot be computed \n if the number of iterations is three or less \n (or for completely observed variables)") +
+        ggplot2::geom_text(ggplot2::aes(
+          x = NA,
+          y = NA,
+          label = "Convergence diagnostics cannot be computed \n if the number of iterations is three or less \n (or for completely observed variables)"
+        ),
+        color = "grey") +
         ggplot2::theme_classic()
     )
   }

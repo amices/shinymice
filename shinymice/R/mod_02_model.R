@@ -91,7 +91,7 @@ mod_02_model_server <- function(id, data){
         plotly::ggplotly(p) %>% 
           clean_plotly()
       })
-    pred <- eventReactive(input$quickpred, {mice::quickpred(data(), mincor = input$mincor)}) #, ignoreNULL = FALSE
+    pred <- eventReactive(input$quickpred, {mice::quickpred(data(), mincor = input$mincor)}, ignoreNULL = FALSE) 
     output$pred_plot <-
       renderPlot(plot_pred_matrix(pred()))
     imp <-
