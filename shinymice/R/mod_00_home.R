@@ -22,6 +22,8 @@ mod_00_home_ui <- function(id){
     ),
     div(tags$b("-Hanne"), align = "center"),
     br(),
+    actionButton(ns("back"), "Test"),
+    br(),
     br(),
     div(
       "For the most recent version of this app or to report an issue, see ",
@@ -30,16 +32,18 @@ mod_00_home_ui <- function(id){
       align = "center"
     ),
     br()
-  ))
+    ))
 }
     
 #' 00_home Server Functions
 #'
 #' @noRd 
-mod_00_home_server <- function(id){
-  moduleServer( id, function(input, output, session){
+mod_00_home_server <- function(id, parent_session){
+  moduleServer(id, function(input, output, session){
     ns <- session$ns
- 
+    observeEvent(input$back, {
+      updateTabsetPanel(session = parent_session, inputId = "tabs", selected = "01")
+    })
   })
 }
     
@@ -47,4 +51,4 @@ mod_00_home_server <- function(id){
 # mod_00_home_ui("00_home_ui_1")
     
 ## To be copied in the server
-# mod_00_home_server("00_home_ui_1")
+# mod_00_home_server("00_home_ui_1", parent_session)

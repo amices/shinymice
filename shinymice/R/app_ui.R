@@ -12,32 +12,40 @@ app_ui <- function(request) {
         windowTitle = "shinymice",
         title = div(img(src = "www/logo.png", width = 120)),
         collapsible = TRUE,
+        id = "tabs",
         header = div(br(), br()),
         tabPanel(
           "Home",
+          value = "00",
           icon = icon("home"),
-          mod_00_home_ui("home_00_ui_1")),
+          #actionButton("test2", "Test this"),
+          mod_00_home_ui("00_home_ui_1")),
         tabPanel(
           "Incomplete data",
+          value = "01",
           icon = icon("file-upload"),
           mod_01_data_ui("01_data_ui_1")
         ),
         tabPanel(
           "Imputation model",
+          value = "02",
           icon = icon("sliders-h"),
           mod_02_model_ui("02_model_ui_1")
         ),
         tabPanel(
           "Algorithmic convergence",
+          value = "03",
           icon = icon("chart-line"),
           mod_03_convergence_ui("03_convergence_ui_1")
           ),
         tabPanel(
           "Imputed data",
+          value = "04",
           icon = icon("chart-area"),
           mod_04_imputations_ui("04_imputations_ui_1")
         ),
         tabPanel("Save",
+                 value = "05",
                  icon = icon("file-download"),
                  mod_05_save_ui("05_save_ui_1")
         )
