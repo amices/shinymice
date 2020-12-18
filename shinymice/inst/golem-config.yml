@@ -5,5 +5,6 @@ default:
 production:
   app_prod: yes
 dev:
-  golem_wd: C:/Users/User/Desktop/shinyMice/shinymice
+  golem_wd: C:/Users/4216318/Documents/shinyMice/shinymice
+  # C:/Users/User/Desktop/shinyMice/shinymice
   # C:/Users/4216318/Documents/shinyMice/shinymice

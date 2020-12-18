@@ -19,7 +19,7 @@ imp_descr <- function(imp) {
     )
   #tab[, 2] <- as.integer(tab[, 2])
   # create datatable
-  dt <- DT::datatable(tab, rownames = FALSE) %>%
+  dt <- DT::datatable(tab, rownames = FALSE, options = list(dom = 't'), selection = 'none') %>%
     DT::formatStyle(
       "n_imputed",
       color = DT::styleInterval(cuts = 0, values = c("black", "#B61A51")),
