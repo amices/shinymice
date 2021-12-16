@@ -1,0 +1,307 @@
+---
+title: "ggmice"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{ggmice}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  warning = FALSE, 
+  message = FALSE,
+  fig.width = 6, 
+  fig.height = 6
+)
+```
+
+```{r setup, include = FALSE}
+# set-up environment
+library(shinymice)
+library(tidyverse)
+
+# example dataset
+dat <- mice::boys
+# example mids object
+imp <- mice::mice(dat, printFlag = FALSE)
+```
+
+## Plot incomplete data
+
+We can evaluate the missingness in the incomplete data using two plotting devices:
+
+- histogram
+
+- scatterplot
+
+
+```{r}
+# conditional distribution
+shinymice::plot_NA_cond(dat, x = "age", z = "hc")
+shinymice::plot_NA_cond(dat, x = "reg", z = "hc")
+```
+
+
+```{r}
+# scatterplot with NAs
+shinymice::plot_NA_scatter(dat, x = "reg", y = "hc")
+shinymice::plot_NA_scatter(dat, x = "hgt", y = "hc")
+```
+
+
+```{r eval=FALSE, include=FALSE}
+# # same same but easier!
+# x = "hgt"
+# y = "hc"
+# dat %>% ggplot2::ggplot() +
+#   ggplot2::theme_classic() +
+#   # plot observed datapoints in x-y space
+#   ggplot2::geom_point(
+#     ggplot2::aes(x = .data[[x]], y = .data[[y]]),
+#     position = ggplot2::position_jitter(width = 0.2, height = 0.2),
+#     color = mice::mdc(1)
+#   ) +
+#   # missing x
+#   ggplot2::geom_point(
+#     position = ggplot2::position_jitter(width = 0.2, height = 0.2),
+#     color = mice:::mdc(2),
+#     shape = 4,
+#     mapping = ggplot2::aes(x = -Inf, y = .data[[y]]),
+#     data = dat[is.na(dat[[x]]),]
+#   ) +
+#   # missing y
+#   ggplot2::geom_point(
+#     position = ggplot2::position_jitter(width = 0.2, height = 0.2),
+#     color = mice:::mdc(2),
+#     shape = 4,
+#     mapping = ggplot2::aes(x = .data[[x]], y = -Inf),
+#     data = dat[is.na(dat[[y]]),]
+#   ) +
+#   # missing xy
+#   ggplot2::geom_point(
+#     position = ggplot2::position_jitter(width = 0.2, height = 0.2),
+#     color = mice:::mdc(2),
+#     shape = 4,
+#     mapping = ggplot2::aes(x = -Inf, y = -Inf),
+#     data = dat[is.na(dat[[x]]) & is.na(dat[[y]]),]
+#   ) +
+#   # axes
+#   ggplot2::coord_cartesian(clip = "off") 
+
+```
+
+## Plot imputation model/missingness
+
+- md pattern
+
+- fluxplot
+
+First look at the missing data pattern
+
+```{r fig.height=7.5, fig.width=6}
+# plot md pattern 
+dat2 <- mice::boys %>% cbind(bhgdhjahfjhksgdkfkjhsdgfksd = mice::boys$age) 
+shinymice::plot_md_pattern(dat2) 
+pat <- mice::md.pattern(dat)
+
+# # change what plotly shows (see https://stackoverflow.com/questions/36325154/how-to-choose-variable-to-display-in-tooltip-when-using-ggplotly)
+# (p <- plot_md_pattern(dat))
+# plotly::ggplotly(p, tooltip = c("x", "group", "text")) 
+```
+
+Then look at the in- and outflux
+
+```{r}
+# plot in- and outflux of incomplete data
+shinymice::plot_flux(dat)
+# plotly::ggplotly(p)
+```
+Develop a predictor matrix to adjust for the imputation model
+
+```{r fig.height=6, fig.width=6}
+# plot the predictor matrix for the imputation model
+pred <- imp$predictorMatrix
+shinymice::plot_pred_matrix(pred)
+# change the predictor matrix and plot again
+pred["bmi", c("hgt", "wgt")] <- 0
+shinymice::plot_pred_matrix(pred) 
+shinymice::plot_pred_matrix(mice::quickpred(dat)) 
+```
+
+
+## Plot convergence
+
+```{r}
+# traceplot: make chain means and variances tidy
+trace_dat <- shinymice::preprocess_thetas(imp)
+
+# traceplot: plot trace of one variable
+shinymice::plot_trace(trace_dat, x = "hgt")
+shinymice::plot_trace(trace_dat, x = "age")
+```
+
+
+## Plot imputed data
+
+We need to preprocess the `mids` object to make it `tidy`. Then we can plot the imputed data using one of four plotting devices:
+
+- stripplot
+
+- bwplot/boxplot
+
+- densityplot
+
+- xyplot/scatterplot
+
+
+```{r}
+# test imputation plots with continuous variable
+x = "hc"
+
+# boxplot 
+shinymice::plot_bw(imp, x)
+
+# stripplot
+shinymice::plot_strip(imp, x)
+
+# density plot
+shinymice::plot_dens(imp, x)
+
+# test with two continuous variables
+y = "hgt"
+
+# xyplot
+shinymice::plot_xy(imp, x, y)
+
+# test with categorical variable
+x = "phb"
+
+# boxplot (not informative with categorical variable)
+shinymice::plot_bw(imp, x)
+
+# stripplot
+shinymice::plot_strip(imp, x)
+
+# density plot (not appropriate with categorical variable)
+shinymice::plot_dens(imp, x)
+```
+
+
+## Additional: compute rhat
+
+```{r}
+# # compute rhat
+# rhat_functions <- function(sims) {
+#   # compute potential scale reduction factor (rhat) for each variable in mids object
+#   # equations adapted from Vehtari et al. (2019)
+#   # helper functions
+#   n_it <- length(sims)
+#   # split chains with maxit > 4 to detect trending
+#   split_chains <- function(sims) {
+#     # split Markov chains, adapted from rstan
+#     n_it <- dim(sims)[1]
+#     # output
+#     if (n_it < 4)
+#       # do not split if result will be chains of length 1
+#       return(sims)
+#     else {
+#       # split each chain to get 2m chains
+#       lower <- 1:floor(n_it / 2)
+#       upper <- ceiling((n_it / 2) + 1):n_it
+#       splits <- base::cbind(sims[lower,], sims[upper,])
+#       return(splits)
+#     }
+#   }
+#   # rank-normalize chains because Gelman says so
+#   z_scale <- function(x) {
+#     # rank-normalize Markov chain, copied from rstan
+#     t <- length(x)
+#     r <- rank(x, ties.method = 'average')
+#     z <- qnorm((r - 1 / 2) / t)
+#     # output
+#     if (!is.null(dim(x))) {
+#       # output should have the input dimensions
+#       z <- array(z, dim = dim(x), dimnames = dimnames(x))
+#     }
+#     return(z)
+#   }
+#   # preprocess chains
+#   sims <- sims %>% split_chains(.) %>% z_scale(.)
+#   # compute rhat
+#   var_between <-
+#     n_it * var(apply(sims, 2, mean))
+#   var_within <- mean(apply(sims, 2, var))
+#   rhat <-
+#     sqrt((var_between / var_within + n_it - 1) / n_it)
+#   # output
+#   return(rhat)
+# }
+# 
+# # function for Rhat for two or more imputation chains
+# compute_rhat <- function(x) {
+#   # input: object with theta values (rows are iterations, columns are imputations)
+#   # output: convergence diagnostic Rhat across imputations
+#   # parse inputs
+#   if (is.data.frame(x)) {
+#     x <- as.matrix(x)
+#   }
+#   # quit function if there are not enough iterations
+#   n_it <- dim(x)[1]
+#   if (is.null(n_it)) {
+#     return(data.frame(
+#       iteration = 1,
+#       max.r.hat = NA,
+#       r.hat = NA
+#     ))
+#   } else {
+#     r.hat <- map_dfr(2:n_it, function(it) {
+#       # compute r hat in all ways described by Vehtari et al. (2019)
+#       rhat_bulk <- x[1:it, ] %>%
+#         rhat_functions(.)
+#       # for rhat of the tails, fold the chains
+#       rhat_tail <- abs(x[1:it, ] - median(x[1:it, ])) %>% 
+#         rhat_functions(.)
+#       max(rhat_bulk, rhat_tail) %>%
+#         data.frame(rhat = .)
+#     }) %>%
+#       rbind(NA, .) %>%
+#       cbind(iteration = 1:n_it, .)
+#   }
+#   # output
+#   return(r.hat)
+# }
+# 
+# # plot rhat
+# plot_rhat <- function(imp, x, theta = "means") {
+#   #parse inputs
+#   if (theta == "means") {
+#     thetas <- imp$chainMean[x, ,]
+#   }
+#   if (theta == "vars") {
+#     thetas <- imp$chainVar[x, ,]
+#   }
+#   # plot
+#   p <- compute_rhat(thetas) %>%
+#     ggplot2::ggplot() +
+#     ggplot2::geom_line(aes(x = iteration, y = rhat)) +
+#     ggplot2::geom_hline(yintercept = 1.2,
+#                         color = "grey",
+#                         size = 1) +
+#     ggplot2::theme_classic()
+#   # output
+#   return(p)
+# }
+
+# test
+x = "age"
+imp3 <- mice::mice.mids(imp, maxit = 10, printFlag = FALSE)
+a <- shinymice::plot_rhat(imp3, x = x)
+b <- shinymice::plot_rhat(imp3, x = x, theta = "vars")
+list(a, b)
+shinymice::plot_rhat( imp3, x=x, theta = "both")
+imp3 %>% shinymice::preprocess_thetas() %>% shinymice::trace_one_variable(x=x)
+```
+
